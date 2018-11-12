@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ZoomControlsMenu">
+        <attr name="iconColor" format="reference|color"/>
+        <attr name="backgroundColor" format="reference|color"/>
+        <attr name="shadowColor" format="reference|color"/>
+    </declare-styleable>
+
+</resources>
