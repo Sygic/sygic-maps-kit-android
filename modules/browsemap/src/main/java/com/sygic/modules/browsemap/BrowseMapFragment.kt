@@ -19,6 +19,30 @@ class BrowseMapFragment : MapFragment() {
 
     private lateinit var viewModel: BrowseMapFragmentViewModel
 
+    var compassEnabled: Boolean
+        get() {
+            return viewModel.compassEnabled.value!!
+        }
+        set(value) {
+            viewModel.compassEnabled.value = value
+        }
+
+    var positionLockFabEnabled: Boolean
+        get() {
+            return viewModel.positionLockFabEnabled.value!!
+        }
+        set(value) {
+            viewModel.positionLockFabEnabled.value = value
+        }
+
+    var zoomControlsEnabled: Boolean
+        get() {
+            return viewModel.zoomControlsEnabled.value!!
+        }
+        set(value) {
+            viewModel.zoomControlsEnabled.value = value
+        }
+
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
         viewModel = ViewModelProviders.of(this, BrowseMapFragmentViewModel.ViewModelFactory(requireActivity().application, attrs))
