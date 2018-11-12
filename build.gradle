@@ -2,13 +2,14 @@
 
 buildscript {
     ext {
-        min_sdk_version = 17
-        compile_sdk_version = 28
-        target_sdk_version = compile_sdk_version
+        androidMinSdkVersion = 17
+        androidCompileSdkVersion = 28
+        androidTargerSdkVersion = androidCompileSdkVersion
 
-        kotlin_version = '1.3.0'
-        android_support_version = '28.0.0'
-        constraint_layout_version = '1.1.3'
+        kotlinVersion = '1.3.0'
+        lifecycleVersion = '1.1.1'
+        androidSupportVersion = '28.0.0'
+        constraintLayoutVersion = '1.1.3'
         sygicSdkVersion = '3.0.0'
     }
     repositories {
@@ -18,7 +19,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
