@@ -6,9 +6,9 @@
         <attr name="sygic_compassEnabled" format="boolean"/>
         <attr name="sygic_positionLockFabEnabled" format="boolean"/>
         <attr name="sygic_zoomControlsEnabled" format="boolean"/>
-        <attr name="sygic_cameraInitialLatitude" format="float"/> <!--todo: reuse sygic_sdk_initial_latitude ?-->
-        <attr name="sygic_cameraInitialLongitude" format="float"/> <!--todo: reuse sygic_sdk_initial_longitude ?-->
-        <attr name="sygic_cameraInitialZoom" format="float"/> <!--todo: reuse sygic_sdk_initial_zoom ?-->
+        <attr name="sygic_cameraInitialLatitude" format="float"/> <!--todo: MS-4502-->
+        <attr name="sygic_cameraInitialLongitude" format="float"/> <!--todo: MS-4502-->
+        <attr name="sygic_cameraInitialZoom" format="float"/> <!--todo: MS-4502-->
     </declare-styleable>
 
 </resources>

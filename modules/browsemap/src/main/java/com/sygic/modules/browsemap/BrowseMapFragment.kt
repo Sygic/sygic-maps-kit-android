@@ -45,7 +45,7 @@ class BrowseMapFragment : MapFragment() {
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
-        //ToDo
+        //todo: MS-4507
         viewModel = ViewModelProviders.of(this, BrowseMapFragmentViewModel.ViewModelFactory(requireActivity().application, attrs))
                 .get(BrowseMapFragmentViewModel::class.java)
     }
@@ -60,7 +60,7 @@ class BrowseMapFragment : MapFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //ToDo
+        //todo: MS-4508
         getMapAsync(object : OnMapInitListener {
             override fun onMapReady(mapView: MapView) {
                 Log.d("BrowseMapFragment", "onMapReady()")
