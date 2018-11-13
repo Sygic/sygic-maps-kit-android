@@ -2,10 +2,10 @@ package com.sygic.ui.view.compass
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewCompat
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView

@@ -2,10 +2,10 @@ package com.sygic.ui.common
 
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v7.content.res.AppCompatResources
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.appcompat.content.res.AppCompatResources
 import android.view.View
 import android.widget.ImageView
 import java.util.*
