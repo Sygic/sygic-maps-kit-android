@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.util.Log
 import com.sygic.modules.browsemap.R
 import com.sygic.sdk.SygicEngine
+import com.sygic.sdk.online.OnlineManager
 
 class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?) : AndroidViewModel(application) {
 
@@ -31,6 +32,7 @@ class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?)
                 SygicEngine.Builder("sdk-test", key, application).setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {
                         Log.d("BrowseMapFragment", "onSdkInitialized()")
+                        OnlineManager.getInstance().enableOnlineMapStreaming(true)
                     }
 
                     override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {}
