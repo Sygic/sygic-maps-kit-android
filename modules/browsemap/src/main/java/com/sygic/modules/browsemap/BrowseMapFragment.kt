@@ -11,9 +11,10 @@ import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragment() {
 
     private lateinit var viewModel: BrowseMapFragmentViewModel

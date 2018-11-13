@@ -1,7 +1,7 @@
 package com.sygic.ui.view.zoomcontrols
 
 import android.content.Context
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.util.AttributeSet
 
 internal class ZoomControlsZoomOutButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
