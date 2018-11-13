@@ -33,11 +33,11 @@ dependencies {
     implementation project(':uikit-zoomcontrols')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "com.android.support:support-v4:${androidSupportVersion}"
-    implementation "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}"
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
-    api "android.arch.lifecycle:extensions:$lifecycleVersion"
-    kapt "android.arch.lifecycle:compiler:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
 
     api("com.sygic.sdk:maps-android:${sygicSdkVersion}@aar") {
         exclude group: 'com.google.android.gms'
