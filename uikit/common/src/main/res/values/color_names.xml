@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- /////////////////////////////////////////////////////////// -->
+    <!-- zdroj mien farieb: http://chir.ag/projects/name-that-color/ -->
+    <!-- /////////////////////////////////////////////////////////// -->
+
+    <!-- BASE COLORS FOR REFERENCING (for shades of transparency use color_shades.xml) -->
+
+
+    <!-- if your're adding a color into this file, there's a 99.9% chance you're doing something WRONG! -->
+    <!-- Please consult adding a color to this file with a designer first :) -->
+
+    <color name="transparent">@android:color/transparent</color>
+    <color name="white">@android:color/white</color>
+    <color name="black">@android:color/black</color>
+
+    <color name="school_bus_yellow">#ffd900</color>
+    <color name="web_orange">#ffa500</color>
+    <color name="limeade">#3abc00</color>
+    <color name="brick_red">#d6304c</color>
+    <color name="bittersweet">#ff656b</color>
+    <color name="crimson">#eb1a20</color>
+
+    <color name="zircon">#f5f8ff</color>
+    <color name="mystic">#E0E6EF</color>
+    <color name="botticelli">#CDD5E3</color>
+    <color name="slate_gray">#7a859a</color>
+    <color name="shuttle_gray">#5C6373</color>
+    <color name="charade">#2d3140</color>
+
+    <color name="malibu">#7DC8F7</color>
+    <color name="azure_radiance">#0080ff</color>
+    <!-- END BASE COLORS FOR REFERENCING -->
+
+</resources>
