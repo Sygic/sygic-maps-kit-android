@@ -11,7 +11,6 @@ import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
-import com.sygic.sdk.online.OnlineManager
 import android.arch.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 
@@ -45,6 +44,7 @@ class BrowseMapFragment : MapFragment() {
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
+        //ToDo
         viewModel = ViewModelProviders.of(this, BrowseMapFragmentViewModel.ViewModelFactory(requireActivity().application, attrs))
                 .get(BrowseMapFragmentViewModel::class.java)
     }
@@ -63,7 +63,6 @@ class BrowseMapFragment : MapFragment() {
         getMapAsync(object : OnMapInitListener {
             override fun onMapReady(mapView: MapView) {
                 Log.d("BrowseMapFragment", "onMapReady()")
-                OnlineManager.getInstance().enableOnlineMapStreaming(true)
                 /*if (cameraInitialLatitude != -1f && cameraInitialLongitude != -1f) {
                     mapView.cameraModel.position =
                             GeoCoordinates(cameraInitialLatitude.toDouble(), cameraInitialLongitude.toDouble())
