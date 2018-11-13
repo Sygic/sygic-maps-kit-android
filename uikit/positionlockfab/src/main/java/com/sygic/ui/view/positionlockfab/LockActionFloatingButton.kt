@@ -2,7 +2,7 @@ package com.sygic.ui.view.positionlockfab
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.design.widget.FloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import com.sygic.ui.common.getVectorDrawable
 

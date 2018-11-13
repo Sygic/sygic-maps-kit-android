@@ -20,11 +20,11 @@ import android.graphics.drawable.StateListDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.Shape
 import android.os.Build
-import android.support.annotation.CallSuper
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatImageButton
+import androidx.annotation.CallSuper
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.AppCompatImageButton
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
