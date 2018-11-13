@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/azure_radiance</color>
+    <color name="colorPrimaryDark">@color/malibu</color>
+    <color name="colorAccent">@color/limeade</color>
+</resources>
