@@ -19,7 +19,7 @@ class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?)
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        compassRotation.value = 45f //todo
+        compassRotation.value = 45f //todo: MS-4505
 
         attrs?.let {
             val typedArray = application.obtainStyledAttributes(it, R.styleable.BrowseMapFragment)
