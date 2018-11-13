@@ -37,8 +37,7 @@ dependencies {
     implementation project(':modules-browsemap')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "com.android.support:appcompat-v7:$androidSupportVersion"
-    implementation "com.android.support:design:$androidSupportVersion"
-    implementation "com.android.support:support-vector-drawable:$androidSupportVersion"
-    implementation "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}"
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 }
