@@ -1,6 +1,7 @@
-include ':app-sample', ':modules-browsemap', ':uikit-common', ':uikit-compass', ':uikit-positionlockfab', ':uikit-zoomcontrols'
+include ':app-sample', ':modules-common', ':modules-browsemap', ':uikit-common', ':uikit-compass', ':uikit-positionlockfab', ':uikit-zoomcontrols'
 
 project(':app-sample').projectDir = new File("app/sample")
+project(':modules-common').projectDir = new File("modules/common")
 project(':modules-browsemap').projectDir = new File("modules/browsemap")
 project(':uikit-common').projectDir = new File("uikit/common")
 project(':uikit-compass').projectDir = new File("uikit/compass")
