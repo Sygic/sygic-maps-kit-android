@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import android.util.AttributeSet
 import com.sygic.modules.browsemap.R
+import android.content.pm.PackageManager
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.online.OnlineManager
 
@@ -24,9 +25,10 @@ class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?)
             compassHideIfNorthUp.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_compassHideIfNorthUp, false)
             positionLockFabEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFabEnabled, false)
             zoomControlsEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControlsEnabled, false)
+            typedArray.recycle()
 
-            val key = typedArray.getString(R.styleable.BrowseMapFragment_sygic_secretKey)
-            key?.let {
+            //ToDO MS-4508
+            getApiKey()?.let { key ->
                 SygicEngine.Builder("sdk-test", key, application).setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {
                         OnlineManager.getInstance().enableOnlineMapStreaming(true)
@@ -34,8 +36,24 @@ class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?)
 
                     override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {}
                 }).init()
+            } ?: run {
+                //ToDO MS-4508
             }
-            typedArray.recycle()
+        }
+    }
+
+    //ToDO MS-4508
+    private fun getApiKey(): String? {
+        return try {
+            val applicationInfo = getApplication<Application>().packageManager.getApplicationInfo(
+                getApplication<Application>().packageName,
+                PackageManager.GET_META_DATA
+            )
+            applicationInfo.metaData.getString("com.sygic.ApiKey") //ToDO MS-4508
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
+        } catch (e: NullPointerException) {
+            null
         }
     }
 
