@@ -10,8 +10,8 @@ import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
-import com.sygic.modules.common.viewmodel.CompassViewModel
 import com.sygic.sdk.map.*
+import com.sygic.ui.viewmodel.compass.CompassViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragment() {
@@ -43,9 +43,8 @@ class BrowseMapFragment : MapFragment() {
             this, BrowseMapFragmentViewModel.ViewModelFactory(application, attrs)
         ).get(BrowseMapFragmentViewModel::class.java)
 
-        compassViewModel = ViewModelProviders.of(
-            this, CompassViewModel.ViewModelFactory(application, cameraDataModel)
-        ).get(CompassViewModel::class.java)
+        compassViewModel = ViewModelProviders.of(this,
+            CompassViewModel.ViewModelFactory(cameraDataModel)).get(CompassViewModel::class.java)
         lifecycle.addObserver(compassViewModel)
     }
 
