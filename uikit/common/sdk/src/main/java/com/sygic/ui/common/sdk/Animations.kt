@@ -1,4 +1,4 @@
-package com.sygic.modules.common.utils
+package com.sygic.ui.common.sdk
 
 import com.sygic.sdk.map.MapAnimation
 
