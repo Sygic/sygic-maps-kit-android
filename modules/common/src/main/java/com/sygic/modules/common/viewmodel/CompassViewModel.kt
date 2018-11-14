@@ -2,9 +2,11 @@ package com.sygic.modules.common.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.sygic.modules.common.utils.DEFAULT_ANIMATION
 import com.sygic.sdk.map.Camera
-import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.position.GeoCoordinates
+
+private const val NORTH_UP = 0f
 
 class CompassViewModel(
     application: Application,
@@ -26,10 +28,7 @@ class CompassViewModel(
     }
 
     fun onClick() {
-        cameraModel.setRotation(
-            0f,
-            MapAnimation(400, MapAnimation.InterpolationCurve.AccelerateDecelerate)
-        ) //todo: const
+        cameraModel.setRotation(NORTH_UP, DEFAULT_ANIMATION)
     }
 
     override fun onPositionChanged(geoCenter: GeoCoordinates, zoom: Float, rotation: Float, tilt: Float) {
