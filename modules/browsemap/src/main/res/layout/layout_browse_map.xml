@@ -15,6 +15,10 @@
             name="compassViewModel"
             type="com.sygic.ui.viewmodel.compass.CompassViewModel" />
 
+        <variable
+            name="zoomControlsViewModel"
+            type="com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,6 +58,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
             android:visibility="@{browseMapFragmentViewModel.zoomControlsEnabled ? View.VISIBLE : View.GONE}"
+            app:tiltType="@{zoomControlsViewModel.tiltType}"
+            app:interactionListener="@{zoomControlsViewModel}"
             app:layout_constraintBottom_toTopOf="@id/positionLockFab"
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
