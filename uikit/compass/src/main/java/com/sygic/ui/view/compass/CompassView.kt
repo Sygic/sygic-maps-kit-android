@@ -10,8 +10,6 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView
 
-import com.sygic.ui.common.*
-
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class CompassView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : FrameLayout(context, attrs, defStyle) {
 
@@ -42,7 +40,7 @@ class CompassView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     private fun generateImage(context: Context, @DrawableRes resourceId: Int): ImageView {
         val imageView = ImageView(context)
-        imageView.setImageDrawable(getVectorDrawable(resourceId))
+        imageView.setImageResource(resourceId)
         imageView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
         addView(imageView)
 
