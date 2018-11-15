@@ -12,9 +12,6 @@ import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
-import androidx.lifecycle.ViewModelProviders
-import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
-import com.sygic.sdk.map.*
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
