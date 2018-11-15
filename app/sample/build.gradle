@@ -22,12 +22,12 @@ android {
         }
     }
 
-    //todo: Gradle task for dataBinding
+    //todo: MS-4504
     dataBinding {
         enabled = true
     }
 
-    //todo: Gradle task for source and target compatibility
+    //todo: MS-4504
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
