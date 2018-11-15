@@ -3,56 +3,56 @@ package com.sygic.modules.browsemap
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
-import com.sygic.sdk.map.MapFragment
-import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
+import com.sygic.sdk.map.*
+import com.sygic.ui.viewmodel.compass.CompassViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragment() {
 
-    private lateinit var viewModel: BrowseMapFragmentViewModel
+    private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
+    private lateinit var compassViewModel: CompassViewModel
 
     var compassEnabled: Boolean
-        get() {
-            return viewModel.compassEnabled.value!!
-        }
-        set(value) {
-            viewModel.compassEnabled.value = value
-        }
+        get() { return browseMapFragmentViewModel.compassEnabled.value!! }
+        set(value) { browseMapFragmentViewModel.compassEnabled.value = value }
+
+    var compassHideIfNorthUp: Boolean
+        get() { return browseMapFragmentViewModel.compassHideIfNorthUp.value!! }
+        set(value) { browseMapFragmentViewModel.compassHideIfNorthUp.value = value }
 
     var positionLockFabEnabled: Boolean
-        get() {
-            return viewModel.positionLockFabEnabled.value!!
-        }
-        set(value) {
-            viewModel.positionLockFabEnabled.value = value
-        }
+        get() { return browseMapFragmentViewModel.positionLockFabEnabled.value!! }
+        set(value) { browseMapFragmentViewModel.positionLockFabEnabled.value = value }
 
     var zoomControlsEnabled: Boolean
-        get() {
-            return viewModel.zoomControlsEnabled.value!!
-        }
-        set(value) {
-            viewModel.zoomControlsEnabled.value = value
-        }
+        get() { return browseMapFragmentViewModel.zoomControlsEnabled.value!! }
+        set(value) { browseMapFragmentViewModel.zoomControlsEnabled.value = value }
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
         //todo: MS-4507
-        viewModel = ViewModelProviders.of(this, BrowseMapFragmentViewModel.ViewModelFactory(requireActivity().application, attrs))
-                .get(BrowseMapFragmentViewModel::class.java)
+        val application = requireActivity().application
+        browseMapFragmentViewModel = ViewModelProviders.of(
+            this, BrowseMapFragmentViewModel.ViewModelFactory(application, attrs)
+        ).get(BrowseMapFragmentViewModel::class.java)
+
+        compassViewModel = ViewModelProviders.of(this,
+            CompassViewModel.ViewModelFactory(cameraDataModel)).get(CompassViewModel::class.java)
+        lifecycle.addObserver(compassViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: LayoutBrowseMapBinding = LayoutBrowseMapBinding.inflate(inflater, container, false)
-        binding.viewModel = viewModel
+        binding.setLifecycleOwner(this)
+        binding.browseMapFragmentViewModel = browseMapFragmentViewModel
+        binding.compassViewModel = compassViewModel
         (binding.root as ViewGroup).addView(super.onCreateView(inflater, container, savedInstanceState), 0)
         return binding.root
     }
@@ -63,7 +63,6 @@ class BrowseMapFragment : MapFragment() {
         //todo: MS-4508
         getMapAsync(object : OnMapInitListener {
             override fun onMapReady(mapView: MapView) {
-                Log.d("BrowseMapFragment", "onMapReady()")
                 /*if (cameraInitialLatitude != -1f && cameraInitialLongitude != -1f) {
                     mapView.cameraModel.position =
                             GeoCoordinates(cameraInitialLatitude.toDouble(), cameraInitialLongitude.toDouble())
@@ -75,5 +74,11 @@ class BrowseMapFragment : MapFragment() {
 
             override fun onMapInitializationInterrupted() {}
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        lifecycle.removeObserver(compassViewModel)
     }
 }

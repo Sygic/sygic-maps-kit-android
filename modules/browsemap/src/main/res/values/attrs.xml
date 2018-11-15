@@ -4,6 +4,7 @@
     <declare-styleable name="BrowseMapFragment">
         <attr name="sygic_secretKey" format="string"/>
         <attr name="sygic_compassEnabled" format="boolean"/>
+        <attr name="sygic_compassHideIfNorthUp" format="boolean"/>
         <attr name="sygic_positionLockFabEnabled" format="boolean"/>
         <attr name="sygic_zoomControlsEnabled" format="boolean"/>
         <attr name="sygic_cameraInitialLatitude" format="float"/> <!--todo: MS-4502-->
