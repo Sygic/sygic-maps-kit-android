@@ -10,12 +10,6 @@ android {
         targetSdkVersion androidTargerSdkVersion
         versionCode 1
         versionName "1.0"
-
-        vectorDrawables.useSupportLibrary = true
-    }
-
-    dataBinding {
-        enabled = true
     }
 
     buildTypes {
@@ -28,12 +22,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-common')
-    implementation project(':uikit-compass-viewmodel')
-    implementation project(':uikit-positionlockfab') //todo
-    implementation project(':uikit-zoomcontrols') //todo
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+
+    api("com.sygic.sdk:maps-android:${sygicSdkVersion}@aar") {
+        exclude group: 'com.google.android.gms'
+        exclude group: 'com.android.support'
+        transitive = true
+    }
 }
