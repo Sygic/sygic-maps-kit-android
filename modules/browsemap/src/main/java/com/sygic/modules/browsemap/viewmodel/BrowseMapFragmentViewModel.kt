@@ -6,39 +6,39 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import android.util.AttributeSet
-import android.util.Log
 import com.sygic.modules.browsemap.R
+import com.sygic.modules.common.utils.getApiKey
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.online.OnlineManager
 
 class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?) : AndroidViewModel(application) {
 
     val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()
-    val compassRotation: MutableLiveData<Float> = MutableLiveData()
+    val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        compassRotation.value = 45f //todo
-
         attrs?.let {
             val typedArray = application.obtainStyledAttributes(it, R.styleable.BrowseMapFragment)
             compassEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_compassEnabled, false)
+            compassHideIfNorthUp.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_compassHideIfNorthUp, false)
             positionLockFabEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFabEnabled, false)
             zoomControlsEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControlsEnabled, false)
+            typedArray.recycle()
 
-            val key = typedArray.getString(R.styleable.BrowseMapFragment_sygic_secretKey)
-            key?.let {
+            //ToDO MS-4508
+            application.getApiKey()?.let { key ->
                 SygicEngine.Builder("sdk-test", key, application).setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {
-                        Log.d("BrowseMapFragment", "onSdkInitialized()")
                         OnlineManager.getInstance().enableOnlineMapStreaming(true)
                     }
 
                     override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {}
                 }).init()
+            } ?: run {
+                //ToDO MS-4508
             }
-            typedArray.recycle()
         }
     }
 

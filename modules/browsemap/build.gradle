@@ -30,16 +30,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':uikit-compass')
-    implementation project(':uikit-positionlockfab')
-    implementation project(':uikit-zoomcontrols')
+    implementation project(':modules-common')
+    implementation project(':uikit-compass-viewmodel')
+    implementation project(':uikit-positionlockfab') //todo
+    implementation project(':uikit-zoomcontrols') //todo
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
 
     // SDK
     if (!gradle.buildSdkFromSource()) {
