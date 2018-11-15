@@ -28,12 +28,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-common')
-    implementation project(':uikit-compass-viewmodel')
-    implementation project(':uikit-positionlockfab') //todo
-    implementation project(':uikit-zoomcontrols') //todo
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+
+    api("com.sygic.sdk:maps-android:${sygicSdkVersion}@aar") {
+        exclude group: 'com.google.android.gms'
+        exclude group: 'com.android.support'
+        transitive = true
+    }
 }
