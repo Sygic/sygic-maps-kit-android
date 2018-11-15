@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import android.util.AttributeSet
-import android.util.Log
 import com.sygic.modules.browsemap.R
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.online.OnlineManager
@@ -14,16 +13,15 @@ import com.sygic.sdk.online.OnlineManager
 class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?) : AndroidViewModel(application) {
 
     val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()
-    val compassRotation: MutableLiveData<Float> = MutableLiveData()
+    val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        compassRotation.value = 45f //todo: MS-4505
-
         attrs?.let {
             val typedArray = application.obtainStyledAttributes(it, R.styleable.BrowseMapFragment)
             compassEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_compassEnabled, false)
+            compassHideIfNorthUp.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_compassHideIfNorthUp, false)
             positionLockFabEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFabEnabled, false)
             zoomControlsEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControlsEnabled, false)
 
@@ -31,7 +29,6 @@ class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?)
             key?.let {
                 SygicEngine.Builder("sdk-test", key, application).setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {
-                        Log.d("BrowseMapFragment", "onSdkInitialized()")
                         OnlineManager.getInstance().enableOnlineMapStreaming(true)
                     }
 
