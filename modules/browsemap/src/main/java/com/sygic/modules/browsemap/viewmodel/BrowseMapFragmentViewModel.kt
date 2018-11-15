@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import android.util.AttributeSet
 import com.sygic.modules.browsemap.R
+import com.sygic.modules.common.utils.getApiKey
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.online.OnlineManager
 
@@ -24,9 +25,10 @@ class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?)
             compassHideIfNorthUp.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_compassHideIfNorthUp, false)
             positionLockFabEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFabEnabled, false)
             zoomControlsEnabled.value = typedArray.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControlsEnabled, false)
+            typedArray.recycle()
 
-            val key = typedArray.getString(R.styleable.BrowseMapFragment_sygic_secretKey)
-            key?.let {
+            //ToDO MS-4508
+            application.getApiKey()?.let { key ->
                 SygicEngine.Builder("sdk-test", key, application).setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {
                         OnlineManager.getInstance().enableOnlineMapStreaming(true)
@@ -34,8 +36,9 @@ class BrowseMapFragmentViewModel(application: Application, attrs: AttributeSet?)
 
                     override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {}
                 }).init()
+            } ?: run {
+                //ToDO MS-4508
             }
-            typedArray.recycle()
         }
     }
 

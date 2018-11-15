@@ -21,7 +21,6 @@
         app:sygic_cameraInitialZoom="16"
         app:sygic_compassEnabled="true"
         app:sygic_compassHideIfNorthUp="false"
-        app:sygic_secretKey="rPMNrPw6PKiZiWmc17gHu7IVzOnjdAkqGUwqXPr+IG69ExNDMJZ/M7NfSg7itsuvRbcJlcTp6vX6R/bvF4MEWw=="
         app:sygic_positionLockFabEnabled="true"
         app:sygic_zoomControlsEnabled="true" />
 
