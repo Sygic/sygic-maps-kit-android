@@ -4,14 +4,12 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.Outline
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
@@ -33,8 +31,6 @@ import android.view.ViewOutlineProvider
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 
-import com.sygic.ui.common.*
-
 internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : AppCompatImageButton(context, attrs, defStyleAttr) {
 
@@ -52,7 +48,6 @@ internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(context
     private val showAnimation: Animation
     private val hideAnimation: Animation
 
-    private var buttonIcon: Drawable? = null
     private var buttonBackgroundDrawable: Drawable? = null
 
     var interactionListener: ZoomControlsMenu.InteractionListener? = null
@@ -79,7 +74,7 @@ internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(context
         showAnimation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_up)
         hideAnimation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_down)
 
-        setIconImage(iconDrawableRes())
+        setImageResource(iconDrawableRes())
         isClickable = true
     }
 
@@ -219,23 +214,15 @@ internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(context
         }
     }
 
-    protected fun setIconImage(@DrawableRes iconDrawableId: Int) {
-        setImageDrawable(this.getVectorDrawableWithTint(iconDrawableId, iconColor))
+    override fun setImageResource(@DrawableRes resId: Int) {
+        val drawable = resources.getDrawable(resId, null)
+        drawable.setTint(iconColor)
+        setImageDrawable(drawable)
     }
 
     override fun setImageDrawable(drawable: Drawable?) {
-        if (buttonIcon !== drawable) {
-            buttonIcon = drawable
-            updateBackground()
-        }
-    }
-
-    override fun getDrawable(): Drawable? {
-        if (buttonIcon == null) {
-            return ColorDrawable(Color.TRANSPARENT)
-        }
-
-        return buttonIcon
+        super.setImageDrawable(drawable)
+        updateBackground()
     }
 
     fun show(animate: Boolean) {
