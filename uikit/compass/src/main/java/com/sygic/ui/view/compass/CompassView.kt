@@ -21,6 +21,7 @@ class CompassView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     private val alphaSetter = AlphaSetter()
 
     private var compassRotation: Float
+    var hideCompassIfNorthUpAllowed: Boolean = false
 
     init {
         val typedArray = resources.obtainAttributes(attrs, R.styleable.CompassView)
@@ -74,6 +75,10 @@ class CompassView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     private fun hideCompassIfNorthUp(animationDuration: Long) {
+        if (!hideCompassIfNorthUpAllowed) {
+            return
+        }
+
         if (!isNorthUp(compassRotation)) {
             animate().alpha(1f).duration = animationDuration
         } else {
