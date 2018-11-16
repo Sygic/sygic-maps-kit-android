@@ -25,7 +25,9 @@ internal class ZoomControlsMenuButton @JvmOverloads constructor(context: Context
     }
 
     fun onMenuAction(open: Boolean) {
-        val drawableRes = if (open) R.drawable.ic_cross else R.drawable.ic_plus_minus
-        setImageDrawableWithFade(getVectorDrawableWithTint(drawableRes, iconColor), ANIMATION_DURATION)
+        context.getDrawable(if (open) R.drawable.ic_cross else R.drawable.ic_plus_minus)?.let {
+            it.setTint(iconColor)
+            setImageDrawableWithFade(it, ANIMATION_DURATION)
+        }
     }
 }
