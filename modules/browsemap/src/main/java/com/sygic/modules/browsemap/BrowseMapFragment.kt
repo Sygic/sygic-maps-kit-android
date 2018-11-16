@@ -6,11 +6,12 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
-import com.sygic.sdk.map.listeners.OnMapInitListener
 import androidx.lifecycle.ViewModelProviders
+import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
-import com.sygic.sdk.map.*
+import com.sygic.sdk.map.MapFragment
+import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -53,8 +54,11 @@ class BrowseMapFragment : MapFragment() {
         binding.setLifecycleOwner(this)
         binding.browseMapFragmentViewModel = browseMapFragmentViewModel
         binding.compassViewModel = compassViewModel
-        (binding.root as ViewGroup).addView(super.onCreateView(inflater, container, savedInstanceState), 0)
-        return binding.root
+        val root = binding.root as ViewGroup
+        super.onCreateView(inflater, root, savedInstanceState)?.let {
+            root.addView(it, 0)
+        }
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

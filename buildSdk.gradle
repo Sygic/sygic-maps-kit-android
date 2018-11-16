@@ -1,0 +1,59 @@
+gradle.ext.buildSdkFromSource = {
+    Properties properties = new Properties()
+    def localProperties = file('local.properties')
+    if (!localProperties.exists())
+        return false
+
+    properties.load(localProperties.newDataInputStream())
+    return properties.getProperty('sygic.sdk.build', "false").toBoolean()
+}
+
+gradle.ext.resolveFlavors = { config ->
+    if (gradle.buildSdkFromSource()) config.missingDimensionStrategy 'build', 'full'
+}
+
+gradle.ext.getSdkDir = {
+    Properties properties = new Properties()
+    def localProperties = file('local.properties')
+    properties.load(localProperties.newDataInputStream())
+
+    def sdkPath = properties.getProperty('sygic.sdk.dir', null)
+    if (sdkPath == null)
+        throw new GradleException("'sygic.sdk.dir' not defined in local.properties")
+
+    def sdkDir = file(sdkPath)
+    if (!sdkDir.exists())
+        throw new GradleException("'sygic.sdk.dir' has path '${sdkDir.getAbsolutePath()}', but it does not exist")
+
+    def androidPath = new File(sdkDir, '/Interface/Source/Android/SdkProject/sdk')
+    if (!androidPath.exists())
+        throw new GradleException("path to android interface '${androidPath.getAbsolutePath()}' does not exist")
+
+    return androidPath
+}
+
+gradle.ext.getNdkUnstackCmd = {
+    Properties properties = new Properties()
+    def localProperties = file('local.properties')
+    if (!localProperties.exists())
+        return
+
+    properties.load(localProperties.newDataInputStream())
+    def sdkDir = file(properties.getProperty('sdk.dir', null))
+    def ndkDir = file(properties.getProperty('ndk.dir', null))
+
+    if (sdkDir == null)
+        throw new GradleException("'sdk.dir' not defined in local.properties")
+
+    if (ndkDir == null)
+        throw new GradleException("'ndk.dir' not defined in local.properties")
+
+    def adb = new File(sdkDir, 'platform-tools/adb')
+    def ndkStack = new File(ndkDir, 'ndk-stack')
+    def sygicSdkPath = gradle.getSdkDir()
+    def debugSymbolsPath = new File(sygicSdkPath, 'build/intermediates/cmake/production/debug/obj/<ABI>')
+
+    def command = "${adb.absolutePath} logcat | ${ndkStack.absolutePath} -sym ${debugSymbolsPath.absolutePath}"
+
+    return command
+}
