@@ -12,6 +12,8 @@ buildscript {
         appCompatVersion = '1.0.2'
         materialVersion = '1.0.0'
         constraintLayoutVersion = '1.1.3'
+        playServicesBaseVersion = '16.0.1'
+        playServicesLocationVersion = '16.0.0'
         sygicSdkVersion = '3.3.1'
     }
     repositories {

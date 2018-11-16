@@ -9,15 +9,19 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
-import com.sygic.sdk.map.MapFragment
+import com.sygic.modules.common.RequesterWrapperFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
+import com.sygic.ui.common.sdk.location.LocationManager
+import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragment() {
+class BrowseMapFragment : RequesterWrapperFragment() {
+
+    private lateinit var locationManager: LocationManager
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
@@ -42,6 +46,10 @@ class BrowseMapFragment : MapFragment() {
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
+
+        //todo: Dagger
+        locationManager = LocationManagerImpl(this)
+
         //todo: MS-4507
         val application = requireActivity().application
         browseMapFragmentViewModel = ViewModelProviders.of(
@@ -53,7 +61,7 @@ class BrowseMapFragment : MapFragment() {
         lifecycle.addObserver(compassViewModel)
 
         positionLockFabViewModel = ViewModelProviders.of(this,
-            PositionLockFabViewModel.ViewModelFactory(cameraDataModel)).get(PositionLockFabViewModel::class.java)
+            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager)).get(PositionLockFabViewModel::class.java)
         lifecycle.addObserver(positionLockFabViewModel)
 
         zoomControlsViewModel = ViewModelProviders.of(this,

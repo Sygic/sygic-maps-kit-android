@@ -1,0 +1,104 @@
+package com.sygic.modules.common
+
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.content.IntentSender
+import android.provider.Settings
+import android.util.Log
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.sygic.sdk.map.MapFragment
+import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
+import com.sygic.ui.common.sdk.location.LocationManager
+import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
+
+open class RequesterWrapperFragment : MapFragment(), LocationManager.LocationRequester {
+
+    private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
+
+    override fun requestToEnableGps(locationRequesterCallback: LocationManager.LocationRequesterCallback) {
+        this.locationRequesterCallback = locationRequesterCallback
+        if (isGooglePlayServicesAvailable()) {
+            createGoogleApiLocationRequest()
+        } else {
+            showNoGoogleApiDialog()
+        }
+    }
+
+    private fun isGooglePlayServicesAvailable(): Boolean {
+        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
+    }
+
+    private fun createGoogleApiLocationRequest() {
+        val locationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        val locationSettingsRequestBuilder = LocationSettingsRequest.Builder()
+            .setAlwaysShow(true)
+            .addLocationRequest(locationRequest)
+
+        val responseTask = LocationServices.getSettingsClient(requireActivity())
+            .checkLocationSettings(locationSettingsRequestBuilder.build())
+        responseTask.addOnCompleteListener(requireActivity()) { task ->
+            try {
+                task.getResult(ApiException::class.java)
+            } catch (exception: ApiException) {
+                when (exception.statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
+                        startIntentSenderForResult(
+                            (exception as ResolvableApiException).resolution.intentSender,
+                            GOOGLE_API_CLIENT_REQUEST_CODE,
+                            null,
+                            0,
+                            0,
+                            0,
+                            null
+                        )
+                    } catch (ignored: IntentSender.SendIntentException) {
+                        Log.e("RequesterWrapper", "SendIntentException")
+                    } catch (ignored: ClassCastException) {
+                        Log.e("RequesterWrapper", "ClassCastException")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showNoGoogleApiDialog() {
+        AlertDialog.Builder(context)
+            .setTitle(R.string.enable_gps_dialog_title)
+            .setMessage(R.string.enable_gps_dialog_text)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(
+                R.string.settings
+            ) { _, _ ->
+                startActivityForResult(
+                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
+                    SETTING_ACTIVITY_REQUEST_CODE
+                )
+            }
+            .show()
+    }
+
+    override fun isProviderEnabled(provider: String): Boolean {
+        return context?.let {
+            (it.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager).isProviderEnabled(
+                provider
+            )
+        } ?: false
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        locationRequesterCallback?.onActivityResult(requestCode, resultCode)
+        locationRequesterCallback = null
+    }
+}
