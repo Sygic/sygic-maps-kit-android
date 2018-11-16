@@ -216,8 +216,8 @@ internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(context
 
     override fun setImageResource(@DrawableRes resId: Int) {
         context.getDrawable(resId)?.let {
-            drawable.setTint(iconColor)
-            setImageDrawable(drawable)
+            it.setTint(iconColor)
+            setImageDrawable(it)
         }
     }
 
