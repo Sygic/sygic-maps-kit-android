@@ -1,17 +1,11 @@
 package com.sygic.ui.view.positionlockfab
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
-import com.sygic.ui.common.getVectorDrawable
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class LockActionFloatingButton : FloatingActionButton {
-
-    private val lockedDrawable: Drawable = getVectorDrawable(R.drawable.ic_map_lock_full)
-    private val unlockedDrawable: Drawable = getVectorDrawable(R.drawable.ic_map_lock_empty)
-    private val lockedCompassDrawable: Drawable = getVectorDrawable(R.drawable.ic_map_lock_rotate)
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -31,9 +25,9 @@ class LockActionFloatingButton : FloatingActionButton {
      */
     fun setState(@LockState state: Int) {
         when (state) {
-            LockState.UNLOCKED -> setImageDrawable(unlockedDrawable)
-            LockState.LOCKED -> setImageDrawable(lockedDrawable)
-            LockState.LOCKED_AUTOROTATE -> setImageDrawable(lockedCompassDrawable)
+            LockState.UNLOCKED -> setImageResource(R.drawable.ic_map_lock_empty)
+            LockState.LOCKED -> setImageResource(R.drawable.ic_map_lock_full)
+            LockState.LOCKED_AUTOROTATE -> setImageResource(R.drawable.ic_map_lock_rotate)
         }
     }
 }

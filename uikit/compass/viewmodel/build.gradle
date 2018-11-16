@@ -11,7 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        vectorDrawables.useSupportLibrary = true
+        gradle.resolveFlavors(it)
     }
 
     buildTypes {
@@ -30,10 +30,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-
-    api("com.sygic.sdk:maps-android:${sygicSdkVersion}@aar") {
-        exclude group: 'com.google.android.gms'
-        exclude group: 'com.android.support'
-        transitive = true
-    }
 }
