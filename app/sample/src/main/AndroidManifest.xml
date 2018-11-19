@@ -25,7 +25,7 @@
 
         <meta-data
             android:name="com.sygic.ApiKey"
-            android:value="rPMNrPw6PKiZiWmc17gHu7IVzOnjdAkqGUwqXPr+IG69ExNDMJZ/M7NfSg7itsuvRbcJlcTp6vX6R/bvF4MEWw==" />
+            android:value="" />
 
     </application>
 
