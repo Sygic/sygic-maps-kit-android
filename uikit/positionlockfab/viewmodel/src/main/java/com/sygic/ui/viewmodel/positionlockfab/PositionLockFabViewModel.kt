@@ -35,7 +35,7 @@ class PositionLockFabViewModel(
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
         if (currentState.value == LockState.LOCKED) {
-            PositionManager.getInstance().startPositionUpdating() //ToDo:
+            PositionManager.getInstance().startPositionUpdating() //ToDo: MS-4555
         }
     }
 
@@ -87,7 +87,7 @@ class PositionLockFabViewModel(
     }
 
     private fun setLockedMode() {
-        PositionManager.getInstance().startPositionUpdating() //ToDo:
+        PositionManager.getInstance().startPositionUpdating() //ToDo: MS-4555
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Free
     }
@@ -133,7 +133,7 @@ class PositionLockFabViewModel(
 
     override fun onStop(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
-        PositionManager.getInstance().stopPositionUpdating() //ToDo:
+        PositionManager.getInstance().stopPositionUpdating() //ToDo: MS-4555
     }
 
     class ViewModelFactory(
