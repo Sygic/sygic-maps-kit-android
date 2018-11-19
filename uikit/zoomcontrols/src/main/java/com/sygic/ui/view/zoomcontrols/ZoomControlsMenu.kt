@@ -64,11 +64,11 @@ class ZoomControlsMenu : ViewGroup, ZoomControlsMenuButton.MenuCallback {
         return zoomControlsMapViewModeButton
     }
 
-    fun cameraProjectionChanged(@TiltType tiltType: Int) {
+    fun setTiltType(@TiltType tiltType: Int) {
         zoomControlsMapViewModeButton.cameraProjectionChanged(tiltType)
     }
 
-    fun setInteractionListener(interactionListener: InteractionListener) {
+    fun setInteractionListener(interactionListener: InteractionListener?) {
         for (i in 0 until childCount) {
             (getChildAt(i) as ZoomControlsBaseButton).interactionListener = interactionListener
         }

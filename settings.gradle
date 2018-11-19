@@ -1,7 +1,7 @@
 apply from: 'buildSdk.gradle'
 
 include ':app-sample', ':modules-common', ':modules-browsemap', ':uikit-common', ':uikit-common-sdk', ':uikit-compass', ':uikit-compass-viewmodel',
-        ':uikit-positionlockfab', ':uikit-zoomcontrols'
+        ':uikit-positionlockfab', ':uikit-zoomcontrols', ':uikit-zoomcontrols-viewmodel'
 
 project(':app-sample').projectDir = new File("app/sample")
 project(':modules-common').projectDir = new File("modules/common")
@@ -12,6 +12,7 @@ project(':uikit-compass').projectDir = new File("uikit/compass")
 project(':uikit-compass-viewmodel').projectDir = new File("uikit/compass/viewmodel")
 project(':uikit-positionlockfab').projectDir = new File("uikit/positionlockfab")
 project(':uikit-zoomcontrols').projectDir = new File("uikit/zoomcontrols")
+project(':uikit-zoomcontrols-viewmodel').projectDir = new File("uikit/zoomcontrols/viewmodel")
 
 if (gradle.buildSdkFromSource()) {
     include ':sdk'

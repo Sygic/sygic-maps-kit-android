@@ -13,12 +13,14 @@ import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.ui.viewmodel.compass.CompassViewModel
+import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragment() {
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
+    private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
     var compassEnabled: Boolean
         get() { return browseMapFragmentViewModel.compassEnabled.value!! }
@@ -47,6 +49,10 @@ class BrowseMapFragment : MapFragment() {
         compassViewModel = ViewModelProviders.of(this,
             CompassViewModel.ViewModelFactory(cameraDataModel)).get(CompassViewModel::class.java)
         lifecycle.addObserver(compassViewModel)
+
+        zoomControlsViewModel = ViewModelProviders.of(this,
+            ZoomControlsViewModel.ViewModelFactory(cameraDataModel)).get(ZoomControlsViewModel::class.java)
+        lifecycle.addObserver(zoomControlsViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -54,6 +60,7 @@ class BrowseMapFragment : MapFragment() {
         binding.setLifecycleOwner(this)
         binding.browseMapFragmentViewModel = browseMapFragmentViewModel
         binding.compassViewModel = compassViewModel
+        binding.zoomControlsViewModel = zoomControlsViewModel
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {
             root.addView(it, 0)
@@ -84,5 +91,6 @@ class BrowseMapFragment : MapFragment() {
         super.onDestroy()
 
         lifecycle.removeObserver(compassViewModel)
+        lifecycle.removeObserver(zoomControlsViewModel)
     }
 }
