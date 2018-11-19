@@ -31,6 +31,7 @@ dependencies {
     if (!gradle.buildSdkFromSource()) {
         // use aar from maven
         api("com.sygic.sdk:maps-android:${sygicSdkVersion}@aar") {
+            exclude group: 'com.google.android.gms'
             exclude group: 'com.android.support'
             transitive = true
         }
