@@ -5,9 +5,7 @@ import android.view.View
 import androidx.lifecycle.*
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.map.Camera
-import com.sygic.sdk.map.MapAnimation
-import com.sygic.sdk.map.MapCenter
-import com.sygic.sdk.map.MapCenterSettings
+import com.sygic.sdk.position.PositionManager
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
 import com.sygic.ui.common.sdk.location.EnableGpsResult
 import com.sygic.ui.common.sdk.location.LocationManager
@@ -36,6 +34,9 @@ class PositionLockFabViewModel(
 
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
+        if (currentState.value == LockState.LOCKED) {
+            PositionManager.getInstance().startPositionUpdating() //ToDo:
+        }
     }
 
     override fun onRotationModeChanged(@Camera.RotationMode mode: Int) {
@@ -86,15 +87,14 @@ class PositionLockFabViewModel(
     }
 
     private fun setLockedMode() {
+        PositionManager.getInstance().startPositionUpdating() //ToDo:
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Free
-        cameraModel.mapCenterSettings = MapCenterSettings(MapCenter(0.5f, 0.3f), MapCenter(0.5f, 0.3f), MapAnimation.NONE, MapAnimation.NONE) //todo
     }
 
     private fun setAutoRotateMode() {
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Attitude
-        cameraModel.mapCenterSettings = MapCenterSettings(MapCenter(0.5f, 0.3f), MapCenter(0.5f, 0.3f), MapAnimation.NONE, MapAnimation.NONE) //todo
     }
 
     private fun setZoom(zoomLevel: Float) {
@@ -133,6 +133,7 @@ class PositionLockFabViewModel(
 
     override fun onStop(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
+        PositionManager.getInstance().stopPositionUpdating() //ToDo:
     }
 
     class ViewModelFactory(
