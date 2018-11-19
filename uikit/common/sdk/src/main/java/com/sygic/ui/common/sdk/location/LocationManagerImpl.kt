@@ -7,12 +7,9 @@ import java.lang.ref.WeakReference
 class LocationManagerImpl(locationRequester: LocationManager.LocationRequester) : LocationManager {
 
     private var locationRequesterWeakReference: WeakReference<LocationManager.LocationRequester> = WeakReference(locationRequester)
-    private var enableGpsCallback: LocationManager.EnableGpsCallback? = null
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 
     override fun requestToEnableGps(enableGpsCallback: LocationManager.EnableGpsCallback, forceDialog: Boolean) {
-        this.enableGpsCallback = enableGpsCallback
-
         locationRequesterWeakReference.get()?.let {
             if (!wasNoGPSDialogAlreadyShown || forceDialog) {
                 it.requestToEnableGps(object : LocationManager.LocationRequesterCallback {

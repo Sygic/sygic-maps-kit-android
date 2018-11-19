@@ -1,31 +1,37 @@
 package com.sygic.ui.viewmodel.positionlockfab
 
+import android.Manifest
 import android.view.View
 import androidx.lifecycle.*
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.map.Camera
+import com.sygic.sdk.map.MapAnimation
+import com.sygic.sdk.map.MapCenter
+import com.sygic.sdk.map.MapCenterSettings
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
 import com.sygic.ui.common.sdk.location.EnableGpsResult
 import com.sygic.ui.common.sdk.location.LocationManager
+import com.sygic.ui.common.sdk.permission.PermissionsManager
 
 private const val NORTH_UP = 0f
 
 private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_MAP = 17f
 private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR = 16f
 
-class PositionLockFabViewModel(private val cameraModel: Camera.CameraModel,
-                               private val locationManager: LocationManager
+class PositionLockFabViewModel(
+    private val cameraModel: Camera.CameraModel,
+    private val locationManager: LocationManager,
+    private val permissionsManager: PermissionsManager
 ) :
     ViewModel(),
     Camera.ModeChangedListener,
     DefaultLifecycleObserver {
 
     @LockState
-    val state: MutableLiveData<Int> = MutableLiveData()
+    val currentState: MutableLiveData<Int> = MutableLiveData()
 
     init {
-        SygicEngine.openGpsConnection() //todo
-        state.value = LockState.UNLOCKED
+        currentState.value = LockState.UNLOCKED
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -53,7 +59,7 @@ class PositionLockFabViewModel(private val cameraModel: Camera.CameraModel,
             return
         }
 
-        when (state.value) {
+        when (currentState.value) {
             LockState.UNLOCKED -> {
                 setState(LockState.LOCKED)
                 setLockedMode()
@@ -74,19 +80,21 @@ class PositionLockFabViewModel(private val cameraModel: Camera.CameraModel,
     }
 
     private fun setState(@LockState state: Int) {
-        if (state != this.state.value) {
-            this.state.value = state
+        if (state != this.currentState.value) {
+            this.currentState.value = state
         }
     }
 
     private fun setLockedMode() {
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Free
+        cameraModel.mapCenterSettings = MapCenterSettings(MapCenter(0.5f, 0.3f), MapCenter(0.5f, 0.3f), MapAnimation.NONE, MapAnimation.NONE) //todo
     }
 
     private fun setAutoRotateMode() {
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Attitude
+        cameraModel.mapCenterSettings = MapCenterSettings(MapCenter(0.5f, 0.3f), MapCenter(0.5f, 0.3f), MapAnimation.NONE, MapAnimation.NONE) //todo
     }
 
     private fun setZoom(zoomLevel: Float) {
@@ -94,29 +102,26 @@ class PositionLockFabViewModel(private val cameraModel: Camera.CameraModel,
     }
 
     private fun canSetNextLockState(view: View): Boolean {
-        /*if (!permissionsManager.hasPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            requestLocationPermission(object : PermissionsManager.PermissionCallback() {
-                fun onPermissionGranted(permission: String) {
-                    gpsConnectionSignal.onNext(RxUtils.Notification.INSTANCE)
+        if (!permissionsManager.hasPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            permissionsManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, object : PermissionsManager.PermissionCallback {
+                override fun onPermissionGranted(permission: String) {
+                    SygicEngine.openGpsConnection()
                     onClick(view)
                 }
 
-                fun onPermissionDenied(deniedPermission: String) {
-                    permissionDeniedNotificationSignal.onNext(
-                        Components.PermissionDeniedSnackBarComponent(deniedPermission,
-                            { requestLocationPermission(this) })
-                    )
+                override fun onPermissionDenied(permission: String) {
+                    /* Currently do nothing */
                 }
             })
             return false
-        }*/
+        }
 
         if (!locationManager.isGpsEnabled()) {
             locationManager.requestToEnableGps(object : LocationManager.EnableGpsCallback {
                 override fun onResult(@EnableGpsResult result: Int) {
                     when (result) {
                         EnableGpsResult.ENABLED -> onClick(view)
-                        EnableGpsResult.DENIED -> { /*Do nothing*/ }
+                        EnableGpsResult.DENIED -> { /* Currently do nothing */ }
                     }
                 }
             })
@@ -126,33 +131,20 @@ class PositionLockFabViewModel(private val cameraModel: Camera.CameraModel,
         return true
     }
 
-    /*private fun requestLocationPermission(callback: PermissionsManager.PermissionCallback) {
-        permissionsManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, callback)
-    }
-
-    fun gpsConnection(): Observable<RxUtils.Notification> {
-        return gpsConnectionSignal
-    }
-
-    fun enableGpsSnackbar(): Observable<Components.EnableGpsSnackBarComponent> {
-        return enableGpsSnackbarSignal
-    }
-
-    fun permissionDeniedNotification(): Observable<Components.PermissionDeniedSnackBarComponent> {
-        return permissionDeniedNotificationSignal
-    }*/
-
     override fun onStop(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
     }
 
-    class ViewModelFactory(private val cameraModel: Camera.CameraModel,
-                           private val locationManager: LocationManager) :
+    class ViewModelFactory(
+        private val cameraModel: Camera.CameraModel,
+        private val locationManager: LocationManager,
+        private val permissionsManager: PermissionsManager
+    ) :
         ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return PositionLockFabViewModel(cameraModel, locationManager) as T
+            return PositionLockFabViewModel(cameraModel, locationManager, permissionsManager) as T
         }
     }
 }

@@ -14,6 +14,8 @@ import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.LocationManagerImpl
+import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
@@ -22,6 +24,7 @@ import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 class BrowseMapFragment : RequesterWrapperFragment() {
 
     private lateinit var locationManager: LocationManager
+    private lateinit var permissionManager: PermissionsManager
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
@@ -49,19 +52,21 @@ class BrowseMapFragment : RequesterWrapperFragment() {
 
         //todo: Dagger
         locationManager = LocationManagerImpl(this)
+        permissionManager = PermissionsManagerImpl(this)
 
         //todo: MS-4507
         val application = requireActivity().application
         browseMapFragmentViewModel = ViewModelProviders.of(
             this, BrowseMapFragmentViewModel.ViewModelFactory(application, attrs)
         ).get(BrowseMapFragmentViewModel::class.java)
+        lifecycle.addObserver(browseMapFragmentViewModel)
 
         compassViewModel = ViewModelProviders.of(this,
             CompassViewModel.ViewModelFactory(cameraDataModel)).get(CompassViewModel::class.java)
         lifecycle.addObserver(compassViewModel)
 
         positionLockFabViewModel = ViewModelProviders.of(this,
-            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager)).get(PositionLockFabViewModel::class.java)
+            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager)).get(PositionLockFabViewModel::class.java)
         lifecycle.addObserver(positionLockFabViewModel)
 
         zoomControlsViewModel = ViewModelProviders.of(this,
@@ -105,6 +110,7 @@ class BrowseMapFragment : RequesterWrapperFragment() {
     override fun onDestroy() {
         super.onDestroy()
 
+        lifecycle.removeObserver(browseMapFragmentViewModel)
         lifecycle.removeObserver(compassViewModel)
         lifecycle.removeObserver(positionLockFabViewModel)
         lifecycle.removeObserver(zoomControlsViewModel)

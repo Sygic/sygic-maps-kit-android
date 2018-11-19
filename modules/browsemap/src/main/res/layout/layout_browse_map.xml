@@ -54,7 +54,7 @@
             android:visibility="@{browseMapFragmentViewModel.positionLockFabEnabled ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:state="@{positionLockFabViewModel.state}"
+            app:state="@{positionLockFabViewModel.currentState}"
             tools:visibility="visible" />
 
         <com.sygic.ui.view.zoomcontrols.ZoomControlsMenu

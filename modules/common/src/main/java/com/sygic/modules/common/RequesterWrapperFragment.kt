@@ -4,8 +4,11 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
@@ -18,10 +21,28 @@ import com.sygic.sdk.map.MapFragment
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
+import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
+import com.sygic.ui.common.sdk.permission.PermissionsManager
 
-open class RequesterWrapperFragment : MapFragment(), LocationManager.LocationRequester {
+open class RequesterWrapperFragment : MapFragment(), LocationManager.LocationRequester,
+    PermissionsManager.PermissionsRequester {
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
+    private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
+
+    override fun hasPermissionGranted(permission: String): Boolean =
+        ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
+
+    override fun shouldShowRationaleForPermission(permission: String): Boolean =
+        ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permission)
+
+    override fun requestPermissions(
+        permissions: Array<String>,
+        permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback
+    ) {
+        this.permissionsRequesterCallback = permissionsRequesterCallback
+        requestPermissions(permissions, PERMISSIONS_REQUEST_CODE)
+    }
 
     override fun requestToEnableGps(locationRequesterCallback: LocationManager.LocationRequesterCallback) {
         this.locationRequesterCallback = locationRequesterCallback
@@ -100,5 +121,11 @@ open class RequesterWrapperFragment : MapFragment(), LocationManager.LocationReq
 
         locationRequesterCallback?.onActivityResult(requestCode, resultCode)
         locationRequesterCallback = null
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        permissionsRequesterCallback?.onRequestPermissionsResult(permissions, grantResults)
     }
 }
