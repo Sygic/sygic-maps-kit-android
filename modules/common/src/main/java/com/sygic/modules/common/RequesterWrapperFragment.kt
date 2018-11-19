@@ -7,7 +7,6 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -30,11 +29,17 @@ open class RequesterWrapperFragment : MapFragment(), LocationManager.LocationReq
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
-    override fun hasPermissionGranted(permission: String): Boolean =
-        ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
+    override fun hasPermissionGranted(permission: String): Boolean {
+        return context?.let {
+            ContextCompat.checkSelfPermission(it, permission) == PackageManager.PERMISSION_GRANTED
+        } ?: false
+    }
 
-    override fun shouldShowRationaleForPermission(permission: String): Boolean =
-        ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permission)
+    override fun shouldShowRationaleForPermission(permission: String): Boolean {
+        return context?.let {
+            shouldShowRequestPermissionRationale(permission)
+        } ?: false
+    }
 
     override fun requestPermissions(
         permissions: Array<String>,
@@ -54,38 +59,43 @@ open class RequesterWrapperFragment : MapFragment(), LocationManager.LocationReq
     }
 
     private fun isGooglePlayServicesAvailable(): Boolean {
-        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
+        return context?.let {
+            GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
+        } ?: false
     }
 
     private fun createGoogleApiLocationRequest() {
-        val locationRequest = LocationRequest.create()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        activity?.let {
+            val locationRequest = LocationRequest.create()
+            locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
-        val locationSettingsRequestBuilder = LocationSettingsRequest.Builder()
-            .setAlwaysShow(true)
-            .addLocationRequest(locationRequest)
+            val locationSettingsRequestBuilder = LocationSettingsRequest.Builder()
+                .setAlwaysShow(true)
+                .addLocationRequest(locationRequest)
 
-        val responseTask = LocationServices.getSettingsClient(requireActivity())
-            .checkLocationSettings(locationSettingsRequestBuilder.build())
-        responseTask.addOnCompleteListener(requireActivity()) { task ->
-            try {
-                task.getResult(ApiException::class.java)
-            } catch (exception: ApiException) {
-                when (exception.statusCode) {
-                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
-                        startIntentSenderForResult(
-                            (exception as ResolvableApiException).resolution.intentSender,
-                            GOOGLE_API_CLIENT_REQUEST_CODE,
-                            null,
-                            0,
-                            0,
-                            0,
-                            null
-                        )
-                    } catch (ignored: IntentSender.SendIntentException) {
-                        Log.e("RequesterWrapper", "SendIntentException")
-                    } catch (ignored: ClassCastException) {
-                        Log.e("RequesterWrapper", "ClassCastException")
+            val responseTask = LocationServices.getSettingsClient(it)
+                .checkLocationSettings(locationSettingsRequestBuilder.build())
+            responseTask.addOnCompleteListener(it) { task ->
+                try {
+                    task.getResult(ApiException::class.java)
+                } catch (exception: ApiException) {
+                    when (exception.statusCode) {
+                        LocationSettingsStatusCodes.RESOLUTION_REQUIRED ->
+                            try {
+                                startIntentSenderForResult(
+                                    (exception as ResolvableApiException).resolution.intentSender,
+                                    GOOGLE_API_CLIENT_REQUEST_CODE,
+                                    null,
+                                    0,
+                                    0,
+                                    0,
+                                    null
+                                )
+                            } catch (ignored: IntentSender.SendIntentException) {
+                                Log.e("RequesterWrapper", "SendIntentException")
+                            } catch (ignored: ClassCastException) {
+                                Log.e("RequesterWrapper", "ClassCastException")
+                            }
                     }
                 }
             }
@@ -93,19 +103,21 @@ open class RequesterWrapperFragment : MapFragment(), LocationManager.LocationReq
     }
 
     private fun showNoGoogleApiDialog() {
-        AlertDialog.Builder(context)
-            .setTitle(R.string.enable_gps_dialog_title)
-            .setMessage(R.string.enable_gps_dialog_text)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(
-                R.string.settings
-            ) { _, _ ->
-                startActivityForResult(
-                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
-                    SETTING_ACTIVITY_REQUEST_CODE
-                )
-            }
-            .show()
+        context.let {
+            AlertDialog.Builder(it)
+                .setTitle(R.string.enable_gps_dialog_title)
+                .setMessage(R.string.enable_gps_dialog_text)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(
+                    R.string.settings
+                ) { _, _ ->
+                    startActivityForResult(
+                        Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
+                        SETTING_ACTIVITY_REQUEST_CODE
+                    )
+                }
+                .show()
+        }
     }
 
     override fun isProviderEnabled(provider: String): Boolean {

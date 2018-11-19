@@ -59,7 +59,6 @@ class BrowseMapFragment : RequesterWrapperFragment() {
         browseMapFragmentViewModel = ViewModelProviders.of(
             this, BrowseMapFragmentViewModel.ViewModelFactory(application, attrs)
         ).get(BrowseMapFragmentViewModel::class.java)
-        lifecycle.addObserver(browseMapFragmentViewModel)
 
         compassViewModel = ViewModelProviders.of(this,
             CompassViewModel.ViewModelFactory(cameraDataModel)).get(CompassViewModel::class.java)
@@ -110,7 +109,6 @@ class BrowseMapFragment : RequesterWrapperFragment() {
     override fun onDestroy() {
         super.onDestroy()
 
-        lifecycle.removeObserver(browseMapFragmentViewModel)
         lifecycle.removeObserver(compassViewModel)
         lifecycle.removeObserver(positionLockFabViewModel)
         lifecycle.removeObserver(zoomControlsViewModel)
