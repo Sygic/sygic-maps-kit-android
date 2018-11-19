@@ -1,9 +1,11 @@
 package com.sygic.ui.common.sdk.permission
 
 import android.content.pm.PackageManager
+import androidx.annotation.RestrictTo
 import java.lang.ref.WeakReference
 import java.util.*
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PermissionsManagerImpl(permissionsRequester: PermissionsManager.PermissionsRequester) : PermissionsManager {
 
     private var permissionRequesterWeakReference: WeakReference<PermissionsManager.PermissionsRequester> =

@@ -1,9 +1,11 @@
 package com.sygic.ui.common.sdk.location
 
 import android.app.Activity
+import androidx.annotation.RestrictTo
 
 import java.lang.ref.WeakReference
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class LocationManagerImpl(locationRequester: LocationManager.LocationRequester) : LocationManager {
 
     private var locationRequesterWeakReference: WeakReference<LocationManager.LocationRequester> = WeakReference(locationRequester)

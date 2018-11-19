@@ -1,7 +1,10 @@
 package com.sygic.ui.common.sdk.permission
 
+import androidx.annotation.RestrictTo
+
 const val PERMISSIONS_REQUEST_CODE = 777
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PermissionsManager {
 
     interface PermissionsRequester {

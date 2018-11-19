@@ -7,6 +7,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
+import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -23,7 +24,8 @@ import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
 
-open class RequesterWrapperFragment : MapFragment(), LocationManager.LocationRequester,
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationRequester,
     PermissionsManager.PermissionsRequester {
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
