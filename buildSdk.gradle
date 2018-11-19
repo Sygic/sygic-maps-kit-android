@@ -12,6 +12,19 @@ gradle.ext.resolveFlavors = { config ->
     if (gradle.buildSdkFromSource()) config.missingDimensionStrategy 'build', 'full'
 }
 
+gradle.ext.getSdkKey = {
+    Properties properties = new Properties()
+    def localProperties = file('local.properties')
+    properties.load(localProperties.newDataInputStream())
+
+    def sdkKey = properties.getProperty('sygic.sdk.key', "")
+    if (sdkKey.isEmpty()) {
+        logger.warn('No API key for Sygic Maps SDK defined!')
+    }
+
+    return sdkKey
+}
+
 gradle.ext.getSdkDir = {
     Properties properties = new Properties()
     def localProperties = file('local.properties')
