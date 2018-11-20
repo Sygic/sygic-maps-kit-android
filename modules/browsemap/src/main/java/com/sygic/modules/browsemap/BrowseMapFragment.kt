@@ -11,8 +11,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
-import com.sygic.sdk.map.MapView
-import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.permission.PermissionsManager
@@ -88,25 +86,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
             root.addView(it, 0)
         }
         return root
-    }
-
-    override fun onSdkInitialized() {
-        super.onSdkInitialized()
-
-        //todo: MS-4508
-        getMapAsync(object : OnMapInitListener {
-            override fun onMapReady(mapView: MapView) {
-                /*if (cameraInitialLatitude != -1f && cameraInitialLongitude != -1f) {
-                    mapView.cameraModel.position =
-                            GeoCoordinates(cameraInitialLatitude.toDouble(), cameraInitialLongitude.toDouble())
-                }
-                if (cameraInitialLatitude != -1f) {
-                    mapView.cameraModel.zoomLevel = cameraInitialZoom
-                }*/
-            }
-
-            override fun onMapInitializationInterrupted() {}
-        })
     }
 
     override fun onDestroy() {
