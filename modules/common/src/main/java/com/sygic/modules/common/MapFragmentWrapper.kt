@@ -1,5 +1,6 @@
 package com.sygic.modules.common
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -7,6 +8,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
+import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
@@ -17,7 +19,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.sygic.modules.common.manager.SdkInitializationManager
+import com.sygic.modules.common.manager.SdkInitializationManagerImpl
 import com.sygic.sdk.map.MapFragment
+import com.sygic.sdk.online.OnlineManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
@@ -26,10 +31,24 @@ import com.sygic.ui.common.sdk.permission.PermissionsManager
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationRequester,
-    PermissionsManager.PermissionsRequester {
+    PermissionsManager.PermissionsRequester, SdkInitializationManager.Callback {
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
+
+    private lateinit var sdkInitializationManager: SdkInitializationManager
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        sdkInitializationManager = SdkInitializationManagerImpl((context as Activity).application)
+        sdkInitializationManager.initialize(this)
+    }
+
+    @CallSuper
+    override fun onSdkInitialized() {
+        OnlineManager.getInstance().enableOnlineMapStreaming(true)
+    }
 
     override fun hasPermissionGranted(permission: String): Boolean {
         return context?.let {
