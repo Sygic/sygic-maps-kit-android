@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
+import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.permission.PermissionsManager
@@ -20,7 +22,7 @@ import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper() {
+class BrowseMapFragment : MapFragmentWrapper(), OnMapInitListener {
 
     private val locationManager: LocationManager = LocationManagerImpl(this)
     private val permissionManager: PermissionsManager = PermissionsManagerImpl(this)
@@ -47,6 +49,10 @@ class BrowseMapFragment : MapFragmentWrapper() {
     var zoomControlsEnabled: Boolean
         get() { return browseMapFragmentViewModel.zoomControlsEnabled.value!! }
         set(value) { browseMapFragmentViewModel.zoomControlsEnabled.value = value }
+
+    init {
+        getMapAsync(this)
+    }
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
@@ -86,6 +92,14 @@ class BrowseMapFragment : MapFragmentWrapper() {
             root.addView(it, 0)
         }
         return root
+    }
+
+    override fun onMapReady(mapView: MapView) {
+        browseMapFragmentViewModel.onMapReady(mapView, mapDataModel)
+    }
+
+    override fun onMapInitializationInterrupted() {
+        /* Currently do nothing */
     }
 
     override fun onDestroy() {

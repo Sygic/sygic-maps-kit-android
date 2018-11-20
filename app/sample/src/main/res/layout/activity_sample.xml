@@ -24,6 +24,7 @@
         app:sygic_cameraInitialZoom="16"
         app:sygic_compassEnabled="true"
         app:sygic_compassHideIfNorthUp="false"
+        app:sygic_mapClickEnabled="true"
         app:sygic_positionLockFabEnabled="true"
         app:sygic_zoomControlsEnabled="true" />
 
