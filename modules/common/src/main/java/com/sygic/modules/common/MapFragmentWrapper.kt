@@ -41,8 +41,8 @@ abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationReque
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        sdkInitializationManager = SdkInitializationManagerImpl((context as Activity).application)
-        sdkInitializationManager.initialize(this)
+        sdkInitializationManager = SdkInitializationManagerImpl() //ToDo: singleton
+        sdkInitializationManager.initialize((context as Activity).application, this)
     }
 
     @CallSuper

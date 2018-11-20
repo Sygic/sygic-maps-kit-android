@@ -8,13 +8,13 @@ import com.sygic.sdk.SygicEngine
 import java.util.LinkedHashSet
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-internal class SdkInitializationManagerImpl(private val application: Application) : SdkInitializationManager,
+internal class SdkInitializationManagerImpl : SdkInitializationManager,
     SygicEngine.OnInitListener {
 
     private var initialized = false
     private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
 
-    override fun initialize(callback: SdkInitializationManager.Callback) {
+    override fun initialize(application: Application, callback: SdkInitializationManager.Callback) {
         if (initialized) {
             callback.onSdkInitialized()
             return
