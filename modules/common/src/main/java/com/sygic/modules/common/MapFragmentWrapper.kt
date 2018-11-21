@@ -19,6 +19,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.sygic.modules.common.di.ContextModule
+import com.sygic.modules.common.di.DaggerModulesComponent
+import com.sygic.modules.common.di.ModuleBuilder
+import com.sygic.modules.common.di.ModulesComponent
 import com.sygic.modules.common.manager.SdkInitializationManager
 import com.sygic.modules.common.manager.SdkInitializationManagerImpl
 import com.sygic.sdk.map.MapFragment
@@ -33,10 +37,20 @@ import com.sygic.ui.common.sdk.permission.PermissionsManager
 abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationRequester,
     PermissionsManager.PermissionsRequester, SdkInitializationManager.Callback {
 
+    protected val modulesComponent: ModulesComponent by lazy {
+        DaggerModulesComponent.builder()
+            .contextModule(ContextModule(this))
+            .build()
+    }
+
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
     private lateinit var sdkInitializationManager: SdkInitializationManager
+
+    protected inline fun <reified T, B: ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
+        block(builder.plus(modulesComponent).build())
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

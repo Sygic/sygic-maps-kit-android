@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -36,4 +37,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+
+    //dagger
+    api 'com.google.dagger:dagger-android-support:2.16'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.16'
+    kapt 'com.google.dagger:dagger-compiler:2.16'
+    kapt 'com.google.dagger:dagger-android-processor:2.16'
 }

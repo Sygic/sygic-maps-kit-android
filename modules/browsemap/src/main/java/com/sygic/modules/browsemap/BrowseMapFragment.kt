@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
+import com.sygic.modules.browsemap.di.BrowseMapComponent
+import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.ui.common.sdk.location.LocationManager
@@ -18,9 +21,13 @@ import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
+import javax.inject.Inject
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragmentWrapper() {
+
+    @Inject
+    internal lateinit var x: Context
 
     private val locationManager: LocationManager = LocationManagerImpl(this)
     private val permissionManager: PermissionsManager = PermissionsManagerImpl(this)
@@ -33,20 +40,36 @@ class BrowseMapFragment : MapFragmentWrapper() {
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
     var compassEnabled: Boolean
-        get() { return browseMapFragmentViewModel.compassEnabled.value!! }
-        set(value) { browseMapFragmentViewModel.compassEnabled.value = value }
+        get() {
+            return browseMapFragmentViewModel.compassEnabled.value!!
+        }
+        set(value) {
+            browseMapFragmentViewModel.compassEnabled.value = value
+        }
 
     var compassHideIfNorthUp: Boolean
-        get() { return browseMapFragmentViewModel.compassHideIfNorthUp.value!! }
-        set(value) { browseMapFragmentViewModel.compassHideIfNorthUp.value = value }
+        get() {
+            return browseMapFragmentViewModel.compassHideIfNorthUp.value!!
+        }
+        set(value) {
+            browseMapFragmentViewModel.compassHideIfNorthUp.value = value
+        }
 
     var positionLockFabEnabled: Boolean
-        get() { return browseMapFragmentViewModel.positionLockFabEnabled.value!! }
-        set(value) { browseMapFragmentViewModel.positionLockFabEnabled.value = value }
+        get() {
+            return browseMapFragmentViewModel.positionLockFabEnabled.value!!
+        }
+        set(value) {
+            browseMapFragmentViewModel.positionLockFabEnabled.value = value
+        }
 
     var zoomControlsEnabled: Boolean
-        get() { return browseMapFragmentViewModel.zoomControlsEnabled.value!! }
-        set(value) { browseMapFragmentViewModel.zoomControlsEnabled.value = value }
+        get() {
+            return browseMapFragmentViewModel.zoomControlsEnabled.value!!
+        }
+        set(value) {
+            browseMapFragmentViewModel.zoomControlsEnabled.value = value
+        }
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
@@ -54,24 +77,39 @@ class BrowseMapFragment : MapFragmentWrapper() {
         attributesTypedArray = context.obtainStyledAttributes(attrs, R.styleable.BrowseMapFragment)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) {
+            it.inject(this)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel = ViewModelProviders.of(this, BrowseMapFragmentViewModel.ViewModelFactory(attributesTypedArray)
+        browseMapFragmentViewModel = ViewModelProviders.of(
+            this, BrowseMapFragmentViewModel.ViewModelFactory(attributesTypedArray)
         ).get(BrowseMapFragmentViewModel::class.java)
 
         compassViewModel = ViewModelProviders.of(this, CompassViewModel.ViewModelFactory(cameraDataModel))
             .get(CompassViewModel::class.java)
         lifecycle.addObserver(compassViewModel)
 
-        positionLockFabViewModel = ViewModelProviders.of(this,
-            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager))
+        positionLockFabViewModel = ViewModelProviders.of(
+            this,
+            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager)
+        )
             .get(PositionLockFabViewModel::class.java)
         lifecycle.addObserver(positionLockFabViewModel)
 
-        zoomControlsViewModel = ViewModelProviders.of(this,
-            ZoomControlsViewModel.ViewModelFactory(cameraDataModel)).get(ZoomControlsViewModel::class.java)
+        zoomControlsViewModel = ViewModelProviders.of(
+            this,
+            ZoomControlsViewModel.ViewModelFactory(cameraDataModel)
+        ).get(ZoomControlsViewModel::class.java)
         lifecycle.addObserver(zoomControlsViewModel)
+
+        Log.d("BrowseMapFragment", "onCreate: $x")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
