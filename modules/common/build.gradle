@@ -37,13 +37,8 @@ dependencies {
     api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
 
     //dagger
-    api 'com.google.dagger:dagger-android-support:2.16'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.16'
-    kapt 'com.google.dagger:dagger-compiler:2.16'
-    kapt 'com.google.dagger:dagger-android-processor:2.16'
-
-    implementation project(':uikit-compass-viewmodel')
-    implementation project(':uikit-positionlockfab-viewmodel')
-    implementation project(':uikit-zoomcontrols-viewmodel')
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    api "com.google.dagger:dagger-android-support:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 }
