@@ -26,6 +26,7 @@ import com.sygic.modules.common.initialization.manager.SdkInitializationManagerI
 import com.sygic.modules.common.model.ExtendedMapDataModel
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
@@ -37,6 +38,7 @@ import com.sygic.ui.common.sdk.permission.PermissionsManager
 import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener, LocationManager.LocationRequester,
     PermissionsManager.PermissionsRequester {
 
@@ -191,5 +193,13 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         permissionsRequesterCallback?.onRequestPermissionsResult(permissions, grantResults)
+    }
+
+    fun addMapMarker(marker: MapMarker) {
+        mapDataModel.addMapObject(marker)
+    }
+
+    fun addMapMarkers(markers: List<MapMarker>) {
+        markers.forEach { addMapMarker(it) }
     }
 }
