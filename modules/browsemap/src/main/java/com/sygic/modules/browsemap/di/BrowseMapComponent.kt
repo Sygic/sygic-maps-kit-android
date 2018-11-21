@@ -14,6 +14,7 @@ annotation class Browse
 @Browse
 @Component(
     modules = [
+        ViewModelModule::class
     ],
     dependencies = [
         ModulesComponent::class
@@ -21,7 +22,7 @@ annotation class Browse
 )
 interface BrowseMapComponent {
     @Component.Builder
-    abstract class Builder: ModuleBuilder<BrowseMapComponent>
+    abstract class Builder : ModuleBuilder<BrowseMapComponent>
 
     fun inject(fragment: BrowseMapFragment)
 }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.os.Bundle
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,15 +25,14 @@ import javax.inject.Inject
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragmentWrapper() {
 
-    @Inject
-    internal lateinit var x: Context
-
     private val locationManager: LocationManager = LocationManagerImpl(this)
     private val permissionManager: PermissionsManager = PermissionsManagerImpl(this)
 
     private var attributesTypedArray: TypedArray? = null
 
-    private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
+    @Inject
+    internal lateinit var browseMapFragmentViewModelF: BrowseMapFragmentViewModel.Factory
+    internal lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
@@ -88,9 +86,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel = ViewModelProviders.of(
-            this, BrowseMapFragmentViewModel.ViewModelFactory(attributesTypedArray)
-        ).get(BrowseMapFragmentViewModel::class.java)
+        browseMapFragmentViewModel =  browseMapFragmentViewModelF.create(attributesTypedArray)
 
         compassViewModel = ViewModelProviders.of(this, CompassViewModel.ViewModelFactory(cameraDataModel))
             .get(CompassViewModel::class.java)
@@ -108,8 +104,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
             ZoomControlsViewModel.ViewModelFactory(cameraDataModel)
         ).get(ZoomControlsViewModel::class.java)
         lifecycle.addObserver(zoomControlsViewModel)
-
-        Log.d("BrowseMapFragment", "onCreate: $x")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
