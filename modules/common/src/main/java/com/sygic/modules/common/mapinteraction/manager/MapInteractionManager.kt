@@ -1,4 +1,4 @@
-package com.sygic.modules.common.manager
+package com.sygic.modules.common.mapinteraction.manager
 
 import androidx.annotation.RestrictTo
 import com.sygic.sdk.map.MapView
@@ -8,8 +8,8 @@ import com.sygic.sdk.map.`object`.ViewObject
 interface MapInteractionManager {
 
     interface Listener {
-        fun onMapObjectRequestStarted()
-        fun onMapObjectReceived(firstViewObject: ViewObject)
+        fun onMapObjectsRequestStarted()
+        fun onMapObjectsReceived(viewObjects: List<ViewObject>)
     }
 
     fun onMapReady(mapView: MapView)

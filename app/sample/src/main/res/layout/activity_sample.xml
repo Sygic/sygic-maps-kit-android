@@ -9,8 +9,8 @@
 
     <!-- todo: MS-4558 change sygic_sdk_ namespace-->
     <fragment
+        class="com.sygic.modules.browsemap.BrowseMapFragment"
         android:id="@+id/browseMapFragment"
-        android:name="com.sygic.modules.browsemap.BrowseMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
@@ -24,7 +24,7 @@
         app:sygic_cameraInitialZoom="16"
         app:sygic_compassEnabled="true"
         app:sygic_compassHideIfNorthUp="false"
-        app:sygic_mapClickEnabled="true"
+        app:sygic_mapInteractionMode="full"
         app:sygic_positionLockFabEnabled="true"
         app:sygic_zoomControlsEnabled="true" />
 

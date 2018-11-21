@@ -5,18 +5,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sygic.modules.browsemap.R
-import com.sygic.modules.common.manager.MapInteractionManager
-import com.sygic.sdk.map.MapView
+import com.sygic.modules.common.mapinteraction.MapInteractionMode
+import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
+import com.sygic.modules.common.model.ExtendedMapDataModel
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.ui.common.sdk.mapobject.DefaultMapMarker
 
 class BrowseMapFragmentViewModel(attributesTypedArray: TypedArray?,
-                                 private val mapDataModel: MapView.MapDataModel,
-                                 private val mapInteractionManager: MapInteractionManager) : ViewModel(), MapInteractionManager.Listener {
+                                 private val extendedMapDataModel: ExtendedMapDataModel,
+                                 private val mapInteractionManager: MapInteractionManager
+) : ViewModel(), MapInteractionManager.Listener {
 
+    @MapInteractionMode
+    val mapInteractionMode: MutableLiveData<Int> = MutableLiveData()
     val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
-    val mapClickEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -26,25 +29,25 @@ class BrowseMapFragmentViewModel(attributesTypedArray: TypedArray?,
         attributesTypedArray?.let {
             compassEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compassEnabled, false)
             compassHideIfNorthUp.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compassHideIfNorthUp, false)
-            mapClickEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_mapClickEnabled, false)
+            mapInteractionMode.value = it.getInt(R.styleable.BrowseMapFragment_sygic_mapInteractionMode, MapInteractionMode.NONE)
             positionLockFabEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFabEnabled, false)
             zoomControlsEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControlsEnabled, false)
             it.recycle()
         }
 
-        mapClickEnabled.value?.let { enabled ->
-            if (enabled) {
-                mapInteractionManager.addOnMapClickListener(this)
+        mapInteractionMode.value?.let { mode ->
+            when (mode) {
+                MapInteractionMode.FULL, MapInteractionMode.MARKERS_ONLY -> mapInteractionManager.addOnMapClickListener(this)
             }
         }
     }
 
-    override fun onMapObjectRequestStarted() {
-        currentMapMarker?.let { mapDataModel.removeMapObject(it) }
+    override fun onMapObjectsRequestStarted() {
+        currentMapMarker?.let { extendedMapDataModel.removeMapObject(it) }
     }
 
-    override fun onMapObjectReceived(firstViewObject: ViewObject) {
-        currentMapMarker = DefaultMapMarker(firstViewObject).apply { mapDataModel.addMapObject(this) }
+    override fun onMapObjectsReceived(viewObjects: List<ViewObject>) { //todo
+        currentMapMarker = DefaultMapMarker(viewObjects.first()).apply { extendedMapDataModel.addMapObject(this) }
     }
 
     override fun onCleared() {
@@ -53,13 +56,14 @@ class BrowseMapFragmentViewModel(attributesTypedArray: TypedArray?,
     }
 
     internal class ViewModelFactory(private val attributesTypedArray: TypedArray?,
-                                    private val mapDataModel: MapView.MapDataModel,
-                                    private val mapInteractionManager: MapInteractionManager) :
+                                    private val extendedMapDataModel: ExtendedMapDataModel,
+                                    private val mapInteractionManager: MapInteractionManager
+    ) :
         ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return BrowseMapFragmentViewModel(attributesTypedArray, mapDataModel, mapInteractionManager) as T
+            return BrowseMapFragmentViewModel(attributesTypedArray, extendedMapDataModel, mapInteractionManager) as T
         }
     }
 }

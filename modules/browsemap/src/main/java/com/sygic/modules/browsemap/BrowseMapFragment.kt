@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
+import com.sygic.modules.common.mapinteraction.MapInteractionMode
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.placedetail.PlaceDetailViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
@@ -26,6 +27,11 @@ class BrowseMapFragment : MapFragmentWrapper() {
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
+    @MapInteractionMode
+    var mapInteractionMode: Int
+        get() { return browseMapFragmentViewModel.mapInteractionMode.value!! }
+        set(value) { browseMapFragmentViewModel.mapInteractionMode.value = value }
+
     var compassEnabled: Boolean
         get() { return browseMapFragmentViewModel.compassEnabled.value!! }
         set(value) { browseMapFragmentViewModel.compassEnabled.value = value }
@@ -33,10 +39,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
     var compassHideIfNorthUp: Boolean
         get() { return browseMapFragmentViewModel.compassHideIfNorthUp.value!! }
         set(value) { browseMapFragmentViewModel.compassHideIfNorthUp.value = value }
-
-    var mapClickEnabled: Boolean
-        get() { return browseMapFragmentViewModel.mapClickEnabled.value!! }
-        set(value) { browseMapFragmentViewModel.mapClickEnabled.value = value }
 
     var positionLockFabEnabled: Boolean
         get() { return browseMapFragmentViewModel.positionLockFabEnabled.value!! }

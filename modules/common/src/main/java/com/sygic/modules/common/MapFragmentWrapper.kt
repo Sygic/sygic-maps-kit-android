@@ -19,10 +19,11 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.manager.MapInteractionManager
-import com.sygic.modules.common.manager.MapInteractionManagerImpl
-import com.sygic.modules.common.manager.SdkInitializationManager
-import com.sygic.modules.common.manager.SdkInitializationManagerImpl
+import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
+import com.sygic.modules.common.mapinteraction.manager.MapInteractionManagerImpl
+import com.sygic.modules.common.initialization.manager.SdkInitializationManager
+import com.sygic.modules.common.initialization.manager.SdkInitializationManagerImpl
+import com.sygic.modules.common.model.ExtendedMapDataModel
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
@@ -46,10 +47,16 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
+    private var extendedMapDataModel: ExtendedMapDataModel = ExtendedMapDataModel()
+
     private lateinit var sdkInitializationManager: SdkInitializationManager
 
     init {
         getMapAsync(this)
+    }
+
+    override fun getMapDataModel(): ExtendedMapDataModel {
+        return extendedMapDataModel
     }
 
     override fun onAttach(context: Context) {

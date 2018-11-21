@@ -1,4 +1,4 @@
-package com.sygic.modules.common.manager
+package com.sygic.modules.common.initialization.manager
 
 import android.app.Application
 import androidx.annotation.RestrictTo

@@ -1,4 +1,4 @@
-package com.sygic.modules.common.manager
+package com.sygic.modules.common.mapinteraction.manager
 
 import android.view.MotionEvent
 import androidx.annotation.RestrictTo
@@ -18,9 +18,9 @@ class MapInteractionManagerImpl : MapInteractionManager {
                     return false
                 }
 
-                listeners.forEach { it.onMapObjectRequestStarted() }
+                listeners.forEach { it.onMapObjectsRequestStarted() }
                 mapView.requestObjectsAtPoint(motionEvent.x, motionEvent.y) { list, _, _, _ ->
-                    listeners.forEach { it.onMapObjectReceived(list.first()) }
+                    listeners.forEach { it.onMapObjectsReceived(list) }
                 }
                 return super.onMapClicked(motionEvent, false)
             }
