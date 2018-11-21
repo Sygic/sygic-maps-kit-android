@@ -11,21 +11,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
-import com.sygic.sdk.map.MapView
-import com.sygic.sdk.map.listeners.OnMapInitListener
-import com.sygic.ui.common.sdk.location.LocationManager
-import com.sygic.ui.common.sdk.location.LocationManagerImpl
-import com.sygic.ui.common.sdk.permission.PermissionsManager
-import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import com.sygic.ui.viewmodel.compass.CompassViewModel
+import com.sygic.ui.viewmodel.placedetail.PlaceDetailViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper(), OnMapInitListener {
-
-    private val locationManager: LocationManager = LocationManagerImpl(this)
-    private val permissionManager: PermissionsManager = PermissionsManagerImpl(this)
+class BrowseMapFragment : MapFragmentWrapper() {
 
     private var attributesTypedArray: TypedArray? = null
 
@@ -42,6 +34,10 @@ class BrowseMapFragment : MapFragmentWrapper(), OnMapInitListener {
         get() { return browseMapFragmentViewModel.compassHideIfNorthUp.value!! }
         set(value) { browseMapFragmentViewModel.compassHideIfNorthUp.value = value }
 
+    var mapClickEnabled: Boolean
+        get() { return browseMapFragmentViewModel.mapClickEnabled.value!! }
+        set(value) { browseMapFragmentViewModel.mapClickEnabled.value = value }
+
     var positionLockFabEnabled: Boolean
         get() { return browseMapFragmentViewModel.positionLockFabEnabled.value!! }
         set(value) { browseMapFragmentViewModel.positionLockFabEnabled.value = value }
@@ -50,20 +46,17 @@ class BrowseMapFragment : MapFragmentWrapper(), OnMapInitListener {
         get() { return browseMapFragmentViewModel.zoomControlsEnabled.value!! }
         set(value) { browseMapFragmentViewModel.zoomControlsEnabled.value = value }
 
-    init {
-        getMapAsync(this)
-    }
-
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
 
         attributesTypedArray = context.obtainStyledAttributes(attrs, R.styleable.BrowseMapFragment)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) { //todo: all VMs not working after rotation
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel = ViewModelProviders.of(this, BrowseMapFragmentViewModel.ViewModelFactory(attributesTypedArray)
+        browseMapFragmentViewModel = ViewModelProviders.of(this,
+            BrowseMapFragmentViewModel.ViewModelFactory(attributesTypedArray, mapDataModel, mapInteractionManager)
         ).get(BrowseMapFragmentViewModel::class.java)
 
         compassViewModel = ViewModelProviders.of(this, CompassViewModel.ViewModelFactory(cameraDataModel))
@@ -92,14 +85,6 @@ class BrowseMapFragment : MapFragmentWrapper(), OnMapInitListener {
             root.addView(it, 0)
         }
         return root
-    }
-
-    override fun onMapReady(mapView: MapView) {
-        browseMapFragmentViewModel.onMapReady(mapView, mapDataModel)
-    }
-
-    override fun onMapInitializationInterrupted() {
-        /* Currently do nothing */
     }
 
     override fun onDestroy() {

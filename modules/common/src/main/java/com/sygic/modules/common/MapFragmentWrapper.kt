@@ -19,24 +19,38 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.sygic.modules.common.manager.MapInteractionManager
+import com.sygic.modules.common.manager.MapInteractionManagerImpl
 import com.sygic.modules.common.manager.SdkInitializationManager
 import com.sygic.modules.common.manager.SdkInitializationManagerImpl
 import com.sygic.sdk.map.MapFragment
+import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
+import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationRequester,
-    PermissionsManager.PermissionsRequester, SdkInitializationManager.Callback {
+abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener, LocationManager.LocationRequester,
+    PermissionsManager.PermissionsRequester {
+
+    protected val mapInteractionManager: MapInteractionManager = MapInteractionManagerImpl()
+    protected val locationManager: LocationManager = LocationManagerImpl(this)
+    protected val permissionManager: PermissionsManager = PermissionsManagerImpl(this)
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
     private lateinit var sdkInitializationManager: SdkInitializationManager
+
+    init {
+        getMapAsync(this)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -48,6 +62,16 @@ abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationReque
     @CallSuper
     override fun onSdkInitialized() {
         OnlineManager.getInstance().enableOnlineMapStreaming(true)
+    }
+
+    @CallSuper
+    override fun onMapReady(mapView: MapView) {
+        mapInteractionManager.onMapReady(mapView)
+    }
+
+    @CallSuper
+    override fun onMapInitializationInterrupted() {
+        /* Currently do nothing */
     }
 
     override fun hasPermissionGranted(permission: String): Boolean {
