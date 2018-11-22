@@ -9,10 +9,22 @@ import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.reflect.KClass
 
+interface ViewModelCreatorFactory {
+    fun create(vararg assistedValues: Any?): ViewModel
+}
+
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory @Inject constructor(private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModel>>) :
+class ViewModelFactory @Inject constructor(private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModelCreatorFactory>>) :
     ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = viewModels[modelClass]?.get() as T
+
+    private var assistedValues: Array<out Any?> = emptyArray()
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = viewModels[modelClass]?.get()?.create(*assistedValues) as T
+
+    fun with(vararg assistedValues: Any?): ViewModelFactory {
+        this.assistedValues = assistedValues
+        return this
+    }
 }
 
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)

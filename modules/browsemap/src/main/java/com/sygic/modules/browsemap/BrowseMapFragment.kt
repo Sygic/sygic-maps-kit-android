@@ -13,6 +13,7 @@ import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
+import com.sygic.modules.common.di.ViewModelFactory
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.permission.PermissionsManager
@@ -31,8 +32,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
     private var attributesTypedArray: TypedArray? = null
 
     @Inject
-    internal lateinit var browseMapFragmentViewModelF: BrowseMapFragmentViewModel.Factory
-    internal lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
@@ -86,7 +88,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel =  browseMapFragmentViewModelF.create(attributesTypedArray)
+        browseMapFragmentViewModel =  ViewModelProviders.of(this,
+            viewModelFactory.with(attributesTypedArray))[BrowseMapFragmentViewModel::class.java]
 
         compassViewModel = ViewModelProviders.of(this, CompassViewModel.ViewModelFactory(cameraDataModel))
             .get(CompassViewModel::class.java)
