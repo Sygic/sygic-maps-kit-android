@@ -23,7 +23,7 @@ import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManagerImpl
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.initialization.manager.SdkInitializationManagerImpl
-import com.sygic.modules.common.model.ExtendedMapDataModel
+import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.MapMarker

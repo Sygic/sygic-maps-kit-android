@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.sygic.modules.browsemap.R
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
-import com.sygic.modules.common.model.ExtendedMapDataModel
+import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
+import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.ui.common.sdk.mapobject.DefaultMapMarker
 
@@ -22,8 +23,6 @@ class BrowseMapFragmentViewModel(attributesTypedArray: TypedArray?,
     val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
-
-    private var currentMapMarker: DefaultMapMarker? = null
 
     init {
         attributesTypedArray?.let {
@@ -43,11 +42,27 @@ class BrowseMapFragmentViewModel(attributesTypedArray: TypedArray?,
     }
 
     override fun onMapObjectsRequestStarted() {
-        currentMapMarker?.let { extendedMapDataModel.removeMapObject(it) }
+        extendedMapDataModel.removeOnClickMapMarker()
     }
 
-    override fun onMapObjectsReceived(viewObjects: List<ViewObject>) { //todo
-        currentMapMarker = DefaultMapMarker(viewObjects.first()).apply { extendedMapDataModel.addMapObject(this) }
+    override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
+        mapInteractionMode.value?.let { mode ->
+            val firstViewObject = viewObjects.first()
+            when (mode) {
+                MapInteractionMode.NONE -> return
+                MapInteractionMode.MARKERS_ONLY -> {
+                    if (firstViewObject is MapMarker) extendedMapDataModel.notifyMapMarkerClick(firstViewObject)
+                }
+                MapInteractionMode.FULL -> {
+                    if (firstViewObject is MapMarker) {
+                        extendedMapDataModel.notifyMapMarkerClick(firstViewObject)
+                        return
+                    }
+
+                    extendedMapDataModel.addOnClickMapMarker(DefaultMapMarker(firstViewObject))
+                }
+            }
+        }
     }
 
     override fun onCleared() {

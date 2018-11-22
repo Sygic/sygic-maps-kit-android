@@ -20,12 +20,12 @@ class SampleActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.bottom_nav_search -> {
-                    Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
-                    return@OnNavigationItemSelectedListener true
+                    showNotImplementedToast()
+                    return@OnNavigationItemSelectedListener false
                 }
                 R.id.bottom_nav_navigation -> {
-                    Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
-                    return@OnNavigationItemSelectedListener true
+                    showNotImplementedToast()
+                    return@OnNavigationItemSelectedListener false
                 }
             }
             false
@@ -40,5 +40,9 @@ class SampleActivity : AppCompatActivity() {
             DefaultMapMarker(48.141797, 17.097001),
             DefaultMapMarker(48.134756, 17.127729),
             DefaultMapMarker(48.153943, 17.125282)))
+    }
+
+    private fun showNotImplementedToast() {
+        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
     }
 }
