@@ -31,7 +31,7 @@ dependencies {
     api project(':modules-common')
 
     implementation project(':uikit-compass-viewmodel')
-    implementation project(':uikit-placedetail-viewmodel')
+    implementation project(':uikit-poidetail-viewmodel')
     implementation project(':uikit-positionlockfab-viewmodel')
     implementation project(':uikit-zoomcontrols-viewmodel')
 

@@ -7,14 +7,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.sygic.modules.browsemap.R
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
+import com.sygic.modules.common.poi.manager.PoiDataManager
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
-import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ViewObject
-import com.sygic.ui.common.sdk.mapobject.DefaultMapMarker
+import com.sygic.ui.common.sdk.data.PoiData
+import com.sygic.ui.common.sdk.mapobject.MapMarker
+import com.sygic.ui.common.sdk.mapobject.OnClickMapMarker
 
 class BrowseMapFragmentViewModel(attributesTypedArray: TypedArray?,
                                  private val extendedMapDataModel: ExtendedMapDataModel,
-                                 private val mapInteractionManager: MapInteractionManager
+                                 private val mapInteractionManager: MapInteractionManager,
+                                 private val poiDataManager: PoiDataManager
 ) : ViewModel(), MapInteractionManager.Listener {
 
     @MapInteractionMode
@@ -51,18 +54,26 @@ class BrowseMapFragmentViewModel(attributesTypedArray: TypedArray?,
             when (mode) {
                 MapInteractionMode.NONE -> return
                 MapInteractionMode.MARKERS_ONLY -> {
-                    if (firstViewObject is MapMarker) extendedMapDataModel.notifyMapMarkerClick(firstViewObject)
+                    if (firstViewObject is MapMarker) getPoiData(firstViewObject)
                 }
                 MapInteractionMode.FULL -> {
+                    getPoiData(firstViewObject)
                     if (firstViewObject is MapMarker) {
-                        extendedMapDataModel.notifyMapMarkerClick(firstViewObject)
                         return
                     }
 
-                    extendedMapDataModel.addOnClickMapMarker(DefaultMapMarker(firstViewObject))
+                    extendedMapDataModel.addOnClickMapMarker(OnClickMapMarker(firstViewObject))
                 }
             }
         }
+    }
+
+    private fun getPoiData(viewObject: ViewObject) {
+        poiDataManager.getPoiData(viewObject, object : PoiDataManager.Callback() {
+            override fun onDataLoaded(poiData: PoiData) {
+                extendedMapDataModel.notifyPoiDataChanged(poiData)
+            }
+        })
     }
 
     override fun onCleared() {
@@ -72,13 +83,14 @@ class BrowseMapFragmentViewModel(attributesTypedArray: TypedArray?,
 
     internal class ViewModelFactory(private val attributesTypedArray: TypedArray?,
                                     private val extendedMapDataModel: ExtendedMapDataModel,
-                                    private val mapInteractionManager: MapInteractionManager
+                                    private val mapInteractionManager: MapInteractionManager,
+                                    private val poiDataManager: PoiDataManager
     ) :
         ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return BrowseMapFragmentViewModel(attributesTypedArray, extendedMapDataModel, mapInteractionManager) as T
+            return BrowseMapFragmentViewModel(attributesTypedArray, extendedMapDataModel, mapInteractionManager, poiDataManager) as T
         }
     }
 }

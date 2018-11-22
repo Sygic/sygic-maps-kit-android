@@ -23,16 +23,18 @@ import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManagerImpl
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.initialization.manager.SdkInitializationManagerImpl
+import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.modules.common.poi.manager.PoiDataManagerImpl
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
-import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
+import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
 import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
@@ -42,9 +44,10 @@ import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener, LocationManager.LocationRequester,
     PermissionsManager.PermissionsRequester {
 
-    protected val mapInteractionManager: MapInteractionManager = MapInteractionManagerImpl()
-    protected val locationManager: LocationManager = LocationManagerImpl(this)
-    protected val permissionManager: PermissionsManager = PermissionsManagerImpl(this)
+    protected val mapInteractionManager: MapInteractionManager by lazy { MapInteractionManagerImpl() }
+    protected val poiDataManager: PoiDataManager by lazy { PoiDataManagerImpl() }
+    protected val locationManager: LocationManager by lazy { LocationManagerImpl(this) }
+    protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) }
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
