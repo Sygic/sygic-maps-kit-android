@@ -1,7 +1,6 @@
 package com.sygic.modules.common
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -18,6 +17,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.sdk.map.MapFragment
+import com.sygic.ui.common.locationManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
@@ -123,11 +123,7 @@ abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationReque
     }
 
     override fun isProviderEnabled(provider: String): Boolean {
-        return context?.let {
-            (it.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager).isProviderEnabled(
-                provider
-            )
-        } ?: false
+        return context?.locationManager?.isProviderEnabled(provider) ?: false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
