@@ -15,12 +15,15 @@ internal class SdkInitializationManagerImpl : SdkInitializationManager,
     private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
 
     override fun initialize(application: Application, callback: SdkInitializationManager.Callback) {
-        if (initialized) {
-            callback.onSdkInitialized()
-            return
+        synchronized(this) {
+            if (initialized) {
+                callback.onSdkInitialized()
+                return
+            }
+
+            callbacks.add(callback)
         }
 
-        callbacks.add(callback)
         application.getApiKey()?.let { key ->
             SygicEngine.Builder(application.getString(R.string.com_sygic_secret), key, application)
                 .setInitListener(this).init()
@@ -28,7 +31,9 @@ internal class SdkInitializationManagerImpl : SdkInitializationManager,
     }
 
     override fun onSdkInitialized() {
-        initialized = true
+        synchronized(this) {
+            initialized = true
+        }
         callbacks.forEach { it.onSdkInitialized() }
         callbacks.clear()
     }
