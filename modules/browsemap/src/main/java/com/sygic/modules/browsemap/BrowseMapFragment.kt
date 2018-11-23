@@ -9,17 +9,26 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
-import com.sygic.sdk.map.MapFragment
+import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
+import com.sygic.ui.common.sdk.location.LocationManager
+import com.sygic.ui.common.sdk.location.LocationManagerImpl
+import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import com.sygic.ui.viewmodel.compass.CompassViewModel
+import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragment() {
+class BrowseMapFragment : MapFragmentWrapper() {
+
+    private lateinit var locationManager: LocationManager
+    private lateinit var permissionManager: PermissionsManager
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
+    private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
     var compassEnabled: Boolean
@@ -40,6 +49,11 @@ class BrowseMapFragment : MapFragment() {
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
+
+        //todo: Dagger
+        locationManager = LocationManagerImpl(this)
+        permissionManager = PermissionsManagerImpl(this)
+
         //todo: MS-4507
         val application = requireActivity().application
         browseMapFragmentViewModel = ViewModelProviders.of(
@@ -49,6 +63,10 @@ class BrowseMapFragment : MapFragment() {
         compassViewModel = ViewModelProviders.of(this,
             CompassViewModel.ViewModelFactory(cameraDataModel)).get(CompassViewModel::class.java)
         lifecycle.addObserver(compassViewModel)
+
+        positionLockFabViewModel = ViewModelProviders.of(this,
+            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager)).get(PositionLockFabViewModel::class.java)
+        lifecycle.addObserver(positionLockFabViewModel)
 
         zoomControlsViewModel = ViewModelProviders.of(this,
             ZoomControlsViewModel.ViewModelFactory(cameraDataModel)).get(ZoomControlsViewModel::class.java)
@@ -60,6 +78,7 @@ class BrowseMapFragment : MapFragment() {
         binding.setLifecycleOwner(this)
         binding.browseMapFragmentViewModel = browseMapFragmentViewModel
         binding.compassViewModel = compassViewModel
+        binding.positionLockFabViewModel = positionLockFabViewModel
         binding.zoomControlsViewModel = zoomControlsViewModel
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {
@@ -91,6 +110,7 @@ class BrowseMapFragment : MapFragment() {
         super.onDestroy()
 
         lifecycle.removeObserver(compassViewModel)
+        lifecycle.removeObserver(positionLockFabViewModel)
         lifecycle.removeObserver(zoomControlsViewModel)
     }
 }
