@@ -71,9 +71,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
     }
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
-
         injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
+        super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) { //todo: inject compassViewModel, positionLockFabViewModel, zoomControlsViewModel
