@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.di.BrowseMapComponent
-import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.di.ViewModelFactory
@@ -35,9 +34,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     @MapInteractionMode
     var mapInteractionMode: Int
-        get() {
-            return browseMapFragmentViewModel.mapInteractionMode.value!!
-        }
+        get() = browseMapFragmentViewModel.mapInteractionMode.value!!
         set(value) {
             browseMapFragmentViewModel.mapInteractionMode.value = value
         }
