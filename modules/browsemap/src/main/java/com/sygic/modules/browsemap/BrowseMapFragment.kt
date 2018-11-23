@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.di.BrowseMapComponent
-import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.di.ViewModelFactory
@@ -21,7 +20,6 @@ import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
-import javax.inject.Inject
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragmentWrapper() {
@@ -40,33 +38,25 @@ class BrowseMapFragment : MapFragmentWrapper() {
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
     var compassEnabled: Boolean
-        get() {
-            return browseMapFragmentViewModel.compassEnabled.value!!
-        }
+        get() = browseMapFragmentViewModel.compassEnabled.value!!
         set(value) {
             browseMapFragmentViewModel.compassEnabled.value = value
         }
 
     var compassHideIfNorthUp: Boolean
-        get() {
-            return browseMapFragmentViewModel.compassHideIfNorthUp.value!!
-        }
+        get() = browseMapFragmentViewModel.compassHideIfNorthUp.value!!
         set(value) {
             browseMapFragmentViewModel.compassHideIfNorthUp.value = value
         }
 
     var positionLockFabEnabled: Boolean
-        get() {
-            return browseMapFragmentViewModel.positionLockFabEnabled.value!!
-        }
+        get() = browseMapFragmentViewModel.positionLockFabEnabled.value!!
         set(value) {
             browseMapFragmentViewModel.positionLockFabEnabled.value = value
         }
 
     var zoomControlsEnabled: Boolean
-        get() {
-            return browseMapFragmentViewModel.zoomControlsEnabled.value!!
-        }
+        get() = browseMapFragmentViewModel.zoomControlsEnabled.value!!
         set(value) {
             browseMapFragmentViewModel.zoomControlsEnabled.value = value
         }
