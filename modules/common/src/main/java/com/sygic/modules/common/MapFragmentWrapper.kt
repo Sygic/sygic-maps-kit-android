@@ -137,5 +137,6 @@ abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationReque
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         permissionsRequesterCallback?.onRequestPermissionsResult(permissions, grantResults)
+        permissionsRequesterCallback = null
     }
 }
