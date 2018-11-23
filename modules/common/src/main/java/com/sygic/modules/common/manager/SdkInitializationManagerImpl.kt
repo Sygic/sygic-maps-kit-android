@@ -8,19 +8,22 @@ import com.sygic.sdk.SygicEngine
 import java.util.LinkedHashSet
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-internal class SdkInitializationManagerImpl(private val application: Application) : SdkInitializationManager,
+internal class SdkInitializationManagerImpl : SdkInitializationManager,
     SygicEngine.OnInitListener {
 
     private var initialized = false
     private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
 
-    override fun initialize(callback: SdkInitializationManager.Callback) {
-        if (initialized) {
-            callback.onSdkInitialized()
-            return
+    override fun initialize(application: Application, callback: SdkInitializationManager.Callback) {
+        synchronized(this) {
+            if (initialized) {
+                callback.onSdkInitialized()
+                return
+            }
+
+            callbacks.add(callback)
         }
 
-        callbacks.add(callback)
         application.getApiKey()?.let { key ->
             SygicEngine.Builder(application.getString(R.string.com_sygic_secret), key, application)
                 .setInitListener(this).init()
@@ -28,7 +31,9 @@ internal class SdkInitializationManagerImpl(private val application: Application
     }
 
     override fun onSdkInitialized() {
-        initialized = true
+        synchronized(this) {
+            initialized = true
+        }
         callbacks.forEach { it.onSdkInitialized() }
         callbacks.clear()
     }

@@ -29,7 +29,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':uikit-common-sdk')
+    api project(':uikit-common')
+    api project(':uikit-common-sdk')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.google.android.gms:play-services-location:$playServicesLocationVersion"

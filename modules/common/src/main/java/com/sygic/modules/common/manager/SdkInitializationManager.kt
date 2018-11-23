@@ -1,5 +1,6 @@
 package com.sygic.modules.common.manager
 
+import android.app.Application
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -9,5 +10,5 @@ internal interface SdkInitializationManager {
         fun onSdkInitialized()
     }
 
-    fun initialize(callback: Callback)
+    fun initialize(application: Application, callback: Callback)
 }
