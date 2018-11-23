@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.di.BrowseMapComponent
+import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.di.ViewModelFactory
@@ -70,9 +71,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
     }
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
-
         injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
+        super.onAttach(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) { //todo: inject compassViewModel, positionLockFabViewModel, zoomControlsViewModel
