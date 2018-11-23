@@ -15,12 +15,7 @@ import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.di.ViewModelFactory
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
-import com.sygic.ui.common.sdk.location.LocationManager
-import com.sygic.ui.common.sdk.location.LocationManagerImpl
-import com.sygic.ui.common.sdk.permission.PermissionsManager
-import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import com.sygic.ui.viewmodel.compass.CompassViewModel
-import com.sygic.ui.viewmodel.poidetail.PoiDetailViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 import javax.inject.Inject
@@ -35,7 +30,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
-    private lateinit var poiDetailViewModel: PoiDetailViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
@@ -81,12 +75,10 @@ class BrowseMapFragment : MapFragmentWrapper() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) {
-            it.inject(this)
-        }
+        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) { //todo: all VMs not working after rotation
+    override fun onCreate(savedInstanceState: Bundle?) { //todo: inject compassViewModel, positionLockFabViewModel, zoomControlsViewModel
         super.onCreate(savedInstanceState)
 
         browseMapFragmentViewModel = ViewModelProviders.of(
@@ -97,12 +89,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
         compassViewModel = ViewModelProviders.of(this, CompassViewModel.ViewModelFactory(cameraDataModel))
             .get(CompassViewModel::class.java)
         lifecycle.addObserver(compassViewModel)
-
-        poiDetailViewModel = ViewModelProviders.of(
-            this,
-            PoiDetailViewModel.ViewModelFactory(mapDataModel)
-        ).get(PoiDetailViewModel::class.java)
-        lifecycle.addObserver(poiDetailViewModel)
 
         positionLockFabViewModel = ViewModelProviders.of(
             this,
@@ -135,7 +121,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
         super.onDestroy()
 
         lifecycle.removeObserver(compassViewModel)
-        lifecycle.removeObserver(poiDetailViewModel)
         lifecycle.removeObserver(positionLockFabViewModel)
         lifecycle.removeObserver(zoomControlsViewModel)
     }

@@ -8,15 +8,19 @@ import com.sygic.modules.common.di.ViewModelCreatorFactory
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
-import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.mapobject.OnClickMapMarker
+import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import javax.inject.Inject
 
-class BrowseMapFragmentViewModel private constructor(attributesTypedArray: TypedArray?) : ViewModel(),
-    MapInteractionManager.Listener {
+class BrowseMapFragmentViewModel private constructor(
+    attributesTypedArray: TypedArray?,
+    private val poiDataManager: PoiDataManager,
+    private val extendedMapDataModel: ExtendedMapDataModel,
+    private val mapInteractionManager: MapInteractionManager
+) : ViewModel(), MapInteractionManager.Listener {
 
     @MapInteractionMode
     val mapInteractionMode: MutableLiveData<Int> = MutableLiveData()
@@ -84,9 +88,16 @@ class BrowseMapFragmentViewModel private constructor(attributesTypedArray: Typed
     }
 
     //todo: generate this
-    class Factory @Inject constructor() : ViewModelCreatorFactory {
+    class Factory @Inject constructor(
+        private val poiDataManager: PoiDataManager,
+        private val extendedMapDataModel: ExtendedMapDataModel,
+        private val mapInteractionManager: MapInteractionManager
+    ) : ViewModelCreatorFactory {
         override fun create(vararg assistedValues: Any?) = BrowseMapFragmentViewModel(
-            if (assistedValues.isNotEmpty()) assistedValues[0] as TypedArray? else null
+            if (assistedValues.isNotEmpty()) assistedValues[0] as TypedArray? else null,
+            poiDataManager,
+            extendedMapDataModel,
+            mapInteractionManager
         )
     }
 }

@@ -2,6 +2,7 @@ package com.sygic.modules.common
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -23,13 +24,8 @@ import com.sygic.modules.common.di.DaggerModulesComponent
 import com.sygic.modules.common.di.ModuleBuilder
 import com.sygic.modules.common.di.ModulesComponent
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
-import com.sygic.modules.common.initialization.manager.SdkInitializationManagerImpl
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
-import com.sygic.modules.common.mapinteraction.manager.MapInteractionManagerImpl
 import com.sygic.modules.common.poi.manager.PoiDataManager
-import com.sygic.modules.common.poi.manager.PoiDataManagerImpl
-import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
-
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
@@ -40,19 +36,19 @@ import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
 import com.sygic.ui.common.sdk.mapobject.MapMarker
+import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
 import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
+import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener, LocationManager.LocationRequester,
     PermissionsManager.PermissionsRequester {
 
-    protected val mapInteractionManager: MapInteractionManager by lazy { MapInteractionManagerImpl() }
-    protected val poiDataManager: PoiDataManager by lazy { PoiDataManagerImpl() }
-    protected val locationManager: LocationManager by lazy { LocationManagerImpl(this) }
-    protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) }
+    protected val locationManager: LocationManager by lazy { LocationManagerImpl(this) } //todo: Dagger
+    protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) } //todo: Dagger
 
     protected val modulesComponent: ModulesComponent by lazy {
         DaggerModulesComponent.builder()
@@ -60,12 +56,17 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
             .build()
     }
 
+    @Inject
+    internal lateinit var poiDataManager: PoiDataManager
+    @Inject
+    internal lateinit var extendedMapDataModel: ExtendedMapDataModel
+    @Inject
+    internal lateinit var mapInteractionManager: MapInteractionManager
+    @Inject
+    internal lateinit var sdkInitializationManager: SdkInitializationManager
+
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
-
-    private var extendedMapDataModel: ExtendedMapDataModel = ExtendedMapDataModel()
-
-    private lateinit var sdkInitializationManager: SdkInitializationManager
 
     protected inline fun <reified T, B: ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
         block(builder.plus(modulesComponent).build())
@@ -82,7 +83,6 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        sdkInitializationManager = SdkInitializationManagerImpl() //ToDo: singleton
         sdkInitializationManager.initialize((context as Activity).application, this)
     }
 

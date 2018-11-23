@@ -5,10 +5,10 @@ import androidx.annotation.RestrictTo
 import com.sygic.modules.common.R
 import com.sygic.modules.common.utils.getApiKey
 import com.sygic.sdk.SygicEngine
-import java.util.LinkedHashSet
+import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-internal class SdkInitializationManagerImpl : SdkInitializationManager,
+class SdkInitializationManagerImpl : SdkInitializationManager,
     SygicEngine.OnInitListener {
 
     private var initialized = false
@@ -38,7 +38,7 @@ internal class SdkInitializationManagerImpl : SdkInitializationManager,
         callbacks.clear()
     }
 
-    override fun onError(p0: Int) {
+    override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
         /* Currently do nothing */
     }
 }

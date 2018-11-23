@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-internal interface SdkInitializationManager {
+interface SdkInitializationManager {
 
     interface Callback {
         fun onSdkInitialized()

@@ -8,6 +8,7 @@ import java.lang.ref.WeakReference
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class LocationManagerImpl(locationRequester: LocationManager.LocationRequester) : LocationManager {
 
+    //todo: live data
     private var locationRequesterWeakReference: WeakReference<LocationManager.LocationRequester> = WeakReference(locationRequester)
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 

@@ -8,6 +8,7 @@ import java.util.*
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PermissionsManagerImpl(permissionsRequester: PermissionsManager.PermissionsRequester) : PermissionsManager {
 
+    //todo: live data
     private var permissionRequesterWeakReference: WeakReference<PermissionsManager.PermissionsRequester> =
         WeakReference(permissionsRequester)
 
