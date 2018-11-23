@@ -2,7 +2,6 @@ package com.sygic.modules.common
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -19,17 +18,23 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
-import com.sygic.modules.common.mapinteraction.manager.MapInteractionManagerImpl
+import com.sygic.modules.common.di.ContextModule
+import com.sygic.modules.common.di.DaggerModulesComponent
+import com.sygic.modules.common.di.ModuleBuilder
+import com.sygic.modules.common.di.ModulesComponent
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.initialization.manager.SdkInitializationManagerImpl
+import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
+import com.sygic.modules.common.mapinteraction.manager.MapInteractionManagerImpl
 import com.sygic.modules.common.poi.manager.PoiDataManager
 import com.sygic.modules.common.poi.manager.PoiDataManagerImpl
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
+
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
+import com.sygic.ui.common.locationManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.LocationManagerImpl
@@ -49,12 +54,22 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     protected val locationManager: LocationManager by lazy { LocationManagerImpl(this) }
     protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) }
 
+    protected val modulesComponent: ModulesComponent by lazy {
+        DaggerModulesComponent.builder()
+            .contextModule(ContextModule(this))
+            .build()
+    }
+
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
     private var extendedMapDataModel: ExtendedMapDataModel = ExtendedMapDataModel()
 
     private lateinit var sdkInitializationManager: SdkInitializationManager
+
+    protected inline fun <reified T, B: ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
+        block(builder.plus(modulesComponent).build())
+    }
 
     init {
         getMapAsync(this)
@@ -178,11 +193,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     }
 
     override fun isProviderEnabled(provider: String): Boolean {
-        return context?.let {
-            (it.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager).isProviderEnabled(
-                provider
-            )
-        } ?: false
+        return context?.locationManager?.isProviderEnabled(provider) ?: false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -196,6 +207,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         permissionsRequesterCallback?.onRequestPermissionsResult(permissions, grantResults)
+        permissionsRequesterCallback = null
     }
 
     fun addMapMarker(marker: MapMarker) {

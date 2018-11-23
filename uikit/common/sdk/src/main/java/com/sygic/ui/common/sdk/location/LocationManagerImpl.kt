@@ -32,9 +32,8 @@ class LocationManagerImpl(locationRequester: LocationManager.LocationRequester) 
     /**
      * Returns the current enabled/disabled status of the GPS provider.
      *
-     *
      * If the user has enabled this provider in the Settings menu, true
-     * is returned, false otherwise false is returned
+     * is returned, false otherwise
      *
      * @return current GPS status
      */
