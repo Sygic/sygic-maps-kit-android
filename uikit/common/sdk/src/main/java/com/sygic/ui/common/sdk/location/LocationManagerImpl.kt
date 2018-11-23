@@ -8,6 +8,7 @@ import java.lang.ref.WeakReference
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class LocationManagerImpl(locationRequester: LocationManager.LocationRequester) : LocationManager {
 
+    //todo: live data
     private var locationRequesterWeakReference: WeakReference<LocationManager.LocationRequester> = WeakReference(locationRequester)
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 
@@ -32,9 +33,8 @@ class LocationManagerImpl(locationRequester: LocationManager.LocationRequester) 
     /**
      * Returns the current enabled/disabled status of the GPS provider.
      *
-     *
      * If the user has enabled this provider in the Settings menu, true
-     * is returned, false otherwise false is returned
+     * is returned, false otherwise
      *
      * @return current GPS status
      */

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -28,10 +29,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':uikit-common')
     api project(':uikit-common-sdk')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.google.android.gms:play-services-location:$playServicesLocationVersion"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+
+    //dagger
+    api "com.google.dagger:dagger-android-support:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 }

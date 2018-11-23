@@ -5,22 +5,25 @@ import androidx.annotation.RestrictTo
 import com.sygic.modules.common.R
 import com.sygic.modules.common.utils.getApiKey
 import com.sygic.sdk.SygicEngine
-import java.util.LinkedHashSet
+import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-internal class SdkInitializationManagerImpl : SdkInitializationManager,
+class SdkInitializationManagerImpl : SdkInitializationManager,
     SygicEngine.OnInitListener {
 
     private var initialized = false
     private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
 
     override fun initialize(application: Application, callback: SdkInitializationManager.Callback) {
-        if (initialized) {
-            callback.onSdkInitialized()
-            return
+        synchronized(this) {
+            if (initialized) {
+                callback.onSdkInitialized()
+                return
+            }
+
+            callbacks.add(callback)
         }
 
-        callbacks.add(callback)
         application.getApiKey()?.let { key ->
             SygicEngine.Builder(application.getString(R.string.com_sygic_secret), key, application)
                 .setInitListener(this).init()
@@ -28,12 +31,14 @@ internal class SdkInitializationManagerImpl : SdkInitializationManager,
     }
 
     override fun onSdkInitialized() {
-        initialized = true
+        synchronized(this) {
+            initialized = true
+        }
         callbacks.forEach { it.onSdkInitialized() }
         callbacks.clear()
     }
 
-    override fun onError(p0: Int) {
+    override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
         /* Currently do nothing */
     }
 }
