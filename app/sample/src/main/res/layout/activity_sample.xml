@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".SampleActivity">
 
+    <!-- todo: MS-4558 change sygic_sdk_ namespace-->
     <fragment
         android:id="@+id/browseMapFragment"
         android:name="com.sygic.modules.browsemap.BrowseMapFragment"
@@ -18,6 +19,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:sygic_cameraInitialLatitude="48.145764"
         app:sygic_cameraInitialLongitude="17.126015"
+        app:sygic_sdk_initial_map_center_x="0.5"
+        app:sygic_sdk_initial_map_center_y="0.5"
         app:sygic_cameraInitialZoom="16"
         app:sygic_compassEnabled="true"
         app:sygic_compassHideIfNorthUp="false"

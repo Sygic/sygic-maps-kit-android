@@ -24,7 +24,7 @@
         </activity>
 
         <meta-data
-            android:name="com.sygic.ApiKey"
+            android:name="@string/com_sygic_api_key"
             android:value="${sygicApiKey}" />
 
     </application>

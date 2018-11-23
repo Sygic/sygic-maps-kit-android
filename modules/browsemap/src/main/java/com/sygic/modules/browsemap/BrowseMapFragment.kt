@@ -1,6 +1,7 @@
 package com.sygic.modules.browsemap
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -10,8 +11,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
-import com.sygic.sdk.map.MapView
-import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.permission.PermissionsManager
@@ -23,8 +22,10 @@ import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragmentWrapper() {
 
-    private lateinit var locationManager: LocationManager
-    private lateinit var permissionManager: PermissionsManager
+    private val locationManager: LocationManager = LocationManagerImpl(this)
+    private val permissionManager: PermissionsManager = PermissionsManagerImpl(this)
+
+    private var attributesTypedArray: TypedArray? = null
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
@@ -50,22 +51,22 @@ class BrowseMapFragment : MapFragmentWrapper() {
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
 
-        //todo: Dagger
-        locationManager = LocationManagerImpl(this)
-        permissionManager = PermissionsManagerImpl(this)
+        attributesTypedArray = context.obtainStyledAttributes(attrs, R.styleable.BrowseMapFragment)
+    }
 
-        //todo: MS-4507
-        val application = requireActivity().application
-        browseMapFragmentViewModel = ViewModelProviders.of(
-            this, BrowseMapFragmentViewModel.ViewModelFactory(application, attrs)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        browseMapFragmentViewModel = ViewModelProviders.of(this, BrowseMapFragmentViewModel.ViewModelFactory(attributesTypedArray)
         ).get(BrowseMapFragmentViewModel::class.java)
 
-        compassViewModel = ViewModelProviders.of(this,
-            CompassViewModel.ViewModelFactory(cameraDataModel)).get(CompassViewModel::class.java)
+        compassViewModel = ViewModelProviders.of(this, CompassViewModel.ViewModelFactory(cameraDataModel))
+            .get(CompassViewModel::class.java)
         lifecycle.addObserver(compassViewModel)
 
         positionLockFabViewModel = ViewModelProviders.of(this,
-            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager)).get(PositionLockFabViewModel::class.java)
+            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager))
+            .get(PositionLockFabViewModel::class.java)
         lifecycle.addObserver(positionLockFabViewModel)
 
         zoomControlsViewModel = ViewModelProviders.of(this,
@@ -85,25 +86,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
             root.addView(it, 0)
         }
         return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        //todo: MS-4508
-        getMapAsync(object : OnMapInitListener {
-            override fun onMapReady(mapView: MapView) {
-                /*if (cameraInitialLatitude != -1f && cameraInitialLongitude != -1f) {
-                    mapView.cameraModel.position =
-                            GeoCoordinates(cameraInitialLatitude.toDouble(), cameraInitialLongitude.toDouble())
-                }
-                if (cameraInitialLatitude != -1f) {
-                    mapView.cameraModel.zoomLevel = cameraInitialZoom
-                }*/
-            }
-
-            override fun onMapInitializationInterrupted() {}
-        })
     }
 
     override fun onDestroy() {
