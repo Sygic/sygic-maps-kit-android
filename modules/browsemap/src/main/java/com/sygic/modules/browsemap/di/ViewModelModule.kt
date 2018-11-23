@@ -13,10 +13,10 @@ import dagger.multibindings.IntoMap
         ViewModelModuleBase::class
     ]
 )
-abstract class ViewModelModule{
+abstract class ViewModelModule {
 
     @Binds
     @IntoMap
     @ViewModelKey(BrowseMapFragmentViewModel::class)
-    internal abstract fun postBrowseMapFragmentViewModel(viewModel: BrowseMapFragmentViewModel.Factory): ViewModelCreatorFactory
+    internal abstract fun putBrowseMapFragmentViewModelFactory(factory: BrowseMapFragmentViewModel.Factory): ViewModelCreatorFactory
 }
