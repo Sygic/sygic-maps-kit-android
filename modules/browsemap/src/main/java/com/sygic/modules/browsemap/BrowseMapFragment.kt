@@ -16,6 +16,7 @@ import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.di.ViewModelFactory
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
 import com.sygic.ui.viewmodel.compass.CompassViewModel
+import com.sygic.ui.viewmodel.poidetail.PoiDetailViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 import javax.inject.Inject
@@ -30,6 +31,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
+    private lateinit var poiDetailViewModel: PoiDetailViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
@@ -87,6 +89,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
             .get(CompassViewModel::class.java)
         lifecycle.addObserver(compassViewModel)
 
+        poiDetailViewModel = ViewModelProviders.of(
+            this,
+            PoiDetailViewModel.ViewModelFactory(mapDataModel)
+        ).get(PoiDetailViewModel::class.java)
+        lifecycle.addObserver(poiDetailViewModel)
+
         positionLockFabViewModel = ViewModelProviders.of(
             this,
             PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager)
@@ -105,6 +113,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         binding.setLifecycleOwner(this)
         binding.browseMapFragmentViewModel = browseMapFragmentViewModel
         binding.compassViewModel = compassViewModel
+        binding.poiDetailViewModel = poiDetailViewModel
         binding.positionLockFabViewModel = positionLockFabViewModel
         binding.zoomControlsViewModel = zoomControlsViewModel
         val root = binding.root as ViewGroup

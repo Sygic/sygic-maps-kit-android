@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="poiDetailInternalViewModel"
+            type="com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel" />
+
+    </data>
+
+    <merge
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+        <!--ToDO: theme attributes-->
+        <LinearLayout
+            android:id="@+id/headerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@{poiDetailInternalViewModel.titleText}"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="20sp"
+                tools:text="Sygic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{poiDetailInternalViewModel.subtitleText}"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                tools:text="Mlynské nivy 16, 821 09 Bratislava" />
+
+        </LinearLayout>
+
+        <!-- ToDO: -->
+        <ImageView
+            android:id="@+id/testImage"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_web"
+            app:layout_constraintBottom_toBottomOf="@+id/testText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/testText" />
+
+        <TextView
+            android:id="@+id/testText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:padding="16dp"
+            android:text="Test 2"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/testImage"
+            app:layout_constraintTop_toBottomOf="@id/headerContainer" />
+
+        <ImageView
+            android:id="@+id/testImage2"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_web"
+            app:layout_constraintBottom_toBottomOf="@+id/testText3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/testText3" />
+
+        <TextView
+            android:id="@+id/testText3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:padding="16dp"
+            android:text="Test 3"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/testImage2"
+            app:layout_constraintTop_toBottomOf="@id/testText" />
+
+    </merge>
+
+</layout>

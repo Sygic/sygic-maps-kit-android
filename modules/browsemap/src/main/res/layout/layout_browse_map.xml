@@ -16,6 +16,10 @@
             type="com.sygic.ui.viewmodel.compass.CompassViewModel" />
 
         <variable
+            name="poiDetailViewModel"
+            type="com.sygic.ui.viewmodel.poidetail.PoiDetailViewModel" />
+
+        <variable
             name="positionLockFabViewModel"
             type="com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel" />
 
@@ -25,51 +29,64 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.sygic.ui.view.compass.CompassView
-            android:id="@+id/compassView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:onClick="@{() -> compassViewModel.onClick()}"
-            android:rotation="@{safeUnbox(compassViewModel.rotation)}"
-            android:visibility="@{safeUnbox(browseMapFragmentViewModel.compassEnabled) ? View.VISIBLE : View.GONE}"
-            app:hideCompassIfNorthUpAllowed="@{safeUnbox(browseMapFragmentViewModel.compassHideIfNorthUp)}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:rotation="45"
-            tools:visibility="visible" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <com.sygic.ui.view.positionlockfab.LockActionFloatingButton
-            android:id="@+id/positionLockFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
-            android:onClick="@{positionLockFabViewModel::onClick}"
-            android:visibility="@{safeUnbox(browseMapFragmentViewModel.positionLockFabEnabled) ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:state="@{safeUnbox(positionLockFabViewModel.currentState)}"
-            tools:visibility="visible" />
+            <com.sygic.ui.view.compass.CompassView
+                android:id="@+id/compassView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:onClick="@{() -> compassViewModel.onClick()}"
+                android:rotation="@{safeUnbox(compassViewModel.rotation)}"
+                android:visibility="@{safeUnbox(browseMapFragmentViewModel.compassEnabled) ? View.VISIBLE : View.GONE}"
+                app:hideCompassIfNorthUpAllowed="@{safeUnbox(browseMapFragmentViewModel.compassHideIfNorthUp)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:rotation="45"
+                tools:visibility="visible" />
 
-        <com.sygic.ui.view.zoomcontrols.ZoomControlsMenu
-            android:id="@+id/zoomControlsMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
-            android:visibility="@{safeUnbox(browseMapFragmentViewModel.zoomControlsEnabled) ? View.VISIBLE : View.GONE}"
-            app:interactionListener="@{zoomControlsViewModel}"
-            app:layout_constraintBottom_toTopOf="@id/positionLockFab"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tiltType="@{safeUnbox(zoomControlsViewModel.tiltType)}"
-            tools:visibility="visible" />
+            <com.sygic.ui.view.positionlockfab.LockActionFloatingButton
+                android:id="@+id/positionLockFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:onClick="@{positionLockFabViewModel::onClick}"
+                android:visibility="@{safeUnbox(browseMapFragmentViewModel.positionLockFabEnabled) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:state="@{safeUnbox(positionLockFabViewModel.currentState)}"
+                tools:visibility="visible" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.sygic.ui.view.zoomcontrols.ZoomControlsMenu
+                android:id="@+id/zoomControlsMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="@{safeUnbox(browseMapFragmentViewModel.zoomControlsEnabled) ? View.VISIBLE : View.GONE}"
+                app:interactionListener="@{zoomControlsViewModel}"
+                app:layout_constraintBottom_toTopOf="@id/positionLockFab"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tiltType="@{safeUnbox(zoomControlsViewModel.tiltType)}"
+                tools:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.sygic.ui.view.poidetail.PoiDetailView
+            android:id="@+id/poiDetailView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:state="@{safeUnbox(poiDetailViewModel.poiDetailState)}"
+            app:data="@{poiDetailViewModel.poiData}"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

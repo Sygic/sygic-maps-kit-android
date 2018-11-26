@@ -1,22 +1,26 @@
 package com.sygic.ui.viewmodel.poidetail
 
-import android.util.Log
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 
 class PoiDetailViewModel(private val extendedMapDataModel: ExtendedMapDataModel) : ViewModel(), DefaultLifecycleObserver {
 
-    //val rotation: MutableLiveData<Float> = MutableLiveData()
+    val poiData: MutableLiveData<PoiData> = MutableLiveData()
+    val poiDetailState: MutableLiveData<Int> = MutableLiveData()
 
     private val poiDataObserver = Observer<PoiData> { poiData ->
-        Log.d("Tomas", "called with: poiDataObserver = [$poiData]")
+        this.poiData.value = poiData
+        if (poiData.isEmpty()) {
+            poiDetailState.value = BottomSheetBehavior.STATE_HIDDEN
+        } else {
+            poiDetailState.value = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 
     init {
+        poiDetailState.value = BottomSheetBehavior.STATE_HIDDEN
         extendedMapDataModel.poiDataObservable.observeForever(poiDataObserver)
     }
 
