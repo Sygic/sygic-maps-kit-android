@@ -15,6 +15,7 @@ import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
 import android.util.TypedValue
 import androidx.core.content.ContextCompat
+import java.io.InvalidClassException
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class PoiDetailView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
@@ -33,12 +34,17 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
         behavior.state = BottomSheetBehavior.STATE_HIDDEN
         setBackgroundColor(context)
 
-        poiDetailInternalViewModel = ViewModelProviders.of(
-            context as FragmentActivity,
-            PoiDetailInternalViewModel.ViewModelFactory()
-        ).get(PoiDetailInternalViewModel::class.java)
+        if (context is FragmentActivity) {
+            poiDetailInternalViewModel = ViewModelProviders.of(
+                context,
+                PoiDetailInternalViewModel.ViewModelFactory()
+            ).get(PoiDetailInternalViewModel::class.java)
+        } else {
+            throw InvalidClassException("The PoiDetailView host must be the FragmentActivity")
+        }
 
         internalBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_poi_detail_internal, this, true)
+        internalBinding.setLifecycleOwner(context)
         internalBinding.poiDetailInternalViewModel = poiDetailInternalViewModel
     }
 
@@ -61,7 +67,7 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
         if (layoutParams is CoordinatorLayout.LayoutParams) {
             (layoutParams as CoordinatorLayout.LayoutParams).behavior = behavior
         } else {
-            throw IllegalStateException("The PoiDetailView parent must be an CoordinatorLayout")
+            throw InvalidClassException("The PoiDetailView parent must be the CoordinatorLayout")
         }
     }
 
