@@ -24,6 +24,8 @@ import java.util.*;
 public class Processor extends AbstractProcessor {
 
     private static final String GENERATED_CLASS_SUFFIX = "Factory";
+    private static final String DEFAULT_FACTORY_INTERFACE = "com.sygic.tools.viewmodel.ViewModelCreatorFactory";
+    private static final String ASSISTED_PARAMETER_NAME = "assistedValues";
 
     private Filer filer;
     private Messager messager;
@@ -63,9 +65,9 @@ public class Processor extends AbstractProcessor {
                     Class[] classes = annotation.implementing();
                     if (classes.length == 0) {
                         try {
-                            classes = new Class[]{Class.forName("com.sygic.tools.viewmodel.ViewModelCreatorFactory")};
+                            classes = new Class[]{Class.forName(DEFAULT_FACTORY_INTERFACE)};
                         } catch (ClassNotFoundException e) {
-                            messager.printMessage(Diagnostic.Kind.WARNING, "Default AutoFactory super type - com.sygic.tools.viewmodel.ViewModelCreatorFactory not found! Define your own super type to resolve this warning.");
+                            messager.printMessage(Diagnostic.Kind.WARNING, "Default AutoFactory super type - " + DEFAULT_FACTORY_INTERFACE + " not found! Define your own super type to resolve this warning.");
                         }
                     }
 
@@ -79,9 +81,9 @@ public class Processor extends AbstractProcessor {
 
                     if (typeMirrors.size() == 0) {
                         try {
-                            interfaces = new ClassName[]{ClassName.get(Class.forName("com.sygic.tools.viewmodel.ViewModelCreatorFactory"))};
+                            interfaces = new ClassName[]{ClassName.get(Class.forName(DEFAULT_FACTORY_INTERFACE))};
                         } catch (ClassNotFoundException e) {
-                            messager.printMessage(Diagnostic.Kind.WARNING, "Default AutoFactory super type - com.sygic.tools.viewmodel.ViewModelCreatorFactory not found! Define your own super type to resolve this warning.");
+                            messager.printMessage(Diagnostic.Kind.WARNING, "Default AutoFactory super type - " + DEFAULT_FACTORY_INTERFACE + " not found! Define your own super type to resolve this warning.");
                         }
                     } else {
                         for (int i = 0; i < typeMirrors.size(); i++) {
@@ -156,7 +158,7 @@ public class Processor extends AbstractProcessor {
                         .methodBuilder("create")
                         .addModifiers(Modifier.PUBLIC)
                         .varargs()
-                        .addParameter(ParameterSpec.builder(ArrayTypeName.of(Object.class), "assistedValues")
+                        .addParameter(ParameterSpec.builder(ArrayTypeName.of(Object.class), ASSISTED_PARAMETER_NAME)
                                 .addAnnotation(NonNull.class)
                                 .build())
                         .addAnnotation(Override.class)
@@ -168,7 +170,7 @@ public class Processor extends AbstractProcessor {
 
                 List<Object> args = new ArrayList<>();
 
-                StringBuilder sb = new StringBuilder("if (assistedValues.length != $L) { " +
+                StringBuilder sb = new StringBuilder("if (" + ASSISTED_PARAMETER_NAME + ".length != $L) { " +
                         "throw new IllegalStateException(\"Wrong number of assisted parameters! Expected count $L\");" +
                         " }\n");
                 args.add(assistedParameters.size());
@@ -179,7 +181,7 @@ public class Processor extends AbstractProcessor {
                     final VariableElement parameter = entry.getValue();
 
                     if (parameter.getAnnotation(NotNull.class) != null || parameter.getAnnotation(NonNull.class) != null) {
-                        sb.append("if (assistedValues[$L] == null) { " +
+                        sb.append("if (" + ASSISTED_PARAMETER_NAME + "[$L] == null) { " +
                                 "throw new IllegalArgumentException(\"Null value provided for @NonNull parameter $N\");" +
                                 " }\n");
                         args.add(assistedValuesCount);
@@ -187,7 +189,7 @@ public class Processor extends AbstractProcessor {
                     }
 
                     if (!parameter.asType().getKind().isPrimitive()) {
-                        sb.append("if (!(assistedValues[$L] instanceof $N)) { " +
+                        sb.append("if (!(" + ASSISTED_PARAMETER_NAME + "[$L] instanceof $N)) { " +
                                 "throw new IllegalArgumentException(\"Value provided for parameter $N is not of correct type $N\");" +
                                 " }\n");
                         args.add(assistedValuesCount);
@@ -206,7 +208,7 @@ public class Processor extends AbstractProcessor {
                     VariableElement parameter = nonAssistedParameters.get(j);
                     if (parameter == null) {
                         parameter = assistedParameters.get(j);
-                        sb.append("($N)assistedValues[$L]");
+                        sb.append("($N)" + ASSISTED_PARAMETER_NAME + "[$L]");
                         args.add(parameter.asType().toString());
                         args.add(assistedIndex++);
                     } else {
