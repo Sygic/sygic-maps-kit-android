@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.sygic.modules.browsemap.R
 import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
-import com.sygic.tools.viewmodel.ViewModelCreatorFactory
 
-@AutoFactory(implementing = [ViewModelCreatorFactory::class])
+@AutoFactory
 class BrowseMapFragmentViewModel internal constructor(@Assisted attributesTypedArray: TypedArray?) : ViewModel() {
 
     val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()

@@ -58,7 +58,7 @@ public class Processor extends AbstractProcessor {
                     continue;
                 }
 
-                ClassName[] interfaces = new ClassName[0];
+                ClassName[] interfaces;
                 try {
                     Class[] classes = annotation.implementing();
                     if (classes.length == 0) {
@@ -69,7 +69,7 @@ public class Processor extends AbstractProcessor {
                         }
                     }
 
-                    interfaces = new ClassName[interfaces.length];
+                    interfaces = new ClassName[classes.length];
                     for (int i = 0; i < classes.length; i++) {
                         interfaces[i] = ClassName.get(classes[i]);
                     }
@@ -77,8 +77,16 @@ public class Processor extends AbstractProcessor {
                     final List<? extends TypeMirror> typeMirrors = mte.getTypeMirrors();
                     interfaces = new ClassName[typeMirrors.size()];
 
-                    for (int i = 0; i < typeMirrors.size(); i++) {
-                        interfaces[i] = ClassName.get(((TypeElement) typeUtils.asElement(typeMirrors.get(i))));
+                    if (typeMirrors.size() == 0) {
+                        try {
+                            interfaces = new ClassName[]{ClassName.get(Class.forName("com.sygic.tools.viewmodel.ViewModelCreatorFactory"))};
+                        } catch (ClassNotFoundException e) {
+                            messager.printMessage(Diagnostic.Kind.WARNING, "Default AutoFactory super type - com.sygic.tools.viewmodel.ViewModelCreatorFactory not found! Define your own super type to resolve this warning.");
+                        }
+                    } else {
+                        for (int i = 0; i < typeMirrors.size(); i++) {
+                            interfaces[i] = ClassName.get(((TypeElement) typeUtils.asElement(typeMirrors.get(i))));
+                        }
                     }
                 }
 
