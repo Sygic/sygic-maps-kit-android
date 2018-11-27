@@ -24,5 +24,6 @@ class ExtendedMapDataModel : SimpleMapDataModel() {
 
     fun notifyPoiDataChanged(poiData: PoiData) {
         poiDataObservable.value = poiData
+        if (poiData.isEmpty()) removeOnClickMapMarker()
     }
 }

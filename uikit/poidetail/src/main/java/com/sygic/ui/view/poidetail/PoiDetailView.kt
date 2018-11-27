@@ -2,8 +2,12 @@ package com.sygic.ui.view.poidetail
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
@@ -12,19 +16,29 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
+import com.sygic.ui.view.poidetail.listener.PoiDetailStateListener
 import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
-import android.util.TypedValue
-import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
 import java.io.InvalidClassException
+import java.lang.ref.WeakReference
+import java.util.*
 
+/* todo: Not working :(
+@BindingMethods(
+    BindingMethod(
+        type = PoiDetailView::class,
+        attribute = "stateListener",
+        method = "addStateListener"
+    )
+)*/
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class PoiDetailView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     LinearLayout(context, attrs, defStyle) {
 
     private val internalBinding: LayoutPoiDetailInternalBinding
     private val poiDetailInternalViewModel: PoiDetailInternalViewModel
+
     private val behavior: BottomSheetBehavior<PoiDetailView> = BottomSheetBehavior()
+    private val stateListeners = LinkedHashSet<WeakReference<PoiDetailStateListener>>()
 
     private val poiData: MutableLiveData<PoiData> = MutableLiveData()
     private val onHeaderContainerClickObserver = Observer<Any> { behavior.state = BottomSheetBehavior.STATE_EXPANDED }
@@ -35,6 +49,16 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
         orientation = VERTICAL
         behavior.isHideable = true
         behavior.state = BottomSheetBehavior.STATE_HIDDEN
+        behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, @BottomSheetBehavior.State newState: Int) {
+                val iterator = stateListeners.iterator()
+                while (iterator.hasNext()) {
+                    iterator.next().get()?.onPoiDetailStateChanged(newState) ?: iterator.remove()
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
         setBackgroundColor(context)
 
         if (context is FragmentActivity) {
@@ -89,6 +113,10 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     fun setState(state: Int) {
         behavior.state = state
+    }
+
+    fun setStateListener(poiDetailStateListener: PoiDetailStateListener) { //todo: add ?!!
+        stateListeners.add(WeakReference(poiDetailStateListener))
     }
 
     fun setData(poiData: PoiData?) {

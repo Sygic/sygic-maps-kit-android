@@ -1,11 +1,14 @@
 package com.sygic.ui.viewmodel.poidetail
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
+import com.sygic.ui.view.poidetail.listener.PoiDetailStateListener
 
-class PoiDetailViewModel(private val extendedMapDataModel: ExtendedMapDataModel) : ViewModel(), DefaultLifecycleObserver {
+class PoiDetailViewModel(private val extendedMapDataModel: ExtendedMapDataModel) : ViewModel(),
+    PoiDetailStateListener, DefaultLifecycleObserver {
 
     val poiData: MutableLiveData<PoiData> = MutableLiveData()
     val poiDetailState: MutableLiveData<Int> = MutableLiveData()
@@ -22,6 +25,13 @@ class PoiDetailViewModel(private val extendedMapDataModel: ExtendedMapDataModel)
     init {
         poiDetailState.value = BottomSheetBehavior.STATE_HIDDEN
         extendedMapDataModel.poiDataObservable.observeForever(poiDataObserver)
+    }
+
+    @SuppressLint("SwitchIntDef")
+    override fun onPoiDetailStateChanged(@BottomSheetBehavior.State state: Int) {
+        when (state) {
+            BottomSheetBehavior.STATE_HIDDEN -> extendedMapDataModel.notifyPoiDataChanged(PoiData())
+        }
     }
 
     override fun onCleared() {

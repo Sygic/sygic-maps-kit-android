@@ -85,6 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:state="@{safeUnbox(poiDetailViewModel.poiDetailState)}"
+            app:stateListener="@{poiDetailViewModel}"
             app:data="@{poiDetailViewModel.poiData}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
