@@ -60,7 +60,12 @@ class BrowseMapFragmentViewModel private constructor(
             when (mode) {
                 MapInteractionMode.NONE -> return
                 MapInteractionMode.MARKERS_ONLY -> {
-                    if (firstViewObject is MapMarker) getPoiData(firstViewObject)
+                    if (firstViewObject is MapMarker) {
+                        getPoiData(firstViewObject)
+                        return
+                    }
+
+                    extendedMapDataModel.notifyPoiDataChanged(PoiData())
                 }
                 MapInteractionMode.FULL -> {
                     getPoiData(firstViewObject)

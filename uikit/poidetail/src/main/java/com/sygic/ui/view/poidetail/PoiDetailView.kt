@@ -8,6 +8,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.sdk.data.PoiData
@@ -25,7 +26,8 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val poiDetailInternalViewModel: PoiDetailInternalViewModel
     private val behavior: BottomSheetBehavior<PoiDetailView> = BottomSheetBehavior()
 
-    val poiData: MutableLiveData<PoiData> = MutableLiveData()
+    private val poiData: MutableLiveData<PoiData> = MutableLiveData()
+    private val onHeaderContainerClickObserver = Observer<Any> { behavior.state = BottomSheetBehavior.STATE_EXPANDED }
 
     init {
         isClickable = true
@@ -42,6 +44,7 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
         } else {
             throw InvalidClassException("The PoiDetailView host must be the FragmentActivity")
         }
+        poiDetailInternalViewModel.setOnHeaderContainerClickObserver(onHeaderContainerClickObserver)
 
         internalBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_poi_detail_internal, this, true)
         internalBinding.setLifecycleOwner(context)
@@ -63,7 +66,7 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        poiDetailInternalViewModel.addObservable(poiData)
+        poiDetailInternalViewModel.addDataObservable(poiData)
         if (layoutParams is CoordinatorLayout.LayoutParams) {
             (layoutParams as CoordinatorLayout.LayoutParams).behavior = behavior
         } else {
@@ -78,7 +81,7 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun onDetachedFromWindow() {
-        poiDetailInternalViewModel.removeObservable(poiData)
+        poiDetailInternalViewModel.removeDataObservable(poiData)
 
         super.onDetachedFromWindow()
     }

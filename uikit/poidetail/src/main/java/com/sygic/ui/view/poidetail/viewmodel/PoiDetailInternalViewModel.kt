@@ -11,6 +11,7 @@ class PoiDetailInternalViewModel : ViewModel() {
     val titleText: MutableLiveData<String> = MutableLiveData()
     val subtitleText: MutableLiveData<String> = MutableLiveData()
 
+    private var onHeaderContainerClickObserver: Observer<Any>? = null
     private val poiDataObserver = Observer<PoiData> { poiData ->
         setTitle(poiData)
         setSubtitle(poiData.street, poiData.city)
@@ -28,12 +29,26 @@ class PoiDetailInternalViewModel : ViewModel() {
         subtitleText.value = stringBuilder.toString()
     }
 
-    fun addObservable(poiData: MutableLiveData<PoiData>) {
+    fun setOnHeaderContainerClickObserver(onHeaderContainerClickObserver: Observer<Any>) {
+        this.onHeaderContainerClickObserver = onHeaderContainerClickObserver
+    }
+
+    fun addDataObservable(poiData: MutableLiveData<PoiData>) {
         poiData.observeForever(poiDataObserver)
     }
 
-    fun removeObservable(poiData: MutableLiveData<PoiData>) {
+    fun removeDataObservable(poiData: MutableLiveData<PoiData>) {
         poiData.removeObserver(poiDataObserver)
+    }
+
+    fun onHeaderContainerClick() {
+        onHeaderContainerClickObserver?.onChanged(Any())
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        onHeaderContainerClickObserver = null
     }
 
     class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
