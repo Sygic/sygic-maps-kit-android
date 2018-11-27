@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="poiDetailInternalViewModel"
@@ -14,9 +15,9 @@
     <merge
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+        android:orientation="vertical"
+        tools:parentTag="android.widget.LinearLayout">
 
-        <!--ToDO: theme attributes-->
         <LinearLayout
             android:id="@+id/headerContainer"
             android:layout_width="match_parent"
@@ -46,54 +47,32 @@
 
         </LinearLayout>
 
-        <!-- ToDO: -->
-        <ImageView
-            android:id="@+id/testImage"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_web"
-            app:layout_constraintBottom_toBottomOf="@+id/testText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/testText" />
+        <TextView
+            style="@style/PoiDetailItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_web"
+            android:text="@{poiDetailInternalViewModel.urlText}"
+            android:visibility="@{poiDetailInternalViewModel.urlText != null ? View.VISIBLE : View.GONE}"
+            tools:text="http://www.sygic.com"/>
 
         <TextView
-            android:id="@+id/testText"
-            android:layout_width="0dp"
+            style="@style/PoiDetailItem"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:fontFamily="sans-serif-medium"
-            android:padding="16dp"
-            android:text="Test 2"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/testImage"
-            app:layout_constraintTop_toBottomOf="@id/headerContainer" />
-
-        <ImageView
-            android:id="@+id/testImage2"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_web"
-            app:layout_constraintBottom_toBottomOf="@+id/testText3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/testText3" />
+            android:drawableStart="@drawable/ic_web"
+            android:text="@{poiDetailInternalViewModel.emailText}"
+            android:visibility="@{poiDetailInternalViewModel.emailText != null ? View.VISIBLE : View.GONE}"
+            tools:text="sygic@sygic.com"/>
 
         <TextView
-            android:id="@+id/testText3"
-            android:layout_width="0dp"
+            style="@style/PoiDetailItem"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:fontFamily="sans-serif-medium"
-            android:padding="16dp"
-            android:text="Test 3"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/testImage2"
-            app:layout_constraintTop_toBottomOf="@id/testText" />
+            android:drawableStart="@drawable/ic_web"
+            android:text="@{poiDetailInternalViewModel.phoneText}"
+            android:visibility="@{poiDetailInternalViewModel.phoneText != null ? View.VISIBLE : View.GONE}"
+            tools:text="+421 0944 123456"/>
 
     </merge>
 

@@ -10,23 +10,33 @@ class PoiDetailInternalViewModel : ViewModel() {
 
     val titleText: MutableLiveData<String> = MutableLiveData()
     val subtitleText: MutableLiveData<String> = MutableLiveData()
+    val urlText: MutableLiveData<String> = MutableLiveData()
+    val emailText: MutableLiveData<String> = MutableLiveData()
+    val phoneText: MutableLiveData<String> = MutableLiveData()
 
     private var onHeaderContainerClickObserver: Observer<Any>? = null
     private val poiDataObserver = Observer<PoiData> { poiData ->
-        setTitle(poiData)
-        setSubtitle(poiData.street, poiData.city)
+        titleText.value = getTitleText(poiData)
+        subtitleText.value = getSetSubtitleText(poiData.street, poiData.city)
+        urlText.value = poiData.url
+        emailText.value = poiData.email
+        phoneText.value = poiData.phone
     }
 
-    private fun setTitle(poiData: PoiData) {
-        titleText.value = poiData.name ?:
-                String.format(Locale.US, "%.6f, %.6f", poiData.coordinates.latitude, poiData.coordinates.longitude)
+    private fun getTitleText(poiData: PoiData): String {
+        return poiData.name ?: String.format(
+            Locale.US,
+            "%.6f, %.6f",
+            poiData.coordinates.latitude,
+            poiData.coordinates.longitude
+        )
     }
 
-    private fun setSubtitle(street: String?, city: String?) {
+    private fun getSetSubtitleText(street: String?, city: String?): String {
         val stringBuilder = StringBuilder()
         street?.let { stringBuilder.append(String.format("%s", it)) }
         city?.let { stringBuilder.append(String.format(if (TextUtils.isEmpty(street)) "%s" else ", %s", it)) }
-        subtitleText.value = stringBuilder.toString()
+        return stringBuilder.toString()
     }
 
     fun setOnHeaderContainerClickObserver(onHeaderContainerClickObserver: Observer<Any>) {

@@ -3,7 +3,6 @@ package com.sygic.ui.view.poidetail
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
@@ -15,12 +14,13 @@ import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
 import android.util.TypedValue
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import java.io.InvalidClassException
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class PoiDetailView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
-    ConstraintLayout(context, attrs, defStyle) {
+    LinearLayout(context, attrs, defStyle) {
 
     private val internalBinding: LayoutPoiDetailInternalBinding
     private val poiDetailInternalViewModel: PoiDetailInternalViewModel
@@ -32,6 +32,7 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
     init {
         isClickable = true
         isFocusable = true
+        orientation = VERTICAL
         behavior.isHideable = true
         behavior.state = BottomSheetBehavior.STATE_HIDDEN
         setBackgroundColor(context)
