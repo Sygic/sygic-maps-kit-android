@@ -111,7 +111,12 @@ public class Processor extends AbstractProcessor {
                 List<Map<Integer, ? extends VariableElement>> assistedParametersList = new ArrayList<>();
                 List<Map<Integer, ? extends VariableElement>> nonAssistedParametersList = new ArrayList<>();
 
-                for (ExecutableElement element : ElementFilter.constructorsIn(typeElement.getEnclosedElements())) {
+                final List<ExecutableElement> constructors = ElementFilter.constructorsIn(typeElement.getEnclosedElements());
+                if (constructors.isEmpty()) {
+                    messager.printMessage(Diagnostic.Kind.ERROR, "Annotated class " + typeName + " has no constructor!", typeElement);
+                }
+
+                for (ExecutableElement element : constructors) {
                     final List<? extends VariableElement> parameters = element.getParameters();
                     final Map<Integer, VariableElement> assistedList = new LinkedHashMap<>(parameters.size());
                     final Map<Integer, VariableElement> nonAssistedList = new LinkedHashMap<>(parameters.size());
@@ -169,48 +174,52 @@ public class Processor extends AbstractProcessor {
                 int parametersSize = nonAssistedParameters.size() + assistedParameters.size();
 
                 List<Object> args = new ArrayList<>();
+                StringBuilder sb = new StringBuilder();
 
-                StringBuilder sb = new StringBuilder("if (" + ASSISTED_PARAMETER_NAME + ".length != $L) { " +
-                        "throw new IllegalStateException(\"Wrong number of assisted parameters! Expected count $L\");" +
-                        " }\n");
-                args.add(assistedParameters.size());
-                args.add(assistedParameters.size());
+                for (Map.Entry<Integer, ? extends VariableElement> assistedParameter : assistedParameters.entrySet()) {
+                    sb.append("$T $N = null;\n");
+                    args.add(assistedParameter.getValue().asType());
+                    args.add(assistedParameter.getValue().getSimpleName().toString());
+                }
 
-                int assistedValuesCount = 0;
+                sb.append("int i = 0;");
                 for (Map.Entry<Integer, ? extends VariableElement> entry : assistedParameters.entrySet()) {
                     final VariableElement parameter = entry.getValue();
 
                     if (parameter.getAnnotation(NotNull.class) != null || parameter.getAnnotation(NonNull.class) != null) {
-                        sb.append("if (" + ASSISTED_PARAMETER_NAME + "[$L] == null) { " +
-                                "throw new IllegalArgumentException(\"Null value provided for @NonNull parameter $N\");" +
+                        //check for null in @NonNull
+                        sb.append("if (i >= " + ASSISTED_PARAMETER_NAME + ".length || " + ASSISTED_PARAMETER_NAME + "[i] == null || !(" + ASSISTED_PARAMETER_NAME + "[i] instanceof $T)) { " +
+                                "throw new IllegalArgumentException(\"$N: null value provided for @NonNull parameter $N\");" +
+                                " } " +
+                                "else { " +
+                                "$N = ($T)" + ASSISTED_PARAMETER_NAME + "[i];\n" +
+                                "i++;" +
                                 " }\n");
-                        args.add(assistedValuesCount);
+                        args.add(parameter.asType());
+                        args.add(typeName);
                         args.add(parameter.getSimpleName().toString());
-                    }
-
-                    if (!parameter.asType().getKind().isPrimitive()) {
-                        sb.append("if (!(" + ASSISTED_PARAMETER_NAME + "[$L] instanceof $N)) { " +
-                                "throw new IllegalArgumentException(\"Value provided for parameter $N is not of correct type $N\");" +
+                        args.add(parameter.getSimpleName().toString());
+                        args.add(parameter.asType());
+                    } else {
+                        //can be null so replace with null if not provided
+                        sb.append("if (i < " + ASSISTED_PARAMETER_NAME + ".length && " + ASSISTED_PARAMETER_NAME + "[i] != null && (" + ASSISTED_PARAMETER_NAME + "[i] instanceof $T)) { " +
+                                "$N = ($T)" + ASSISTED_PARAMETER_NAME + "[i];\n" +
+                                "i++;" +
                                 " }\n");
-                        args.add(assistedValuesCount);
-                        args.add(parameter.asType().toString());
+                        args.add(parameter.asType());
                         args.add(parameter.getSimpleName().toString());
-                        args.add(parameter.asType().toString());
+                        args.add(parameter.asType());
                     }
-
-                    assistedValuesCount++;
                 }
 
-                int assistedIndex = 0;
                 sb.append("return new $N(");
                 args.add(className.simpleName());
                 for (int j = 0; j < parametersSize; j++) {
                     VariableElement parameter = nonAssistedParameters.get(j);
                     if (parameter == null) {
                         parameter = assistedParameters.get(j);
-                        sb.append("($N)" + ASSISTED_PARAMETER_NAME + "[$L]");
-                        args.add(parameter.asType().toString());
-                        args.add(assistedIndex++);
+                        sb.append("$N");
+                        args.add(parameter.getSimpleName().toString());
                     } else {
                         sb.append("$N");
                         args.add(parameter.getSimpleName().toString());
