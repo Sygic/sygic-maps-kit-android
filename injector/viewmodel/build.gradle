@@ -23,6 +23,6 @@ dependencies {
     annotationProcessor project(':injector')
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    compileOnly 'javax.inject:javax.inject:1'
+    api 'javax.inject:javax.inject:1'
     api project(':injector')
 }

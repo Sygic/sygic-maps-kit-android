@@ -19,13 +19,15 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.di.ContextModule
 import com.sygic.modules.common.di.DaggerModulesComponent
+import com.sygic.modules.common.di.MapModule
 import com.sygic.modules.common.di.ModuleBuilder
 import com.sygic.modules.common.di.ModulesComponent
 import com.sygic.modules.common.manager.SdkInitializationManager
 import com.sygic.modules.common.manager.SdkInitializationManagerImpl
+import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
+import com.sygic.sdk.map.MapView
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.ui.common.locationManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
@@ -33,6 +35,7 @@ import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
+import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationRequester,
@@ -40,9 +43,14 @@ abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationReque
 
     protected val modulesComponent: ModulesComponent by lazy {
         DaggerModulesComponent.builder()
-            .contextModule(ContextModule(this))
+            .mapModule(MapModule())
             .build()
     }
+
+    @Inject
+    internal lateinit var cameraDataModel: Camera.CameraModel
+    @Inject
+    internal lateinit var mapDataModel: MapView.MapDataModel
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
@@ -58,6 +66,14 @@ abstract class MapFragmentWrapper : MapFragment(), LocationManager.LocationReque
 
         sdkInitializationManager = SdkInitializationManagerImpl() //ToDo: singleton
         sdkInitializationManager.initialize((context as Activity).application, this)
+    }
+
+    override fun getCameraDataModel(): Camera.CameraModel {
+        return cameraDataModel
+    }
+
+    override fun getMapDataModel(): MapView.MapDataModel {
+        return mapDataModel
     }
 
     @CallSuper
