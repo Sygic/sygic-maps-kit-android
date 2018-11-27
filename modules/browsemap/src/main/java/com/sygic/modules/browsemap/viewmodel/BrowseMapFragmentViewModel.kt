@@ -4,10 +4,12 @@ import android.content.res.TypedArray
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.modules.browsemap.R
-import com.sygic.modules.common.di.ViewModelCreatorFactory
-import javax.inject.Inject
+import com.sygic.tools.annotations.Assisted
+import com.sygic.tools.annotations.AutoFactory
+import com.sygic.tools.viewmodel.ViewModelCreatorFactory
 
-class BrowseMapFragmentViewModel private constructor(attributesTypedArray: TypedArray?) : ViewModel() {
+@AutoFactory(implementing = [ViewModelCreatorFactory::class])
+class BrowseMapFragmentViewModel internal constructor(@Assisted attributesTypedArray: TypedArray?) : ViewModel() {
 
     val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
@@ -23,12 +25,5 @@ class BrowseMapFragmentViewModel private constructor(attributesTypedArray: Typed
             zoomControlsEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControlsEnabled, false)
             it.recycle()
         }
-    }
-
-    //todo: generate this
-    class Factory @Inject constructor() : ViewModelCreatorFactory {
-        override fun create(vararg assistedValues: Any?) = BrowseMapFragmentViewModel(
-            if (assistedValues.isNotEmpty()) assistedValues[0] as TypedArray? else null
-        )
     }
 }
