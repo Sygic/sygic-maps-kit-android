@@ -1,7 +1,8 @@
 apply from: 'buildSdk.gradle'
 
-include ':app-sample', ':modules-common', ':modules-browsemap', ':uikit-common', ':uikit-common-sdk', ':uikit-compass', ':uikit-compass-viewmodel', ':injector', ':injector-viewmodel',
-        ':uikit-positionlockfab', ':uikit-positionlockfab-viewmodel', ':uikit-zoomcontrols', ':uikit-zoomcontrols-viewmodel'
+include ':app-sample', ':modules-common', ':modules-browsemap', ':uikit-common', ':uikit-common-sdk', ':uikit-compass',
+        ':uikit-compass-viewmodel', ':tools-injector', ':tools-injector-viewmodel', ':uikit-positionlockfab',
+        ':uikit-positionlockfab-viewmodel', ':uikit-zoomcontrols', ':uikit-zoomcontrols-viewmodel'
 
 project(':app-sample').projectDir = new File("app/sample")
 project(':modules-common').projectDir = new File("modules/common")
@@ -14,8 +15,8 @@ project(':uikit-positionlockfab').projectDir = new File("uikit/positionlockfab")
 project(':uikit-positionlockfab-viewmodel').projectDir = new File("uikit/positionlockfab/viewmodel")
 project(':uikit-zoomcontrols').projectDir = new File("uikit/zoomcontrols")
 project(':uikit-zoomcontrols-viewmodel').projectDir = new File("uikit/zoomcontrols/viewmodel")
-project(':injector').projectDir = new File("injector")
-project(':injector-viewmodel').projectDir = new File("injector/viewmodel")
+project(':tools-injector').projectDir = new File("tools/injector")
+project(':tools-injector-viewmodel').projectDir = new File("tools/injector/viewmodel")
 
 if (gradle.buildSdkFromSource()) {
     include ':sdk'
