@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.databinding.BindingMethod
+import androidx.databinding.BindingMethods
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
@@ -22,14 +24,13 @@ import java.io.InvalidClassException
 import java.lang.ref.WeakReference
 import java.util.*
 
-/* todo: Not working :(
 @BindingMethods(
     BindingMethod(
         type = PoiDetailView::class,
         attribute = "stateListener",
         method = "addStateListener"
     )
-)*/
+)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class PoiDetailView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     LinearLayout(context, attrs, defStyle) {
@@ -115,7 +116,7 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
         behavior.state = state
     }
 
-    fun setStateListener(poiDetailStateListener: PoiDetailStateListener) { //todo: add ?!!
+    fun addStateListener(poiDetailStateListener: PoiDetailStateListener) {
         stateListeners.add(WeakReference(poiDetailStateListener))
     }
 
