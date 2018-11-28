@@ -3,7 +3,7 @@ language: android
 jdk:
   - oraclejdk8
 
-sudo: false
+sudo: true
 
 cache:
   directories:
@@ -11,7 +11,8 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-  - "./gradlew clean build"
+  - yes | sudo sdkmanager --licenses
+  - ./gradlew clean build
 
 android:
  components:
