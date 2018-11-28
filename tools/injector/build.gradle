@@ -2,10 +2,10 @@ apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.squareup:javapoet:1.11.1'
-    compileOnly 'androidx.annotation:annotation:1.0.0'
-    compileOnly 'org.jetbrains:annotations:16.0.3'
-    compileOnly 'javax.inject:javax.inject:1'
+    implementation "com.squareup:javapoet:$javaPoetVersion"
+    compileOnly "androidx.annotation:annotation:$annotationsVersion"
+    compileOnly "org.jetbrains:annotations:$kotlinAnnotationsVersion"
+    compileOnly "javax.inject:javax.inject:$javaxInjectVersion"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
