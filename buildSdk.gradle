@@ -15,9 +15,13 @@ gradle.ext.resolveFlavors = { config ->
 gradle.ext.getSdkKey = {
     Properties properties = new Properties()
     def localProperties = file('local.properties')
-    properties.load(localProperties.newDataInputStream())
 
-    def sdkKey = properties.getProperty('sygic.sdk.key', "")
+    def sdkKey = ""
+    if (localProperties.exists()) {
+        properties.load(localProperties.newDataInputStream())
+        sdkKey = properties.getProperty('sygic.sdk.key', "")
+    }
+
     if (sdkKey.isEmpty()) {
         logger.warn('No API key for Sygic Maps SDK defined!')
     }
@@ -28,6 +32,9 @@ gradle.ext.getSdkKey = {
 gradle.ext.getSdkDir = {
     Properties properties = new Properties()
     def localProperties = file('local.properties')
+    if (!localProperties.exists())
+        throw new GradleException("can't resolve 'sygic.sdk.dir' because there is no local.properties file")
+
     properties.load(localProperties.newDataInputStream())
 
     def sdkPath = properties.getProperty('sygic.sdk.dir', null)
