@@ -12,3 +12,13 @@ cache:
 
 script:
   - "./gradlew clean build"
+
+android:
+ components:
+ - tools
+ - platform-tools
+
+licenses:
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
