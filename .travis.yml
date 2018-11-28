@@ -17,12 +17,12 @@ android:
  components:
  - tools
  - platform-tools
+ - android-28
+
+ licenses:
+   - android-sdk-preview-license-.+
+   - android-sdk-license-.+
+   - google-gdk-license-.+
 
 before_install:
-  - sdkmanager --version
   - yes | sdkmanager --licenses
-
-licenses:
-  - android-sdk-preview-license-.+
-  - android-sdk-license-.+
-  - google-gdk-license-.+
