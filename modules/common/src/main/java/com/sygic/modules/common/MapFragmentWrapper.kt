@@ -19,8 +19,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.di.ContextModule
 import com.sygic.modules.common.di.DaggerModulesComponent
+import com.sygic.modules.common.di.MapModule
 import com.sygic.modules.common.di.ModuleBuilder
 import com.sygic.modules.common.di.ModulesComponent
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
@@ -52,10 +52,14 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
 
     protected val modulesComponent: ModulesComponent by lazy {
         DaggerModulesComponent.builder()
-            .contextModule(ContextModule(this))
+            .mapModule(MapModule())
             .build()
     }
 
+    @Inject
+    internal lateinit var cameraDataModel: Camera.CameraModel
+    @Inject
+    internal lateinit var mapDataModel: MapView.MapDataModel
     @Inject
     internal lateinit var poiDataManager: PoiDataManager
     @Inject
@@ -76,8 +80,12 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         getMapAsync(this)
     }
 
+    override fun getCameraDataModel(): Camera.CameraModel {
+        return cameraDataModel
+    }
+
     override fun getMapDataModel(): ExtendedMapDataModel {
-        return extendedMapDataModel
+        return mapDataModel
     }
 
     override fun onAttach(context: Context) {

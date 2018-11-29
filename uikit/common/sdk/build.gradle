@@ -28,6 +28,11 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
+    api project(':tools-injector-viewmodel')
+    annotationProcessor project(':tools-injector')
+
+    api "com.google.dagger:dagger-android-support:$daggerVersion"
+
     // Sygic Maps SDK
     if (!gradle.buildSdkFromSource()) {
         // use aar from maven

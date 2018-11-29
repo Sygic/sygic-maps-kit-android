@@ -34,12 +34,12 @@ dependencies {
     implementation project(':uikit-compass-viewmodel')
     implementation project(':uikit-positionlockfab-viewmodel')
     implementation project(':uikit-zoomcontrols-viewmodel')
+    annotationProcessor project(':tools-injector')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
-    //dagger
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 }
