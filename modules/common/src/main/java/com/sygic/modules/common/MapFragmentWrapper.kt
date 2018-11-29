@@ -20,9 +20,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.modules.common.di.ModuleBuilder
-import com.sygic.modules.common.di.component.DaggerSingletonModulesComponent
+import com.sygic.modules.common.di.component.DaggerModulesComponent
 import com.sygic.modules.common.di.component.ModulesComponent
-import com.sygic.modules.common.di.module.MapModule
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
@@ -52,8 +51,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) } //todo: Dagger
 
     protected val modulesComponent: ModulesComponent by lazy {
-        DaggerSingletonModulesComponent.builder()
-            .build().plus(MapModule())
+        DaggerModulesComponent.builder()
+            .build()
     }
 
     @Inject
