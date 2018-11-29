@@ -19,13 +19,13 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.di.ContextModule
-import com.sygic.modules.common.di.DaggerModulesComponent
 import com.sygic.modules.common.di.ModuleBuilder
-import com.sygic.modules.common.di.ModulesComponent
+import com.sygic.modules.common.di.component.DaggerModulesComponent
+import com.sygic.modules.common.di.component.ModulesComponent
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
@@ -52,10 +52,13 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
 
     protected val modulesComponent: ModulesComponent by lazy {
         DaggerModulesComponent.builder()
-            .contextModule(ContextModule(this))
             .build()
     }
 
+    @Inject
+    internal lateinit var cameraDataModel: Camera.CameraModel
+    @Inject
+    internal lateinit var mapDataModel: ExtendedMapDataModel
     @Inject
     internal lateinit var poiDataManager: PoiDataManager
     @Inject
@@ -76,8 +79,12 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         getMapAsync(this)
     }
 
+    override fun getCameraDataModel(): Camera.CameraModel {
+        return cameraDataModel
+    }
+
     override fun getMapDataModel(): ExtendedMapDataModel {
-        return extendedMapDataModel
+        return mapDataModel
     }
 
     override fun onAttach(context: Context) {

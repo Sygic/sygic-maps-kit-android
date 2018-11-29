@@ -13,8 +13,8 @@ import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
-import com.sygic.modules.common.di.ViewModelFactory
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
+import com.sygic.tools.viewmodel.ViewModelFactory
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.poidetail.PoiDetailViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
@@ -77,7 +77,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         super.onAttach(context)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) { //todo: inject compassViewModel, positionLockFabViewModel, zoomControlsViewModel
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         browseMapFragmentViewModel = ViewModelProviders.of(
@@ -85,8 +85,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
             viewModelFactory.with(attributesTypedArray)
         )[BrowseMapFragmentViewModel::class.java]
 
-        compassViewModel = ViewModelProviders.of(this, CompassViewModel.ViewModelFactory(cameraDataModel))
-            .get(CompassViewModel::class.java)
+        compassViewModel = ViewModelProviders.of(this,
+            viewModelFactory)[CompassViewModel::class.java]
         lifecycle.addObserver(compassViewModel)
 
         poiDetailViewModel = ViewModelProviders.of(
@@ -95,16 +95,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
         ).get(PoiDetailViewModel::class.java)
         lifecycle.addObserver(poiDetailViewModel)
 
-        positionLockFabViewModel = ViewModelProviders.of(
-            this,
-            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager)
-        ).get(PositionLockFabViewModel::class.java)
+        positionLockFabViewModel = ViewModelProviders.of(this,
+            viewModelFactory.with(locationManager, permissionManager))[PositionLockFabViewModel::class.java]
         lifecycle.addObserver(positionLockFabViewModel)
 
-        zoomControlsViewModel = ViewModelProviders.of(
-            this,
-            ZoomControlsViewModel.ViewModelFactory(cameraDataModel)
-        ).get(ZoomControlsViewModel::class.java)
+        zoomControlsViewModel = ViewModelProviders.of(this,
+            viewModelFactory)[ZoomControlsViewModel::class.java]
         lifecycle.addObserver(zoomControlsViewModel)
     }
 
