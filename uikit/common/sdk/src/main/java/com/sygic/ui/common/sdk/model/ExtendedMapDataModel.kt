@@ -1,19 +1,20 @@
 package com.sygic.ui.common.sdk.model
 
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.ui.common.sdk.data.PoiData
-import com.sygic.ui.common.sdk.mapobject.OnClickMapMarker
+import com.sygic.ui.common.sdk.mapobject.MapMarker
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ExtendedMapDataModel : SimpleMapDataModel() {
 
-    private var currentOnClickMapMarker: OnClickMapMarker? = null
+    private var currentOnClickMapMarker: MapMarker? = null
 
-    val poiDataObservable: MutableLiveData<PoiData> = MutableLiveData()
+    val poiDataObservable: LiveData<PoiData> = MutableLiveData()
 
-    fun addOnClickMapMarker(onClickMapMarker: OnClickMapMarker) {
+    fun addOnClickMapMarker(onClickMapMarker: MapMarker) {
         currentOnClickMapMarker = onClickMapMarker
         addMapObject(onClickMapMarker)
     }
@@ -23,6 +24,6 @@ class ExtendedMapDataModel : SimpleMapDataModel() {
     }
 
     fun notifyPoiDataChanged(poiData: PoiData) {
-        poiDataObservable.value = poiData
+        (poiDataObservable as MutableLiveData<PoiData>).value = poiData
     }
 }

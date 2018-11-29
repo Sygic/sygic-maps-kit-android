@@ -13,7 +13,7 @@ import com.sygic.ui.common.sdk.data.PoiData
 private const val MARKER_ANCHOR_POSITION_X = 0.5f
 private const val MARKER_ANCHOR_POSITION_Y = 1f
 
-private val DEFAULT_ICON = DrawableFactory(R.drawable.ic_map_pin)
+private val DEFAULT_ICON: BitmapFactory by lazy { DrawableFactory(R.drawable.ic_map_pin) }
 
 // ToDo: Custom data / payload
 // ToDo: refactor SDK MapMarker, then remove it
@@ -36,32 +36,11 @@ open class MapMarker : com.sygic.sdk.map.`object`.MapMarker {
         private val data: PoiData = PoiData()
         private var bitmapFactory: BitmapFactory = DEFAULT_ICON
 
-        fun coordinates(latitude: Double, longitude: Double): Builder {
-            return coordinates(GeoCoordinates(latitude, longitude))
-        }
-
-        fun coordinates(coordinates: GeoCoordinates): Builder {
-            data.coordinates = coordinates
-            return this
-        }
-
-        fun iconDrawable(@DrawableRes iconDrawable: Int): Builder {
-            this.bitmapFactory = DrawableFactory(iconDrawable)
-            return this
-        }
-
-        fun iconBitmap(iconBitmap: Bitmap): Builder {
-            this.bitmapFactory = SimpleBitmapFactory(iconBitmap)
-            return this
-        }
-
-        fun title(title: String): Builder {
-            data.name = title
-            return this
-        }
-
-        fun build(): MapMarker {
-            return MapMarker(data.coordinates.latitude, data.coordinates.longitude, bitmapFactory, data)
-        }
+        fun coordinates(latitude: Double, longitude: Double): Builder = coordinates(GeoCoordinates(latitude, longitude))
+        fun coordinates(coordinates: GeoCoordinates): Builder = this.apply { data.coordinates = coordinates }
+        fun iconDrawable(@DrawableRes iconDrawable: Int): Builder = this.apply { this.bitmapFactory = DrawableFactory(iconDrawable) }
+        fun iconBitmap(iconBitmap: Bitmap): Builder = this.apply { this.bitmapFactory = SimpleBitmapFactory(iconBitmap) }
+        fun title(title: String): Builder = this.apply { data.name = title }
+        fun build(): MapMarker = MapMarker(data.coordinates.latitude, data.coordinates.longitude, bitmapFactory, data)
     }
 }

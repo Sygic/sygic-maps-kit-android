@@ -11,7 +11,6 @@ import com.sygic.modules.common.poi.manager.PoiDataManager
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.mapobject.MapMarker
-import com.sygic.ui.common.sdk.mapobject.OnClickMapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import javax.inject.Inject
 
@@ -68,7 +67,7 @@ class BrowseMapFragmentViewModel private constructor(
                         return
                     }
 
-                    extendedMapDataModel.addOnClickMapMarker(OnClickMapMarker(firstViewObject))
+                    extendedMapDataModel.addOnClickMapMarker(MapMarker(firstViewObject))
                 }
             }
         }
