@@ -31,7 +31,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(':uikit-common')
     api project(':uikit-common-sdk')
-    api project(':tools-injector-viewmodel')
+    implementation project(':tools-injector-viewmodel')
     annotationProcessor project(':tools-injector')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
