@@ -83,21 +83,16 @@ class BrowseMapFragment : MapFragmentWrapper() {
         browseMapFragmentViewModel =  ViewModelProviders.of(this,
             viewModelFactory.with(attributesTypedArray))[BrowseMapFragmentViewModel::class.java]
 
-        compassViewModel = ViewModelProviders.of(this, CompassViewModel.ViewModelFactory(cameraDataModel))
-            .get(CompassViewModel::class.java)
+        compassViewModel = ViewModelProviders.of(this,
+            viewModelFactory)[CompassViewModel::class.java]
         lifecycle.addObserver(compassViewModel)
 
-        positionLockFabViewModel = ViewModelProviders.of(
-            this,
-            PositionLockFabViewModel.ViewModelFactory(cameraDataModel, locationManager, permissionManager)
-        )
-            .get(PositionLockFabViewModel::class.java)
+        positionLockFabViewModel = ViewModelProviders.of(this,
+            viewModelFactory.with(locationManager, permissionManager))[PositionLockFabViewModel::class.java]
         lifecycle.addObserver(positionLockFabViewModel)
 
-        zoomControlsViewModel = ViewModelProviders.of(
-            this,
-            ZoomControlsViewModel.ViewModelFactory(cameraDataModel)
-        ).get(ZoomControlsViewModel::class.java)
+        zoomControlsViewModel = ViewModelProviders.of(this,
+            viewModelFactory)[ZoomControlsViewModel::class.java]
         lifecycle.addObserver(zoomControlsViewModel)
     }
 

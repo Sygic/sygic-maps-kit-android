@@ -2,10 +2,15 @@ package com.sygic.ui.viewmodel.positionlockfab
 
 import android.Manifest
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.position.PositionManager
+import com.sygic.tools.annotations.Assisted
+import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
 import com.sygic.ui.common.sdk.location.EnableGpsResult
 import com.sygic.ui.common.sdk.location.LocationManager
@@ -16,10 +21,11 @@ private const val NORTH_UP = 0f
 private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_MAP = 17f
 private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR = 16f
 
-class PositionLockFabViewModel(
+@AutoFactory
+class PositionLockFabViewModel internal constructor(
     private val cameraModel: Camera.CameraModel,
-    private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager
+    @Assisted private val locationManager: LocationManager,
+    @Assisted private val permissionsManager: PermissionsManager
 ) :
     ViewModel(),
     Camera.ModeChangedListener,
@@ -103,16 +109,18 @@ class PositionLockFabViewModel(
 
     private fun canSetNextLockState(view: View): Boolean {
         if (!permissionsManager.hasPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            permissionsManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, object : PermissionsManager.PermissionCallback {
-                override fun onPermissionGranted(permission: String) {
-                    SygicEngine.openGpsConnection()
-                    onClick(view)
-                }
+            permissionsManager.requestPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                object : PermissionsManager.PermissionCallback {
+                    override fun onPermissionGranted(permission: String) {
+                        SygicEngine.openGpsConnection()
+                        onClick(view)
+                    }
 
-                override fun onPermissionDenied(permission: String) {
-                    /* Currently do nothing */
-                }
-            })
+                    override fun onPermissionDenied(permission: String) {
+                        /* Currently do nothing */
+                    }
+                })
             return false
         }
 
@@ -134,18 +142,5 @@ class PositionLockFabViewModel(
     override fun onStop(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
         PositionManager.getInstance().stopPositionUpdating() //ToDo: MS-4555
-    }
-
-    class ViewModelFactory(
-        private val cameraModel: Camera.CameraModel,
-        private val locationManager: LocationManager,
-        private val permissionsManager: PermissionsManager
-    ) :
-        ViewModelProvider.NewInstanceFactory() {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            return PositionLockFabViewModel(cameraModel, locationManager, permissionsManager) as T
-        }
     }
 }

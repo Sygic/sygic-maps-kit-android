@@ -1,13 +1,18 @@
 package com.sygic.ui.viewmodel.compass
 
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
 
 private const val NORTH_UP = 0f
 
-class CompassViewModel(
+@AutoFactory
+class CompassViewModel internal constructor(
     private val cameraModel: Camera.CameraModel
 ) : ViewModel(), Camera.PositionChangedListener, DefaultLifecycleObserver {
 
@@ -35,14 +40,5 @@ class CompassViewModel(
 
     override fun onPositionChangeCompleted() {
         // Do nothing
-    }
-
-    class ViewModelFactory(private val cameraModel: Camera.CameraModel) :
-        ViewModelProvider.NewInstanceFactory() {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            return CompassViewModel(cameraModel) as T
-        }
     }
 }

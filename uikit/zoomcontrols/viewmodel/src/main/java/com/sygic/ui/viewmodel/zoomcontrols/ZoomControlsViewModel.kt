@@ -1,16 +1,23 @@
 package com.sygic.ui.viewmodel.zoomcontrols
 
 import android.graphics.PointF
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
 import com.sygic.ui.common.sdk.ZOOM_ANIMATION
 import com.sygic.ui.view.zoomcontrols.TiltType
 import com.sygic.ui.view.zoomcontrols.ZoomControlsMenu
 import com.sygic.ui.view.zoomcontrols.ZoomType
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.floor
 
 private const val ZOOM_BASE_LINE = 1f
@@ -20,7 +27,8 @@ private const val ZOOM_FLOW_TIME_STEP = 20L // ms
 private const val TILT_2D = 0f
 private const val TILT_3D = 70f
 
-class ZoomControlsViewModel(
+@AutoFactory
+class ZoomControlsViewModel internal constructor(
     private val cameraModel: Camera.CameraModel
 ) : ViewModel(), ZoomControlsMenu.InteractionListener, Camera.PositionChangedListener, DefaultLifecycleObserver {
 
@@ -106,13 +114,4 @@ class ZoomControlsViewModel(
     @TiltType
     private fun getTiltType(tilt: Float): Int =
         if (floor(tilt) == floor(TILT_2D)) TiltType.TILT_2D else TiltType.TILT_3D
-
-    class ViewModelFactory(private val cameraModel: Camera.CameraModel) :
-        ViewModelProvider.NewInstanceFactory() {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            return ZoomControlsViewModel(cameraModel) as T
-        }
-    }
 }

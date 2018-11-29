@@ -1,17 +1,18 @@
 package com.sygic.modules.common.di;
 
-import android.content.Context;
+import com.sygic.modules.common.di.scope.ActivityScope;
+import com.sygic.sdk.map.Camera;
+import com.sygic.sdk.map.MapView;
 import dagger.Component;
 
-import javax.inject.Singleton;
 
-
-@Singleton
+@ActivityScope
 @Component(
         modules = {
-                ContextModule.class
+                MapModule.class
         }
 )
 public interface ModulesComponent {
-    Context getContext();
+    MapView.MapDataModel getMapDataModel();
+    Camera.CameraModel getCameraModel();
 }

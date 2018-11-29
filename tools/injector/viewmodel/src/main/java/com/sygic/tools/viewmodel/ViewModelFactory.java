@@ -28,6 +28,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) viewModels.get(modelClass).get().create(assistedValues);
+        final Provider<ViewModelCreatorFactory> viewModelCreatorFactoryProvider = viewModels.get(modelClass);
+        if (viewModelCreatorFactoryProvider == null) {
+            throw new IllegalStateException("ViewModel factory provider for class " + modelClass.getSimpleName() + " not found. Make sure you have bind it to the ViewModel map!");
+        }
+
+        return (T) viewModelCreatorFactoryProvider.get().create(assistedValues);
     }
 }

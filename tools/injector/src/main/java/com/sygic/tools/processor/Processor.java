@@ -182,7 +182,10 @@ public class Processor extends AbstractProcessor {
                     args.add(assistedParameter.getValue().getSimpleName().toString());
                 }
 
-                sb.append("int i = 0;");
+                if (assistedParameters.size() > 0) {
+                    sb.append("int i = 0;\n");
+                }
+
                 for (Map.Entry<Integer, ? extends VariableElement> entry : assistedParameters.entrySet()) {
                     final VariableElement parameter = entry.getValue();
 
