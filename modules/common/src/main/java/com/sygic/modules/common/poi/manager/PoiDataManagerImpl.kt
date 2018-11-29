@@ -17,7 +17,12 @@ class PoiDataManagerImpl : PoiDataManager {
     override fun getPoiData(viewObject: ViewObject, callback: PoiDataManager.Callback) {
         when (viewObject.objectType) {
             ViewObject.ObjectType.Map -> {
-                if (viewObject is MapMarker) callback.onDataLoaded(viewObject.data)
+                if (viewObject is MapMarker) {
+                    callback.onDataLoaded(viewObject.data)
+                    return
+                }
+
+                reverseGeocoder.search(viewObject.position, callback)
             }
             ViewObject.ObjectType.Proxy -> {
                 when ((viewObject as ProxyObject).proxyObjectType) {
