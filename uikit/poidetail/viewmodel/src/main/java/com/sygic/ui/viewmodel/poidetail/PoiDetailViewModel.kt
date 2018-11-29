@@ -3,10 +3,12 @@ package com.sygic.ui.viewmodel.poidetail
 import android.annotation.SuppressLint
 import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.ui.view.poidetail.listener.PoiDetailStateListener
 
+@AutoFactory
 class PoiDetailViewModel(private val extendedMapDataModel: ExtendedMapDataModel) : ViewModel(),
     PoiDetailStateListener, DefaultLifecycleObserver {
 
@@ -37,14 +39,5 @@ class PoiDetailViewModel(private val extendedMapDataModel: ExtendedMapDataModel)
     override fun onCleared() {
         extendedMapDataModel.poiDataObservable.removeObserver(poiDataObserver)
         super.onCleared()
-    }
-
-    class ViewModelFactory(private val extendedMapDataModel: ExtendedMapDataModel) :
-        ViewModelProvider.NewInstanceFactory() {
-
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            return PoiDetailViewModel(extendedMapDataModel) as T
-        }
     }
 }

@@ -66,7 +66,7 @@ class PoiDetailView @JvmOverloads constructor(context: Context, attrs: Attribute
             poiDetailInternalViewModel = ViewModelProviders.of(
                 context,
                 PoiDetailInternalViewModel.ViewModelFactory()
-            ).get(PoiDetailInternalViewModel::class.java)
+            )[PoiDetailInternalViewModel::class.java]
         } else {
             throw InvalidClassException("The PoiDetailView host must be the FragmentActivity")
         }

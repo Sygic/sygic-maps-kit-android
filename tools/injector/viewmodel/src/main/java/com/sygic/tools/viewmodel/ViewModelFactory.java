@@ -20,14 +20,14 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     }
 
     @NonNull
-    public final ViewModelFactory with(@NonNull Object... assistedValues) {
+    public final ViewModelFactory with(@NonNull final Object... assistedValues) {
         this.assistedValues = assistedValues;
         return this;
     }
 
     @NonNull
     @Override
-    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+    public <T extends ViewModel> T create(@NonNull final Class<T> modelClass) {
         final Provider<ViewModelCreatorFactory> viewModelCreatorFactoryProvider = viewModels.get(modelClass);
         if (viewModelCreatorFactoryProvider == null) {
             throw new IllegalStateException("ViewModel factory provider for class " + modelClass.getSimpleName() + " not found. Make sure you have bind it to the ViewModel map!");

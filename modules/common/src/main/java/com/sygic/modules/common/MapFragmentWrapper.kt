@@ -11,6 +11,8 @@ import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
@@ -30,6 +32,7 @@ import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
+import com.sygic.tools.viewmodel.ViewModelFactory
 import com.sygic.ui.common.locationManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
@@ -56,6 +59,9 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     }
 
     @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    @Inject
     internal lateinit var cameraDataModel: Camera.CameraModel
     @Inject
     internal lateinit var mapDataModel: ExtendedMapDataModel
@@ -71,9 +77,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
-    protected inline fun <reified T, B: ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
-        block(builder.plus(modulesComponent).build())
-    }
+    protected inline fun <reified T, B: ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) = block(builder.plus(modulesComponent).build())
+    protected inline fun <reified T: ViewModel> viewModelOf(viewModelClass: Class<out T>) = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
 
     init {
         getMapAsync(this)
