@@ -31,6 +31,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(':uikit-common')
     api project(':uikit-common-sdk')
+    api project(':tools-injector-viewmodel')
+    annotationProcessor project(':tools-injector')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.google.android.gms:play-services-location:$playServicesLocationVersion"
@@ -39,7 +41,6 @@ dependencies {
 
     //dagger
     api "com.google.dagger:dagger-android-support:$daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 }
