@@ -13,12 +13,8 @@ import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
-import com.sygic.tools.viewmodel.ViewModelFactory
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
-import com.sygic.ui.common.sdk.location.LocationManager
-import com.sygic.ui.common.sdk.location.LocationManagerImpl
-import com.sygic.ui.common.sdk.permission.PermissionsManager
-import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
+import com.sygic.tools.viewmodel.ViewModelFactory
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel

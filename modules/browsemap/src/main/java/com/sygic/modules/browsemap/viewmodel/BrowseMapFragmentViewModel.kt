@@ -4,6 +4,8 @@ import android.content.res.TypedArray
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.modules.browsemap.R
+import com.sygic.modules.common.mapinteraction.MapInteractionMode
+import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.modules.common.poi.manager.PoiDataManager

@@ -19,13 +19,14 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.di.DaggerModulesComponent
-import com.sygic.modules.common.di.MapModule
 import com.sygic.modules.common.di.ModuleBuilder
-import com.sygic.modules.common.di.ModulesComponent
+import com.sygic.modules.common.di.component.DaggerSingletonModulesComponent
+import com.sygic.modules.common.di.component.ModulesComponent
+import com.sygic.modules.common.di.module.MapModule
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
@@ -51,15 +52,14 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) } //todo: Dagger
 
     protected val modulesComponent: ModulesComponent by lazy {
-        DaggerModulesComponent.builder()
-            .mapModule(MapModule())
-            .build()
+        DaggerSingletonModulesComponent.builder()
+            .build().plus(MapModule())
     }
 
     @Inject
     internal lateinit var cameraDataModel: Camera.CameraModel
     @Inject
-    internal lateinit var mapDataModel: MapView.MapDataModel
+    internal lateinit var mapDataModel: ExtendedMapDataModel
     @Inject
     internal lateinit var poiDataManager: PoiDataManager
     @Inject
