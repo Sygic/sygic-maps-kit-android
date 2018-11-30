@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.di.BrowseMapComponent
@@ -14,6 +15,8 @@ import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
+import com.sygic.ui.common.sdk.data.PoiData
+import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
@@ -77,6 +80,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
             this,
             viewModelFactory.with(attributesTypedArray)
         )[BrowseMapFragmentViewModel::class.java]
+        browseMapFragmentViewModel.poiDataObservable.observe(this,
+            Observer<PoiData> { showPoiDetailBottomDialogFragment(it) })
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
 
@@ -104,6 +109,10 @@ class BrowseMapFragment : MapFragmentWrapper() {
             root.addView(it, 0)
         }
         return root
+    }
+
+    private fun showPoiDetailBottomDialogFragment(poiData: PoiData) {
+        PoiDetailBottomDialogFragment.newInstance(poiData).show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
     override fun onDestroy() {

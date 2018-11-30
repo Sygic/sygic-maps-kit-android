@@ -1,6 +1,7 @@
 package com.sygic.modules.browsemap.viewmodel
 
 import android.content.res.TypedArray
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.modules.browsemap.R
@@ -29,12 +30,14 @@ class BrowseMapFragmentViewModel internal constructor(
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
 
+    val poiDataObservable: LiveData<PoiData> = MutableLiveData()
+
     init {
         attributesTypedArray?.let {
             compassEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compassEnabled, false)
             compassHideIfNorthUp.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compassHideIfNorthUp, false)
             mapInteractionMode.value =
-                    it.getInt(R.styleable.BrowseMapFragment_sygic_mapInteractionMode, MapInteractionMode.NONE)
+                    it.getInt(R.styleable.BrowseMapFragment_sygic_mapInteractionMode, MapInteractionMode.MARKERS_ONLY)
             positionLockFabEnabled.value =
                     it.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFabEnabled, false)
             zoomControlsEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControlsEnabled, false)
@@ -65,7 +68,7 @@ class BrowseMapFragmentViewModel internal constructor(
                         return
                     }
 
-                    extendedMapDataModel.notifyPoiDataChanged(PoiData())
+                    notifyPoiDataChanged(PoiData())
                 }
                 MapInteractionMode.FULL -> {
                     getPoiData(firstViewObject)
@@ -82,9 +85,14 @@ class BrowseMapFragmentViewModel internal constructor(
     private fun getPoiData(viewObject: ViewObject) {
         poiDataManager.getPoiData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(poiData: PoiData) {
-                extendedMapDataModel.notifyPoiDataChanged(poiData)
+                notifyPoiDataChanged(poiData)
             }
         })
+    }
+
+    private fun notifyPoiDataChanged(poiData: PoiData) {
+        (poiDataObservable as MutableLiveData<PoiData>).value = poiData
+        if (poiData.isEmpty()) extendedMapDataModel.removeOnClickMapMarker()
     }
 
     override fun onCleared() {

@@ -2,29 +2,36 @@ package com.sygic.ui.view.poidetail.viewmodel
 
 import android.text.TextUtils
 import androidx.lifecycle.*
-import androidx.lifecycle.Observer
 import com.sygic.ui.common.sdk.data.PoiData
 import java.util.*
 
-class PoiDetailInternalViewModel : ViewModel() {
+class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
 
-    val titleText: MutableLiveData<String> = MutableLiveData()
-    val subtitleText: MutableLiveData<String> = MutableLiveData()
-    val urlText: MutableLiveData<String> = MutableLiveData()
-    val emailText: MutableLiveData<String> = MutableLiveData()
-    val phoneText: MutableLiveData<String> = MutableLiveData()
+    val titleText: String? = getTitleText(poiData)
+    val subtitleText: String? = getSetSubtitleText(poiData)
+    val coordinatesText: String? = getCoordinatesText(poiData)
+    val urlText: String? = poiData.url
+    val emailText: String? = poiData.email
+    val phoneText: String? = poiData.phone
 
-    private var onHeaderContainerClickObserver: Observer<Any>? = null
-    private val poiDataObserver = Observer<PoiData> { poiData ->
-        titleText.value = getTitleText(poiData)
-        subtitleText.value = getSetSubtitleText(poiData.street, poiData.city)
-        urlText.value = poiData.url
-        emailText.value = poiData.email
-        phoneText.value = poiData.phone
-    }
+    val webUrlClickObservable: LiveData<String> = MutableLiveData()
+    val emailClickObservable: LiveData<String> = MutableLiveData()
+    val phoneNumberClickObservable: LiveData<String> = MutableLiveData()
+    val coordinatesClickObservable: LiveData<String> = MutableLiveData()
 
     private fun getTitleText(poiData: PoiData): String {
-        return poiData.name ?: String.format(
+        return poiData.name ?: getCoordinatesText(poiData)
+    }
+
+    private fun getSetSubtitleText(poiData: PoiData): String {
+        val stringBuilder = StringBuilder()
+        poiData.street?.let { stringBuilder.append(String.format("%s", it)) }
+        poiData.city?.let { stringBuilder.append(String.format(if (TextUtils.isEmpty(poiData.street)) "%s" else ", %s", it)) }
+        return stringBuilder.toString()
+    }
+
+    private fun getCoordinatesText(poiData: PoiData): String {
+        return String.format(
             Locale.US,
             "%.6f, %.6f",
             poiData.coordinates.latitude,
@@ -32,40 +39,27 @@ class PoiDetailInternalViewModel : ViewModel() {
         )
     }
 
-    private fun getSetSubtitleText(street: String?, city: String?): String {
-        val stringBuilder = StringBuilder()
-        street?.let { stringBuilder.append(String.format("%s", it)) }
-        city?.let { stringBuilder.append(String.format(if (TextUtils.isEmpty(street)) "%s" else ", %s", it)) }
-        return stringBuilder.toString()
+    fun onWebUrlClick() {
+        (webUrlClickObservable as MutableLiveData<String>).value = urlText
     }
 
-    fun setOnHeaderContainerClickObserver(onHeaderContainerClickObserver: Observer<Any>) {
-        this.onHeaderContainerClickObserver = onHeaderContainerClickObserver
+    fun onEmailClick() {
+        (emailClickObservable as MutableLiveData<String>).value = emailText
     }
 
-    fun addDataObservable(poiData: MutableLiveData<PoiData>) {
-        poiData.observeForever(poiDataObserver)
+    fun onPhoneNumberClick() {
+        (phoneNumberClickObservable as MutableLiveData<String>).value = phoneText
     }
 
-    fun removeDataObservable(poiData: MutableLiveData<PoiData>) {
-        poiData.removeObserver(poiDataObserver)
+    fun onCoordinatesClick() {
+        (coordinatesClickObservable as MutableLiveData<String>).value = coordinatesText
     }
 
-    fun onHeaderContainerClick() {
-        onHeaderContainerClickObserver?.onChanged(Any())
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        onHeaderContainerClickObserver = null
-    }
-
-    class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
+    class ViewModelFactory(private val poiData: PoiData) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return PoiDetailInternalViewModel() as T
+            return PoiDetailInternalViewModel(poiData) as T
         }
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidElementNotAllowed -->
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -12,18 +12,16 @@
 
     </data>
 
-    <merge
+    <android.widget.LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:parentTag="android.widget.LinearLayout">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/headerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:onClick="@{() -> poiDetailInternalViewModel.onHeaderContainerClick()}"
             android:orientation="vertical"
             android:padding="24dp">
 
@@ -51,29 +49,42 @@
             style="@style/PoiDetailItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_web"
-            android:text="@{poiDetailInternalViewModel.urlText}"
-            android:visibility="@{poiDetailInternalViewModel.urlText != null ? View.VISIBLE : View.GONE}"
-            tools:text="http://www.sygic.com"/>
-
-        <TextView
-            style="@style/PoiDetailItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_web"
-            android:text="@{poiDetailInternalViewModel.emailText}"
-            android:visibility="@{poiDetailInternalViewModel.emailText != null ? View.VISIBLE : View.GONE}"
-            tools:text="sygic@sygic.com"/>
-
-        <TextView
-            style="@style/PoiDetailItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_web"
+            android:drawableStart="@drawable/ic_phone"
+            android:onClick="@{() -> poiDetailInternalViewModel.onPhoneNumberClick()}"
             android:text="@{poiDetailInternalViewModel.phoneText}"
             android:visibility="@{poiDetailInternalViewModel.phoneText != null ? View.VISIBLE : View.GONE}"
-            tools:text="+421 0944 123456"/>
+            tools:text="+421 0944 123456" />
 
-    </merge>
+        <TextView
+            style="@style/PoiDetailItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_email"
+            android:onClick="@{() -> poiDetailInternalViewModel.onEmailClick()}"
+            android:text="@{poiDetailInternalViewModel.emailText}"
+            android:visibility="@{poiDetailInternalViewModel.emailText != null ? View.VISIBLE : View.GONE}"
+            tools:text="sygic@sygic.com" />
+
+        <TextView
+            style="@style/PoiDetailItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_web"
+            android:onClick="@{() -> poiDetailInternalViewModel.onWebUrlClick()}"
+            android:text="@{poiDetailInternalViewModel.urlText}"
+            android:visibility="@{poiDetailInternalViewModel.urlText != null ? View.VISIBLE : View.GONE}"
+            tools:text="http://www.sygic.com" />
+
+        <TextView
+            style="@style/PoiDetailItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_location"
+            android:onClick="@{() -> poiDetailInternalViewModel.onCoordinatesClick()}"
+            android:text="@{poiDetailInternalViewModel.coordinatesText}"
+            android:visibility="@{poiDetailInternalViewModel.coordinatesText != null ? View.VISIBLE : View.GONE}"
+            tools:text="48.126895, 12.214578" />
+
+    </android.widget.LinearLayout>
 
 </layout>
