@@ -1,4 +1,4 @@
-package com.sygic.modules.common.di.module;
+package com.sygic.modules.common.di.component.module;
 
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager;
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManagerImpl;

@@ -1,8 +1,8 @@
 package com.sygic.modules.common.di.component;
 
-import com.sygic.modules.common.di.module.MapModule;
-import com.sygic.modules.common.di.module.PoiDataManagerModule;
-import com.sygic.modules.common.di.module.SdkInitializationManagerModule;
+import com.sygic.modules.common.di.component.module.MapModule;
+import com.sygic.modules.common.di.component.module.PoiDataManagerModule;
+import com.sygic.modules.common.di.component.module.SdkInitializationManagerModule;
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager;
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager;
 import com.sygic.modules.common.poi.manager.PoiDataManager;
