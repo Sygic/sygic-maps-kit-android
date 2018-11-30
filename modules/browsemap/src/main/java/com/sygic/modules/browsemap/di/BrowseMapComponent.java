@@ -1,7 +1,8 @@
 package com.sygic.modules.browsemap.di;
 
 import com.sygic.modules.browsemap.BrowseMapFragment;
-import com.sygic.modules.common.di.ModuleBuilder;
+import com.sygic.modules.browsemap.di.module.ViewModelModule;
+import com.sygic.modules.common.di.util.ModuleBuilder;
 import com.sygic.modules.common.di.ModulesComponent;
 import dagger.Component;
 

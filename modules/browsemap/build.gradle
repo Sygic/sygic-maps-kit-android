@@ -29,10 +29,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-common')
+    api project(':modules-common')
+
     implementation project(':uikit-compass-viewmodel')
     implementation project(':uikit-positionlockfab-viewmodel')
     implementation project(':uikit-zoomcontrols-viewmodel')
+    implementation project(':tools-injector-viewmodel')
     annotationProcessor project(':tools-injector')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"

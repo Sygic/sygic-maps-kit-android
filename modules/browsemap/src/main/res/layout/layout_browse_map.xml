@@ -36,9 +36,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:onClick="@{() -> compassViewModel.onClick()}"
-            android:rotation="@{compassViewModel.rotation}"
-            android:visibility="@{browseMapFragmentViewModel.compassEnabled ? View.VISIBLE : View.GONE}"
-            app:hideCompassIfNorthUpAllowed="@{browseMapFragmentViewModel.compassHideIfNorthUp}"
+            android:rotation="@{safeUnbox(compassViewModel.rotation)}"
+            android:visibility="@{safeUnbox(browseMapFragmentViewModel.compassEnabled) ? View.VISIBLE : View.GONE}"
+            app:hideCompassIfNorthUpAllowed="@{safeUnbox(browseMapFragmentViewModel.compassHideIfNorthUp)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:rotation="45"
@@ -51,10 +51,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
             android:onClick="@{positionLockFabViewModel::onClick}"
-            android:visibility="@{browseMapFragmentViewModel.positionLockFabEnabled ? View.VISIBLE : View.GONE}"
+            android:visibility="@{safeUnbox(browseMapFragmentViewModel.positionLockFabEnabled) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:state="@{positionLockFabViewModel.currentState}"
+            app:state="@{safeUnbox(positionLockFabViewModel.currentState)}"
             tools:visibility="visible" />
 
         <com.sygic.ui.view.zoomcontrols.ZoomControlsMenu
@@ -63,11 +63,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="@{browseMapFragmentViewModel.zoomControlsEnabled ? View.VISIBLE : View.GONE}"
+            android:visibility="@{safeUnbox(browseMapFragmentViewModel.zoomControlsEnabled) ? View.VISIBLE : View.GONE}"
             app:interactionListener="@{zoomControlsViewModel}"
             app:layout_constraintBottom_toTopOf="@id/positionLockFab"
             app:layout_constraintStart_toStartOf="parent"
-            app:tiltType="@{zoomControlsViewModel.tiltType}"
+            app:tiltType="@{safeUnbox(zoomControlsViewModel.tiltType)}"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

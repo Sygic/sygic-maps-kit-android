@@ -24,11 +24,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':uikit-common')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-
-    api project(':tools-injector-viewmodel')
-    annotationProcessor project(':tools-injector')
 
     api "com.google.dagger:dagger-android-support:$daggerVersion"
 

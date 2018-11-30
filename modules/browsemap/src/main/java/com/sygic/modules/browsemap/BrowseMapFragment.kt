@@ -13,11 +13,8 @@ import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
+import com.sygic.modules.common.mapinteraction.MapInteractionMode
 import com.sygic.tools.viewmodel.ViewModelFactory
-import com.sygic.ui.common.sdk.location.LocationManager
-import com.sygic.ui.common.sdk.location.LocationManagerImpl
-import com.sygic.ui.common.sdk.permission.PermissionsManager
-import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
@@ -25,9 +22,6 @@ import javax.inject.Inject
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragmentWrapper() {
-
-    private val locationManager: LocationManager = LocationManagerImpl(this)
-    private val permissionManager: PermissionsManager = PermissionsManagerImpl(this)
 
     private var attributesTypedArray: TypedArray? = null
 
@@ -38,6 +32,13 @@ class BrowseMapFragment : MapFragmentWrapper() {
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
+
+    @MapInteractionMode
+    var mapInteractionMode: Int
+        get() = browseMapFragmentViewModel.mapInteractionMode.value!!
+        set(value) {
+            browseMapFragmentViewModel.mapInteractionMode.value = value
+        }
 
     var compassEnabled: Boolean
         get() = browseMapFragmentViewModel.compassEnabled.value!!
@@ -70,18 +71,17 @@ class BrowseMapFragment : MapFragmentWrapper() {
     }
 
     override fun onAttach(context: Context) {
+        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
         super.onAttach(context)
-
-        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) {
-            it.inject(this)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel =  ViewModelProviders.of(this,
-            viewModelFactory.with(attributesTypedArray))[BrowseMapFragmentViewModel::class.java]
+        browseMapFragmentViewModel = ViewModelProviders.of(
+            this,
+            viewModelFactory.with(attributesTypedArray)
+        )[BrowseMapFragmentViewModel::class.java]
 
         compassViewModel = ViewModelProviders.of(this,
             viewModelFactory)[CompassViewModel::class.java]

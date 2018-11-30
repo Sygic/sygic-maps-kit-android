@@ -2,6 +2,12 @@
 <resources>
 
     <declare-styleable name="BrowseMapFragment">
+        <attr name="sygic_mapInteractionMode" format="enum">
+            <enum name="none" value="0"/>
+            <enum name="markersOnly" value="1"/>
+            <enum name="full" value="2"/>
+        </attr>
+
         <attr name="sygic_compassEnabled" format="boolean"/>
         <attr name="sygic_compassHideIfNorthUp" format="boolean"/>
         <attr name="sygic_positionLockFabEnabled" format="boolean"/>
