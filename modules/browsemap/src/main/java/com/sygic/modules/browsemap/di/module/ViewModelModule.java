@@ -7,8 +7,6 @@ import com.sygic.modules.common.di.util.ViewModelModuleBase;
 import com.sygic.tools.viewmodel.ViewModelCreatorFactory;
 import com.sygic.ui.viewmodel.compass.CompassViewModel;
 import com.sygic.ui.viewmodel.compass.CompassViewModelFactory;
-import com.sygic.ui.viewmodel.poidetail.PoiDetailViewModel;
-import com.sygic.ui.viewmodel.poidetail.PoiDetailViewModelFactory;
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel;
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModelFactory;
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel;
@@ -33,11 +31,6 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CompassViewModel.class)
     abstract ViewModelCreatorFactory putCompassViewModelFactory(CompassViewModelFactory factory);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(PoiDetailViewModel.class)
-    abstract ViewModelCreatorFactory putPoiDetailViewModelFactory(PoiDetailViewModelFactory factory);
 
     @Binds
     @IntoMap

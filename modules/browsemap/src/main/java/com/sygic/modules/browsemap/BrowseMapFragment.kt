@@ -15,7 +15,6 @@ import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
 import com.sygic.ui.viewmodel.compass.CompassViewModel
-import com.sygic.ui.viewmodel.poidetail.PoiDetailViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 
@@ -26,7 +25,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
-    private lateinit var poiDetailViewModel: PoiDetailViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
@@ -81,7 +79,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
         )[BrowseMapFragmentViewModel::class.java]
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
-        poiDetailViewModel = viewModelOf(PoiDetailViewModel::class.java)
 
         positionLockFabViewModel = ViewModelProviders.of( //todo: use viewModelOf
             this,
@@ -91,7 +88,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
         zoomControlsViewModel = viewModelOf(ZoomControlsViewModel::class.java)
 
         lifecycle.addObserver(compassViewModel)
-        lifecycle.addObserver(poiDetailViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
     }
@@ -101,7 +97,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
         binding.setLifecycleOwner(this)
         binding.browseMapFragmentViewModel = browseMapFragmentViewModel
         binding.compassViewModel = compassViewModel
-        binding.poiDetailViewModel = poiDetailViewModel
         binding.positionLockFabViewModel = positionLockFabViewModel
         binding.zoomControlsViewModel = zoomControlsViewModel
         val root = binding.root as ViewGroup
