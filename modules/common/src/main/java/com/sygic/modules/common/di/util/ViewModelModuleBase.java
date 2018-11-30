@@ -1,4 +1,4 @@
-package com.sygic.modules.common.di;
+package com.sygic.modules.common.di.util;
 
 import androidx.lifecycle.ViewModelProvider;
 import com.sygic.tools.viewmodel.ViewModelFactory;

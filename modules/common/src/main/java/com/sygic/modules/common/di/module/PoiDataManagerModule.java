@@ -1,4 +1,4 @@
-package com.sygic.modules.common.di.component.module;
+package com.sygic.modules.common.di.module;
 
 import com.sygic.modules.common.poi.manager.PoiDataManager;
 import com.sygic.modules.common.poi.manager.PoiDataManagerImpl;
