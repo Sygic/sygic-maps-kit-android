@@ -21,9 +21,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.di.ModuleBuilder
-import com.sygic.modules.common.di.component.DaggerModulesComponent
-import com.sygic.modules.common.di.component.ModulesComponent
+import com.sygic.modules.common.di.DaggerModulesComponent
+import com.sygic.modules.common.di.util.ModuleBuilder
+import com.sygic.modules.common.di.ModulesComponent
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager

@@ -88,7 +88,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onCleared() {
-        mapInteractionManager.removeOnMapClickListener(this)
         super.onCleared()
+        mapInteractionManager.removeOnMapClickListener(this)
     }
 }

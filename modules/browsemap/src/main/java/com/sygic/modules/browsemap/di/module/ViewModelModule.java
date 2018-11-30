@@ -1,9 +1,9 @@
-package com.sygic.modules.browsemap.di;
+package com.sygic.modules.browsemap.di.module;
 
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel;
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModelFactory;
-import com.sygic.modules.common.di.ViewModelKey;
-import com.sygic.modules.common.di.ViewModelModuleBase;
+import com.sygic.modules.common.di.util.ViewModelKey;
+import com.sygic.modules.common.di.util.ViewModelModuleBase;
 import com.sygic.tools.viewmodel.ViewModelCreatorFactory;
 import com.sygic.ui.viewmodel.compass.CompassViewModel;
 import com.sygic.ui.viewmodel.compass.CompassViewModelFactory;
@@ -22,7 +22,7 @@ import dagger.multibindings.IntoMap;
             ViewModelModuleBase.class
     }
 )
-abstract class ViewModelModule {
+public abstract class ViewModelModule {
 
     @Binds
     @IntoMap

@@ -1,4 +1,4 @@
-package com.sygic.modules.common.di.component;
+package com.sygic.modules.common.di;
 
 import com.sygic.modules.common.di.module.MapModule;
 import com.sygic.modules.common.di.module.PoiDataManagerModule;

@@ -1,6 +1,5 @@
 package com.sygic.ui.common.sdk.model
 
-import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,10 +13,6 @@ class ExtendedMapDataModel : SimpleMapDataModel() {
     private var currentOnClickMapMarker: MapMarker? = null
 
     val poiDataObservable: LiveData<PoiData> = MutableLiveData()
-
-    init {
-        Log.d("Tomas", "ExtendedMapDataModel() called")
-    }
 
     fun addOnClickMapMarker(onClickMapMarker: MapMarker) {
         currentOnClickMapMarker = onClickMapMarker
