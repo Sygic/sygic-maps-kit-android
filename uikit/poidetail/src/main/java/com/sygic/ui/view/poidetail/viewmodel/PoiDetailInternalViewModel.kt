@@ -1,17 +1,18 @@
 package com.sygic.ui.view.poidetail.viewmodel
 
-import android.text.TextUtils
 import androidx.lifecycle.*
 import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.ui.common.sdk.data.PoiData
+import com.sygic.ui.common.sdk.utlils.getAddressTitle
+import com.sygic.ui.common.sdk.utlils.getAddressSubtitle
+import com.sygic.ui.common.sdk.utlils.getFormattedLocation
 import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
-import java.util.*
 
 class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
 
-    val titleText: String? = getTitleText(poiData)
-    val subtitleText: String? = getSetSubtitleText(poiData)
-    val coordinatesText: String? = getCoordinatesText(poiData)
+    val titleText: String? = getAddressTitle(poiData)
+    val subtitleText: String? = getAddressSubtitle(poiData)
+    val coordinatesText: String? = getFormattedLocation(poiData.coordinates)
     val urlText: String? = poiData.url
     val emailText: String? = poiData.email
     val phoneText: String? = poiData.phone
@@ -22,26 +23,6 @@ class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
     val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
 
     private var listener: PoiDetailBottomDialogFragment.Listener? = null
-
-    private fun getTitleText(poiData: PoiData): String {
-        return poiData.name ?: getCoordinatesText(poiData)
-    }
-
-    private fun getSetSubtitleText(poiData: PoiData): String {
-        val stringBuilder = StringBuilder()
-        poiData.street?.let { stringBuilder.append(String.format("%s", it)) }
-        poiData.city?.let { stringBuilder.append(String.format(if (TextUtils.isEmpty(poiData.street)) "%s" else ", %s", it)) }
-        return stringBuilder.toString()
-    }
-
-    private fun getCoordinatesText(poiData: PoiData): String {
-        return String.format(
-            Locale.US,
-            "%.6f, %.6f",
-            poiData.coordinates.latitude,
-            poiData.coordinates.longitude
-        )
-    }
 
     fun onWebUrlClick() {
         (webUrlClickObservable as MutableLiveData<String>).value = urlText
