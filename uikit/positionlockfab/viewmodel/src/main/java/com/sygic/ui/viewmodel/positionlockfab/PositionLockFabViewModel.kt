@@ -1,18 +1,13 @@
 package com.sygic.ui.viewmodel.positionlockfab
 
 import android.Manifest
-import android.view.View
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.position.PositionManager
 import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
-import com.sygic.ui.common.sdk.location.EnableGpsResult
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.permission.PermissionsManager
 
@@ -25,7 +20,7 @@ private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR = 16f
 class PositionLockFabViewModel internal constructor(
     private val cameraModel: Camera.CameraModel,
     @Assisted private val locationManager: LocationManager,
-    @Assisted private val permissionsManager: PermissionsManager
+    private val permissionsManager: PermissionsManager
 ) :
     ViewModel(),
     Camera.ModeChangedListener,
@@ -61,27 +56,25 @@ class PositionLockFabViewModel internal constructor(
         }
     }
 
-    fun onClick(view: View) {
-        if (!canSetNextLockState(view)) {
-            return
-        }
-
-        when (currentState.value) {
-            LockState.UNLOCKED -> {
-                setState(LockState.LOCKED)
-                setLockedMode()
-                setZoom(ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR)
-            }
-            LockState.LOCKED_AUTOROTATE -> {
-                setState(LockState.LOCKED)
-                setLockedMode()
-                setZoom(ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR)
-                cameraModel.setRotation(NORTH_UP, DEFAULT_ANIMATION)
-            }
-            LockState.LOCKED -> {
-                setState(LockState.LOCKED_AUTOROTATE)
-                setAutoRotateMode()
-                setZoom(ZOOM_LEVEL_PEDESTRIAN_ROTATE_MAP)
+    fun onClick() {
+        setNextLockState {
+            when (currentState.value) {
+                LockState.UNLOCKED -> {
+                    setState(LockState.LOCKED)
+                    setLockedMode()
+                    setZoom(ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR)
+                }
+                LockState.LOCKED_AUTOROTATE -> {
+                    setState(LockState.LOCKED)
+                    setLockedMode()
+                    setZoom(ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR)
+                    cameraModel.setRotation(NORTH_UP, DEFAULT_ANIMATION)
+                }
+                LockState.LOCKED -> {
+                    setState(LockState.LOCKED_AUTOROTATE)
+                    setAutoRotateMode()
+                    setZoom(ZOOM_LEVEL_PEDESTRIAN_ROTATE_MAP)
+                }
             }
         }
     }
@@ -107,36 +100,41 @@ class PositionLockFabViewModel internal constructor(
         cameraModel.zoomLevel = zoomLevel
     }
 
-    private fun canSetNextLockState(view: View): Boolean {
-        if (!permissionsManager.hasPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            permissionsManager.requestPermission(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                object : PermissionsManager.PermissionCallback {
-                    override fun onPermissionGranted(permission: String) {
-                        SygicEngine.openGpsConnection()
-                        onClick(view)
-                    }
+    private fun setNextLockState(block: () -> Unit) {
+        permissionsManager.checkPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION, Observer {
+            if (!it) {
+                permissionsManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION,
+                    object : PermissionsManager.PermissionCallback {
+                        override fun onPermissionGranted(permission: String) {
+                            SygicEngine.openGpsConnection()
+                            block()
+                        }
 
-                    override fun onPermissionDenied(permission: String) {
-                        /* Currently do nothing */
-                    }
-                })
-            return false
-        }
+                        override fun onPermissionDenied(permission: String) {
+                            /* Currently do nothing */
+                        }
+                    })
+            } else {
+                block()
+            }
+        })
 
+
+        /*
         if (!locationManager.isGpsEnabled()) {
             locationManager.requestToEnableGps(object : LocationManager.EnableGpsCallback {
                 override fun onResult(@EnableGpsResult result: Int) {
                     when (result) {
                         EnableGpsResult.ENABLED -> onClick(view)
-                        EnableGpsResult.DENIED -> { /* Currently do nothing */ }
+                        EnableGpsResult.DENIED -> { *//* Currently do nothing *//*
+                        }
                     }
                 }
             })
             return false
         }
 
-        return true
+        return true*/
     }
 
     override fun onStop(owner: LifecycleOwner) {

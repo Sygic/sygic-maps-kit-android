@@ -5,12 +5,11 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
@@ -20,8 +19,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.modules.common.di.DaggerModulesComponent
-import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.di.ModulesComponent
+import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
@@ -39,7 +38,6 @@ import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
-import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import javax.inject.Inject
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -47,11 +45,9 @@ import kotlin.reflect.KProperty
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener,
-    LocationManager.LocationRequester,
-    PermissionsManager.PermissionsRequester {
+    LocationManager.LocationRequester {
 
     protected val locationManager: LocationManager by lazy { LocationManagerImpl(this) } //todo: Dagger
-    protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) } //todo: Dagger
 
     protected val modulesComponent: ModulesComponent by SingletonDelegate()
 
@@ -67,6 +63,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     internal lateinit var mapInteractionManager: MapInteractionManager
     @Inject
     internal lateinit var sdkInitializationManager: SdkInitializationManager
+    @Inject
+    internal lateinit var permissionManager: PermissionsManager
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
@@ -91,6 +89,10 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         super.onAttach(context)
 
         sdkInitializationManager.initialize((context as Activity).application, this)
+        permissionManager.observe(this, Observer {
+            permissionsRequesterCallback = it.callback
+            requestPermissions(it.permissions, PERMISSIONS_REQUEST_CODE)
+        })
     }
 
     @CallSuper
@@ -106,26 +108,6 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     @CallSuper
     override fun onMapInitializationInterrupted() {
         /* Currently do nothing */
-    }
-
-    override fun hasPermissionGranted(permission: String): Boolean {
-        return context?.let {
-            ContextCompat.checkSelfPermission(it, permission) == PackageManager.PERMISSION_GRANTED
-        } ?: false
-    }
-
-    override fun shouldShowRationaleForPermission(permission: String): Boolean {
-        return context?.let {
-            shouldShowRequestPermissionRationale(permission)
-        } ?: false
-    }
-
-    override fun requestPermissions(
-        permissions: Array<String>,
-        permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback
-    ) {
-        this.permissionsRequesterCallback = permissionsRequesterCallback
-        requestPermissions(permissions, PERMISSIONS_REQUEST_CODE)
     }
 
     override fun requestToEnableGps(locationRequesterCallback: LocationManager.LocationRequesterCallback) {

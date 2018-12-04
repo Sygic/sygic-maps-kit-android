@@ -88,7 +88,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         lifecycle.addObserver(compassViewModel)
 
         positionLockFabViewModel = ViewModelProviders.of(this,
-            viewModelFactory.with(locationManager, permissionManager))[PositionLockFabViewModel::class.java]
+            viewModelFactory.with(locationManager))[PositionLockFabViewModel::class.java]
         lifecycle.addObserver(positionLockFabViewModel)
 
         zoomControlsViewModel = ViewModelProviders.of(this,
