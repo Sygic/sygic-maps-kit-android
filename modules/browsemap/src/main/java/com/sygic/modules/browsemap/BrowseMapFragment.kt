@@ -22,7 +22,7 @@ import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper(), PoiDetailBottomDialogFragment.Listener {
+class BrowseMapFragment : MapFragmentWrapper() {
 
     private var attributesTypedArray: TypedArray? = null
 
@@ -82,6 +82,7 @@ class BrowseMapFragment : MapFragmentWrapper(), PoiDetailBottomDialogFragment.Li
         )[BrowseMapFragmentViewModel::class.java]
         browseMapFragmentViewModel.poiDataObservable.observe(this,
             Observer<PoiData> { showPoiDetailBottomDialogFragment(it) })
+        setPoiDetailBottomDialogFragmentListener(savedInstanceState)
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
 
@@ -95,14 +96,12 @@ class BrowseMapFragment : MapFragmentWrapper(), PoiDetailBottomDialogFragment.Li
         lifecycle.addObserver(compassViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
-
-        setPoiDetailBottomDialogFragmentListener(savedInstanceState)
     }
 
     private fun setPoiDetailBottomDialogFragmentListener(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
             fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-                (fragment as PoiDetailBottomDialogFragment).seListener(this)
+                (fragment as PoiDetailBottomDialogFragment).setListener(browseMapFragmentViewModel)
             }
         }
     }
@@ -123,12 +122,8 @@ class BrowseMapFragment : MapFragmentWrapper(), PoiDetailBottomDialogFragment.Li
 
     private fun showPoiDetailBottomDialogFragment(poiData: PoiData) {
         val dialog = PoiDetailBottomDialogFragment.newInstance(poiData)
-        dialog.seListener(this)
+        dialog.setListener(browseMapFragmentViewModel)
         dialog.show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
-    }
-
-    override fun onPoiDetailBottomDialogDismiss() {
-        mapDataModel.removeOnClickMapMarker() //todo: move it to VM
     }
 
     override fun onDestroy() {

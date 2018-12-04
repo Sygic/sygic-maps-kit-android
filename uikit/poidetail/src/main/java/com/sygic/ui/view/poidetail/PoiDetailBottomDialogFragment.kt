@@ -66,7 +66,7 @@ class PoiDetailBottomDialogFragment : BottomSheetDialogFragment() {
         binding.setLifecycleOwner(this)
     }
 
-    fun seListener(listener: Listener) {
+    fun setListener(listener: Listener) {
         viewModel?.setListener(listener) ?: run { this.listener = listener }
     }
 

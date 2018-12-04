@@ -15,6 +15,7 @@ import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
+import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 
 @AutoFactory
 class BrowseMapFragmentViewModel internal constructor(
@@ -22,7 +23,7 @@ class BrowseMapFragmentViewModel internal constructor(
     private val poiDataManager: PoiDataManager,
     private val extendedMapDataModel: ExtendedMapDataModel,
     private val mapInteractionManager: MapInteractionManager
-) : ViewModel(), MapInteractionManager.Listener {
+) : ViewModel(), MapInteractionManager.Listener, PoiDetailBottomDialogFragment.Listener {
 
     @MapInteractionMode
     val mapInteractionMode: MutableLiveData<Int> = MutableLiveData()
@@ -94,6 +95,10 @@ class BrowseMapFragmentViewModel internal constructor(
     private fun notifyPoiDataChanged(poiData: PoiData) {
         (poiDataObservable as MutableLiveData<PoiData>).value = poiData
         if (poiData.isEmpty()) extendedMapDataModel.removeOnClickMapMarker()
+    }
+
+    override fun onPoiDetailBottomDialogDismiss() {
+        extendedMapDataModel.removeOnClickMapMarker()
     }
 
     override fun onCleared() {
