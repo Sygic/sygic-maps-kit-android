@@ -1,4 +1,4 @@
-package com.sygic.ui.common
+package com.sygic.ui.common.extensions
 
 import android.content.res.Resources
 import android.util.TypedValue

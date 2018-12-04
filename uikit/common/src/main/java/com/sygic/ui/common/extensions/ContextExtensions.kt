@@ -1,4 +1,4 @@
-package com.sygic.ui.common
+package com.sygic.ui.common.extensions
 
 import android.content.*
 import android.content.Context.CLIPBOARD_SERVICE
@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
+import com.sygic.ui.common.R
 
 fun Context.isRtl(): Boolean {
     return this.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL

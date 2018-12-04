@@ -30,9 +30,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(':modules-common')
+    api project(':uikit-poidetail')
 
     implementation project(':uikit-compass-viewmodel')
-    implementation project(':uikit-poidetail')
     implementation project(':uikit-positionlockfab-viewmodel')
     implementation project(':uikit-zoomcontrols-viewmodel')
     implementation project(':tools-injector-viewmodel')

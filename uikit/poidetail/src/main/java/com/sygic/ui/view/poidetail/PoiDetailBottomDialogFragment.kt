@@ -1,23 +1,30 @@
 package com.sygic.ui.view.poidetail
 
-import android.content.DialogInterface
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.os.Bundle
-import android.util.Log
-import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.ui.common.*
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.sygic.ui.common.extensions.copyToClipboard
+import com.sygic.ui.common.extensions.openEmail
+import com.sygic.ui.common.extensions.openPhone
+import com.sygic.ui.common.extensions.openUrl
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
 
 class PoiDetailBottomDialogFragment : BottomSheetDialogFragment() {
 
+    interface Listener {
+        fun onPoiDetailBottomDialogDismiss()
+    }
+
     private lateinit var binding: LayoutPoiDetailInternalBinding
-    private lateinit var viewModel: PoiDetailInternalViewModel
+
+    private var viewModel: PoiDetailInternalViewModel? = null
+    private var listener: Listener? = null
 
     companion object {
 
@@ -37,11 +44,15 @@ class PoiDetailBottomDialogFragment : BottomSheetDialogFragment() {
 
         viewModel = ViewModelProviders.of(
             this, PoiDetailInternalViewModel.ViewModelFactory(arguments?.getParcelable(POI_DATA)!!)
-        )[PoiDetailInternalViewModel::class.java]
-        viewModel.webUrlClickObservable.observe(this, Observer<String> { context?.openUrl(it) })
-        viewModel.emailClickObservable.observe(this, Observer<String> { context?.openEmail(it) })
-        viewModel.phoneNumberClickObservable.observe(this, Observer<String> { context?.openPhone(it) })
-        viewModel.coordinatesClickObservable.observe(this, Observer<String> { context?.copyToClipboard(it) })
+        )[PoiDetailInternalViewModel::class.java].apply {
+            this.setListener(listener)
+            listener = null
+
+            this.webUrlClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openUrl(it) })
+            this.emailClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openEmail(it) })
+            this.phoneNumberClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openPhone(it) })
+            this.coordinatesClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.copyToClipboard(it) })
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,10 +66,13 @@ class PoiDetailBottomDialogFragment : BottomSheetDialogFragment() {
         binding.setLifecycleOwner(this)
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
+    fun seListener(listener: Listener) {
+        viewModel?.setListener(listener) ?: run { this.listener = listener }
+    }
 
-        //todo: inject ExtendedMapDataModel and hide pin when dismiss?
-        Log.d("Tomas", "onDismiss() called with: dialog = [$dialog]")
+    override fun onDestroy() {
+        super.onDestroy()
+
+        listener = null
     }
 }

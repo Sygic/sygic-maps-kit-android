@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 
-import com.sygic.ui.common.*
+import com.sygic.ui.common.extensions.isRtl
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class ZoomControlsMenu : ViewGroup, ZoomControlsMenuButton.MenuCallback {

@@ -22,7 +22,7 @@ import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper() {
+class BrowseMapFragment : MapFragmentWrapper(), PoiDetailBottomDialogFragment.Listener {
 
     private var attributesTypedArray: TypedArray? = null
 
@@ -95,6 +95,16 @@ class BrowseMapFragment : MapFragmentWrapper() {
         lifecycle.addObserver(compassViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
+
+        setPoiDetailBottomDialogFragmentListener(savedInstanceState)
+    }
+
+    private fun setPoiDetailBottomDialogFragmentListener(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
+                (fragment as PoiDetailBottomDialogFragment).seListener(this)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -112,7 +122,13 @@ class BrowseMapFragment : MapFragmentWrapper() {
     }
 
     private fun showPoiDetailBottomDialogFragment(poiData: PoiData) {
-        PoiDetailBottomDialogFragment.newInstance(poiData).show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
+        val dialog = PoiDetailBottomDialogFragment.newInstance(poiData)
+        dialog.seListener(this)
+        dialog.show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
+    }
+
+    override fun onPoiDetailBottomDialogDismiss() {
+        mapDataModel.removeOnClickMapMarker() //todo: move it to VM
     }
 
     override fun onDestroy() {

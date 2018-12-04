@@ -2,7 +2,9 @@ package com.sygic.ui.view.poidetail.viewmodel
 
 import android.text.TextUtils
 import androidx.lifecycle.*
+import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.ui.common.sdk.data.PoiData
+import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 import java.util.*
 
 class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
@@ -14,10 +16,12 @@ class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
     val emailText: String? = poiData.email
     val phoneText: String? = poiData.phone
 
-    val webUrlClickObservable: LiveData<String> = MutableLiveData()
-    val emailClickObservable: LiveData<String> = MutableLiveData()
-    val phoneNumberClickObservable: LiveData<String> = MutableLiveData()
-    val coordinatesClickObservable: LiveData<String> = MutableLiveData()
+    val webUrlClickObservable: LiveData<String> = SingleLiveEvent()
+    val emailClickObservable: LiveData<String> = SingleLiveEvent()
+    val phoneNumberClickObservable: LiveData<String> = SingleLiveEvent()
+    val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
+
+    private var listener: PoiDetailBottomDialogFragment.Listener? = null
 
     private fun getTitleText(poiData: PoiData): String {
         return poiData.name ?: getCoordinatesText(poiData)
@@ -53,6 +57,17 @@ class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
 
     fun onCoordinatesClick() {
         (coordinatesClickObservable as MutableLiveData<String>).value = coordinatesText
+    }
+
+    fun setListener(listener: PoiDetailBottomDialogFragment.Listener?) {
+        this.listener = listener
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        listener?.onPoiDetailBottomDialogDismiss()
+        listener = null
     }
 
     class ViewModelFactory(private val poiData: PoiData) : ViewModelProvider.NewInstanceFactory() {

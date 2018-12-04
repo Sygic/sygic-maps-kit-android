@@ -10,6 +10,7 @@ import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.mapobject.MapMarker
@@ -30,7 +31,7 @@ class BrowseMapFragmentViewModel internal constructor(
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
 
-    val poiDataObservable: LiveData<PoiData> = MutableLiveData()
+    val poiDataObservable: LiveData<PoiData> = SingleLiveEvent()
 
     init {
         attributesTypedArray?.let {
