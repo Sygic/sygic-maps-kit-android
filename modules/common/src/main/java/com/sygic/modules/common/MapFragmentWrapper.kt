@@ -66,8 +66,13 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
+    protected var injected = false
+
     protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
-        block(builder.plus(modulesComponent).build())
+        if (!injected) {
+            block(builder.plus(modulesComponent).build())
+        }
+        injected = true
     }
 
     init {

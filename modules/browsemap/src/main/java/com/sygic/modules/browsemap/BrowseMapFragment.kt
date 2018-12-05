@@ -65,6 +65,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         }
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
         super.onInflate(context, attrs, savedInstanceState)
 
         attributesTypedArray = context.obtainStyledAttributes(attrs, R.styleable.BrowseMapFragment)
