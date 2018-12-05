@@ -5,9 +5,9 @@ import androidx.lifecycle.*
 import com.sygic.sdk.SygicEngine
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.position.PositionManager
-import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
+import com.sygic.ui.common.sdk.location.EnableGpsResult
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.permission.PermissionsManager
 
@@ -19,7 +19,7 @@ private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR = 16f
 @AutoFactory
 class PositionLockFabViewModel internal constructor(
     private val cameraModel: Camera.CameraModel,
-    @Assisted private val locationManager: LocationManager,
+    private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager
 ) :
     ViewModel(),
@@ -101,40 +101,50 @@ class PositionLockFabViewModel internal constructor(
     }
 
     private fun setNextLockState(block: () -> Unit) {
-        permissionsManager.checkPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION, Observer {
-            if (!it) {
-                permissionsManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION,
-                    object : PermissionsManager.PermissionCallback {
-                        override fun onPermissionGranted(permission: String) {
-                            SygicEngine.openGpsConnection()
-                            block()
-                        }
+        checkPermission {
+            checkLocationEnabled(block)
+        }
+    }
 
-                        override fun onPermissionDenied(permission: String) {
-                            /* Currently do nothing */
-                        }
-                    })
-            } else {
-                block()
-            }
-        })
+    private fun checkPermission(onSuccess: () -> Unit) {
+        permissionsManager.checkPermissionGranted(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Observer { permissionEnabled ->
+                if (!permissionEnabled) {
+                    permissionsManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION,
+                        object : PermissionsManager.PermissionCallback {
+                            override fun onPermissionGranted(permission: String) {
+                                SygicEngine.openGpsConnection()
+                                onSuccess()
+                            }
 
-
-        /*
-        if (!locationManager.isGpsEnabled()) {
-            locationManager.requestToEnableGps(object : LocationManager.EnableGpsCallback {
-                override fun onResult(@EnableGpsResult result: Int) {
-                    when (result) {
-                        EnableGpsResult.ENABLED -> onClick(view)
-                        EnableGpsResult.DENIED -> { *//* Currently do nothing *//*
-                        }
-                    }
+                            override fun onPermissionDenied(permission: String) {
+                                /* Currently do nothing */
+                            }
+                        })
+                } else {
+                    onSuccess()
                 }
             })
-            return false
-        }
+    }
 
-        return true*/
+    private fun checkLocationEnabled(onSuccess: () -> Unit) {
+        locationManager.checkGpsEnabled(Observer { gpsEnabled ->
+            if (!gpsEnabled) {
+                locationManager.requestToEnableGps(object : LocationManager.EnableGpsCallback {
+                    override fun onResult(@EnableGpsResult result: Int) {
+                        when (result) {
+                            EnableGpsResult.ENABLED -> onSuccess()
+                            EnableGpsResult.DENIED -> {
+                                /* Currently do nothing */
+                            }
+                        }
+                    }
+                })
+            } else {
+                onSuccess()
+            }
+        })
     }
 
     override fun onStop(owner: LifecycleOwner) {

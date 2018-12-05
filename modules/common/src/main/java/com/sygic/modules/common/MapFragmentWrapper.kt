@@ -29,10 +29,8 @@ import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
-import com.sygic.ui.common.locationManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
-import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
@@ -44,10 +42,7 @@ import kotlin.reflect.KProperty
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener,
-    LocationManager.LocationRequester {
-
-    protected val locationManager: LocationManager by lazy { LocationManagerImpl(this) } //todo: Dagger
+abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected val modulesComponent: ModulesComponent by SingletonDelegate()
 
@@ -65,6 +60,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     internal lateinit var sdkInitializationManager: SdkInitializationManager
     @Inject
     internal lateinit var permissionManager: PermissionsManager
+    @Inject
+    internal lateinit var locationManager: LocationManager
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
@@ -93,6 +90,14 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
             permissionsRequesterCallback = it.callback
             requestPermissions(it.permissions, PERMISSIONS_REQUEST_CODE)
         })
+        locationManager.observe(this, Observer {
+            locationRequesterCallback = it
+            if (isGooglePlayServicesAvailable()) {
+                createGoogleApiLocationRequest()
+            } else {
+                showNoGoogleApiDialog()
+            }
+        })
     }
 
     @CallSuper
@@ -108,15 +113,6 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     @CallSuper
     override fun onMapInitializationInterrupted() {
         /* Currently do nothing */
-    }
-
-    override fun requestToEnableGps(locationRequesterCallback: LocationManager.LocationRequesterCallback) {
-        this.locationRequesterCallback = locationRequesterCallback
-        if (isGooglePlayServicesAvailable()) {
-            createGoogleApiLocationRequest()
-        } else {
-            showNoGoogleApiDialog()
-        }
     }
 
     private fun isGooglePlayServicesAvailable(): Boolean {
@@ -179,10 +175,6 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
                 }
                 .show()
         }
-    }
-
-    override fun isProviderEnabled(provider: String): Boolean {
-        return context?.locationManager?.isProviderEnabled(provider) ?: false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
