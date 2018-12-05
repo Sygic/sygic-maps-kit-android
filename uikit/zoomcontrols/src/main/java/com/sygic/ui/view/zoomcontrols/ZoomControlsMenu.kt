@@ -9,7 +9,8 @@ import android.view.ViewGroup
 import com.sygic.ui.common.extensions.isRtl
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class ZoomControlsMenu : ViewGroup, ZoomControlsMenuButton.MenuCallback {
+class ZoomControlsMenu @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : ViewGroup(context, attrs, defStyleAttr), ZoomControlsMenuButton.MenuCallback {
 
     companion object {
         private const val ANIMATION_DELAY_PER_ITEM = 50
@@ -36,15 +37,7 @@ class ZoomControlsMenu : ViewGroup, ZoomControlsMenuButton.MenuCallback {
         fun onCameraProjectionChanged()
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context, attrs)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init(context, attrs)
-    }
-
-    private fun init(context: Context, attrs: AttributeSet) {
+    init {
         val defaultLayoutParams = super.generateDefaultLayoutParams()
         isRtl = context.isRtl()
 
@@ -54,12 +47,12 @@ class ZoomControlsMenu : ViewGroup, ZoomControlsMenuButton.MenuCallback {
         addView(ZoomControlsZoomOutButton(context, attrs), defaultLayoutParams)
     }
 
-    private fun createMenuButton(context: Context, attrs: AttributeSet): ZoomControlsMenuButton {
+    private fun createMenuButton(context: Context, attrs: AttributeSet?): ZoomControlsMenuButton {
         menuButton = ZoomControlsMenuButton(context, attrs, callback = this)
         return menuButton
     }
 
-    private fun createMapModeMenuButton(context: Context, attrs: AttributeSet): ZoomControlsMapViewModeButton {
+    private fun createMapModeMenuButton(context: Context, attrs: AttributeSet?): ZoomControlsMapViewModeButton {
         zoomControlsMapViewModeButton = ZoomControlsMapViewModeButton(context, attrs)
         return zoomControlsMapViewModeButton
     }

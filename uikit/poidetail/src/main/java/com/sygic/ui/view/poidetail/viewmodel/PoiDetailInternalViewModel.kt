@@ -17,12 +17,17 @@ class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
     val emailText: String? = poiData.email
     val phoneText: String? = poiData.phone
 
+    val expandObservable: LiveData<Any> = SingleLiveEvent()
     val webUrlClickObservable: LiveData<String> = SingleLiveEvent()
     val emailClickObservable: LiveData<String> = SingleLiveEvent()
     val phoneNumberClickObservable: LiveData<String> = SingleLiveEvent()
     val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
 
     private var listener: PoiDetailBottomDialogFragment.Listener? = null
+
+    fun onHeaderClick() {
+        (expandObservable as SingleLiveEvent<Any>).call()
+    }
 
     fun onWebUrlClick() {
         (webUrlClickObservable as MutableLiveData<String>).value = urlText
