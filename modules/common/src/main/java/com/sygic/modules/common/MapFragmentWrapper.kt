@@ -44,19 +44,19 @@ import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
 import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import javax.inject.Inject
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener, LocationManager.LocationRequester,
+abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener,
+    LocationManager.LocationRequester,
     PermissionsManager.PermissionsRequester {
 
     protected val locationManager: LocationManager by lazy { LocationManagerImpl(this) } //todo: Dagger
     protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) } //todo: Dagger
 
-    protected val modulesComponent: ModulesComponent by lazy {
-        DaggerModulesComponent.builder()
-            .build()
-    }
+    protected val modulesComponent: ModulesComponent by SingletonDelegate()
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -77,7 +77,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
-    protected inline fun <reified T, B: ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) = block(builder.plus(modulesComponent).build())
+    protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) = block(builder.plus(modulesComponent).build())
     protected inline fun <reified T: ViewModel> viewModelOf(viewModelClass: Class<out T>) = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
 
     init {
@@ -229,4 +229,16 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     fun addMapMarkers(markers: List<MapMarker>) {
         markers.forEach { addMapMarker(it) }
     }
+}
+
+class SingletonDelegate : ReadOnlyProperty<Any, ModulesComponent> {
+
+    companion object {
+        private val component: ModulesComponent by lazy {
+            DaggerModulesComponent.builder()
+                .build()
+        }
+    }
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): ModulesComponent = component
 }
