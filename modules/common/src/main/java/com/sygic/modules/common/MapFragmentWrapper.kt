@@ -5,12 +5,11 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.common.ConnectionResult
@@ -22,8 +21,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.modules.common.di.DaggerModulesComponent
-import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.di.ModulesComponent
+import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
@@ -33,28 +32,20 @@ import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.tools.viewmodel.ViewModelFactory
-import com.sygic.ui.common.extensions.locationManager
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
-import com.sygic.ui.common.sdk.location.LocationManagerImpl
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
-import com.sygic.ui.common.sdk.permission.PermissionsManagerImpl
 import javax.inject.Inject
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener,
-    LocationManager.LocationRequester,
-    PermissionsManager.PermissionsRequester {
-
-    protected val locationManager: LocationManager by lazy { LocationManagerImpl(this) } //todo: Dagger
-    protected val permissionManager: PermissionsManager by lazy { PermissionsManagerImpl(this) } //todo: Dagger
+abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected val modulesComponent: ModulesComponent by SingletonDelegate()
 
@@ -73,12 +64,22 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     internal lateinit var mapInteractionManager: MapInteractionManager
     @Inject
     internal lateinit var sdkInitializationManager: SdkInitializationManager
+    @Inject
+    internal lateinit var permissionManager: PermissionsManager
+    @Inject
+    internal lateinit var locationManager: LocationManager
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
-    protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) =
-        block(builder.plus(modulesComponent).build())
+    protected var injected = false
+
+    protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
+        if (!injected) {
+            block(builder.plus(modulesComponent).build())
+        }
+        injected = true
+    }
 
     protected inline fun <reified T : ViewModel> viewModelOf(
         viewModelClass: Class<out T>,
@@ -101,6 +102,18 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         super.onAttach(context)
 
         sdkInitializationManager.initialize((context as Activity).application, this)
+        permissionManager.observe(this, Observer {
+            permissionsRequesterCallback = it.callback
+            requestPermissions(it.permissions, PERMISSIONS_REQUEST_CODE)
+        })
+        locationManager.observe(this, Observer {
+            locationRequesterCallback = it
+            if (isGooglePlayServicesAvailable()) {
+                createGoogleApiLocationRequest()
+            } else {
+                showNoGoogleApiDialog()
+            }
+        })
     }
 
     @CallSuper
@@ -116,35 +129,6 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     @CallSuper
     override fun onMapInitializationInterrupted() {
         /* Currently do nothing */
-    }
-
-    override fun hasPermissionGranted(permission: String): Boolean {
-        return context?.let {
-            ContextCompat.checkSelfPermission(it, permission) == PackageManager.PERMISSION_GRANTED
-        } ?: false
-    }
-
-    override fun shouldShowRationaleForPermission(permission: String): Boolean {
-        return context?.let {
-            shouldShowRequestPermissionRationale(permission)
-        } ?: false
-    }
-
-    override fun requestPermissions(
-        permissions: Array<String>,
-        permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback
-    ) {
-        this.permissionsRequesterCallback = permissionsRequesterCallback
-        requestPermissions(permissions, PERMISSIONS_REQUEST_CODE)
-    }
-
-    override fun requestToEnableGps(locationRequesterCallback: LocationManager.LocationRequesterCallback) {
-        this.locationRequesterCallback = locationRequesterCallback
-        if (isGooglePlayServicesAvailable()) {
-            createGoogleApiLocationRequest()
-        } else {
-            showNoGoogleApiDialog()
-        }
     }
 
     private fun isGooglePlayServicesAvailable(): Boolean {
@@ -207,10 +191,6 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
                 }
                 .show()
         }
-    }
-
-    override fun isProviderEnabled(provider: String): Boolean {
-        return context?.locationManager?.isProviderEnabled(provider) ?: false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
