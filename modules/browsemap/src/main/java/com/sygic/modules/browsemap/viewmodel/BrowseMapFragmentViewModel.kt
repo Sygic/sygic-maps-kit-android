@@ -93,7 +93,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     private fun notifyPoiDataChanged(poiData: PoiData) {
-        (poiDataObservable as MutableLiveData<PoiData>).value = poiData
+        (poiDataObservable as SingleLiveEvent<PoiData>).value = poiData
         if (poiData.isEmpty()) extendedMapDataModel.removeOnClickMapMarker()
     }
 

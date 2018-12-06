@@ -30,19 +30,19 @@ class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
     }
 
     fun onWebUrlClick() {
-        (webUrlClickObservable as MutableLiveData<String>).value = urlText
+        (webUrlClickObservable as SingleLiveEvent<String>).value = urlText
     }
 
     fun onEmailClick() {
-        (emailClickObservable as MutableLiveData<String>).value = emailText
+        (emailClickObservable as SingleLiveEvent<String>).value = emailText
     }
 
     fun onPhoneNumberClick() {
-        (phoneNumberClickObservable as MutableLiveData<String>).value = phoneText
+        (phoneNumberClickObservable as SingleLiveEvent<String>).value = phoneText
     }
 
     fun onCoordinatesClick() {
-        (coordinatesClickObservable as MutableLiveData<String>).value = coordinatesText
+        (coordinatesClickObservable as SingleLiveEvent<String>).value = coordinatesText
     }
 
     fun setListener(listener: PoiDetailBottomDialogFragment.Listener?) {
