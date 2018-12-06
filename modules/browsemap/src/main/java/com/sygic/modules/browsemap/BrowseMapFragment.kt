@@ -77,9 +77,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
         super.onCreate(savedInstanceState)
 
         browseMapFragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, attributesTypedArray)
-        browseMapFragmentViewModel.poiDataObservable.observe(this,
-            Observer<PoiData> { showPoiDetailBottomDialogFragment(it) })
-        savedInstanceState?.let { setPoiDetailBottomDialogFragmentListener() }
+        browseMapFragmentViewModel.poiDataObservable.observe(this, Observer<PoiData> { showPoiDetail(it) })
+        savedInstanceState?.let { setPoiDetailListener() }
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
 
@@ -95,7 +94,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         lifecycle.addObserver(zoomControlsViewModel)
     }
 
-    private fun setPoiDetailBottomDialogFragmentListener() {
+    private fun setPoiDetailListener() {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as PoiDetailBottomDialogFragment).setListener(browseMapFragmentViewModel)
         }
@@ -115,7 +114,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         return root
     }
 
-    private fun showPoiDetailBottomDialogFragment(poiData: PoiData) {
+    private fun showPoiDetail(poiData: PoiData) {
         val dialog = PoiDetailBottomDialogFragment.newInstance(poiData)
         dialog.setListener(browseMapFragmentViewModel)
         dialog.show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
