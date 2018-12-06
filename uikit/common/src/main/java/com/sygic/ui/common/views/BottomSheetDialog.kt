@@ -20,7 +20,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.google.android.material.R.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 
 /**
  * Friendly and more usable alternative to the official material BottomSheetDialog
@@ -30,23 +30,13 @@ class BottomSheetDialog @JvmOverloads constructor(
     @StyleRes theme: Int,
     private val initialPeekHeight: Int? = null,
     private val initialState: Int = BottomSheetBehavior.STATE_COLLAPSED
-) : AppCompatDialog(context, getSubThemeResId(context, theme)) {
+) : AppCompatDialog(context, getSubThemeResId(context, theme)), BottomSheetBehaviorWrapper.StateListener {
 
-    var behavior: BottomSheetBehavior<FrameLayout>? = null
+    var behavior: BottomSheetBehaviorWrapper? = null
         private set
     private var cancelable: Boolean = false
     private var canceledOnTouchOutside: Boolean = false
     private var canceledOnTouchOutsideSet: Boolean = false
-
-    private val bottomSheetCallback = object : BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                cancel()
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-    }
 
     init {
         cancelable = true
@@ -107,14 +97,25 @@ class BottomSheetDialog @JvmOverloads constructor(
         canceledOnTouchOutsideSet = true
     }
 
+    override fun onStateChanged(bottomSheet: View, newState: Int) {
+        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+            cancel()
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        behavior?.removeStateListener(this)
+    }
+
     @SuppressLint("PrivateResource")
     private fun wrapInBottomSheet(layoutResId: Int, view: View?, params: LayoutParams?): View {
         val container = View.inflate(context, layout.design_bottom_sheet_dialog, null) as FrameLayout
         val coordinator = container.findViewById<CoordinatorLayout>(id.coordinator)
         val bottomSheet = coordinator.findViewById<FrameLayout>(id.design_bottom_sheet)
 
-        behavior = BottomSheetBehavior.from(bottomSheet).apply {
-            setBottomSheetCallback(bottomSheetCallback)
+        behavior = BottomSheetBehaviorWrapper(BottomSheetBehavior.from(bottomSheet)).apply {
+            addStateListener(this@BottomSheetDialog)
             isHideable = cancelable
             initialPeekHeight?.let { peekHeight = initialPeekHeight }
         }
