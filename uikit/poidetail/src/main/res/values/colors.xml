@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="defaultPeekHeight">118dp</dimen>
+    <color name="black_with_alpha">#4d000000</color>
 </resources>
