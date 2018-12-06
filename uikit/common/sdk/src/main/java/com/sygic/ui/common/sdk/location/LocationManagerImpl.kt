@@ -4,16 +4,16 @@ import android.app.Activity
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.sygic.ui.common.sdk.location.livedata.LocationCheckLiveEvent
-import com.sygic.ui.common.sdk.location.livedata.LocationLiveEvent
+import com.sygic.ui.common.sdk.location.livedata.LocationProviderCheckLiveEvent
+import com.sygic.ui.common.sdk.location.livedata.LocationRequestLiveEvent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class LocationManagerImpl : LocationManager {
 
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 
-    private val providerCheck: LocationCheckLiveEvent = LocationCheckLiveEvent()
-    private val locationRequest: LocationLiveEvent = LocationLiveEvent()
+    private val providerCheck: LocationProviderCheckLiveEvent = LocationProviderCheckLiveEvent()
+    private val locationRequest: LocationRequestLiveEvent = LocationRequestLiveEvent()
 
     override fun observe(owner: LifecycleOwner, observer: Observer<LocationManager.LocationRequesterCallback>) {
         providerCheck.observe(owner)

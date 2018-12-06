@@ -10,7 +10,7 @@ import com.sygic.ui.common.livedata.SingleLiveData
 import com.sygic.ui.common.locationManager
 
 
-class LocationCheckLiveEvent : SingleLiveData<String>() {
+class LocationProviderCheckLiveEvent : SingleLiveData<String>() {
 
     private lateinit var observer: Observer<Boolean>
 

@@ -5,15 +5,15 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.sygic.ui.common.sdk.permission.livedata.PermissionCheckLiveEvent
-import com.sygic.ui.common.sdk.permission.livedata.PermissionLiveEvent
 import com.sygic.ui.common.sdk.permission.livedata.PermissionRationaleLiveEvent
+import com.sygic.ui.common.sdk.permission.livedata.PermissionRequestLiveEvent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PermissionsManagerImpl : PermissionsManager {
 
     private val permissionCheck: PermissionCheckLiveEvent = PermissionCheckLiveEvent()
     private val rationaleCheck: PermissionRationaleLiveEvent = PermissionRationaleLiveEvent()
-    private val permissionRequest: PermissionLiveEvent = PermissionLiveEvent()
+    private val permissionRequest: PermissionRequestLiveEvent = PermissionRequestLiveEvent()
 
     override fun observe(owner: LifecycleOwner, observer: Observer<PermissionsManager.PermissionRequest>) {
         permissionCheck.observe(owner)

@@ -33,6 +33,7 @@ interface PermissionsManager {
 
     data class PermissionRequest(val permissions: Array<String>, val callback: PermissionsRequesterCallback) {
 
+        //generated to safe check content of Array in data class
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
