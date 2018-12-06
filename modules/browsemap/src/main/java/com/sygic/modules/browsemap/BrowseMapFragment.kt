@@ -76,10 +76,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel = ViewModelProviders.of(
-            this,
-            viewModelFactory.with(attributesTypedArray)
-        )[BrowseMapFragmentViewModel::class.java]
+        browseMapFragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, attributesTypedArray)
         browseMapFragmentViewModel.poiDataObservable.observe(this,
             Observer<PoiData> { showPoiDetailBottomDialogFragment(it) })
         savedInstanceState?.let { setPoiDetailBottomDialogFragmentListener() }

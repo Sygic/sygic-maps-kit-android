@@ -77,8 +77,13 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
-    protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) = block(builder.plus(modulesComponent).build())
-    protected inline fun <reified T: ViewModel> viewModelOf(viewModelClass: Class<out T>) = ViewModelProviders.of(this, viewModelFactory)[viewModelClass]
+    protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) =
+        block(builder.plus(modulesComponent).build())
+
+    protected inline fun <reified T : ViewModel> viewModelOf(
+        viewModelClass: Class<out T>,
+        vararg assistedParams: Any? = emptyArray()
+    ) = ViewModelProviders.of(this, viewModelFactory.with(*assistedParams))[viewModelClass]
 
     init {
         getMapAsync(this)
