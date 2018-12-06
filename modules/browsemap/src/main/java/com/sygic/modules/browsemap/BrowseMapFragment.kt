@@ -65,6 +65,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         }
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
         super.onInflate(context, attrs, savedInstanceState)
 
         attributesTypedArray = context.obtainStyledAttributes(attrs, R.styleable.BrowseMapFragment)
@@ -88,7 +89,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         lifecycle.addObserver(compassViewModel)
 
         positionLockFabViewModel = ViewModelProviders.of(this,
-            viewModelFactory.with(locationManager, permissionManager))[PositionLockFabViewModel::class.java]
+            viewModelFactory)[PositionLockFabViewModel::class.java]
         lifecycle.addObserver(positionLockFabViewModel)
 
         zoomControlsViewModel = ViewModelProviders.of(this,
