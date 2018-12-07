@@ -3,16 +3,14 @@ package com.sygic.ui.view.poidetail.viewmodel
 import androidx.lifecycle.*
 import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.ui.common.sdk.data.PoiData
-import com.sygic.ui.common.sdk.utlils.getAddressTitle
-import com.sygic.ui.common.sdk.utlils.getAddressSubtitle
-import com.sygic.ui.common.sdk.utlils.getFormattedLocation
+import com.sygic.ui.common.sdk.extension.getFormattedLocation
 import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 
 class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
 
-    val titleText: String? = getAddressTitle(poiData)
-    val subtitleText: String? = getAddressSubtitle(poiData)
-    val coordinatesText: String? = getFormattedLocation(poiData.coordinates)
+    val titleText: String
+    val subtitleText: String
+    val coordinatesText: String?
     val urlText: String? = poiData.url
     val emailText: String? = poiData.email
     val phoneText: String? = poiData.phone
@@ -24,6 +22,13 @@ class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
     val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
 
     private var listener: PoiDetailBottomDialogFragment.Listener? = null
+
+    init {
+        val addressComponent = poiData.getAddressComponent()
+        titleText = addressComponent.formattedTitle
+        subtitleText = addressComponent.formattedSubtitle
+        coordinatesText = poiData.coordinates.getFormattedLocation()
+    }
 
     fun onHeaderClick() {
         (expandObservable as SingleLiveEvent<Any>).call()

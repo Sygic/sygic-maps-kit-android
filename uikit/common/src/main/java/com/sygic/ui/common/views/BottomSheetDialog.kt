@@ -34,12 +34,11 @@ class BottomSheetDialog @JvmOverloads constructor(
 
     var behavior: BottomSheetBehaviorWrapper? = null
         private set
-    private var cancelable: Boolean = false
+    private var cancelable: Boolean = true
     private var canceledOnTouchOutside: Boolean = false
     private var canceledOnTouchOutsideSet: Boolean = false
 
     init {
-        cancelable = true
         canceledOnTouchOutside = true
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
     }

@@ -25,7 +25,7 @@ open class MapMarker : com.sygic.sdk.map.`object`.MapMarker {
     constructor(latitude: Double, longitude: Double, icon: BitmapFactory) : super(GeoCoordinates(latitude, longitude), icon) { this.data.coordinates = GeoCoordinates(latitude, longitude) }
     constructor(latitude: Double, longitude: Double, icon: BitmapFactory, data: PoiData) : super(GeoCoordinates(latitude, longitude), icon) { this.data = data }
 
-    var data: PoiData = PoiData()
+    var data: PoiData = PoiData.EMPTY
 
     init {
         setAnchorPosition(MARKER_ANCHOR_POSITION_X, MARKER_ANCHOR_POSITION_Y)
@@ -33,7 +33,7 @@ open class MapMarker : com.sygic.sdk.map.`object`.MapMarker {
 
     class Builder {
 
-        private val data: PoiData = PoiData()
+        private val data: PoiData = PoiData.EMPTY
         private var bitmapFactory: BitmapFactory = DEFAULT_ICON
 
         fun coordinates(latitude: Double, longitude: Double): Builder = coordinates(GeoCoordinates(latitude, longitude))

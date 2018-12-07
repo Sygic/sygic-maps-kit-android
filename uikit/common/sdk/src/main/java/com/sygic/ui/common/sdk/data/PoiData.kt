@@ -2,8 +2,11 @@ package com.sygic.ui.common.sdk.data
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.text.TextUtils
 import com.sygic.sdk.places.PoiInfo
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.ui.common.extensions.EMPTY_STRING
+import com.sygic.ui.common.sdk.extension.getFormattedLocation
 
 // Todo: Builder for Java
 data class PoiData(
@@ -21,7 +24,63 @@ data class PoiData(
     var url: String? = null
 ) : Parcelable {
 
+    class AddressComponent(private val title: String? = null, private val subtitle: String? = null) {
+        val formattedTitle: String
+            get() = title?.let { it } ?: EMPTY_STRING
+        val formattedSubtitle: String
+            get() = subtitle?.let { it } ?: EMPTY_STRING
+    }
+
     fun isEmpty() = coordinates == GeoCoordinates.Invalid
+
+    fun getAddressComponent(): AddressComponent {
+        name?.let {
+            if (it.isNotEmpty()) {
+                return AddressComponent(it, getStreetWithHouseNumberAndCityWithPostal())
+            }
+        }
+        street?.let { street ->
+            if (street.isNotEmpty()) {
+                return AddressComponent(
+                    getStreetWithHouseNumber(),
+                    city?.let { if (it.isNotEmpty()) getCityWithPostal() else null })
+            }
+        }
+        city?.let {
+            if (it.isNotEmpty()) {
+                return AddressComponent(getCityWithPostal())
+            }
+        }
+
+        return AddressComponent(coordinates.getFormattedLocation())
+    }
+
+    /**
+     * Formatted example: Mlynské nivy 16, 821 09 Bratislava
+     */
+    private fun getStreetWithHouseNumberAndCityWithPostal(): String {
+        val builder = StringBuilder()
+        val street = street?.let { getStreetWithHouseNumber() }
+
+        street?.let { builder.append(it) }
+        getCityWithPostal().let {
+            if (!TextUtils.isEmpty(street)) builder.append(", ")
+            builder.append(it)
+        }
+        return builder.toString()
+    }
+
+    /**
+     * Formatted example: Mlynské nivy 16
+     */
+    private fun getStreetWithHouseNumber(): String? =
+        houseNumber?.let { if (it.isNotEmpty()) String.format("%s %s", street, it) else street } ?: street
+
+    /**
+     * Formatted example: 821 09 Bratislava
+     */
+    private fun getCityWithPostal(): String? =
+        postal?.let { if (it.isNotEmpty()) return String.format("%s %s", it, city) else city } ?: city
 
     override fun describeContents(): Int {
         return 0
@@ -57,13 +116,20 @@ data class PoiData(
         parcel.readString()
     )
 
-    companion object CREATOR : Parcelable.Creator<PoiData> {
-        override fun createFromParcel(parcel: Parcel): PoiData {
-            return PoiData(parcel)
-        }
+    companion object {
 
-        override fun newArray(size: Int): Array<PoiData?> {
-            return arrayOfNulls(size)
+        @JvmField
+        val EMPTY = PoiData()
+
+        @JvmField
+        val CREATOR = object : Parcelable.Creator<PoiData> {
+            override fun createFromParcel(parcel: Parcel): PoiData {
+                return PoiData(parcel)
+            }
+
+            override fun newArray(size: Int): Array<PoiData?> {
+                return arrayOfNulls(size)
+            }
         }
     }
 }

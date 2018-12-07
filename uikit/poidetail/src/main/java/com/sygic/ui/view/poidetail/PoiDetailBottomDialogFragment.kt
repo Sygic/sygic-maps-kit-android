@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.views.BottomSheetDialog
 
+private const val POI_DATA = "poi_data"
+
 class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     interface Listener {
@@ -32,7 +34,6 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     companion object {
 
         const val TAG = "poi_detail_bottom_dialog_fragment"
-        private const val POI_DATA = "poi_data"
 
         @JvmStatic
         fun newInstance(poiData: PoiData): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {

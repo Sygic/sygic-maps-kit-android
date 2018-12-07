@@ -70,7 +70,7 @@ class BrowseMapFragmentViewModel internal constructor(
                         return
                     }
 
-                    notifyPoiDataChanged(PoiData())
+                    notifyPoiDataChanged(PoiData.EMPTY)
                 }
                 MapInteractionMode.FULL -> {
                     getPoiData(firstViewObject)
