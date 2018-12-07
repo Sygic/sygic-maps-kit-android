@@ -1,17 +1,17 @@
 package com.sygic.ui.common.behaviors
 
 import android.view.View
-import android.widget.FrameLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import java.lang.ref.WeakReference
 
-class BottomSheetBehaviorWrapper(private val behavior: BottomSheetBehavior<FrameLayout>) {
+class BottomSheetBehaviorWrapper(private val behavior: BottomSheetBehavior<View>) {
 
     interface StateListener {
-        fun onStateChanged(bottomSheet: View, newState: Int)
+        fun onStateChanged(@BottomSheetBehavior.State newState: Int)
     }
 
     interface SlideListener {
-        fun onSlide(bottomSheet: View, slideOffset: Float)
+        fun onSlide(slideOffset: Float)
     }
 
     @BottomSheetBehavior.State
@@ -33,34 +33,50 @@ class BottomSheetBehaviorWrapper(private val behavior: BottomSheetBehavior<Frame
             behavior.peekHeight = value
         }
 
-    private val stateListeners = LinkedHashSet<StateListener>()
-    private val slideListeners = LinkedHashSet<SlideListener>()
+    private val stateListeners = LinkedHashSet<WeakReference<StateListener>>()
+    private val slideListeners = LinkedHashSet<WeakReference<SlideListener>>()
 
     init {
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                stateListeners.forEach { it.onStateChanged(bottomSheet, newState) }
+                notifyStateChanged(newState)
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                slideListeners.forEach { it.onSlide(bottomSheet, slideOffset) }
+                notifySlideChanged(slideOffset)
             }
         })
     }
 
-    fun addStateListener(listener: StateListener) {
-        stateListeners.add(listener)
+    fun notifyStateChanged(state: Int) {
+        val iterator = stateListeners.iterator()
+        while (iterator.hasNext()) {
+            val reference = iterator.next().get()
+            if (reference != null) {
+                reference.onStateChanged(state)
+            } else {
+                iterator.remove()
+            }
+        }
     }
 
-    fun removeStateListener(listener: StateListener) {
-        stateListeners.remove(listener)
+    fun notifySlideChanged(slideOffset: Float) {
+        val iterator = slideListeners.iterator()
+        while (iterator.hasNext()) {
+            val reference = iterator.next().get()
+            if (reference != null) {
+                reference.onSlide(slideOffset)
+            } else {
+                iterator.remove()
+            }
+        }
+    }
+
+    fun addStateListener(listener: StateListener) {
+        stateListeners.add(WeakReference(listener))
     }
 
     fun addSlideListener(listener: SlideListener) {
-        slideListeners.add(listener)
-    }
-
-    fun removeSlideListener(listener: SlideListener) {
-        slideListeners.remove(listener)
+        slideListeners.add(WeakReference(listener))
     }
 }

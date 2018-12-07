@@ -6,6 +6,8 @@ import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 
+const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
+
 class PoiDetailInternalViewModel(poiData: PoiData) : ViewModel() {
 
     val titleText: String

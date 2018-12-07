@@ -2,6 +2,7 @@ package com.sygic.ui.common.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -30,16 +31,18 @@ class BottomSheetDialog @JvmOverloads constructor(
     @StyleRes theme: Int,
     private val initialPeekHeight: Int? = null,
     private val initialState: Int = BottomSheetBehavior.STATE_COLLAPSED
-) : AppCompatDialog(context, getSubThemeResId(context, theme)), BottomSheetBehaviorWrapper.StateListener {
+) : AppCompatDialog(context, getSubThemeResId(context, theme)),
+    DialogInterface.OnShowListener,
+    BottomSheetBehaviorWrapper.StateListener {
 
     var behavior: BottomSheetBehaviorWrapper? = null
         private set
     private var cancelable: Boolean = true
-    private var canceledOnTouchOutside: Boolean = false
+    private var canceledOnTouchOutside: Boolean = true
     private var canceledOnTouchOutsideSet: Boolean = false
 
     init {
-        canceledOnTouchOutside = true
+        setOnShowListener(this)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
     }
 
@@ -96,15 +99,14 @@ class BottomSheetDialog @JvmOverloads constructor(
         canceledOnTouchOutsideSet = true
     }
 
-    override fun onStateChanged(bottomSheet: View, newState: Int) {
+    override fun onStateChanged(@BottomSheetBehavior.State newState: Int) {
         if (newState == BottomSheetBehavior.STATE_HIDDEN) {
             cancel()
         }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        behavior?.removeStateListener(this)
+    override fun onShow(dialog: DialogInterface) {
+        behavior?.notifyStateChanged(initialState)
     }
 
     @SuppressLint("PrivateResource")

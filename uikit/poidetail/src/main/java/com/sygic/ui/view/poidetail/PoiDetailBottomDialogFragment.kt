@@ -17,6 +17,7 @@ import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.views.BottomSheetDialog
+import com.sygic.ui.view.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
 
 private const val POI_DATA = "poi_data"
 
@@ -43,10 +44,6 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return BottomSheetDialog(requireContext(), theme, resources.getDimensionPixelSize(R.dimen.defaultPeekHeight))
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,6 +59,12 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
             this.phoneNumberClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openPhone(it) })
             this.coordinatesClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.copyToClipboard(it) })
         }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return BottomSheetDialog(
+            requireContext(), theme, resources.getDimensionPixelSize(R.dimen.defaultPeekHeight), DEFAULT_BEHAVIOR_STATE
+        )
     }
 
     private fun expandBottomSheet() {
