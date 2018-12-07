@@ -67,10 +67,6 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         )
     }
 
-    private fun expandBottomSheet() {
-        (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LayoutPoiDetailInternalBinding.inflate(inflater, container, false)
         return binding.root
@@ -80,6 +76,10 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.poiDetailInternalViewModel = viewModel
         binding.setLifecycleOwner(this)
+    }
+
+    private fun expandBottomSheet() {
+        (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     fun setListener(listener: Listener) {
