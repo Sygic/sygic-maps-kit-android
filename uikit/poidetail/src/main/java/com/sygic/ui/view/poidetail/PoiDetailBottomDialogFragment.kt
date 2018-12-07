@@ -17,6 +17,7 @@ import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.views.BottomSheetDialog
+import com.sygic.ui.view.poidetail.manager.PreferencesManager
 import com.sygic.ui.view.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
 
 private const val POI_DATA = "poi_data"
@@ -48,12 +49,17 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(
-            this, PoiDetailInternalViewModel.ViewModelFactory(arguments?.getParcelable(POI_DATA)!!)
+            this,
+            PoiDetailInternalViewModel.ViewModelFactory(
+                arguments?.getParcelable(POI_DATA)!!,
+                PreferencesManager(requireContext())
+            )
         )[PoiDetailInternalViewModel::class.java].apply {
             this.setListener(listener)
             listener = null
 
             this.expandObservable.observe(this@PoiDetailBottomDialogFragment, Observer<Any> { expandBottomSheet() })
+            this.collapseObservable.observe(this@PoiDetailBottomDialogFragment, Observer<Any> { collapseBottomSheet() })
             this.webUrlClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openUrl(it) })
             this.emailClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openEmail(it) })
             this.phoneNumberClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openPhone(it) })
@@ -78,8 +84,18 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         binding.setLifecycleOwner(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        viewModel?.let { (dialog as BottomSheetDialog).behavior?.addStateListener(it) }
+    }
+
     private fun expandBottomSheet() {
         (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun collapseBottomSheet() {
+        (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun setListener(listener: Listener) {
