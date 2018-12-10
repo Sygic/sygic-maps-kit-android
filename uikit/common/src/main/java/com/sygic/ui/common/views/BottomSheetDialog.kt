@@ -83,7 +83,7 @@ class BottomSheetDialog @JvmOverloads constructor(
         super.onStart()
 
         behavior?.let {
-            if (it.state == BottomSheetBehavior.STATE_HIDDEN) {
+            if (it.state != initialState) {
                 it.state = initialState
             }
         }

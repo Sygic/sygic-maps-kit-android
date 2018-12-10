@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit
 
 private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
 const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
+const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED
 
 internal class PoiDetailInternalViewModel(poiData: PoiData,
                                  private val preferencesManager: PreferencesManager) : ViewModel(),
@@ -71,17 +72,12 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
     }
 
     private fun startShowcase(newState: Int) {
-        if (newState != DEFAULT_BEHAVIOR_STATE || !preferencesManager.showcaseAllowed) {
+        if (newState != SHOWCASE_BEHAVIOR_STATE || !preferencesManager.showcaseAllowed) {
             return
         }
 
         preferencesManager.showcaseAllowed = false
-        launchShowcaseBlock {
-            (expandObservable as SingleLiveEvent<Any>).call()
-            launchShowcaseBlock {
-                (collapseObservable as SingleLiveEvent<Any>).call()
-            }
-        }
+        launchShowcaseBlock { (collapseObservable as SingleLiveEvent<Any>).call() }
     }
 
     private fun launchShowcaseBlock(showcaseBlock: () -> Unit) {

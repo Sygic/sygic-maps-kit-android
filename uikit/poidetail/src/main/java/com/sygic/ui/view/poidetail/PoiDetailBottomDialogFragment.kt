@@ -19,6 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.views.BottomSheetDialog
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
 import com.sygic.ui.view.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
+import com.sygic.ui.view.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
 private const val POI_DATA = "poi_data"
 
@@ -31,6 +32,7 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     private var listener: Listener? = null
     private var viewModel: PoiDetailInternalViewModel? = null
 
+    private lateinit var preferencesManager: PreferencesManager
     private lateinit var binding: LayoutPoiDetailInternalBinding
 
     companion object {
@@ -48,11 +50,13 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        preferencesManager = PreferencesManager(requireContext())
+
         viewModel = ViewModelProviders.of(
             this,
             PoiDetailInternalViewModel.ViewModelFactory(
                 arguments?.getParcelable(POI_DATA)!!,
-                PreferencesManager(requireContext())
+                preferencesManager
             )
         )[PoiDetailInternalViewModel::class.java].apply {
             this.setListener(listener)
@@ -69,7 +73,10 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(
-            requireContext(), theme, resources.getDimensionPixelSize(R.dimen.defaultPeekHeight), DEFAULT_BEHAVIOR_STATE
+            requireContext(),
+            theme,
+            resources.getDimensionPixelSize(R.dimen.defaultPeekHeight),
+            if (preferencesManager.showcaseAllowed) SHOWCASE_BEHAVIOR_STATE else DEFAULT_BEHAVIOR_STATE
         )
     }
 
