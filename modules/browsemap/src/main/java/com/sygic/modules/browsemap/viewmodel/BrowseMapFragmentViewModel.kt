@@ -12,6 +12,7 @@ import com.sygic.tools.annotations.AutoFactory
 import com.sygic.modules.common.poi.manager.PoiDataManager
 import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.sdk.map.`object`.ViewObject
+import com.sygic.ui.common.extensions.asSingleEvent
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
@@ -93,7 +94,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     private fun notifyPoiDataChanged(poiData: PoiData) {
-        (poiDataObservable as SingleLiveEvent<PoiData>).value = poiData
+        poiDataObservable.asSingleEvent().value = poiData
         if (poiData.isEmpty()) extendedMapDataModel.removeOnClickMapMarker()
     }
 

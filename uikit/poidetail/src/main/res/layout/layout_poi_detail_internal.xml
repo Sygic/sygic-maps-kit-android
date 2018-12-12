@@ -12,7 +12,7 @@
 
     </data>
 
-    <android.widget.LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -96,6 +96,6 @@
             android:visibility="@{poiDetailInternalViewModel.coordinatesText != null ? View.VISIBLE : View.GONE}"
             tools:text="48.126895, 12.214578" />
 
-    </android.widget.LinearLayout>
+    </LinearLayout>
 
 </layout>

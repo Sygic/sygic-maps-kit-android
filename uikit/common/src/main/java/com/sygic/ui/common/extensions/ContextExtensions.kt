@@ -49,9 +49,11 @@ fun Context.openEmail(mailto: String) {
 fun Context.openPhone(phoneNumber: String) {
     if (!TextUtils.isEmpty(phoneNumber)) {
         val phoneIntent = Intent(Intent.ACTION_DIAL)
+
         phoneIntent.data = Uri.parse("tel:$phoneNumber")
+
         try {
-            phoneIntent.resolveActivity(packageManager)?.let { startActivity(phoneIntent) }
+            startActivity(Intent.createChooser(phoneIntent, null))
         } catch (e: ActivityNotFoundException) {
             longToast(R.string.no_phone_client)
         }

@@ -13,6 +13,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
+import androidx.annotation.RestrictTo
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -26,6 +27,7 @@ import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 /**
  * Friendly and more usable alternative to the official material BottomSheetDialog
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BottomSheetDialog @JvmOverloads constructor(
     context: Context,
     @StyleRes theme: Int,

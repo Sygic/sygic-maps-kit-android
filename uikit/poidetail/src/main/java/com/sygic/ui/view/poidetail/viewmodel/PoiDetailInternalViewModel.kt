@@ -3,6 +3,7 @@ package com.sygic.ui.view.poidetail.viewmodel
 import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
+import com.sygic.ui.common.extensions.asSingleEvent
 import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
@@ -44,23 +45,23 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
     }
 
     fun onHeaderClick() {
-        (expandObservable as SingleLiveEvent<Any>).call()
+        expandObservable.asSingleEvent().call()
     }
 
     fun onWebUrlClick() {
-        (webUrlClickObservable as SingleLiveEvent<String>).value = urlText
+        webUrlClickObservable.asSingleEvent().value = urlText
     }
 
     fun onEmailClick() {
-        (emailClickObservable as SingleLiveEvent<String>).value = emailText
+        emailClickObservable.asSingleEvent().value = emailText
     }
 
     fun onPhoneNumberClick() {
-        (phoneNumberClickObservable as SingleLiveEvent<String>).value = phoneText
+        phoneNumberClickObservable.asSingleEvent().value = phoneText
     }
 
     fun onCoordinatesClick() {
-        (coordinatesClickObservable as SingleLiveEvent<String>).value = coordinatesText
+        coordinatesClickObservable.asSingleEvent().value = coordinatesText
     }
 
     fun setListener(listener: PoiDetailBottomDialogFragment.Listener?) {
@@ -77,7 +78,7 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
         }
 
         preferencesManager.showcaseAllowed = false
-        launchShowcaseBlock { (collapseObservable as SingleLiveEvent<Any>).call() }
+        launchShowcaseBlock { collapseObservable.asSingleEvent().call() }
     }
 
     private fun launchShowcaseBlock(showcaseBlock: () -> Unit) {

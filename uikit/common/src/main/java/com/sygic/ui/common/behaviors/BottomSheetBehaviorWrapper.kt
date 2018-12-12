@@ -1,9 +1,12 @@
 package com.sygic.ui.common.behaviors
 
 import android.view.View
+import androidx.annotation.RestrictTo
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.lang.ref.WeakReference
+import java.util.*
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BottomSheetBehaviorWrapper(private val behavior: BottomSheetBehavior<View>) {
 
     interface StateListener {
@@ -49,25 +52,17 @@ class BottomSheetBehaviorWrapper(private val behavior: BottomSheetBehavior<View>
     }
 
     fun notifyStateChanged(state: Int) {
-        val iterator = stateListeners.iterator()
-        while (iterator.hasNext()) {
-            val reference = iterator.next().get()
-            if (reference != null) {
-                reference.onStateChanged(state)
-            } else {
-                iterator.remove()
+        stateListeners.iterator().apply {
+            while (hasNext()) {
+                next().get()?.onStateChanged(state) ?: remove()
             }
         }
     }
 
     fun notifySlideChanged(slideOffset: Float) {
-        val iterator = slideListeners.iterator()
-        while (iterator.hasNext()) {
-            val reference = iterator.next().get()
-            if (reference != null) {
-                reference.onSlide(slideOffset)
-            } else {
-                iterator.remove()
+        slideListeners.iterator().apply {
+            while (hasNext()) {
+                next().get()?.onSlide(slideOffset) ?: remove()
             }
         }
     }
