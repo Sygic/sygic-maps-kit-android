@@ -43,14 +43,12 @@ interface PoiDataManager {
             }
 
             val reverseSearchResult = results.first()
-            val resultNames = reverseSearchResult.names
-
             onDataLoaded(
                 PoiData(reverseSearchResult.position,
-                    iso = resultNames.countryIso,
-                    city = resultNames.city,
-                    street = resultNames.street,
-                    houseNumber = resultNames.houseNumber)
+                    iso = reverseSearchResult.names.countryIso,
+                    city = reverseSearchResult.names.city,
+                    street = reverseSearchResult.names.street,
+                    houseNumber = reverseSearchResult.names.houseNumber)
             )
         }
     }

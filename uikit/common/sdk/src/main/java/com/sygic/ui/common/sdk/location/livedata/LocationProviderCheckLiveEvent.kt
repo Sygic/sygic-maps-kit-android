@@ -6,9 +6,8 @@ import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.sygic.ui.common.extensions.locationManager
 import com.sygic.ui.common.livedata.SingleLiveData
-import com.sygic.ui.common.locationManager
-
 
 class LocationProviderCheckLiveEvent : SingleLiveData<String>() {
 

@@ -11,8 +11,6 @@ android {
         targetSdkVersion androidTargerSdkVersion
         versionCode 1
         versionName "1.0"
-
-        gradle.resolveFlavors(it)
     }
 
     dataBinding {
@@ -29,19 +27,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':modules-common')
-    api project(':uikit-poidetail')
-
-    implementation project(':uikit-compass-viewmodel')
-    implementation project(':uikit-positionlockfab-viewmodel')
-    implementation project(':uikit-zoomcontrols-viewmodel')
-    implementation project(':tools-injector-viewmodel')
-    annotationProcessor project(':tools-injector')
+    api project(':uikit-common-sdk')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
 }

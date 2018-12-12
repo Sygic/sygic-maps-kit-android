@@ -10,6 +10,8 @@ import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
@@ -29,6 +31,7 @@ import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
+import com.sygic.tools.viewmodel.ViewModelFactory
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
@@ -45,6 +48,9 @@ import kotlin.reflect.KProperty
 abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected val modulesComponent: ModulesComponent by SingletonDelegate()
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     @Inject
     internal lateinit var cameraDataModel: Camera.CameraModel
@@ -74,6 +80,11 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         }
         injected = true
     }
+
+    protected inline fun <reified T : ViewModel> viewModelOf(
+        viewModelClass: Class<out T>,
+        vararg assistedParams: Any? = emptyArray()
+    ) = ViewModelProviders.of(this, viewModelFactory.with(*assistedParams))[viewModelClass]
 
     init {
         getMapAsync(this)

@@ -1,4 +1,4 @@
-package com.sygic.ui.common
+package com.sygic.ui.common.extensions
 
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable

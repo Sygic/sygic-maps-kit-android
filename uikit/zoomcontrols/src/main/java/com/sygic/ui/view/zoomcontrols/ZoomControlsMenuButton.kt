@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import android.util.AttributeSet
 
-import com.sygic.ui.common.*
+import com.sygic.ui.common.extensions.setImageDrawableWithFade
 
 internal class ZoomControlsMenuButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, private val callback: MenuCallback? = null)
     : ZoomControlsBaseButton(context, attrs, defStyleAttr) {

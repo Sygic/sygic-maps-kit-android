@@ -2,8 +2,6 @@ package com.sygic.ui.common.livedata
 
 import androidx.annotation.MainThread
 
-private const val TAG = "SingleLiveEvent"
-
 /**
  * A lifecycle-aware observable that sends only new updates after subscription, used for events like
  * navigation and Snackbar messages.
