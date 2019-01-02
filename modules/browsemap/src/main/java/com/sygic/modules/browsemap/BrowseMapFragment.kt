@@ -7,26 +7,23 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
-import com.sygic.tools.viewmodel.ViewModelFactory
+import com.sygic.ui.common.sdk.data.PoiData
+import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
 import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
-import javax.inject.Inject
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragmentWrapper() {
 
     private var attributesTypedArray: TypedArray? = null
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
@@ -79,22 +76,23 @@ class BrowseMapFragment : MapFragmentWrapper() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel = ViewModelProviders.of(
-            this,
-            viewModelFactory.with(attributesTypedArray)
-        )[BrowseMapFragmentViewModel::class.java]
+        browseMapFragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, attributesTypedArray)
+        browseMapFragmentViewModel.poiDataObservable.observe(this, Observer<PoiData> { showPoiDetail(it) })
+        savedInstanceState?.let { setPoiDetailListener() }
 
-        compassViewModel = ViewModelProviders.of(this,
-            viewModelFactory)[CompassViewModel::class.java]
+        compassViewModel = viewModelOf(CompassViewModel::class.java)
+        positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
+        zoomControlsViewModel = viewModelOf(ZoomControlsViewModel::class.java)
+
         lifecycle.addObserver(compassViewModel)
-
-        positionLockFabViewModel = ViewModelProviders.of(this,
-            viewModelFactory)[PositionLockFabViewModel::class.java]
         lifecycle.addObserver(positionLockFabViewModel)
-
-        zoomControlsViewModel = ViewModelProviders.of(this,
-            viewModelFactory)[ZoomControlsViewModel::class.java]
         lifecycle.addObserver(zoomControlsViewModel)
+    }
+
+    private fun setPoiDetailListener() {
+        fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as PoiDetailBottomDialogFragment).setListener(browseMapFragmentViewModel)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -109,6 +107,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
             root.addView(it, 0)
         }
         return root
+    }
+
+    private fun showPoiDetail(poiData: PoiData) {
+        val dialog = PoiDetailBottomDialogFragment.newInstance(poiData)
+        dialog.setListener(browseMapFragmentViewModel)
+        dialog.show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
     override fun onDestroy() {

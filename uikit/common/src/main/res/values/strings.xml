@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="send_email">Send e-mail</string>
+    <string name="no_browser_client">Unable to find Web browser</string>
+    <string name="no_email_client">Unable to find e-mail client</string>
+    <string name="no_phone_client">Unable to find phone client</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+</resources>
