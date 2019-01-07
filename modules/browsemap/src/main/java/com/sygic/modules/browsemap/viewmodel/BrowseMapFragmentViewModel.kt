@@ -37,13 +37,13 @@ class BrowseMapFragmentViewModel internal constructor(
 
     init {
         attributesTypedArray?.let {
-            compassEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compassEnabled, false)
-            compassHideIfNorthUp.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compassHideIfNorthUp, false)
+            compassEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compass_enabled, false)
+            compassHideIfNorthUp.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compass_hideIfNorthUp, false)
             mapInteractionMode.value =
-                    it.getInt(R.styleable.BrowseMapFragment_sygic_mapInteractionMode, MapInteractionMode.MARKERS_ONLY)
+                    it.getInt(R.styleable.BrowseMapFragment_sygic_map_interactionMode, MapInteractionMode.MARKERS_ONLY)
             positionLockFabEnabled.value =
-                    it.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFabEnabled, false)
-            zoomControlsEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControlsEnabled, false)
+                    it.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFab_enabled, false)
+            zoomControlsEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControls_enabled, false)
             it.recycle()
         }
 
