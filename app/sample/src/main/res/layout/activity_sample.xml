@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".SampleActivity">
 
-    <!-- todo: MS-4558 change sygic_sdk_ namespace-->
     <fragment
         class="com.sygic.modules.browsemap.BrowseMapFragment"
         android:id="@+id/browseMapFragment"
@@ -17,16 +16,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:sygic_cameraInitialLatitude="48.145764"
-        app:sygic_cameraInitialLongitude="17.126015"
-        app:sygic_sdk_initial_map_center_x="0.5"
-        app:sygic_sdk_initial_map_center_y="0.5"
-        app:sygic_cameraInitialZoom="16"
-        app:sygic_compassEnabled="true"
-        app:sygic_compassHideIfNorthUp="false"
-        app:sygic_mapInteractionMode="full"
-        app:sygic_positionLockFabEnabled="true"
-        app:sygic_zoomControlsEnabled="true" />
+        app:sygic_map_interactionMode="full"
+        app:sygic_map_latitude="48.145764"
+        app:sygic_map_longitude="17.126015"
+        app:sygic_map_centerX="0.5"
+        app:sygic_map_centerY="0.5"
+        app:sygic_map_zoom="16"
+        app:sygic_compass_enabled="true"
+        app:sygic_compass_hideIfNorthUp="false"
+        app:sygic_positionLockFab_enabled="true"
+        app:sygic_zoomControls_enabled="true" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"

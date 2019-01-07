@@ -2,19 +2,16 @@
 <resources>
 
     <declare-styleable name="BrowseMapFragment">
-        <attr name="sygic_mapInteractionMode" format="enum">
+        <attr name="sygic_map_interactionMode" format="enum">
             <enum name="none" value="0"/>
             <enum name="markersOnly" value="1"/>
             <enum name="full" value="2"/>
         </attr>
 
-        <attr name="sygic_compassEnabled" format="boolean"/>
-        <attr name="sygic_compassHideIfNorthUp" format="boolean"/>
-        <attr name="sygic_positionLockFabEnabled" format="boolean"/>
-        <attr name="sygic_zoomControlsEnabled" format="boolean"/>
-        <attr name="sygic_cameraInitialLatitude" format="float"/> <!--todo: MS-4502-->
-        <attr name="sygic_cameraInitialLongitude" format="float"/> <!--todo: MS-4502-->
-        <attr name="sygic_cameraInitialZoom" format="float"/> <!--todo: MS-4502-->
+        <attr name="sygic_compass_enabled" format="boolean"/>
+        <attr name="sygic_compass_hideIfNorthUp" format="boolean"/>
+        <attr name="sygic_positionLockFab_enabled" format="boolean"/>
+        <attr name="sygic_zoomControls_enabled" format="boolean"/>
     </declare-styleable>
 
 </resources>
