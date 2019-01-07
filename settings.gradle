@@ -1,12 +1,25 @@
 apply from: 'buildSdk.gradle'
 
-include ':app-sample', ':modules-common', ':modules-browsemap', ':tools-injector', ':tools-injector-viewmodel',
-        ':uikit-common', ':uikit-common-sdk', ':uikit-compass', ':uikit-compass-viewmodel', ':uikit-poidetail',
-        ':uikit-positionlockfab', ':uikit-positionlockfab-viewmodel', ':uikit-zoomcontrols', ':uikit-zoomcontrols-viewmodel'
+include ':app-sample',
+        ':modules-common',
+        ':modules-browsemap',
+        ':modules-routeplanner',
+        ':tools-injector',
+        ':tools-injector-viewmodel',
+        ':uikit-common',
+        ':uikit-common-sdk',
+        ':uikit-compass',
+        ':uikit-compass-viewmodel',
+        ':uikit-poidetail',
+        ':uikit-positionlockfab',
+        ':uikit-positionlockfab-viewmodel',
+        ':uikit-zoomcontrols',
+        ':uikit-zoomcontrols-viewmodel'
 
 project(':app-sample').projectDir = new File("app/sample")
 project(':modules-common').projectDir = new File("modules/common")
 project(':modules-browsemap').projectDir = new File("modules/browsemap")
+project(':modules-routeplanner').projectDir = new File("modules/routeplanner")
 project(':tools-injector').projectDir = new File("tools/injector")
 project(':tools-injector-viewmodel').projectDir = new File("tools/injector/viewmodel")
 project(':uikit-common').projectDir = new File("uikit/common")

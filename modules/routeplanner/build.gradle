@@ -1,48 +1,43 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion androidCompileSdkVersion
 
     defaultConfig {
-        applicationId "com.sygic.sample"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
         versionCode 1
         versionName "1.0"
 
         gradle.resolveFlavors(it)
+    }
 
-        manifestPlaceholders = [sygicApiKey: gradle.getSdkKey()]
+    dataBinding {
+        enabled = true
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
         }
-    }
-
-    //todo: MS-4504
-    dataBinding {
-        enabled = true
-    }
-
-    //todo: MS-4504
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-browsemap')
-    implementation project(':modules-routeplanner')
+    api project(':modules-common')
+
+    implementation project(':tools-injector-viewmodel')
+    annotationProcessor project(':tools-injector')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 }
