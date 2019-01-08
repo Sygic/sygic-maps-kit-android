@@ -1,11 +1,15 @@
 package com.sygic.sample
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sygic.modules.browsemap.BrowseMapFragment
+import com.sygic.modules.common.mapinteraction.MapInteractionMode
+import com.sygic.modules.routeplanner.RoutePlannerFragment
 import com.sygic.sdk.map.factory.DrawableFactory
+import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import kotlinx.android.synthetic.main.activity_sample.*
 
@@ -14,6 +18,16 @@ class SampleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
+
+        val browseMapFragment = BrowseMapFragment()
+        supportFragmentManager.beginTransaction().add(R.id.mapContainer, browseMapFragment).commitNow()
+        browseMapFragment.compassEnabled = true
+        browseMapFragment.compassHideIfNorthUp = true
+        browseMapFragment.mapInteractionMode = MapInteractionMode.FULL
+        browseMapFragment.zoomControlsEnabled= true
+        browseMapFragment.positionLockFabEnabled = true
+        browseMapFragment.cameraDataModel.position = GeoCoordinates(48.145764, 17.126015)
+        browseMapFragment.cameraDataModel.zoomLevel = 16f
 
         navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -43,7 +57,6 @@ class SampleActivity : AppCompatActivity() {
             .iconDrawable(R.drawable.ic_map_pin)
             .build()
 
-        val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         browseMapFragment.addMapMarkers(listOf(
             MapMarker(48.143489, 17.150560),
             MapMarker(48.154687, 17.114679),
@@ -58,5 +71,10 @@ class SampleActivity : AppCompatActivity() {
 
     private fun showNotImplementedToast() {
         Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
+    }
+
+    fun onDogeClicked(view: View) {
+        supportFragmentManager.beginTransaction().replace(R.id.mapContainer, RoutePlannerFragment(), "rotePlanner")
+            .addToBackStack("rotePlanner").commit()
     }
 }

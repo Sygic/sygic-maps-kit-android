@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import com.sygic.modules.browsemap.R
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
+import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
-import com.sygic.modules.common.poi.manager.PoiDataManager
-import com.sygic.ui.common.livedata.SingleLiveEvent
-import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.ui.common.extensions.asSingleEvent
+import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
@@ -47,11 +47,12 @@ class BrowseMapFragmentViewModel internal constructor(
             it.recycle()
         }
 
-        mapInteractionMode.value?.let { mode ->
+        mapInteractionMode.observeForever { mode ->
             when (mode) {
-                MapInteractionMode.FULL, MapInteractionMode.MARKERS_ONLY -> mapInteractionManager.addOnMapClickListener(
-                    this
-                )
+                MapInteractionMode.FULL, MapInteractionMode.MARKERS_ONLY ->
+                    mapInteractionManager.addOnMapClickListener(this)
+                MapInteractionMode.NONE ->
+                    mapInteractionManager.removeOnMapClickListener(this)
             }
         }
     }

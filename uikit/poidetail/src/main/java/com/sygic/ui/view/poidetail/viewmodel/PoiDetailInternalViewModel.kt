@@ -1,6 +1,8 @@
 package com.sygic.ui.view.poidetail.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 import com.sygic.ui.common.extensions.asSingleEvent
@@ -27,8 +29,8 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
     val emailText: String? = poiData.email
     val phoneText: String? = poiData.phone
 
-    val expandObservable: LiveData<Any> = SingleLiveEvent()
-    val collapseObservable: LiveData<Any> = SingleLiveEvent()
+    val expandObservable: LiveData<Nothing> = SingleLiveEvent()
+    val collapseObservable: LiveData<Nothing> = SingleLiveEvent()
     val webUrlClickObservable: LiveData<String> = SingleLiveEvent()
     val emailClickObservable: LiveData<String> = SingleLiveEvent()
     val phoneNumberClickObservable: LiveData<String> = SingleLiveEvent()
