@@ -33,9 +33,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     @MapSelectionMode
     var mapSelectionMode: Int
-        get() = browseMapFragmentViewModel.mapSelectionMode.value!!
+        get() = browseMapFragmentViewModel.mapSelectionMode
         set(value) {
-            browseMapFragmentViewModel.mapSelectionMode.value = value
+            browseMapFragmentViewModel.mapSelectionMode = value
         }
 
     var compassEnabled: Boolean
