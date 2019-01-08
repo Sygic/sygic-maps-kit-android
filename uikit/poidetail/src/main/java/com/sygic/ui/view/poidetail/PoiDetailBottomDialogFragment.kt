@@ -16,6 +16,7 @@ import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.ui.common.listeners.DialogFragmentListener
 import com.sygic.ui.common.views.BottomSheetDialog
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
 import com.sygic.ui.view.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
@@ -25,11 +26,7 @@ private const val POI_DATA = "poi_data"
 
 class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
-    interface Listener {
-        fun onPoiDetailBottomDialogDismiss()
-    }
-
-    private var listener: Listener? = null
+    private var listener: DialogFragmentListener? = null
     private var viewModel: PoiDetailInternalViewModel? = null
 
     private lateinit var preferencesManager: PreferencesManager
@@ -87,6 +84,7 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.poiDetailInternalViewModel = viewModel
         binding.setLifecycleOwner(this)
     }
@@ -105,7 +103,7 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
-    fun setListener(listener: Listener) {
+    fun setListener(listener: DialogFragmentListener) {
         viewModel?.setListener(listener) ?: run { this.listener = listener }
     }
 

@@ -4,10 +4,10 @@ import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 import com.sygic.ui.common.extensions.asSingleEvent
+import com.sygic.ui.common.listeners.DialogFragmentListener
 import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
-import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
@@ -34,7 +34,7 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
     val phoneNumberClickObservable: LiveData<String> = SingleLiveEvent()
     val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
 
-    private var listener: PoiDetailBottomDialogFragment.Listener? = null
+    private var listener: DialogFragmentListener? = null
     private var showcaseLaunch: Job? = null
 
     init {
@@ -64,7 +64,7 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
         coordinatesClickObservable.asSingleEvent().value = coordinatesText
     }
 
-    fun setListener(listener: PoiDetailBottomDialogFragment.Listener?) {
+    fun setListener(listener: DialogFragmentListener?) {
         this.listener = listener
     }
 
@@ -91,7 +91,7 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
     override fun onCleared() {
         super.onCleared()
 
-        listener?.onPoiDetailBottomDialogDismiss()
+        listener?.onDismiss()
         showcaseLaunch?.cancel()
         listener = null
     }

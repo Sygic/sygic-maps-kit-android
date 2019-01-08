@@ -13,8 +13,9 @@ import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
-import com.sygic.modules.common.mapinteraction.MapInteractionMode
+import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.ui.common.sdk.data.PoiData
+import com.sygic.ui.common.sdk.listener.OnMapClickListener
 import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.ui.viewmodel.compass.CompassViewModel
 import com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel
@@ -30,11 +31,11 @@ class BrowseMapFragment : MapFragmentWrapper() {
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
-    @MapInteractionMode
-    var mapInteractionMode: Int
-        get() = browseMapFragmentViewModel.mapInteractionMode.value!!
+    @MapSelectionMode
+    var mapSelectionMode: Int
+        get() = browseMapFragmentViewModel.mapSelectionMode.value!!
         set(value) {
-            browseMapFragmentViewModel.mapInteractionMode.value = value
+            browseMapFragmentViewModel.mapSelectionMode.value = value
         }
 
     var compassEnabled: Boolean
@@ -84,6 +85,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
         zoomControlsViewModel = viewModelOf(ZoomControlsViewModel::class.java)
 
+        lifecycle.addObserver(browseMapFragmentViewModel)
         lifecycle.addObserver(compassViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
@@ -91,7 +93,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     private fun setPoiDetailListener() {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setListener(browseMapFragmentViewModel)
+            (fragment as PoiDetailBottomDialogFragment).setListener(browseMapFragmentViewModel.dialogFragmentListener)
         }
     }
 
@@ -109,15 +111,30 @@ class BrowseMapFragment : MapFragmentWrapper() {
         return root
     }
 
+    fun addOnMapClickListener(onMapClickListener: (poiData: PoiData) -> Unit) {
+        addOnMapClickListener(object : OnMapClickListener {
+            override fun onMapClick(poiData: PoiData) = onMapClickListener(poiData)
+        })
+    }
+
+    fun addOnMapClickListener(onMapClickListener: OnMapClickListener) {
+        browseMapFragmentViewModel.addOnMapClickListener(onMapClickListener)
+    }
+
+    fun removeOnMapMarkerClickListener(onMapClickListener: OnMapClickListener) {
+        browseMapFragmentViewModel.removeOnMapClickListener(onMapClickListener)
+    }
+
     private fun showPoiDetail(poiData: PoiData) {
         val dialog = PoiDetailBottomDialogFragment.newInstance(poiData)
-        dialog.setListener(browseMapFragmentViewModel)
+        dialog.setListener(browseMapFragmentViewModel.dialogFragmentListener)
         dialog.show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
+        lifecycle.removeObserver(browseMapFragmentViewModel)
         lifecycle.removeObserver(compassViewModel)
         lifecycle.removeObserver(positionLockFabViewModel)
         lifecycle.removeObserver(zoomControlsViewModel)

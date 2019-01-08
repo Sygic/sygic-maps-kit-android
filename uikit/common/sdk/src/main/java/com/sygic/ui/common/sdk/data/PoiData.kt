@@ -63,7 +63,7 @@ data class PoiData(
         val street = street?.let { getStreetWithHouseNumber() }
 
         street?.let { builder.append(it) }
-        getCityWithPostal().let {
+        getCityWithPostal()?.let {
             if (!TextUtils.isEmpty(street)) builder.append(", ")
             builder.append(it)
         }

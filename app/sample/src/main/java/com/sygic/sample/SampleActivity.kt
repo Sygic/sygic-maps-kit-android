@@ -54,6 +54,11 @@ class SampleActivity : AppCompatActivity() {
             markerFromBuilder,
             markerFromBuilderWithCustomIcon,
             MapMarker(48.144921, 17.114853, DrawableFactory(R.drawable.ic_map_pin))))
+
+        /* Todo: use it in example APP
+        browseMapFragment.addOnMapClickListener { poiData ->
+            Log.d("SampleActivity", "onMapClickListener() called with: poiData = [$poiData]")
+        }*/
     }
 
     private fun showNotImplementedToast() {
