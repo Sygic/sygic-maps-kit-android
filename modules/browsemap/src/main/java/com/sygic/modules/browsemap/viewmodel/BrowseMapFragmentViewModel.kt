@@ -28,7 +28,7 @@ class BrowseMapFragmentViewModel internal constructor(
 ) : ViewModel(), MapInteractionManager.Listener, DefaultLifecycleObserver {
 
     @MapSelectionMode
-    val mapSelectionMode: MutableLiveData<Int> = MutableLiveData()
+    var mapSelectionMode: Int = MapSelectionMode.MARKERS_ONLY
     val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
@@ -46,24 +46,17 @@ class BrowseMapFragmentViewModel internal constructor(
 
     init {
         attributesTypedArray?.let {
+            mapSelectionMode =
+                    it.getInt(R.styleable.BrowseMapFragment_sygic_map_selectionMode, MapSelectionMode.MARKERS_ONLY)
             compassEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compass_enabled, false)
             compassHideIfNorthUp.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compass_hideIfNorthUp, false)
-            mapSelectionMode.value =
-                    it.getInt(R.styleable.BrowseMapFragment_sygic_map_selectionMode, MapSelectionMode.MARKERS_ONLY)
             positionLockFabEnabled.value =
                     it.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFab_enabled, false)
             zoomControlsEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControls_enabled, false)
             it.recycle()
         }
 
-        mapSelectionMode.observeForever { mode ->
-            when (mode) {
-                MapSelectionMode.FULL, MapSelectionMode.MARKERS_ONLY ->
-                    mapInteractionManager.addOnMapClickListener(this)
-                MapSelectionMode.NONE ->
-                    mapInteractionManager.removeOnMapClickListener(this)
-            }
-        }
+        mapInteractionManager.addOnMapClickListener(this)
     }
 
     override fun onMapObjectsRequestStarted() {
@@ -71,28 +64,26 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
-        mapSelectionMode.value?.let { mode ->
-            when (mode) {
-                MapSelectionMode.NONE -> {
-                    logWarning("NONE")
+        when (mapSelectionMode) {
+            MapSelectionMode.NONE -> {
+                logWarning("NONE")
+            }
+            MapSelectionMode.MARKERS_ONLY -> {
+                val firstViewObject = viewObjects.first()
+                if (firstViewObject !is MapMarker) {
+                    logWarning("MARKERS_ONLY")
+                    return
                 }
-                MapSelectionMode.MARKERS_ONLY -> {
-                    val firstViewObject = viewObjects.first()
-                    if (firstViewObject !is MapMarker) {
-                        logWarning("MARKERS_ONLY")
-                        return
-                    }
 
-                    getPoiDataAndNotifyObservers(firstViewObject)
+                getPoiDataAndNotifyObservers(firstViewObject)
+            }
+            MapSelectionMode.FULL -> {
+                val firstViewObject = viewObjects.first()
+                if (firstViewObject !is MapMarker && !isOnMapClickListenerSet()) {
+                    extendedMapDataModel.addOnClickMapMarker(MapMarker(firstViewObject))
                 }
-                MapSelectionMode.FULL -> {
-                    val firstViewObject = viewObjects.first()
-                    if (firstViewObject !is MapMarker && !isOnMapClickListenerSet()) {
-                        extendedMapDataModel.addOnClickMapMarker(MapMarker(firstViewObject))
-                    }
 
-                    getPoiDataAndNotifyObservers(firstViewObject)
-                }
+                getPoiDataAndNotifyObservers(firstViewObject)
             }
         }
     }
