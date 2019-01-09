@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.transition.ChangeBounds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
@@ -75,15 +74,7 @@ class SampleActivity : AppCompatActivity() {
     }
 
     fun onDogeClicked(view: View) {
-        val routePlannerFragment = RoutePlannerFragment()
-        routePlannerFragment.sharedElementEnterTransition = ChangeBounds().setDuration(5000L)
-        routePlannerFragment.sharedElementReturnTransition = ChangeBounds().setDuration(5000L)
-
-        val map = findViewById<View>(R.id.map)
-        supportFragmentManager.beginTransaction()
-            .addSharedElement(map, "buhaha")
-            .replace(R.id.mapContainer, routePlannerFragment, "rotePlanner")
-            .addToBackStack("rotePlanner")
-            .commit()
+        supportFragmentManager.beginTransaction().replace(R.id.mapContainer, RoutePlannerFragment(), "rotePlanner")
+            .addToBackStack("rotePlanner").commit()
     }
 }

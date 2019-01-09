@@ -12,7 +12,6 @@ import com.sygic.modules.routeplanner.databinding.LayoutRoutePlannerBinding
 import com.sygic.modules.routeplanner.di.DaggerRoutePlannerComponent
 import com.sygic.modules.routeplanner.di.RoutePlannerComponent
 import com.sygic.modules.routeplanner.viewmodel.RoutePlannerFragmentViewModel
-import com.sygic.sdk.map.MapView
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class RoutePlannerFragment : MapFragmentWrapper() {
@@ -45,16 +44,8 @@ class RoutePlannerFragment : MapFragmentWrapper() {
         binding.routePlannerFragmentViewModel = routePlannerFragmentViewModel
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {
-            (it as ViewGroup).getChildAt(0).transitionName = "buhaha"
-            it.getChildAt(0).layoutParams.height = 700
-            root.addView(it, 0, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+            root.addView(it, 0)
         }
         return root
-    }
-
-    override fun onMapReady(mapView: MapView) {
-        super.onMapReady(mapView)
-
-        mapView.view?.transitionName = "buhaha"
     }
 }

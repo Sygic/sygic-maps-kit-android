@@ -14,7 +14,6 @@ import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
-import com.sygic.sdk.map.MapView
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.ui.viewmodel.compass.CompassViewModel
@@ -108,13 +107,6 @@ class BrowseMapFragment : MapFragmentWrapper() {
             root.addView(it, 0)
         }
         return root
-    }
-
-    override fun onMapReady(mapView: MapView) {
-        super.onMapReady(mapView)
-
-        mapView.view?.id = R.id.map
-        mapView.view?.transitionName = "hola"
     }
 
     private fun showPoiDetail(poiData: PoiData) {
