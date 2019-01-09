@@ -8,12 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <!--todo-->
-        <!--<item name="compassStyle">@style/TestStyle</item>-->
+        <!--<item name="compassStyle">@style/TestCompassStyle</item>-->
+        <!--<item name="positionLockFabStyle">@style/TestPositionLockFabStyle</item>-->
     </style>
 
     <!--todo-->
-    <style name="TestStyle">
-        <item name="android:background">@color/black</item>
+    <style name="TestCompassStyle">
+        <!--<item name="android:background">@color/black</item>-->
+        <item name="android:background">@drawable/ic_map_pin</item>
+    </style>
+
+    <style name="TestPositionLockFabStyle" parent="Widget.Design.FloatingActionButton">
+        <item name="android:tint">@color/white</item>
+        <item name="android:backgroundTint">@color/black</item>
     </style>
 
 </resources>

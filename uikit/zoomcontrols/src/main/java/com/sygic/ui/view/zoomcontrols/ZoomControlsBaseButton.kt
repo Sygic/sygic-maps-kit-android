@@ -57,11 +57,11 @@ internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(
             //ToDo
             iconColor = typedArray.getColor(
                 R.styleable.ZoomControlsMenu_iconColor,
-                getColorFromAttr(R.attr.colorMapComponentForeground)
+                getColorFromAttr(android.R.attr.colorAccent)
             )
             backgroundColor = typedArray.getColor(
                 R.styleable.ZoomControlsMenu_backgroundColor,
-                getColorFromAttr(R.attr.colorMapComponentBackground)
+                getColorFromAttr(android.R.attr.colorBackground)
             )
             shadowColor = typedArray.getColor(
                 R.styleable.ZoomControlsMenu_shadowColor,

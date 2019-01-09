@@ -44,7 +44,7 @@
             tools:rotation="45"
             tools:visibility="visible" />
 
-        <com.sygic.ui.view.positionlockfab.LockActionFloatingButton
+        <com.sygic.ui.view.positionlockfab.PositionLockFab
             android:id="@+id/positionLockFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
