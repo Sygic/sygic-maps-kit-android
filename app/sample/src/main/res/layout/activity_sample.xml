@@ -32,6 +32,7 @@
         android:layout_height="60dp"
         android:onClick="onDogeClicked"
         android:src="@drawable/doge"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
