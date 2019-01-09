@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--todo: use it or remove it?!-->
+    <style name="SygicComponentStyle">
+        <!--<item name="colorMapComponentForeground">?android:colorAccent</item>-->
+    </style>
+
+
+    <!--todo: add at least one predefined theme -->
+
+</resources>

@@ -6,6 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!--todo-->
+        <!--<item name="compassStyle">@style/TestStyle</item>-->
+    </style>
+
+    <!--todo-->
+    <style name="TestStyle">
+        <item name="android:background">@color/black</item>
     </style>
 
 </resources>

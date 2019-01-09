@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--todo: use it or remove it?!-->
+    <attr name="globalColorAttribute" format="reference|color" />
+</resources>

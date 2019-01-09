@@ -3,26 +3,11 @@ package com.sygic.ui.view.zoomcontrols
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Canvas
-import android.graphics.ColorFilter
-import android.graphics.Outline
-import android.graphics.Paint
-import android.graphics.PixelFormat
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.RippleDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.StateListDrawable
+import android.graphics.*
+import android.graphics.drawable.*
 import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.Shape
 import android.os.Build
-import androidx.annotation.CallSuper
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
-import androidx.appcompat.widget.AppCompatImageButton
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -30,9 +15,19 @@ import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageButton
+import androidx.annotation.CallSuper
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import com.sygic.ui.common.extensions.getColorFromAttr
 
-internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : AppCompatImageButton(context, attrs, defStyleAttr) {
+internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : ImageButton(context, attrs, defStyleAttr, defStyleRes) {
 
     @ColorInt
     protected val iconColor: Int
@@ -41,12 +36,12 @@ internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(context
     @ColorInt
     private val shadowColor: Int
 
-    private val circleSize: Int
-    private val iconSize: Int
-    private val shadowRadius: Int
+    private val circleSize: Int = resources.getDimensionPixelSize(R.dimen.zoomControlFAB)
+    private val iconSize: Int = resources.getDimensionPixelSize(R.dimen.zoomControlIconSize)
+    private val shadowRadius: Int = resources.getDimensionPixelSize(R.dimen.zoomControlShadowRadius)
 
-    private val showAnimation: Animation
-    private val hideAnimation: Animation
+    private val showAnimation: Animation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_up)
+    private val hideAnimation: Animation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_down)
 
     private var buttonBackgroundDrawable: Drawable? = null
 
@@ -57,25 +52,27 @@ internal abstract class ZoomControlsBaseButton @JvmOverloads constructor(context
     abstract fun onActionUpOrCancel()
 
     init {
-        val resources = resources
-        circleSize = resources.getDimensionPixelSize(R.dimen.zoomControlFAB)
-        iconSize = resources.getDimensionPixelSize(R.dimen.zoomControlIconSize)
-        shadowRadius = resources.getDimensionPixelSize(R.dimen.zoomControlShadowRadius)
-
         val typedArray = resources.obtainAttributes(attrs, R.styleable.ZoomControlsMenu)
         try {
-            iconColor = typedArray.getColor(R.styleable.ZoomControlsMenu_iconColor, ContextCompat.getColor(context, R.color.colorPrimary))
-            backgroundColor = typedArray.getColor(R.styleable.ZoomControlsMenu_backgroundColor, ContextCompat.getColor(context, R.color.colorAccent))
-            shadowColor = typedArray.getColor(R.styleable.ZoomControlsMenu_shadowColor, ContextCompat.getColor(context, R.color.black_a20))
+            //ToDo
+            iconColor = typedArray.getColor(
+                R.styleable.ZoomControlsMenu_iconColor,
+                getColorFromAttr(R.attr.colorMapComponentForeground)
+            )
+            backgroundColor = typedArray.getColor(
+                R.styleable.ZoomControlsMenu_backgroundColor,
+                getColorFromAttr(R.attr.colorMapComponentBackground)
+            )
+            shadowColor = typedArray.getColor(
+                R.styleable.ZoomControlsMenu_shadowColor,
+                ContextCompat.getColor(context, R.color.black_a20)
+            )
         } finally {
             typedArray.recycle()
         }
 
-        showAnimation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_up)
-        hideAnimation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_down)
-
-        setImageResource(iconDrawableRes())
         isClickable = true
+        setImageResource(iconDrawableRes())
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
