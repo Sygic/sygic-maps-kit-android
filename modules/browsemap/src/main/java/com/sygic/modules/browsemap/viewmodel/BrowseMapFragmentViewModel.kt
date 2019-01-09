@@ -17,7 +17,6 @@ import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.listener.OnMapClickListener
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
-import java.util.LinkedHashSet
 
 @AutoFactory
 class BrowseMapFragmentViewModel internal constructor(
@@ -42,7 +41,7 @@ class BrowseMapFragmentViewModel internal constructor(
         }
     }
 
-    private val onMapClickListeners = LinkedHashSet<OnMapClickListener>()
+    private var onMapClickListener: OnMapClickListener? = null
 
     init {
         attributesTypedArray?.let {
@@ -79,7 +78,7 @@ class BrowseMapFragmentViewModel internal constructor(
             }
             MapSelectionMode.FULL -> {
                 val firstViewObject = viewObjects.first()
-                if (firstViewObject !is MapMarker && !isOnMapClickListenerSet()) {
+                if (firstViewObject !is MapMarker && onMapClickListener == null) {
                     extendedMapDataModel.addOnClickMapMarker(MapMarker(firstViewObject))
                 }
 
@@ -89,16 +88,14 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     private fun logWarning(mode: String) {
-        if (isOnMapClickListenerSet()) {
-            Log.w("OnMapClickListener", "The listener is set, but map selection mode is $mode.")
-        }
+        onMapClickListener?.let { Log.w("OnMapClickListener", "The listener is set, but map selection mode is $mode.") }
     }
 
     private fun getPoiDataAndNotifyObservers(firstViewObject: ViewObject) {
         poiDataManager.getPoiData(firstViewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(poiData: PoiData) {
-                if (isOnMapClickListenerSet()) {
-                    onMapClickListeners.forEach { it.onMapClick(poiData) }
+                onMapClickListener?.let {
+                    it.onMapClick(poiData)
                     return
                 }
 
@@ -107,18 +104,12 @@ class BrowseMapFragmentViewModel internal constructor(
         })
     }
 
-    private fun isOnMapClickListenerSet() = !onMapClickListeners.isEmpty()
-
-    fun addOnMapClickListener(onMapClickListener: OnMapClickListener) {
-        onMapClickListeners.add(onMapClickListener)
-    }
-
-    fun removeOnMapClickListener(onMapClickListener: OnMapClickListener) {
-        onMapClickListeners.remove(onMapClickListener)
+    fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
+        this.onMapClickListener = onMapClickListener
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        onMapClickListeners.clear()
+        onMapClickListener = null
     }
 
     override fun onCleared() {

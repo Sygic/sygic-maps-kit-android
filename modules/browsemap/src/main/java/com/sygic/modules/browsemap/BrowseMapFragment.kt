@@ -111,18 +111,14 @@ class BrowseMapFragment : MapFragmentWrapper() {
         return root
     }
 
-    fun addOnMapClickListener(onMapClickListener: (poiData: PoiData) -> Unit) {
-        addOnMapClickListener(object : OnMapClickListener {
+    fun setOnMapClickListener(onMapClickListener: (poiData: PoiData) -> Unit) {
+        setOnMapClickListener(object : OnMapClickListener {
             override fun onMapClick(poiData: PoiData) = onMapClickListener(poiData)
         })
     }
 
-    fun addOnMapClickListener(onMapClickListener: OnMapClickListener) {
-        browseMapFragmentViewModel.addOnMapClickListener(onMapClickListener)
-    }
-
-    fun removeOnMapMarkerClickListener(onMapClickListener: OnMapClickListener) {
-        browseMapFragmentViewModel.removeOnMapClickListener(onMapClickListener)
+    fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
+        browseMapFragmentViewModel.setOnMapClickListener(onMapClickListener)
     }
 
     private fun showPoiDetail(poiData: PoiData) {
