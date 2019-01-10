@@ -12,6 +12,15 @@
         <!--<item name="positionLockFabStyle">@style/TestPositionLockFabStyle</item>-->
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <!--todo-->
     <style name="TestCompassStyle">
         <!--<item name="android:background">@color/black</item>-->

@@ -12,8 +12,8 @@
                 tools:color="@color/white" />
 
             <size
-                android:width="@dimen/compassWidth"
-                android:height="@dimen/compassHeight" />
+                android:width="@dimen/compassSize"
+                android:height="@dimen/compassSize" />
             <padding
                 android:bottom="1.5dp"
                 android:left="1dp"
