@@ -4,9 +4,8 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.os.Bundle
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.modules.browsemap.di.BrowseMapComponent
@@ -76,6 +75,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setHasOptionsMenu(true)
+
         browseMapFragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, attributesTypedArray)
         browseMapFragmentViewModel.poiDataObservable.observe(this, Observer<PoiData> { showPoiDetail(it) })
         savedInstanceState?.let { setPoiDetailListener() }
@@ -88,6 +89,24 @@ class BrowseMapFragment : MapFragmentWrapper() {
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
     }
+
+    //tmp code for second module
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_browse_map, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.route_planning -> requireFragmentManager()
+                .beginTransaction()
+                .replace((view?.parent as View).id, Class.forName("com.sygic.modules.routeplanner.RoutePlannerFragment").newInstance() as Fragment, "rotePlanner")
+                .addToBackStack("rotePlanner")
+                .commit()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+    // -------------------------------
 
     private fun setPoiDetailListener() {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->

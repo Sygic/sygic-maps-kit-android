@@ -1,13 +1,11 @@
 package com.sygic.sample
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.modules.common.mapinteraction.MapInteractionMode
-import com.sygic.modules.routeplanner.RoutePlannerFragment
 import com.sygic.sdk.map.factory.DrawableFactory
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.ui.common.sdk.mapobject.MapMarker
@@ -71,10 +69,5 @@ class SampleActivity : AppCompatActivity() {
 
     private fun showNotImplementedToast() {
         Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
-    }
-
-    fun onDogeClicked(view: View) {
-        supportFragmentManager.beginTransaction().replace(R.id.mapContainer, RoutePlannerFragment(), "rotePlanner")
-            .addToBackStack("rotePlanner").commit()
     }
 }
