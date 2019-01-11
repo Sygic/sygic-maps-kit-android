@@ -4,30 +4,23 @@ import android.content.Context
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
-
+import android.widget.LinearLayout
 import com.sygic.ui.common.extensions.isRtl
 
+private const val ANIMATION_DELAY_PER_ITEM = 50
+
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class ZoomControlsMenu @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : ViewGroup(context, attrs, defStyleAttr), ZoomControlsMenuButton.MenuCallback {
-
-    companion object {
-        private const val ANIMATION_DELAY_PER_ITEM = 50
-    }
-
-    private var maxButtonHeight: Int = 0
-    private var buttonsCount: Int = 0
-
-    private var isMenuOpening: Boolean = false
-    private var isMenuOpened: Boolean = false
+class ZoomControlsMenu @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.zoomControlsMenuStyle
+) : LinearLayout(context, attrs, 0), ZoomControlsMenuButton.MenuCallback {
 
     private val uiHandler = Handler()
+    private var isMenuOpened: Boolean = false
 
-    private lateinit var menuButton: ZoomControlsMenuButton
-    private lateinit var zoomControlsMapViewModeButton: ZoomControlsMapViewModeButton
-
-    private var isRtl = false
+    private val menuButton: ZoomControlsMenuButton
+    private val internalButtonMargin: Int = resources.getDimensionPixelSize(R.dimen.zoomControlsButtonMargin)
 
     interface InteractionListener {
         fun onZoomInStart()
@@ -38,115 +31,38 @@ class ZoomControlsMenu @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     init {
-        val defaultLayoutParams = super.generateDefaultLayoutParams()
-        isRtl = context.isRtl()
+        orientation = HORIZONTAL
+        clipChildren = false
 
-        addView(createMenuButton(context, attrs), defaultLayoutParams)
-        addView(createMapModeMenuButton(context, attrs), defaultLayoutParams)
-        addView(ZoomControlsZoomInButton(context, attrs), defaultLayoutParams)
-        addView(ZoomControlsZoomOutButton(context, attrs), defaultLayoutParams)
+        addView(
+            ZoomControlsMenuButton(context, attrs, defStyleAttr, this).also { menuButton = it },
+            LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        )
+
+        val layoutParams = getChildLayoutParams()
+        addView(ZoomControlsZoomOutButton(context, attrs, defStyleAttr).apply { hide(false) }, layoutParams)
+        addView(ZoomControlsZoomInButton(context, attrs, defStyleAttr).apply { hide(false) }, layoutParams)
+        addView(ZoomControlsMapViewModeButton(context, attrs, defStyleAttr).apply { hide(false) }, layoutParams)
     }
 
-    private fun createMenuButton(context: Context, attrs: AttributeSet?): ZoomControlsMenuButton {
-        menuButton = ZoomControlsMenuButton(context, attrs, callback = this)
-        return menuButton
-    }
-
-    private fun createMapModeMenuButton(context: Context, attrs: AttributeSet?): ZoomControlsMapViewModeButton {
-        zoomControlsMapViewModeButton = ZoomControlsMapViewModeButton(context, attrs)
-        return zoomControlsMapViewModeButton
+    private fun getChildLayoutParams(): LayoutParams {
+        return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+            context.isRtl().let {
+                setMargins(if (!it) internalButtonMargin else 0, 0, if (it) internalButtonMargin else 0, 0)
+            }
+        }
     }
 
     fun setTiltType(@TiltType tiltType: Int) {
-        zoomControlsMapViewModeButton.cameraProjectionChanged(tiltType)
+        for (i in 0 until childCount) {
+            getChildAt(i).let { if (it is ZoomControlsMapViewModeButton) it.cameraProjectionChanged(tiltType) }
+        }
     }
 
     fun setInteractionListener(interactionListener: InteractionListener?) {
         for (i in 0 until childCount) {
-            (getChildAt(i) as ZoomControlsBaseButton).interactionListener = interactionListener
+            (getChildAt(i) as BaseZoomControlsButton).interactionListener = interactionListener
         }
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var width = 0
-        maxButtonHeight = 0
-
-        for (i in 0 until buttonsCount) {
-            val child = getChildAt(i)
-
-            if (child.visibility == View.GONE) continue
-
-            measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
-            maxButtonHeight = Math.max(maxButtonHeight, child.measuredHeight)
-            width += child.measuredWidth
-        }
-
-        width += paddingTop + paddingBottom
-        width = adjustForOvershoot(width)
-
-        val height = maxButtonHeight + paddingTop + paddingBottom
-        setMeasuredDimension(width, height)
-    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val buttonsVerticalCenter = bottom - top - maxButtonHeight / 2 - paddingBottom
-        val menuButtonTop = bottom - top - menuButton.measuredHeight - paddingBottom
-        val menuButtonLeft = if (isRtl)
-            right - left - menuButton.measuredWidth - paddingRight
-        else
-            buttonsVerticalCenter - menuButton.measuredWidth / 2
-
-        menuButton.layout(menuButtonLeft, menuButtonTop, menuButtonLeft + menuButton.measuredWidth,
-                menuButtonTop + menuButton.measuredHeight)
-
-        var nextX = menuButtonLeft
-        for (i in buttonsCount - 1 downTo 0) {
-            val child = getChildAt(i)
-
-            val controlsBaseButton = child as ZoomControlsBaseButton
-            if (controlsBaseButton.visibility == View.GONE) continue
-
-            val childY = buttonsVerticalCenter - controlsBaseButton.measuredHeight / 2
-            if (controlsBaseButton !== menuButton) {
-                controlsBaseButton.layout(nextX, childY, nextX + controlsBaseButton.measuredWidth,
-                        childY + controlsBaseButton.measuredHeight)
-
-                if (!isMenuOpening) {
-                    controlsBaseButton.hide(false)
-                }
-            }
-
-            nextX = if (isRtl)
-                nextX - controlsBaseButton.measuredWidth
-            else
-                nextX + controlsBaseButton.measuredWidth
-        }
-    }
-
-    private fun adjustForOvershoot(dimension: Int): Int {
-        return (dimension * 0.03 + dimension).toInt()
-    }
-
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        bringChildToFront(menuButton)
-        buttonsCount = childCount
-    }
-
-    override fun generateLayoutParams(attributeSet: AttributeSet): ViewGroup.MarginLayoutParams {
-        return ViewGroup.MarginLayoutParams(context, attributeSet)
-    }
-
-    override fun generateLayoutParams(layoutParams: ViewGroup.LayoutParams): ViewGroup.MarginLayoutParams {
-        return ViewGroup.MarginLayoutParams(layoutParams)
-    }
-
-    override fun generateDefaultLayoutParams(): ViewGroup.MarginLayoutParams {
-        return ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT)
-    }
-
-    override fun checkLayoutParams(layoutParams: ViewGroup.LayoutParams): Boolean {
-        return layoutParams is ViewGroup.MarginLayoutParams
     }
 
     override fun toggleMenu() {
@@ -158,56 +74,54 @@ class ZoomControlsMenu @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     fun open(animate: Boolean) {
-        if (!isMenuOpened) {
-            menuButton.onMenuAction(true)
+        if (isMenuOpened) {
+            return
+        }
 
-            var delay = 0
-            var counter = 0
-            isMenuOpening = true
-            for (i in childCount - 1 downTo 0) {
-                val child = getChildAt(i)
-                if (child is ZoomControlsBaseButton && child.getVisibility() != View.GONE) {
+        menuButton.onMenuAction(true)
+
+        var delay = 0L
+        var counter = 0L
+        for (i in 0 until childCount) {
+            getChildAt(i).let {
+                if (it is BaseZoomControlsButton && it.visibility != View.GONE) {
                     counter++
 
                     uiHandler.postDelayed(Runnable {
                         if (isMenuOpened) return@Runnable
-
-                        if (child !== menuButton) {
-                            child.show(animate)
-                        }
-                    }, delay.toLong())
+                        if (it !is ZoomControlsMenuButton) it.show(animate)
+                    }, delay)
                     delay += ANIMATION_DELAY_PER_ITEM
                 }
             }
-
-            uiHandler.postDelayed({ isMenuOpened = true }, (++counter * ANIMATION_DELAY_PER_ITEM).toLong())
         }
+
+        uiHandler.postDelayed({ isMenuOpened = true }, (++counter * ANIMATION_DELAY_PER_ITEM))
     }
 
     fun close(animate: Boolean) {
-        if (isMenuOpened) {
-            menuButton.onMenuAction(false)
+        if (!isMenuOpened) {
+            return
+        }
 
-            var delay = 0
-            var counter = 0
-            isMenuOpening = false
-            for (i in 0 until childCount) {
-                val child = getChildAt(i)
-                if (child is ZoomControlsBaseButton && child.getVisibility() != View.GONE) {
+        menuButton.onMenuAction(false)
+
+        var delay = 0L
+        var counter = 0L
+        for (i in childCount - 1 downTo 0) {
+            getChildAt(i).let {
+                if (it is BaseZoomControlsButton && it.visibility != View.GONE) {
                     counter++
 
                     uiHandler.postDelayed(Runnable {
                         if (!isMenuOpened) return@Runnable
-
-                        if (child !== menuButton) {
-                            child.hide(animate)
-                        }
-                    }, delay.toLong())
+                        if (it !is ZoomControlsMenuButton) it.hide(animate)
+                    }, delay)
                     delay += ANIMATION_DELAY_PER_ITEM
                 }
             }
-
-            uiHandler.postDelayed({ isMenuOpened = false }, (++counter * ANIMATION_DELAY_PER_ITEM).toLong())
         }
+
+        uiHandler.postDelayed({ isMenuOpened = false }, (++counter * ANIMATION_DELAY_PER_ITEM))
     }
 }

@@ -28,16 +28,14 @@ class CompassView @JvmOverloads constructor(
 
         compassRotation = rotation
 
-        addView(context, R.drawable.compass_nicks)
-        addView(context, R.drawable.compass_arrow).let { arrowImageView = it }
+        addView(createImageView(context, R.drawable.compass_nicks))
+        addView(createImageView(context, R.drawable.compass_arrow).also { arrowImageView = it })
     }
 
-    private fun addView(context: Context, @DrawableRes resourceId: Int): ImageView {
+    private fun createImageView(context: Context, @DrawableRes resourceId: Int): ImageView {
         val imageView = ImageView(context)
         imageView.setImageResource(resourceId)
         imageView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        addView(imageView)
-
         return imageView
     }
 

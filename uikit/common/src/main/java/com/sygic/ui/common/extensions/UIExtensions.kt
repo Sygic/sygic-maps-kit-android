@@ -1,11 +1,8 @@
 package com.sygic.ui.common.extensions
 
 import android.content.res.TypedArray
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.TransitionDrawable
 import android.util.TypedValue
 import android.view.View
-import android.widget.ImageView
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
@@ -39,18 +36,4 @@ fun View.getColorFromAttr(typedArray: TypedArray, styleable: Int, @AttrRes resId
         context.theme.resolveAttribute(resId, it, resolveRefs)
         return it.data
     }*/
-}
-
-fun ImageView.setImageDrawableWithFade(targetDrawable: Drawable, duration: Int) {
-    val currentDrawable = this.drawable
-    if (currentDrawable == null) {
-        this.setImageDrawable(targetDrawable)
-        return
-    }
-
-    val layers = arrayOf(currentDrawable, targetDrawable)
-    val transition = TransitionDrawable(layers)
-    transition.isCrossFadeEnabled = true
-    this.setImageDrawable(transition)
-    transition.startTransition(duration)
 }

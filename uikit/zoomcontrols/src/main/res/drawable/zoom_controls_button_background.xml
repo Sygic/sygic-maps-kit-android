@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:bottom="1.5dp"
+        android:left="1dp"
+        android:right="1dp">
+        <shape android:shape="oval">
+            <solid
+                android:color="?android:attr/colorBackground"
+                tools:color="@color/white" />
+
+            <size
+                android:width="@dimen/zoomControlsButtonSize"
+                android:height="@dimen/zoomControlsButtonSize" />
+            <padding
+                android:bottom="1.5dp"
+                android:left="1dp"
+                android:right="1dp" />
+        </shape>
+    </item>
+</layer-list>

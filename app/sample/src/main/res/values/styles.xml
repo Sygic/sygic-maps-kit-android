@@ -10,6 +10,7 @@
         <!--todo-->
         <!--<item name="compassStyle">@style/TestCompassStyle</item>-->
         <!--<item name="positionLockFabStyle">@style/TestPositionLockFabStyle</item>-->
+        <!--<item name="zoomControlsMenuStyle">@style/TestZoomControlsMenuStyle</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -30,6 +31,11 @@
     <style name="TestPositionLockFabStyle" parent="Widget.Design.FloatingActionButton">
         <item name="android:tint">@color/white</item>
         <item name="android:backgroundTint">@color/black</item>
+    </style>
+
+    <style name="TestZoomControlsMenuStyle" parent="SygicZoomControlsMenuStyle">
+        <item name="android:background">@color/black</item>
+        <item name="android:tint">@color/brick_red</item>
     </style>
 
 </resources>

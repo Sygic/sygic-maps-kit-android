@@ -1,14 +1,10 @@
 package com.sygic.ui.view.zoomcontrols
 
 import android.content.Context
-import androidx.annotation.DrawableRes
 import android.util.AttributeSet
 
 internal class ZoomControlsMapViewModeButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : ZoomControlsBaseButton(context, attrs, defStyleAttr) {
-
-    @DrawableRes
-    override fun iconDrawableRes(): Int = R.drawable.ic_3d
+    : BaseZoomControlsButton(context, attrs, defStyleAttr, iconDrawableRes = R.drawable.ic_3d) {
 
     override fun onActionUpOrCancel() {
         interactionListener?.onCameraProjectionChanged()
