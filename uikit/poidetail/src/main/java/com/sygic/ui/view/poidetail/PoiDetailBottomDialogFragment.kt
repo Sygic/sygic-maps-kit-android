@@ -50,6 +50,7 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setStyle(STYLE_NORMAL, R.style.PoiDetailBottomDialog)
         preferencesManager = PreferencesManager(requireContext())
 
         viewModel = ViewModelProviders.of(
