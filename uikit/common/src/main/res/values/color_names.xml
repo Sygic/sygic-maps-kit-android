@@ -16,7 +16,10 @@
 
     <color name="school_bus_yellow">#ffd900</color>
     <color name="web_orange">#ffa500</color>
+    <color name="orange">#ff5722</color>
+    <color name="cinnabar">#e64a19</color>
     <color name="limeade">#3abc00</color>
+    <color name="fruit_salad">#4caf50</color>
     <color name="brick_red">#d6304c</color>
     <color name="bittersweet">#ff656b</color>
     <color name="crimson">#eb1a20</color>
@@ -28,8 +31,11 @@
     <color name="shuttle_gray">#5C6373</color>
     <color name="charade">#2d3140</color>
 
-    <color name="malibu">#7DC8F7</color>
+    <color name="malibu">#7dc8f7</color>
     <color name="azure_radiance">#0080ff</color>
+    <color name="science_blue">#0461be</color>
+
+    <color name="mine_shaft">#212121</color>
     <!-- END BASE COLORS FOR REFERENCING -->
 
 </resources>

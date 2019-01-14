@@ -24,8 +24,6 @@ class CompassView @JvmOverloads constructor(
     var hideCompassIfNorthUpAllowed: Boolean = false
 
     init {
-        //applyStyle(R.style.SygicComponentStyle) //todo: use it or remove it?!
-
         compassRotation = rotation
 
         addView(createImageView(context, R.drawable.compass_nicks))
