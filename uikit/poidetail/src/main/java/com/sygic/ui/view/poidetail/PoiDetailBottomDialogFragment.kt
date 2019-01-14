@@ -5,20 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.extensions.copyToClipboard
 import com.sygic.ui.common.extensions.openEmail
 import com.sygic.ui.common.extensions.openPhone
 import com.sygic.ui.common.extensions.openUrl
 import com.sygic.ui.common.sdk.data.PoiData
-import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
-import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
-import androidx.appcompat.app.AppCompatDialogFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.views.BottomSheetDialog
+import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
 import com.sygic.ui.view.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
+import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
 import com.sygic.ui.view.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
 private const val POI_DATA = "poi_data"
@@ -50,7 +50,6 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setStyle(STYLE_NORMAL, R.style.PoiDetailBottomDialog)
         preferencesManager = PreferencesManager(requireContext())
 
         viewModel = ViewModelProviders.of(
@@ -74,15 +73,19 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(
-            requireContext(),
-            theme,
-            resources.getDimensionPixelSize(R.dimen.defaultPeekHeight),
+            this.requireContext(),
+            this.theme,
+            this.resources.getDimensionPixelSize(R.dimen.defaultPeekHeight),
             if (preferencesManager.showcaseAllowed) SHOWCASE_BEHAVIOR_STATE else DEFAULT_BEHAVIOR_STATE
         )
     }
 
+    /**
+     * Using requireActivity().layoutInflater instead of provided inflater from onCreateView
+     * fix DialogFragment styling problem
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = LayoutPoiDetailInternalBinding.inflate(inflater, container, false)
+        binding = LayoutPoiDetailInternalBinding.inflate(requireActivity().layoutInflater, container, false)
         return binding.root
     }
 
