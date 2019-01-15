@@ -80,6 +80,7 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     /**
      * Using requireActivity().layoutInflater instead of provided inflater from onCreateView
      * fix DialogFragment styling problem
+     * (https://stackoverflow.com/q/32784009/3796931 or https://issuetracker.google.com/issues/37042151)
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LayoutPoiDetailInternalBinding.inflate(requireActivity().layoutInflater, container, false)

@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.Sygic.Light.DarkActionBar">
         <!--Todo: sample APP-->
-        <!--<item name="compassStyle">@style/TestCompassStyle</item>-->
-        <!--<item name="positionLockFabStyle">@style/TestPositionLockFabStyle</item>-->
-        <!--<item name="zoomControlsMenuStyle">@style/TestZoomControlsMenuStyle</item>-->
+        <!--<item name="compassStyle">@style/CustomCompassStyle</item>-->
+        <!--<item name="positionLockFabStyle">@style/CustomPositionLockFabStyle</item>-->
+        <!--<item name="zoomControlsMenuStyle">@style/CustomZoomControlsMenuStyle</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -18,17 +18,17 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!--Todo: sample APP-->
-    <style name="TestCompassStyle">
+    <style name="CustomCompassStyle">
         <!--<item name="android:background">@color/black</item>-->
         <item name="android:background">@drawable/ic_map_pin</item>
     </style>
 
-    <style name="TestPositionLockFabStyle" parent="Widget.Design.FloatingActionButton">
+    <style name="CustomPositionLockFabStyle" parent="Widget.Design.FloatingActionButton">
         <item name="android:tint">@color/white</item>
         <item name="android:backgroundTint">@color/black</item>
     </style>
 
-    <style name="TestZoomControlsMenuStyle" parent="SygicZoomControlsMenuStyle">
+    <style name="CustomZoomControlsMenuStyle" parent="SygicZoomControlsMenuStyle">
         <item name="android:background">@color/black</item>
         <item name="android:tint">@color/brick_red</item>
     </style>
