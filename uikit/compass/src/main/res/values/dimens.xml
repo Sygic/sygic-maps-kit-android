@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="compassWidth">48dp</dimen>
-    <dimen name="compassHeight">48dp</dimen>
+    <dimen name="compassSize">48dp</dimen>
 </resources>

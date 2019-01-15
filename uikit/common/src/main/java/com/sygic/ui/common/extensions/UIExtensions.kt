@@ -1,19 +1,17 @@
 package com.sygic.ui.common.extensions
 
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.TransitionDrawable
-import android.widget.ImageView
+import android.util.TypedValue
+import android.view.View
+import androidx.annotation.AttrRes
+import androidx.annotation.StyleRes
 
-fun ImageView.setImageDrawableWithFade(targetDrawable: Drawable, duration: Int) {
-    val currentDrawable = this.drawable
-    if (currentDrawable == null) {
-        this.setImageDrawable(targetDrawable)
-        return
+fun View.applyStyle(@StyleRes resId: Int, force: Boolean = false) {
+    context.theme.applyStyle(resId, force)
+}
+
+fun View.getDataFromAttr(@AttrRes resId: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true): Int {
+    typedValue.let {
+        context.theme.resolveAttribute(resId, it, resolveRefs)
+        return it.data
     }
-
-    val layers = arrayOf(currentDrawable, targetDrawable)
-    val transition = TransitionDrawable(layers)
-    transition.isCrossFadeEnabled = true
-    this.setImageDrawable(transition)
-    transition.startTransition(duration)
 }

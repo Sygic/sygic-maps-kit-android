@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="defaultPeekHeight">118dp</dimen>
+    <dimen name="defaultPeekHeight">100dp</dimen>
 </resources>

@@ -1,19 +1,11 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="24dp"
-        android:height="24dp"
-        android:viewportHeight="24.0"
-        android:viewportWidth="24.0">
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
 
     <path
         android:name="cross_to_plus_minus"
-        android:fillColor="@color/colorPrimary"
-        android:pathData="M9.17157,12 L5.63604,15.5355
-        L8.46447,18.364 L12,14.8284
-        L9.17157,12 Z
-        M12,9.17157 L8.46447,5.63604
-        L5.63604,8.46447 L9.34835,12.1768
-        L9.65771,12.4861 L11.4144,14.2429
-        L11.8232,14.6517 L15.5355,18.364
-        L18.364,15.5355 L14.8284,12 L18.364,8.46447
-        L15.5355,5.63604 L12,9.17157 Z"/>
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="@string/ic_cross_path_data" />
 </vector>

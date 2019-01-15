@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SygicZoomControlsMenuStyle">
+        <item name="android:elevation">4dp</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:background">@drawable/zoom_controls_button_background</item>
+    </style>
+
+</resources>

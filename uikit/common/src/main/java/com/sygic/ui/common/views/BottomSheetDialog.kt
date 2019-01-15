@@ -52,10 +52,8 @@ class BottomSheetDialog @JvmOverloads constructor(
         super.onCreate(savedInstanceState)
 
         window?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                it.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-                it.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            }
+            it.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            it.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
     }

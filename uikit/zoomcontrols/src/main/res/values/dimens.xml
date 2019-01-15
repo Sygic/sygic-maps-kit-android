@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="zoomControlFAB">48dp</dimen>
-    <dimen name="zoomControlIconSize">24dp</dimen>
-    <dimen name="zoomControlShadowRadius">4dp</dimen>
+    <dimen name="zoomControlsButtonSize">48dp</dimen>
+    <dimen name="zoomControlsButtonMargin">6dp</dimen>
 </resources>

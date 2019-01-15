@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="CompassView">
-        <attr name="backgroundColor" format="reference|color"/>
+    <declare-styleable name="Theme">
+        <attr name="compassStyle" format="reference"/>
     </declare-styleable>
 
 </resources>

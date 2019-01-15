@@ -27,7 +27,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false">
 
         <com.sygic.ui.view.compass.CompassView
             android:id="@+id/compassView"
@@ -44,7 +45,7 @@
             tools:rotation="45"
             tools:visibility="visible" />
 
-        <com.sygic.ui.view.positionlockfab.LockActionFloatingButton
+        <com.sygic.ui.view.positionlockfab.PositionLockFab
             android:id="@+id/positionLockFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +62,7 @@
             android:id="@+id/zoomControlsMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:layout_marginBottom="8dp"
             android:visibility="@{safeUnbox(browseMapFragmentViewModel.zoomControlsEnabled) ? View.VISIBLE : View.GONE}"
             app:interactionListener="@{zoomControlsViewModel}"

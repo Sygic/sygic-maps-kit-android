@@ -1,20 +1,22 @@
 package com.sygic.ui.view.compass
 
 import android.content.Context
-import android.content.res.ColorStateList
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
+
+private const val ANIMATION_DURATION = 300L
+private const val ANIMATION_DELAY = 500L
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class CompassView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : FrameLayout(context, attrs, defStyle) {
+class CompassView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.compassStyle,
+    defStyleRes: Int = R.style.SygicCompassStyle
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    @ColorInt
-    private val backgroundColor: Int
     private val arrowImageView: ImageView?
     private val alphaSetter = AlphaSetter()
 
@@ -22,28 +24,16 @@ class CompassView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     var hideCompassIfNorthUpAllowed: Boolean = false
 
     init {
-        val typedArray = resources.obtainAttributes(attrs, R.styleable.CompassView)
-        try {
-            backgroundColor = typedArray.getColor(R.styleable.CompassView_backgroundColor, ContextCompat.getColor(context, R.color.colorAccent))
-        } finally {
-            typedArray.recycle()
-        }
-
         compassRotation = rotation
 
-        generateImage(context, R.drawable.compass_nicks)
-        arrowImageView = generateImage(context, R.drawable.compass_arrow)
-        setBackgroundResource(R.drawable.compass_background)
-
-        ViewCompat.setBackgroundTintList(this, ColorStateList.valueOf(backgroundColor))
+        addView(createImageView(context, R.drawable.compass_nicks))
+        addView(createImageView(context, R.drawable.compass_arrow).also { arrowImageView = it })
     }
 
-    private fun generateImage(context: Context, @DrawableRes resourceId: Int): ImageView {
+    private fun createImageView(context: Context, @DrawableRes resourceId: Int): ImageView {
         val imageView = ImageView(context)
         imageView.setImageResource(resourceId)
-        imageView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-        addView(imageView)
-
+        imageView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         return imageView
     }
 
@@ -65,7 +55,7 @@ class CompassView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         if (isNorth != northWanted) {
             // the visibility is going to change
             removeCallbacks(alphaSetter)
-            postDelayed(alphaSetter, 500L)
+            postDelayed(alphaSetter, ANIMATION_DELAY)
         }
 
         // setRotation is sometimes called from View constructor
@@ -86,7 +76,7 @@ class CompassView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     private inner class AlphaSetter : Runnable {
         override fun run() {
-            hideCompassIfNorthUp(300L)
+            hideCompassIfNorthUp(ANIMATION_DURATION)
         }
     }
 }
