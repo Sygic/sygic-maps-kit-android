@@ -3,7 +3,6 @@ package com.sygic.ui.common.extensions
 import android.util.TypedValue
 import android.view.View
 import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.annotation.StyleRes
 
 fun View.applyStyle(@StyleRes resId: Int, force: Boolean = false) {
