@@ -70,7 +70,6 @@ class BrowseMapFragmentViewModel internal constructor(
             MapSelectionMode.MARKERS_ONLY -> {
                 val firstViewObject = viewObjects.first()
                 if (firstViewObject !is MapMarker) {
-                    logWarning("MARKERS_ONLY")
                     return
                 }
 
@@ -91,8 +90,8 @@ class BrowseMapFragmentViewModel internal constructor(
         onMapClickListener?.let { Log.w("OnMapClickListener", "The listener is set, but map selection mode is $mode.") }
     }
 
-    private fun getPoiDataAndNotifyObservers(firstViewObject: ViewObject) {
-        poiDataManager.getPoiData(firstViewObject, object : PoiDataManager.Callback() {
+    private fun getPoiDataAndNotifyObservers(viewObject: ViewObject) {
+        poiDataManager.getPoiData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(poiData: PoiData) {
                 onMapClickListener?.let {
                     it.onMapClick(poiData)
