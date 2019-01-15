@@ -8,7 +8,14 @@
     <string name="nav_header_title">Bringing life to maps</string>
     <string name="nav_header_subtitle">http://www.sygic.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="communicate">Communicate</string>
-    <string name="share">Share</string>
-    <string name="send">Send</string>
+    <string name="modules">Modules</string>
+    <string name="ui_kit">Ui Kit</string>
+    <string name="compass">Compass</string>
+    <string name="position_lock_fab">Position Lock Fab</string>
+    <string name="zoom_controls">Zoom Controls</string>
+    <string name="poi_detail">Poi Detail</string>
+    <string name="get_started">Get started!</string>
+    <string name="source_code">Source code</string>
+    <string name="wiki">Wiki</string>
+    <string name="qa">Q&amp;A</string>
 </resources>
