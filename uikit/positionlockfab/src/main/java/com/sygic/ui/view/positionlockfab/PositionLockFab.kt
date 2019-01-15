@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
-import com.sygic.ui.common.extensions.getColorFromAttr
+import com.sygic.ui.common.extensions.getDataFromAttr
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class PositionLockFab @JvmOverloads constructor(
@@ -27,14 +27,14 @@ class PositionLockFab @JvmOverloads constructor(
             imageTintList = ColorStateList.valueOf(
                 typedArray.getColor(
                     R.styleable.PositionLockFab_android_tint,
-                    getColorFromAttr(android.R.attr.colorAccent)
+                    getDataFromAttr(android.R.attr.colorAccent)
                 )
             )
 
             backgroundTintList = ColorStateList.valueOf(
                 typedArray.getColor(
                     R.styleable.PositionLockFab_android_backgroundTint,
-                    getColorFromAttr(android.R.attr.colorBackground)
+                    getDataFromAttr(android.R.attr.colorBackground)
                 )
             )
 

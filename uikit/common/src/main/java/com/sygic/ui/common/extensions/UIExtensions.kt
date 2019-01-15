@@ -10,8 +10,7 @@ fun View.applyStyle(@StyleRes resId: Int, force: Boolean = false) {
     context.theme.applyStyle(resId, force)
 }
 
-@ColorInt
-fun View.getColorFromAttr(@AttrRes resId: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true): Int {
+fun View.getDataFromAttr(@AttrRes resId: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true): Int {
     typedValue.let {
         context.theme.resolveAttribute(resId, it, resolveRefs)
         return it.data

@@ -13,6 +13,7 @@ import com.sygic.ui.common.extensions.copyToClipboard
 import com.sygic.ui.common.extensions.openEmail
 import com.sygic.ui.common.extensions.openPhone
 import com.sygic.ui.common.extensions.openUrl
+import com.sygic.ui.common.listeners.DialogFragmentListener
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.views.BottomSheetDialog
 import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
@@ -25,11 +26,7 @@ private const val POI_DATA = "poi_data"
 
 class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
-    interface Listener {
-        fun onPoiDetailBottomDialogDismiss()
-    }
-
-    private var listener: Listener? = null
+    private var listener: DialogFragmentListener? = null
     private var viewModel: PoiDetailInternalViewModel? = null
 
     private lateinit var preferencesManager: PreferencesManager
@@ -83,6 +80,7 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     /**
      * Using requireActivity().layoutInflater instead of provided inflater from onCreateView
      * fix DialogFragment styling problem
+     * (https://stackoverflow.com/q/32784009/3796931 or https://issuetracker.google.com/issues/37042151)
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LayoutPoiDetailInternalBinding.inflate(requireActivity().layoutInflater, container, false)
@@ -91,6 +89,7 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.poiDetailInternalViewModel = viewModel
         binding.setLifecycleOwner(this)
     }
@@ -109,7 +108,7 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
-    fun setListener(listener: Listener) {
+    fun setListener(listener: DialogFragmentListener) {
         viewModel?.setListener(listener) ?: run { this.listener = listener }
     }
 
