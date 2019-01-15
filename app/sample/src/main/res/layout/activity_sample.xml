@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:sygic_map_interactionMode="full"
+        app:sygic_map_selectionMode="full"
         app:sygic_map_latitude="48.145764"
         app:sygic_map_longitude="17.126015"
         app:sygic_map_centerX="0.5"

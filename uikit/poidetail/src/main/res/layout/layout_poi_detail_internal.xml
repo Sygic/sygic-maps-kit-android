@@ -34,12 +34,14 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="6dp"
-                android:background="@drawable/drag_hint_shape"/>
+                android:background="@drawable/drag_hint_shape" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
+                android:singleLine="true"
                 android:text="@{poiDetailInternalViewModel.titleText}"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="20sp"
@@ -49,6 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="@{poiDetailInternalViewModel.subtitleText}"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="16sp"
