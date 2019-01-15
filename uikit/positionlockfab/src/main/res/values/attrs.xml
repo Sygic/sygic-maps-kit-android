@@ -2,12 +2,12 @@
 <resources>
 
     <declare-styleable name="Theme">
-        <attr name="positionLockFabStyle" format="reference"/>
+        <attr name="positionLockFabStyle" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="PositionLockFab">
-        <attr name="android:tint" format="reference|color"/>
-        <attr name="android:backgroundTint" format="reference|color"/>
+        <attr name="android:tint" />
+        <attr name="android:backgroundTint" />
     </declare-styleable>
 
 </resources>
