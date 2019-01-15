@@ -62,7 +62,7 @@
             android:id="@+id/zoomControlsMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="12dp"
             android:layout_marginBottom="8dp"
             android:visibility="@{safeUnbox(browseMapFragmentViewModel.zoomControlsEnabled) ? View.VISIBLE : View.GONE}"
             app:interactionListener="@{zoomControlsViewModel}"
