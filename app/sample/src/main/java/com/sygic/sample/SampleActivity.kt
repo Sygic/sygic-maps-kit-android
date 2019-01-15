@@ -45,6 +45,11 @@ class SampleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 MapMarker(48.144921, 17.114853, DrawableFactory(R.drawable.ic_map_pin))
             )
         )
+
+        /* Todo: use it in example APP
+        browseMapFragment.setOnMapClickListener { poiData ->
+            Log.d("SampleActivity", "onMapClickListener() called with: poiData = [$poiData]")
+        }*/
     }
 
     private fun initDrawer() {
