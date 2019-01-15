@@ -1,33 +1,53 @@
 package com.sygic.sample.activities
 
 import android.os.Bundle
-import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import com.google.android.material.navigation.NavigationView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.sygic.sample.R
+import com.sygic.sample.viewmodels.SamplesActivityViewModel
+import com.sygic.ui.common.extensions.openUrl
 import kotlinx.android.synthetic.main.activity_sample.*
 
-class SamplesActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class SamplesActivity : AppCompatActivity() {
+
+    private lateinit var samplesActivityViewModel: SamplesActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_sample)
         setSupportActionBar(toolbar)
-        initDrawer()
+
+        samplesActivityViewModel = ViewModelProviders.of(this).get(SamplesActivityViewModel::class.java).apply {
+            this.navigationItemListenerObservable.observe(
+                this@SamplesActivity,
+                Observer<Any> { navView.setNavigationItemSelectedListener(this) })
+            this.closeDrawerLayoutObservable.observe(
+                this@SamplesActivity,
+                Observer<Any> { drawerLayout.closeDrawer(GravityCompat.START) })
+            this.notImplementedToastObservable.observe(
+                this@SamplesActivity,
+                Observer<Any> { Toast.makeText(this@SamplesActivity, R.string.not_implemented_yet, Toast.LENGTH_SHORT).show() })
+            this.openLinkInBrowserObservable.observe(
+                this@SamplesActivity,
+                Observer<String> { openUrl(it) })
+        }
+        lifecycle.addObserver(samplesActivityViewModel)
+
+        initDrawerToggle()
     }
 
-    private fun initDrawer() {
+    private fun initDrawerToggle() {
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-
-        navView.setNavigationItemSelectedListener(this)
     }
 
     override fun onBackPressed() {
@@ -38,28 +58,9 @@ class SamplesActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean { //todo: move to VM
-        when (item.itemId) {
-            R.id.nav_browse_map_module -> {
+    override fun onDestroy() {
+        super.onDestroy()
 
-            }
-            R.id.nav_ui_kit_compass, R.id.nav_ui_kit_position_lock_fab,
-            R.id.nav_ui_kit_zoom_controls, R.id.nav_ui_kit_poi_detail -> {
-
-                return false
-            }
-            R.id.nav_source_code -> {
-
-            }
-            R.id.nav_wiki -> {
-
-            }
-            R.id.nav_qa -> {
-
-            }
-        }
-
-        drawerLayout.closeDrawer(GravityCompat.START)
-        return true
+        lifecycle.removeObserver(samplesActivityViewModel)
     }
 }
