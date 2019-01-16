@@ -5,6 +5,9 @@
         <item name="colorPrimary">@color/azure_radiance</item>
         <item name="colorPrimaryDark">@color/science_blue</item>
         <item name="colorAccent">@color/azure_radiance</item>
+
+        <item name="android:textColorPrimary">@color/mine_shaft</item>
+        <item name="android:textColorSecondary">@color/boulder</item>
     </style>
 
     <style name="Theme.Sygic.Colored" parent="Theme.AppCompat.DayNight">

@@ -9,7 +9,12 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import com.sygic.ui.common.R
+
+fun Context.openActivity(targetClass: Class<out AppCompatActivity>) {
+    startActivity(Intent(this, targetClass))
+}
 
 fun Context.isRtl(): Boolean {
     return this.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL

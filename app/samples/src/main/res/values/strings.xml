@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Sygic Samples</string>
+    <string name="browse_map">Browse Map</string>
+    <string name="browse_map_samples">Browse Map samples</string>
+    <string name="search">Search</string>
+    <string name="navigation">Navigation</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Bringing life to maps</string>
+    <string name="nav_header_subtitle">http://www.sygic.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="modules">Modules</string>
+    <string name="ui_kit">Ui Kit</string>
+    <string name="compass">Compass</string>
+    <string name="position_lock_fab">Position Lock Fab</string>
+    <string name="zoom_controls">Zoom Controls</string>
+    <string name="poi_detail">Poi Detail</string>
+    <string name="get_started">Get started!</string>
+    <string name="source_code">Source code</string>
+    <string name="wiki">Wiki</string>
+    <string name="qa">Q&amp;A</string>
+    <string name="not_implemented_yet">Not implemented yet</string>
+
+    <string name="browse_map_default">Browse Map - Default</string> <!--todo-->
+    <string name="browse_map_default_summary">Browse Map module with no configuration</string> <!--todo-->
+</resources>
