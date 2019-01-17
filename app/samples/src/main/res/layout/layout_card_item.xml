@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/preview_browsemap_simple" />
+                tools:src="@drawable/preview_browsemap_default" />
 
             <TextView
                 android:id="@+id/title"

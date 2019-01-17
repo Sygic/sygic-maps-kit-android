@@ -1,3 +1,4 @@
 <resources>
-    <string name="browsemap_default_app_name">Browse Map - Default</string>
+    <string name="browse_map_default">Browse Map - Default</string>
+    <string name="browse_map_default_summary">Browse Map module with no configuration</string>
 </resources>

@@ -7,7 +7,7 @@ object Samples {
 
     val browseMapSampleList: List<Sample> = listOf(
         Sample(
-            com.sygic.samples.BrowseMapDefaultActivity::class.java, R.drawable.preview_browsemap_simple,
+            com.sygic.samples.BrowseMapDefaultActivity::class.java, R.drawable.preview_browsemap_default,
             R.string.browse_map_default, R.string.browse_map_default_summary
         ),
         //todo

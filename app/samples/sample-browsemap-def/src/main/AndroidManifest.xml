@@ -7,7 +7,7 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher_browsemap_default"
-        android:label="@string/browsemap_default_app_name"
+        android:label="@string/browse_map_default"
         android:roundIcon="@mipmap/ic_launcher_browsemap_default_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sygic.Light.DarkActionBar"
@@ -15,7 +15,7 @@
 
         <activity
             android:name=".BrowseMapDefaultActivity"
-            android:label="@string/browsemap_default_app_name">
+            android:label="@string/browse_map_default">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

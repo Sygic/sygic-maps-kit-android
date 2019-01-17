@@ -20,7 +20,4 @@
     <string name="wiki">Wiki</string>
     <string name="qa">Q&amp;A</string>
     <string name="not_implemented_yet">Not implemented yet</string>
-
-    <string name="browse_map_default">Browse Map - Default</string> <!--todo-->
-    <string name="browse_map_default_summary">Browse Map module with no configuration</string> <!--todo-->
 </resources>
