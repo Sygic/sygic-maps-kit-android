@@ -5,6 +5,7 @@ include ':app-samples',
         ':app-samples-browsemap-full',
         ':app-samples-browsemap-click-listener',
         ':app-samples-browsemap-markers',
+        ':app-samples-browsemap-themes',
         ':modules-common',
         ':modules-browsemap',
         ':tools-injector',
@@ -24,6 +25,7 @@ project(':app-samples-browsemap-default').projectDir = new File("app/samples/sam
 project(':app-samples-browsemap-full').projectDir = new File("app/samples/sample-browsemap-full")
 project(':app-samples-browsemap-click-listener').projectDir = new File("app/samples/sample-browsemap-click-listener")
 project(':app-samples-browsemap-markers').projectDir = new File("app/samples/sample-browsemap-markers")
+project(':app-samples-browsemap-themes').projectDir = new File("app/samples/sample-browsemap-themes")
 project(':modules-common').projectDir = new File("modules/common")
 project(':modules-browsemap').projectDir = new File("modules/browsemap")
 project(':tools-injector').projectDir = new File("tools/injector")

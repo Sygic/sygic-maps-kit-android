@@ -25,20 +25,20 @@
         </activity>
         <activity
             android:name=".BrowseMapDefaultActivity"
-            android:label="@string/browse_map_default">
-        </activity>
+            android:label="@string/browse_map_default" />
         <activity
             android:name=".BrowseMapFullActivity"
-            android:label="@string/browse_map_full">
-        </activity>
+            android:label="@string/browse_map_full" />
         <activity
             android:name=".BrowseMapClickListenerActivity"
-            android:label="@string/browse_map_click_listener">
-        </activity>
+            android:label="@string/browse_map_click_listener" />
         <activity
             android:name=".BrowseMapMarkersActivity"
-            android:label="@string/browse_map_markers">
-        </activity>
+            android:label="@string/browse_map_markers" />
+        <activity
+            android:name=".BrowseMapThemesActivity"
+            android:label="@string/browse_map_themes"
+            android:theme="@style/Theme.Sygic.Colored" />
 
         <meta-data
             android:name="@string/com_sygic_api_key"
