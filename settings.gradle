@@ -2,6 +2,7 @@ apply from: 'buildSdk.gradle'
 
 include ':app-samples',
         ':app-samples-browsemap-default',
+        ':app-samples-browsemap-full',
         ':modules-common',
         ':modules-browsemap',
         ':tools-injector',
@@ -18,6 +19,7 @@ include ':app-samples',
 
 project(':app-samples').projectDir = new File("app/samples")
 project(':app-samples-browsemap-default').projectDir = new File("app/samples/sample-browsemap-def")
+project(':app-samples-browsemap-full').projectDir = new File("app/samples/sample-browsemap-full")
 project(':modules-common').projectDir = new File("modules/common")
 project(':modules-browsemap').projectDir = new File("modules/browsemap")
 project(':tools-injector').projectDir = new File("tools/injector")

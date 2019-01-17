@@ -10,11 +10,11 @@ object Samples {
             com.sygic.samples.BrowseMapDefaultActivity::class.java, R.drawable.preview_browsemap_default,
             R.string.browse_map_default, R.string.browse_map_default_summary
         ),
-        //todo
         Sample(
-            SamplesActivity::class.java, R.drawable.sygic_logo_dark,
-            R.string.app_name, R.string.not_implemented_yet
+            com.sygic.samples.BrowseMapFullActivity::class.java, R.drawable.preview_browsemap_full,
+            R.string.browse_map_full, R.string.browse_map_full_summary
         ),
+        //todo
         Sample(
             SamplesActivity::class.java, R.drawable.sygic_logo_dark,
             R.string.app_name, R.string.not_implemented_yet
