@@ -5,13 +5,16 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/browseMapFragmentClickListener"
+        android:id="@+id/browseMapFragment"
         class="com.sygic.modules.browsemap.BrowseMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:sygic_compass_enabled="true"
         app:sygic_map_latitude="48.145764"
         app:sygic_map_longitude="17.126015"
         app:sygic_map_selectionMode="full"
-        app:sygic_map_zoom="16" />
+        app:sygic_map_zoom="16"
+        app:sygic_positionLockFab_enabled="true"
+        app:sygic_zoomControls_enabled="true" />
 
 </FrameLayout>

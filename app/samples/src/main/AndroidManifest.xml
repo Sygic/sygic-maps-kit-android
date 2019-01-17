@@ -35,6 +35,10 @@
             android:name=".BrowseMapClickListenerActivity"
             android:label="@string/browse_map_click_listener">
         </activity>
+        <activity
+            android:name=".BrowseMapMarkersActivity"
+            android:label="@string/browse_map_markers">
+        </activity>
 
         <meta-data
             android:name="@string/com_sygic_api_key"
