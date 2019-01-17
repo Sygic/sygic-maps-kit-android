@@ -1,4 +1,4 @@
-package com.sygic.sample.browsemap.def
+package com.sygic.samples
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

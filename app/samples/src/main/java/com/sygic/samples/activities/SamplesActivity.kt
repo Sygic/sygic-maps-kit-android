@@ -22,6 +22,7 @@ class SamplesActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_samples)
         setSupportActionBar(toolbar)
+        initDrawerToggle()
 
         samplesActivityViewModel = ViewModelProviders.of(this).get(SamplesActivityViewModel::class.java).apply {
             this.navigationItemListenerObservable.observe(
@@ -45,8 +46,6 @@ class SamplesActivity : AppCompatActivity() {
                 Observer<String> { openUrl(it) })
         }
         lifecycle.addObserver(samplesActivityViewModel)
-
-        initDrawerToggle()
     }
 
     private fun initDrawerToggle() {

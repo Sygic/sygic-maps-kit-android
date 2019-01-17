@@ -23,6 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".BrowseMapDefaultActivity"
+            android:label="@string/browsemap_default_app_name">
+        </activity>
 
         <meta-data
             android:name="@string/com_sygic_api_key"

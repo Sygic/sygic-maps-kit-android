@@ -8,7 +8,7 @@ android {
     compileSdkVersion androidCompileSdkVersion
 
     defaultConfig {
-        applicationId "com.sygic.sample.browsemap.def"
+        applicationId "com.sygic.samples.browsemap.default"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
         versionCode 1

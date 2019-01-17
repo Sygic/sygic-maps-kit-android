@@ -26,11 +26,10 @@ android {
         }
     }
 
-    //todo Unresolved reference: R
-    /*sourceSets {
+    sourceSets {
         main.java.srcDirs += 'sample-browsemap-def/src/main/java'
         main.res.srcDirs += 'sample-browsemap-def/src/main/res'
-    }*/
+    }
 
     /* -= APK Split =- */
     def abiCodes = ['x86':1, 'x86_64':2, 'armeabi-v7a':3, 'arm64-v8a':4]
@@ -65,7 +64,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-common')
+    implementation project(':modules-browsemap')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
