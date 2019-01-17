@@ -1,0 +1,4 @@
+<resources>
+    <string name="browse_map_modes">Browse Map - Modes</string>
+    <string name="browse_map_modes_summary">Browse Map module with all available modes</string>
+</resources>

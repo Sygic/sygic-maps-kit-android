@@ -30,6 +30,9 @@
             android:name=".BrowseMapFullActivity"
             android:label="@string/browse_map_full" />
         <activity
+            android:name=".BrowseMapModesActivity"
+            android:label="@string/browse_map_modes" />
+        <activity
             android:name=".BrowseMapClickListenerActivity"
             android:label="@string/browse_map_click_listener" />
         <activity
