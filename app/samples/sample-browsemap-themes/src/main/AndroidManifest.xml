@@ -14,8 +14,7 @@
 
         <activity
             android:name=".BrowseMapThemesActivity"
-            android:label="@string/browse_map_themes"
-            android:theme="@style/Theme.Sygic.Colored">
+            android:label="@string/browse_map_themes">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

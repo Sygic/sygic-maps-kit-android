@@ -27,6 +27,7 @@ import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.ui.common.sdk.skin.MapSkin
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
@@ -40,6 +41,7 @@ import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.skin.VehicleSkin
 import javax.inject.Inject
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -220,6 +222,14 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
 
     fun addMapMarkers(markers: List<MapMarker>) {
         markers.forEach { addMapMarker(it) }
+    }
+
+    fun setMapSkin(@MapSkin mapSkin: String) {
+        mapDataModel.setSkinAtLayer(ExtendedMapDataModel.SkinLayer.DayNight, mapSkin)
+    }
+
+    fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
+        mapDataModel.setSkinAtLayer(ExtendedMapDataModel.SkinLayer.Vehicle, vehicleSkin)
     }
 
     override fun onDestroy() {
