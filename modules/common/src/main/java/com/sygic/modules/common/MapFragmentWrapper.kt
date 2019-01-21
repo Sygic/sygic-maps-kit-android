@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.CallSuper
@@ -116,6 +117,12 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         })
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycle.addObserver(mapDataModel)
+    }
+
     @CallSuper
     override fun onSdkInitialized() {
         OnlineManager.getInstance().enableOnlineMapStreaming(true)
@@ -213,6 +220,12 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
 
     fun addMapMarkers(markers: List<MapMarker>) {
         markers.forEach { addMapMarker(it) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        lifecycle.removeObserver(mapDataModel)
     }
 }
 
