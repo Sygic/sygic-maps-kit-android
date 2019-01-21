@@ -1,4 +1,9 @@
 <resources>
     <string name="browse_map_modes">Browse Map - Modes</string>
     <string name="browse_map_modes_summary">Browse Map module with all available modes</string>
+    <string name="selection_mode">Selection mode</string>
+    <string name="selection_mode_is">Selection mode is</string>
+    <string name="none">None</string>
+    <string name="markers_only">MarkersOnly</string>
+    <string name="full">Full</string>
 </resources>
