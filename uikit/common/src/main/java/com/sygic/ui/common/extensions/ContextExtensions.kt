@@ -6,11 +6,37 @@ import android.content.Context.LOCATION_SERVICE
 import android.location.LocationManager
 import android.net.Uri
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import com.sygic.ui.common.R
+
+fun Context.applyStyle(@StyleRes resId: Int, force: Boolean = false) {
+    theme.applyStyle(resId, force)
+}
+
+@ColorInt
+fun Context.getColorFromAttr(@AttrRes resId: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true): Int {
+    typedValue.let {
+        theme.resolveAttribute(resId, it, resolveRefs)
+        return it.data
+    }
+}
+
+fun Context.getStringFromAttr(@AttrRes resId: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true): String {
+    typedValue.let {
+        theme.resolveAttribute(resId, it, resolveRefs)
+        if (it.type == TypedValue.TYPE_STRING && it.string != null) {
+            return it.string.toString()
+        }
+        return EMPTY_STRING
+    }
+}
 
 fun Context.openActivity(targetClass: Class<out AppCompatActivity>) {
     startActivity(Intent(this, targetClass))

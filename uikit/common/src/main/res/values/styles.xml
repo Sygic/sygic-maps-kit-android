@@ -18,6 +18,8 @@
         <item name="android:colorBackground">@color/mine_shaft</item>
         <item name="android:textColorPrimary">@color/mystic</item>
         <item name="android:textColorSecondary">@color/botticelli</item>
+
+        <item name="sygicMapSkin">"night"</item>
     </style>
 
 </resources>

@@ -26,9 +26,9 @@ class ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
         currentOnClickMapMarker?.let { removeMapObject(it) }
     }
 
-    fun setSkinAtLayer(skinLayer: SkinLayer, requiredSkin: String) {
+    fun setSkinAtLayer(skinLayer: SkinLayer, desiredSkin: String) {
         val skins: MutableList<String> = ArrayList(skin)
-        skins[skinLayer.position] = requiredSkin
+        skins[skinLayer.position] = desiredSkin
         skin = skins
     }
 

@@ -3,7 +3,6 @@ package com.sygic.samples
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sygic.modules.browsemap.BrowseMapFragment
-import com.sygic.ui.common.sdk.skin.MapSkin
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 
 class BrowseMapThemesActivity : AppCompatActivity() {
@@ -15,7 +14,6 @@ class BrowseMapThemesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_browsemap_themes)
 
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        browseMapFragment.setMapSkin(MapSkin.NIGHT)
         browseMapFragment.addMapMarkers(
             listOf(
                 MapMarker.Builder()
