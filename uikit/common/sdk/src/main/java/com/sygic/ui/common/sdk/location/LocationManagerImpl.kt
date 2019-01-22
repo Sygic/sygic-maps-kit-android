@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.sygic.sdk.position.PositionManager
 import com.sygic.ui.common.sdk.location.livedata.LocationProviderCheckLiveEvent
 import com.sygic.ui.common.sdk.location.livedata.LocationRequestLiveEvent
 
@@ -15,13 +16,50 @@ class LocationManagerImpl : LocationManager {
     private val providerCheck: LocationProviderCheckLiveEvent = LocationProviderCheckLiveEvent()
     private val locationRequest: LocationRequestLiveEvent = LocationRequestLiveEvent()
 
+    override var positionOnMapEnabled: Boolean = false
+        set(value) {
+            field = value
+            PositionManager.getInstance().run {
+                if (value) startPositionUpdating() else stopPositionUpdating()
+            }
+        }
+
     override fun observe(owner: LifecycleOwner, observer: Observer<LocationManager.LocationRequesterCallback>) {
         providerCheck.observe(owner)
         locationRequest.observe(owner, observer)
     }
 
-    override fun requestToEnableGps(enableGpsCallback: LocationManager.EnableGpsCallback, forceDialog: Boolean) {
-        if (!wasNoGPSDialogAlreadyShown || forceDialog) {
+    /**
+     * Returns the current enabled/disabled status of the GPS provider.
+     *
+     * If the user has enabled this provider in the Settings menu, true
+     * is returned to the {@link androidx.lifecycle.Observer}, false otherwise
+     *
+     * @return current GPS status
+     */
+    override fun checkGpsEnabled(observer: Observer<Boolean>) {
+        providerCheck.checkEnabled(android.location.LocationManager.GPS_PROVIDER, observer)
+    }
+
+    override fun requestToEnableGps(onSuccess: () -> Unit, onDenied: () -> Unit) {
+        checkGpsEnabled(Observer { gpsEnabled ->
+            if (!gpsEnabled) {
+                requestToEnableGpsInternal(object : LocationManager.EnableGpsCallback {
+                    override fun onResult(@EnableGpsResult result: Int) {
+                        when (result) {
+                            EnableGpsResult.ENABLED -> onSuccess()
+                            EnableGpsResult.DENIED -> onDenied()
+                        }
+                    }
+                })
+            } else {
+                onSuccess()
+            }
+        })
+    }
+
+    private fun requestToEnableGpsInternal(enableGpsCallback: LocationManager.EnableGpsCallback) {
+        if (!wasNoGPSDialogAlreadyShown) {
             locationRequest.value = object : LocationManager.LocationRequesterCallback {
                 override fun onActivityResult(requestCode: Int, resultCode: Int) {
                     when (requestCode) {
@@ -36,17 +74,5 @@ class LocationManagerImpl : LocationManager {
         } else {
             enableGpsCallback.onResult(EnableGpsResult.DENIED)
         }
-    }
-
-    /**
-     * Returns the current enabled/disabled status of the GPS provider.
-     *
-     * If the user has enabled this provider in the Settings menu, true
-     * is returned to the {@link androidx.lifecycle.Observer}, false otherwise
-     *
-     * @return current GPS status
-     */
-    override fun checkGpsEnabled(observer: Observer<Boolean>) {
-        providerCheck.checkEnabled(android.location.LocationManager.GPS_PROVIDER, observer)
     }
 }

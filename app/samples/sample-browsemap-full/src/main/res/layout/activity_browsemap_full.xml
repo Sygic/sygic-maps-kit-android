@@ -17,6 +17,7 @@
         app:sygic_map_longitude="17.126015"
         app:sygic_map_selectionMode="full"
         app:sygic_map_zoom="16"
+        app:sygic_positionOnMap_enabled="true"
         app:sygic_positionLockFab_enabled="true"
         app:sygic_zoomControls_enabled="true" />
 
