@@ -2,10 +2,13 @@ package com.sygic.samples
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.sygic.modules.browsemap.BrowseMapFragment
+import com.sygic.ui.common.extensions.classPathToUrl
 
-class BrowseMapClickListenerActivity : AppCompatActivity() {
+class BrowseMapClickListenerActivity : CommonSampleActivity() {
+
+    override val filePath: String =
+        "sample-browsemap-click-listener/src/main/java/" + BrowseMapClickListenerActivity::class.java.name.classPathToUrl() + ".kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -46,7 +46,7 @@
         <menu>
             <item
                 android:id="@+id/nav_source_code"
-                android:icon="@drawable/ic_code"
+                android:icon="@drawable/ic_github"
                 android:title="@string/source_code" />
 
             <item
