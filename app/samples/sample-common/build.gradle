@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -11,12 +10,6 @@ android {
         targetSdkVersion androidTargerSdkVersion
         versionCode 1
         versionName "1.0"
-
-        gradle.resolveFlavors(it)
-    }
-
-    dataBinding {
-        enabled = true
     }
 
     buildTypes {
