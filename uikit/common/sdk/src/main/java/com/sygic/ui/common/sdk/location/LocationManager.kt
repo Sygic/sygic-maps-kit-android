@@ -20,8 +20,10 @@ interface LocationManager {
         fun onResult(@EnableGpsResult result: Int)
     }
 
+    fun observe(owner: LifecycleOwner, observer: Observer<LocationManager.LocationRequesterCallback>)
+
     fun checkGpsEnabled(observer: Observer<Boolean>)
     fun requestToEnableGps(onSuccess: () -> Unit, onDenied: () -> Unit = { /* do nothing */ })
 
-    fun observe(owner: LifecycleOwner, observer: Observer<LocationManager.LocationRequesterCallback>)
+    fun setSdkPositionUpdatingEnabled(enabled: Boolean)
 }

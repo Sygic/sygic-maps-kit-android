@@ -79,7 +79,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         if (positionOnMapEnabled) {
-            locationManager.positionOnMapEnabled = true
+            locationManager.setSdkPositionUpdatingEnabled(true)
         }
     }
 
@@ -133,7 +133,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onStop(owner: LifecycleOwner) {
-        locationManager.positionOnMapEnabled = false
+        locationManager.setSdkPositionUpdatingEnabled(false)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {

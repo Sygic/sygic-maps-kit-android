@@ -19,15 +19,16 @@ class LocationManagerImpl : LocationManager {
     override var positionOnMapEnabled: Boolean = false
         set(value) {
             field = value
-            PositionManager.getInstance().run {
-                if (value) startPositionUpdating() else stopPositionUpdating()
-            }
+            setSdkPositionUpdatingEnabled(value)
         }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<LocationManager.LocationRequesterCallback>) {
         providerCheck.observe(owner)
         locationRequest.observe(owner, observer)
     }
+
+    override fun setSdkPositionUpdatingEnabled(enabled: Boolean) =
+        PositionManager.getInstance().run { if (enabled) startPositionUpdating() else stopPositionUpdating() }
 
     /**
      * Returns the current enabled/disabled status of the GPS provider.

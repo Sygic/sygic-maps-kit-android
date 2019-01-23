@@ -36,7 +36,7 @@ class PositionLockFabViewModel internal constructor(
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
         if (currentState.value == LockState.LOCKED) {
-            locationManager.positionOnMapEnabled = true
+            locationManager.setSdkPositionUpdatingEnabled(true)
         }
     }
 
@@ -102,6 +102,6 @@ class PositionLockFabViewModel internal constructor(
 
     override fun onStop(owner: LifecycleOwner) {
         cameraModel.removeModeChangedListener(this)
-        locationManager.positionOnMapEnabled = false
+        locationManager.setSdkPositionUpdatingEnabled(false)
     }
 }
