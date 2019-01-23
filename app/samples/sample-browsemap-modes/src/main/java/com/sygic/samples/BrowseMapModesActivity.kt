@@ -2,14 +2,17 @@ package com.sygic.samples
 
 import android.os.Bundle
 import android.view.Gravity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
+import com.sygic.ui.common.extensions.classPathToUrl
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import kotlinx.android.synthetic.main.activity_browsemap_modes.*
 
-class BrowseMapModesActivity : AppCompatActivity() {
+class BrowseMapModesActivity : CommonSampleActivity() {
+
+    override val filePath: String =
+        "sample-browsemap-modes/src/main/java/" + BrowseMapModesActivity::class.java.name.classPathToUrl() + ".kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,12 +1,15 @@
 package com.sygic.samples
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.sdk.map.factory.DrawableFactory
+import com.sygic.ui.common.extensions.classPathToUrl
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 
-class BrowseMapMarkersActivity : AppCompatActivity() {
+class BrowseMapMarkersActivity : CommonSampleActivity() {
+
+    override val filePath: String =
+        "sample-browsemap-markers/src/main/java/" + BrowseMapMarkersActivity::class.java.name.classPathToUrl() + ".kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

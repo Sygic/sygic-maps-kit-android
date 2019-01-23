@@ -6,9 +6,9 @@
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
-        android:icon="@mipmap/ic_launcher_browsemap_markers"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/browse_map_markers"
-        android:roundIcon="@mipmap/ic_launcher_browsemap_markers_round"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sygic.Light.DarkActionBar"
         tools:ignore="GoogleAppIndexingWarning">

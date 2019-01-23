@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:sygic_compass_enabled="true"
+        app:sygic_compass_hideIfNorthUp="true"
         app:sygic_map_centerX="0.5"
         app:sygic_map_centerY="0.5"
         app:sygic_map_latitude="48.145764"

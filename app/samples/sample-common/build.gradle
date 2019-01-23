@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargerSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        all {
+            buildConfigField "String", "BASE_SOURCE_URL", '"https://github.com/Sygic/sygic-maps-kit-android/blob/feature/develop/app/samples/"'
+        }
+
+        release {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':uikit-common')
+
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+}
