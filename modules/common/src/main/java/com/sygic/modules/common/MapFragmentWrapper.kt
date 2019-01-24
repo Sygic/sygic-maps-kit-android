@@ -220,18 +220,40 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         permissionsRequesterCallback = null
     }
 
+    /**
+     * Adds a single [MapMarker] to the map. This is useful if you want to add only one object to the map,
+     * for example after a click.
+     *
+     * @param marker [MapMarker] object to be added.
+     */
     fun addMapMarker(marker: MapMarker) {
         mapDataModel.addMapObject(marker)
     }
 
+    /**
+     * Adds a multiple [MapMarker]-s to the map at once. This is useful if you want to add multiple objects to the map,
+     * for example nearby restaurants, company affiliates, etc.
+     *
+     * @param markers [List] of [MapMarker]-s objects to be added.
+     */
     fun addMapMarkers(markers: List<MapMarker>) {
         markers.forEach { addMapMarker(it) }
     }
 
+    /**
+     * Allows you to change the look of the map. The default value is [MapSkin.DAY].
+     *
+     * @param mapSkin [MapSkin] to be applied to the map.
+     */
     fun setMapSkin(@MapSkin mapSkin: String) {
         mapDataModel.setSkinAtLayer(ExtendedMapDataModel.SkinLayer.DayNight, mapSkin)
     }
 
+    /**
+     * Allows you to change the vehicle indicator look. The default value is [VehicleSkin.CAR].
+     *
+     * @param vehicleSkin [VehicleSkin] to be applied to the vehicle indicator.
+     */
     fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
         mapDataModel.setSkinAtLayer(ExtendedMapDataModel.SkinLayer.Vehicle, vehicleSkin)
     }

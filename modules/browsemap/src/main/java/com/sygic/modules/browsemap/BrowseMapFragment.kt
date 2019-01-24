@@ -41,13 +41,13 @@ class BrowseMapFragment : MapFragmentWrapper() {
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
     /**
-     * A *[MapSelectionMode]* defines the three available [BrowseMapFragment] selection modes
+     * A *[MapSelectionMode]* defines the three available [BrowseMapFragment] selection modes.
      *
-     * [MapSelectionMode.FULL] -> Enable an unlimited selection mode on the map, every click will be processed
+     * [MapSelectionMode.FULL] -> Enable an unlimited selection mode on the map, every click will be processed.
      *
-     * [MapSelectionMode.MARKERS_ONLY] (default) -> Limit selection mode to the custom [MapMarker]s only, see [addMapMarker] or [addMapMarkers] methods
+     * [MapSelectionMode.MARKERS_ONLY] (default) -> Limit selection mode to the custom [MapMarker]s only, see [addMapMarker] or [addMapMarkers] methods.
      *
-     * [MapSelectionMode.NONE] -> Disable any selection on the map
+     * [MapSelectionMode.NONE] -> Disable any selection on the map.
      */
     @MapSelectionMode
     var mapSelectionMode: Int
@@ -57,11 +57,11 @@ class BrowseMapFragment : MapFragmentWrapper() {
         }
 
     /**
-     * A *[compassEnabled]* modifies the [CompassView] visibility
+     * A *[compassEnabled]* modifies the [CompassView] visibility.
      *
-     * @param [Boolean] true to enable the [CompassView], false otherwise
+     * @param [Boolean] true to enable the [CompassView], false otherwise.
      *
-     * @return whether the [CompassView] is on or off
+     * @return whether the [CompassView] is on or off.
      */
     var compassEnabled: Boolean
         get() = browseMapFragmentViewModel.compassEnabled.value!!
@@ -70,11 +70,11 @@ class BrowseMapFragment : MapFragmentWrapper() {
         }
 
     /**
-     * A *[compassHideIfNorthUp]* modifies the [CompassView] auto hide behaviour
+     * A *[compassHideIfNorthUp]* modifies the [CompassView] auto hide behaviour.
      *
-     * @param [Boolean] true to hide the [CompassView] automatically when it points northwards, false otherwise
+     * @param [Boolean] true to hide the [CompassView] automatically when it points northwards, false otherwise.
      *
-     * @return whether the "my position" indicator is on or off
+     * @return whether the "my position" indicator is on or off.
      */
     var compassHideIfNorthUp: Boolean
         get() = browseMapFragmentViewModel.compassHideIfNorthUp.value!!
@@ -83,11 +83,11 @@ class BrowseMapFragment : MapFragmentWrapper() {
         }
 
     /**
-     * A *[positionOnMapEnabled]* modifies the "my position" indicator visibility
+     * A *[positionOnMapEnabled]* modifies the "my position" indicator visibility.
      *
-     * @param [Boolean] true to enable the "my position" indicator, false otherwise
+     * @param [Boolean] true to enable the "my position" indicator, false otherwise.
      *
-     * @return whether the "my position" indicator is on or off
+     * @return whether the "my position" indicator is on or off.
      */
     var positionOnMapEnabled: Boolean
         get() = browseMapFragmentViewModel.positionOnMapEnabled
@@ -96,11 +96,11 @@ class BrowseMapFragment : MapFragmentWrapper() {
         }
 
     /**
-     * A *[positionLockFabEnabled]* modifies the [PositionLockFab] visibility
+     * A *[positionLockFabEnabled]* modifies the [PositionLockFab] visibility.
      *
-     * @param [Boolean] true to enable the [PositionLockFab], false otherwise
+     * @param [Boolean] true to enable the [PositionLockFab], false otherwise.
      *
-     * @return whether the [PositionLockFab] is on or off
+     * @return whether the [PositionLockFab] is on or off.
      */
     var positionLockFabEnabled: Boolean
         get() = browseMapFragmentViewModel.positionLockFabEnabled.value!!
@@ -109,11 +109,11 @@ class BrowseMapFragment : MapFragmentWrapper() {
         }
 
     /**
-     * A *[zoomControlsEnabled]* modifies the [ZoomControlsMenu] visibility
+     * A *[zoomControlsEnabled]* modifies the [ZoomControlsMenu] visibility.
      *
-     * @param [Boolean] true to enable the [ZoomControlsMenu], false otherwise
+     * @param [Boolean] true to enable the [ZoomControlsMenu], false otherwise.
      *
-     * @return whether the [ZoomControlsMenu] is on or off
+     * @return whether the [ZoomControlsMenu] is on or off.
      */
     var zoomControlsEnabled: Boolean
         get() = browseMapFragmentViewModel.zoomControlsEnabled.value!!
@@ -171,9 +171,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
     }
 
     /**
-     * Register a callback to be invoked when a click to the map has been made
+     * Register a callback to be invoked when a click to the map has been made.
      *
-     * @param onMapClickListener the callback to invoke on map click
+     * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */
     fun setOnMapClickListener(onMapClickListener: (poiData: PoiData) -> Unit) {
         setOnMapClickListener(object : OnMapClickListener {
@@ -182,9 +182,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
     }
 
     /**
-     * Register a callback to be invoked when a click to the map has been made
+     * Register a callback to be invoked when a click to the map has been made.
      *
-     * @param onMapClickListener the callback to invoke on map click
+     * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */
     fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
         browseMapFragmentViewModel.setOnMapClickListener(onMapClickListener)
