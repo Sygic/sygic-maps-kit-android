@@ -28,7 +28,7 @@ private const val TILT_2D = 0f
 private const val TILT_3D = 70f
 
 @AutoFactory
-class ZoomControlsViewModel internal constructor(
+open class ZoomControlsViewModel internal constructor(
     private val cameraModel: Camera.CameraModel
 ) : ViewModel(), ZoomControlsMenu.InteractionListener, Camera.PositionChangedListener, DefaultLifecycleObserver {
 

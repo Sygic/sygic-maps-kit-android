@@ -24,7 +24,7 @@ import com.sygic.ui.view.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
 private const val POI_DATA = "poi_data"
 
-class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
+open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     private var listener: DialogFragmentListener? = null
     private var viewModel: PoiDetailInternalViewModel? = null

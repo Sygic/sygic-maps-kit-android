@@ -12,7 +12,7 @@ import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
 private const val NORTH_UP = 0f
 
 @AutoFactory
-class CompassViewModel internal constructor(
+open class CompassViewModel internal constructor(
     private val cameraModel: Camera.CameraModel
 ) : ViewModel(), Camera.PositionChangedListener, DefaultLifecycleObserver {
 

@@ -17,7 +17,7 @@ private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_MAP = 17f
 private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR = 16f
 
 @AutoFactory
-class PositionLockFabViewModel internal constructor(
+open class PositionLockFabViewModel internal constructor(
     private val cameraModel: Camera.CameraModel,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager

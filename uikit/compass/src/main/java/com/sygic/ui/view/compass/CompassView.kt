@@ -10,7 +10,7 @@ private const val ANIMATION_DURATION = 300L
 private const val ANIMATION_DELAY = 500L
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class CompassView @JvmOverloads constructor(
+open class CompassView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.compassStyle,

@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import com.sygic.ui.common.extensions.getColorFromAttr
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class PositionLockFab @JvmOverloads constructor(
+open class PositionLockFab @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.positionLockFabStyle,

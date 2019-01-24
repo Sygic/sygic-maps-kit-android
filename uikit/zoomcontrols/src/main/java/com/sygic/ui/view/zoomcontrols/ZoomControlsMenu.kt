@@ -10,7 +10,7 @@ import com.sygic.ui.common.extensions.isRtl
 private const val ANIMATION_DELAY_PER_ITEM = 50
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class ZoomControlsMenu @JvmOverloads constructor(
+open class ZoomControlsMenu @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.zoomControlsMenuStyle
