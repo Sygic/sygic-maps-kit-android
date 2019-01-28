@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
-import androidx.annotation.UiThread
 
 private const val DEFAULT_ANIMATION_DELAY = 500L
 private const val DEFAULT_ANIMATION_DURATION = 300L
@@ -16,7 +16,6 @@ private const val DEFAULT_ANIMATION_DURATION = 300L
  *
  * The size, background drawable or color can be changed with the custom style or attribute. See "Sample app" for more info.
  */
-@UiThread
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class CompassView @JvmOverloads constructor(
     context: Context,
@@ -52,13 +51,13 @@ open class CompassView @JvmOverloads constructor(
      */
     var hideCompassIfNorthUpAllowed: Boolean = false
 
-    private val arrowImageView: ImageView?
-    private val alphaSetter = AlphaSetter()
+    protected val arrowImageView: ImageView?
+    protected val alphaSetter = AlphaSetter()
 
-    private var compassRotation: Float
+    private var needleRotation: Float
 
     init {
-        compassRotation = rotation
+        needleRotation = rotation
 
         addView(createImageView(context, R.drawable.compass_nicks))
         addView(createImageView(context, R.drawable.compass_arrow).also { arrowImageView = it })
@@ -82,10 +81,11 @@ open class CompassView @JvmOverloads constructor(
      *
      * @param rotation [Float] to be applied to the [CompassView] needle.
      */
+    @CallSuper
     override fun setRotation(rotation: Float) {
-        val isNorth = isNorthUp(compassRotation)
+        val isNorth = isNorthUp(needleRotation)
         val northWanted = isNorthUp(rotation)
-        compassRotation = rotation
+        needleRotation = rotation
 
         if (isNorth != northWanted) {
             // the visibility is going to change
@@ -102,7 +102,7 @@ open class CompassView @JvmOverloads constructor(
             return
         }
 
-        if (!isNorthUp(compassRotation)) {
+        if (!isNorthUp(needleRotation)) {
             animate().alpha(1f).duration = animationDuration
         } else {
             animate().alpha(0f).duration = animationDuration
@@ -111,7 +111,7 @@ open class CompassView @JvmOverloads constructor(
 
     private fun isNorthUp(rotation: Float): Boolean = rotation >= -1 && rotation <= 1
 
-    private inner class AlphaSetter : Runnable {
+    protected inner class AlphaSetter : Runnable {
         override fun run() {
             hideCompassIfNorthUp(hideAnimationDuration)
         }
