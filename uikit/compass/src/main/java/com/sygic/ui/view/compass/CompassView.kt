@@ -5,10 +5,18 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.annotation.UiThread
 
-private const val ANIMATION_DURATION = 300L
-private const val ANIMATION_DELAY = 500L
+private const val DEFAULT_ANIMATION_DELAY = 500L
+private const val DEFAULT_ANIMATION_DURATION = 300L
 
+/**
+ * A [CompassView] is a simple but powerful view with bundled virtual needle. The primary purpose of this child view is point
+ * to the north relatively to the map rotation. The view can be simply controlled with the standard [setRotation] method.
+ *
+ * The size, background drawable or color can be changed with the custom style or attribute. See "Sample app" for more info.
+ */
+@UiThread
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class CompassView @JvmOverloads constructor(
     context: Context,
@@ -17,11 +25,37 @@ open class CompassView @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicCompassStyle
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
+    /**
+     * A *[hideAnimationDelay]* modifies the [CompassView] auto hide delay. The default value is 500ms.
+     *
+     * @param [Long] delay value in milliseconds.
+     *
+     * @return the animation delay value in milliseconds.
+     */
+    var hideAnimationDelay: Long = DEFAULT_ANIMATION_DELAY
+
+    /**
+     * A *[hideAnimationDuration]* modifies the [CompassView] auto hide animation duration. The default value is 300ms.
+     *
+     * @param [Long] animation duration value in milliseconds.
+     *
+     * @return the animation duration value in milliseconds.
+     */
+    var hideAnimationDuration: Long = DEFAULT_ANIMATION_DURATION
+
+    /**
+     * A *[hideCompassIfNorthUpAllowed]* modifies the [CompassView] auto hide behaviour.
+     *
+     * @param [Boolean] true to hide the [CompassView] automatically when it points northwards, false otherwise.
+     *
+     * @return whether the [CompassView] auto hide behaviour is on or off.
+     */
+    var hideCompassIfNorthUpAllowed: Boolean = false
+
     private val arrowImageView: ImageView?
     private val alphaSetter = AlphaSetter()
 
     private var compassRotation: Float
-    var hideCompassIfNorthUpAllowed: Boolean = false
 
     init {
         compassRotation = rotation
@@ -43,19 +77,20 @@ open class CompassView @JvmOverloads constructor(
         hideCompassIfNorthUp(0)
     }
 
-    fun isNorthUp(rotation: Float): Boolean {
-        return rotation >= -1 && rotation <= 1
-    }
-
+    /**
+     * Allows you to change rotation of the [CompassView] needle. The default value is 0 (north).
+     *
+     * @param rotation [Float] to be applied to the [CompassView] needle.
+     */
     override fun setRotation(rotation: Float) {
-        val isNorth = isNorthUp(this.compassRotation)
+        val isNorth = isNorthUp(compassRotation)
         val northWanted = isNorthUp(rotation)
-        this.compassRotation = rotation
+        compassRotation = rotation
 
         if (isNorth != northWanted) {
             // the visibility is going to change
             removeCallbacks(alphaSetter)
-            postDelayed(alphaSetter, ANIMATION_DELAY)
+            postDelayed(alphaSetter, hideAnimationDelay)
         }
 
         // setRotation is sometimes called from View constructor
@@ -74,9 +109,11 @@ open class CompassView @JvmOverloads constructor(
         }
     }
 
+    private fun isNorthUp(rotation: Float): Boolean = rotation >= -1 && rotation <= 1
+
     private inner class AlphaSetter : Runnable {
         override fun run() {
-            hideCompassIfNorthUp(ANIMATION_DURATION)
+            hideCompassIfNorthUp(hideAnimationDuration)
         }
     }
 }

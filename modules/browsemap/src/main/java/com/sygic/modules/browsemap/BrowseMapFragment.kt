@@ -74,7 +74,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
      *
      * @param [Boolean] true to hide the [CompassView] automatically when it points northwards, false otherwise.
      *
-     * @return whether the "my position" indicator is on or off.
+     * @return whether the [CompassView] auto hide behaviour is on or off.
      */
     var compassHideIfNorthUp: Boolean
         get() = browseMapFragmentViewModel.compassHideIfNorthUp.value!!
