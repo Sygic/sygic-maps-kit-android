@@ -18,14 +18,12 @@ private const val STACK_OVERFLOW = "https://stackoverflow.com/questions/tagged/a
 
 class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, NavigationView.OnNavigationItemSelectedListener {
 
-    val navigationItemListenerObservable: LiveData<Any> = SingleLiveEvent()
     val closeDrawerLayoutObservable: LiveData<Any> = SingleLiveEvent()
     val samplesListFragmentsObservable: LiveData<Fragment> = SingleLiveEvent()
     val notImplementedToastObservable: LiveData<Any> = SingleLiveEvent()
     val openLinkInBrowserObservable: LiveData<String> = SingleLiveEvent()
 
     override fun onCreate(owner: LifecycleOwner) {
-        navigationItemListenerObservable.asSingleEvent().call()
         samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSamplesListFragment()
     }
 

@@ -22,7 +22,7 @@ class BrowseMapModesActivity : CommonSampleActivity() {
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         val selectionModeMenu = PopupMenu(this, selectionModeButton, Gravity.END).apply {
             menuInflater.inflate(R.menu.selection_modes_menu, menu)
-            menu.findItem(getItemId()).let {
+            menu.findItem(getItemId(browseMapFragment.mapSelectionMode)).let {
                 it.isChecked = true
                 setSelectionModeText(it.title)
             }
@@ -68,8 +68,8 @@ class BrowseMapModesActivity : CommonSampleActivity() {
         )
     }
 
-    private fun getItemId(): Int {
-        return when ((supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment).mapSelectionMode) {
+    private fun getItemId(mapSelectionMode: Int): Int {
+        return when (mapSelectionMode) {
             MapSelectionMode.NONE -> R.id.selection_mode_none
             MapSelectionMode.MARKERS_ONLY -> R.id.selection_mode_markers_only
             MapSelectionMode.FULL -> R.id.selection_mode_full
