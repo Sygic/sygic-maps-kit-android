@@ -10,13 +10,20 @@ import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.permission.PermissionsManager
 import com.sygic.ui.common.sdk.utils.requestLocationAccess
+import com.sygic.ui.view.positionlockfab.PositionLockFab
 
 private const val NORTH_UP = 0f
 
 private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_MAP = 17f
 private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR = 16f
 
+/**
+ * A [PositionLockFabViewModel] is a basic ViewModel implementation for the [PositionLockFab] class. It listens to the Sygic SDK
+ * [Camera.ModeChangedListener] and set appropriate state to the [PositionLockFab] view. It also sets the [LockState.UNLOCKED]
+ * as default.
+ */
 @AutoFactory
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 open class PositionLockFabViewModel internal constructor(
     private val cameraModel: Camera.CameraModel,
     private val locationManager: LocationManager,
@@ -30,7 +37,7 @@ open class PositionLockFabViewModel internal constructor(
     val currentState: MutableLiveData<Int> = MutableLiveData()
 
     init {
-        currentState.value = LockState.UNLOCKED
+        setState(LockState.UNLOCKED)
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -48,7 +55,7 @@ open class PositionLockFabViewModel internal constructor(
         modeChanged()
     }
 
-    private fun modeChanged() {
+    protected fun modeChanged() {
         when {
             cameraModel.movementMode == Camera.MovementMode.Free -> setState(LockState.UNLOCKED)
             cameraModel.rotationMode == Camera.RotationMode.Attitude -> setState(LockState.LOCKED_AUTOROTATE)
@@ -80,23 +87,23 @@ open class PositionLockFabViewModel internal constructor(
     }
 
     private fun setState(@LockState state: Int) {
-        if (state != this.currentState.value) {
-            this.currentState.value = state
+        if (currentState.value != state) {
+            currentState.value = state
         }
     }
 
-    private fun setLockedMode() {
+    protected fun setLockedMode() {
         locationManager.positionOnMapEnabled = true
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Free
     }
 
-    private fun setAutoRotateMode() {
+    protected fun setAutoRotateMode() {
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Attitude
     }
 
-    private fun setZoom(zoomLevel: Float) {
+    protected fun setZoom(zoomLevel: Float) {
         cameraModel.zoomLevel = zoomLevel
     }
 

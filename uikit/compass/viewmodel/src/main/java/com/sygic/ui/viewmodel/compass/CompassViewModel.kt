@@ -14,7 +14,7 @@ import com.sygic.ui.view.compass.CompassView
 private const val NORTH_UP = 0f
 
 /**
- * A [CompassViewModel] is a basic ViewModel implementation for [CompassView] class. It listens to the Sygic SDK
+ * A [CompassViewModel] is a basic ViewModel implementation for the [CompassView] class. It listens to the Sygic SDK
  * [Camera.PositionChangedListener] and set appropriate rotation to the [CompassView] needle. It also sets the
  * north (default) rotation when [View.OnClickListener] click method is called.
  */
