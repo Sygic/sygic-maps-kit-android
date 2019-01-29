@@ -1,10 +1,11 @@
-package com.sygic.ui.view.zoomcontrols
+package com.sygic.ui.view.zoomcontrols.buttons
 
 import android.content.Context
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
+import com.sygic.ui.view.zoomcontrols.R
 
 internal class ZoomControlsMenuButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null,

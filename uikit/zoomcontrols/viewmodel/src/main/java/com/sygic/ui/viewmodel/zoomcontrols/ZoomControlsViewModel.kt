@@ -48,6 +48,10 @@ open class ZoomControlsViewModel internal constructor(
         cameraModel.removePositionChangedListener(this)
     }
 
+    override fun onMenuOpened(opened: Boolean) {
+        // Do nothing
+    }
+
     override fun onZoomInStart() {
         startZoom(ZoomType.IN)
     }

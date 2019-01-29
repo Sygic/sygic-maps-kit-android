@@ -32,6 +32,7 @@ open class CompassView @JvmOverloads constructor(
      * @return the animation delay value in milliseconds.
      */
     var hideAnimationDelay: Long = DEFAULT_ANIMATION_DELAY
+        protected set
 
     /**
      * A *[hideAnimationDuration]* modifies the [CompassView] auto hide animation duration. The default value is 300ms.
@@ -41,6 +42,7 @@ open class CompassView @JvmOverloads constructor(
      * @return the animation duration value in milliseconds.
      */
     var hideAnimationDuration: Long = DEFAULT_ANIMATION_DURATION
+        protected set
 
     /**
      * A *[hideCompassIfNorthUpAllowed]* modifies the [CompassView] auto hide behaviour.
