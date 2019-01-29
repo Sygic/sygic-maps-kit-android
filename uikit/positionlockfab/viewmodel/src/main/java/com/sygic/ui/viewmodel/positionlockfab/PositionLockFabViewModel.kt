@@ -1,15 +1,15 @@
 package com.sygic.ui.viewmodel.positionlockfab
 
-import android.Manifest
-import androidx.lifecycle.*
-import com.sygic.sdk.SygicEngine
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sygic.sdk.map.Camera
-import com.sygic.sdk.position.PositionManager
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
-import com.sygic.ui.common.sdk.location.EnableGpsResult
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.utils.requestLocationAccess
 
 private const val NORTH_UP = 0f
 
@@ -36,7 +36,7 @@ class PositionLockFabViewModel internal constructor(
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
         if (currentState.value == LockState.LOCKED) {
-            PositionManager.getInstance().startPositionUpdating() //ToDo: MS-4555
+            locationManager.setSdkPositionUpdatingEnabled(true)
         }
     }
 
@@ -57,7 +57,7 @@ class PositionLockFabViewModel internal constructor(
     }
 
     fun onClick() {
-        setNextLockState {
+        requestLocationAccess(permissionsManager, locationManager) {
             when (currentState.value) {
                 LockState.UNLOCKED -> {
                     setState(LockState.LOCKED)
@@ -86,7 +86,7 @@ class PositionLockFabViewModel internal constructor(
     }
 
     private fun setLockedMode() {
-        PositionManager.getInstance().startPositionUpdating() //ToDo: MS-4555
+        locationManager.positionOnMapEnabled = true
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Free
     }
@@ -100,55 +100,8 @@ class PositionLockFabViewModel internal constructor(
         cameraModel.zoomLevel = zoomLevel
     }
 
-    private fun setNextLockState(block: () -> Unit) {
-        checkPermission {
-            checkLocationEnabled(block)
-        }
-    }
-
-    private fun checkPermission(onSuccess: () -> Unit) {
-        permissionsManager.checkPermissionGranted(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Observer { permissionEnabled ->
-                if (!permissionEnabled) {
-                    permissionsManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION,
-                        object : PermissionsManager.PermissionCallback {
-                            override fun onPermissionGranted(permission: String) {
-                                SygicEngine.openGpsConnection()
-                                onSuccess()
-                            }
-
-                            override fun onPermissionDenied(permission: String) {
-                                /* Currently do nothing */
-                            }
-                        })
-                } else {
-                    onSuccess()
-                }
-            })
-    }
-
-    private fun checkLocationEnabled(onSuccess: () -> Unit) {
-        locationManager.checkGpsEnabled(Observer { gpsEnabled ->
-            if (!gpsEnabled) {
-                locationManager.requestToEnableGps(object : LocationManager.EnableGpsCallback {
-                    override fun onResult(@EnableGpsResult result: Int) {
-                        when (result) {
-                            EnableGpsResult.ENABLED -> onSuccess()
-                            EnableGpsResult.DENIED -> {
-                                /* Currently do nothing */
-                            }
-                        }
-                    }
-                })
-            } else {
-                onSuccess()
-            }
-        })
-    }
-
     override fun onStop(owner: LifecycleOwner) {
-        cameraModel.addModeChangedListener(this)
-        PositionManager.getInstance().stopPositionUpdating() //ToDo: MS-4555
+        cameraModel.removeModeChangedListener(this)
+        locationManager.setSdkPositionUpdatingEnabled(false)
     }
 }

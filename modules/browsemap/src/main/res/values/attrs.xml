@@ -10,6 +10,7 @@
 
         <attr name="sygic_compass_enabled" format="boolean" />
         <attr name="sygic_compass_hideIfNorthUp" format="boolean" />
+        <attr name="sygic_positionOnMap_enabled" format="boolean" />
         <attr name="sygic_positionLockFab_enabled" format="boolean" />
         <attr name="sygic_zoomControls_enabled" format="boolean" />
     </declare-styleable>

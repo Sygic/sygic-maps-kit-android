@@ -10,6 +10,8 @@ const val SETTING_ACTIVITY_REQUEST_CODE = 5432
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface LocationManager {
 
+    var positionOnMapEnabled: Boolean
+
     interface LocationRequesterCallback {
         fun onActivityResult(requestCode: Int, resultCode: Int)
     }
@@ -18,8 +20,10 @@ interface LocationManager {
         fun onResult(@EnableGpsResult result: Int)
     }
 
-    fun checkGpsEnabled(observer: Observer<Boolean>)
-    fun requestToEnableGps(enableGpsCallback: EnableGpsCallback, forceDialog: Boolean = true)
-
     fun observe(owner: LifecycleOwner, observer: Observer<LocationManager.LocationRequesterCallback>)
+
+    fun checkGpsEnabled(observer: Observer<Boolean>)
+    fun requestToEnableGps(onSuccess: () -> Unit, onDenied: () -> Unit = { /* do nothing */ })
+
+    fun setSdkPositionUpdatingEnabled(enabled: Boolean)
 }
