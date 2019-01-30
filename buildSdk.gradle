@@ -13,13 +13,18 @@ gradle.ext.resolveFlavors = { config ->
 }
 
 gradle.ext.getSdkKey = {
-    Properties properties = new Properties()
-    def localProperties = file('local.properties')
-
     def sdkKey = ""
-    if (localProperties.exists()) {
-        properties.load(localProperties.newDataInputStream())
-        sdkKey = properties.getProperty('sygic.sdk.key', "")
+
+    if (gradle.rootProject.hasProperty('sygic.sdk.key')) {
+        sdkKey = gradle.rootProject.property('sygic.sdk.key')
+    } else {
+        Properties properties = new Properties()
+        def localProperties = file('local.properties')
+
+        if (localProperties.exists()) {
+            properties.load(localProperties.newDataInputStream())
+            sdkKey = properties.getProperty('sygic.sdk.key', "")
+        }
     }
 
     if (sdkKey.isEmpty()) {

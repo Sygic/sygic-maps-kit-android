@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import com.sygic.modules.browsemap.BrowseMapFragment
+import com.sygic.sample.detail.CustomDetailsViewFactory
 import com.sygic.sdk.map.factory.DrawableFactory
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import kotlinx.android.synthetic.main.activity_sample.*
@@ -45,6 +46,8 @@ class SampleActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 MapMarker(48.144921, 17.114853, DrawableFactory(R.drawable.ic_map_pin))
             )
         )
+
+        browseMapFragment.setDetailsViewFactory(CustomDetailsViewFactory())
 
         /* Todo: use it in example APP
         browseMapFragment.setOnMapClickListener { poiData ->

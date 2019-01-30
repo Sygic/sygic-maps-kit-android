@@ -11,4 +11,5 @@
     <string name="communicate">Communicate</string>
     <string name="share">Share</string>
     <string name="send">Send</string>
+    <string name="place_info_description">Place info image</string>
 </resources>

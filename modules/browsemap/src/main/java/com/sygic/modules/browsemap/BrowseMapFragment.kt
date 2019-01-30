@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
+import com.sygic.modules.browsemap.detail.DetailsViewFactory
 import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
@@ -119,6 +120,10 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
         browseMapFragmentViewModel.setOnMapClickListener(onMapClickListener)
+    }
+
+    fun setDetailsViewFactory(factory: DetailsViewFactory?) {
+        browseMapFragmentViewModel.setDetailsViewFactory(factory)
     }
 
     private fun showPoiDetail(poiData: PoiData) {
