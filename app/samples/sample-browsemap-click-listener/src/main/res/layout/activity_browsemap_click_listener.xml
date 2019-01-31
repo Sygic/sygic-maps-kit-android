@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/browseMapFragment"
+        class="com.sygic.modules.browsemap.BrowseMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:sygic_compass_enabled="true"
+        app:sygic_compass_hideIfNorthUp="true"
+        app:sygic_map_latitude="48.145764"
+        app:sygic_map_longitude="17.126015"
+        app:sygic_map_selectionMode="full"
+        app:sygic_map_zoom="16"
+        app:sygic_positionLockFab_enabled="true"
+        app:sygic_zoomControls_enabled="true" />
+
+</FrameLayout>

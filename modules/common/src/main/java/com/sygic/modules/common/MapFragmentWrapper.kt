@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.CallSuper
@@ -28,12 +29,14 @@ import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.ui.common.sdk.skin.MapSkin
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.tools.viewmodel.ViewModelFactory
+import com.sygic.ui.common.extensions.getStringFromAttr
 import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
@@ -41,6 +44,8 @@ import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.skin.VehicleSkin
+import com.sygic.ui.common.sdk.skin.isMapSkinValid
 import javax.inject.Inject
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -124,6 +129,14 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
                 showNoGoogleApiDialog()
             }
         })
+
+        context.getStringFromAttr(R.attr.sygicMapSkin).let { if (isMapSkinValid(it)) setMapSkin(it) }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycle.addObserver(mapDataModel)
     }
 
     @CallSuper
@@ -223,6 +236,20 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
 
     fun addMapMarkers(markers: List<MapMarker>) {
         markers.forEach { addMapMarker(it) }
+    }
+
+    fun setMapSkin(@MapSkin mapSkin: String) {
+        mapDataModel.setSkinAtLayer(ExtendedMapDataModel.SkinLayer.DayNight, mapSkin)
+    }
+
+    fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
+        mapDataModel.setSkinAtLayer(ExtendedMapDataModel.SkinLayer.Vehicle, vehicleSkin)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        lifecycle.removeObserver(mapDataModel)
     }
 }
 

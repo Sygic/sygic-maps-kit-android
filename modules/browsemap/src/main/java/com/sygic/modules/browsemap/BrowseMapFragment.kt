@@ -51,6 +51,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
             browseMapFragmentViewModel.compassHideIfNorthUp.value = value
         }
 
+    var positionOnMapEnabled: Boolean
+        get() = browseMapFragmentViewModel.positionOnMapEnabled
+        set(value) {
+            browseMapFragmentViewModel.positionOnMapEnabled = value
+        }
+
     var positionLockFabEnabled: Boolean
         get() = browseMapFragmentViewModel.positionLockFabEnabled.value!!
         set(value) {

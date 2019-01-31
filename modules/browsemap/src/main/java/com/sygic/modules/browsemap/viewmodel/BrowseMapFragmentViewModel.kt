@@ -19,8 +19,11 @@ import com.sygic.ui.common.listeners.DialogFragmentListener
 import com.sygic.ui.common.livedata.SingleLiveEvent
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.listener.OnMapClickListener
+import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
+import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.utils.requestLocationAccess
 
 @AutoFactory
 class BrowseMapFragmentViewModel internal constructor(
@@ -28,11 +31,25 @@ class BrowseMapFragmentViewModel internal constructor(
     app: Application,
     private val poiDataManager: PoiDataManager,
     private val extendedMapDataModel: ExtendedMapDataModel,
-    private val mapInteractionManager: MapInteractionManager
+    private val mapInteractionManager: MapInteractionManager,
+    private val locationManager: LocationManager,
+    private val permissionsManager: PermissionsManager
 ) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver {
 
     @MapSelectionMode
     var mapSelectionMode: Int = MapSelectionMode.MARKERS_ONLY
+    var positionOnMapEnabled: Boolean
+        get() = locationManager.positionOnMapEnabled
+        set(value) {
+            if (value) {
+                requestLocationAccess(permissionsManager, locationManager) {
+                    locationManager.positionOnMapEnabled = true
+                }
+            } else {
+                locationManager.positionOnMapEnabled = false
+            }
+        }
+
     val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
@@ -54,6 +71,8 @@ class BrowseMapFragmentViewModel internal constructor(
         attributesTypedArray?.let {
             mapSelectionMode =
                     it.getInt(R.styleable.BrowseMapFragment_sygic_map_selectionMode, MapSelectionMode.MARKERS_ONLY)
+            positionOnMapEnabled = it.getBoolean(R.styleable.BrowseMapFragment_sygic_positionOnMap_enabled, false)
+
             compassEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compass_enabled, false)
             compassHideIfNorthUp.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compass_hideIfNorthUp, false)
             positionLockFabEnabled.value =
@@ -63,6 +82,12 @@ class BrowseMapFragmentViewModel internal constructor(
         }
 
         mapInteractionManager.addOnMapClickListener(this)
+    }
+
+    override fun onStart(owner: LifecycleOwner) {
+        if (positionOnMapEnabled) {
+            locationManager.setSdkPositionUpdatingEnabled(true)
+        }
     }
 
     override fun onMapObjectsRequestStarted() {
@@ -136,6 +161,10 @@ class BrowseMapFragmentViewModel internal constructor(
 
     fun setDetailsViewFactory(factory: DetailsViewFactory?) {
         this.detailsViewFactory = factory
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        locationManager.setSdkPositionUpdatingEnabled(false)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {

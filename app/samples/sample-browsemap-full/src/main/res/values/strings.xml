@@ -1,0 +1,4 @@
+<resources>
+    <string name="browse_map_full">Browse Map - Full</string>
+    <string name="browse_map_full_summary">Browse Map module with full configuration</string>
+</resources>

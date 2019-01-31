@@ -1,0 +1,4 @@
+<resources>
+    <string name="browse_map_markers">Browse Map - Markers</string>
+    <string name="browse_map_markers_summary">Browse Map module with own custom map markers</string>
+</resources>
