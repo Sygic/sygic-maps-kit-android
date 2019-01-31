@@ -20,8 +20,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.sygic.modules.common.di.DaggerAppComponent
 import com.sygic.modules.common.di.DaggerModulesComponent
 import com.sygic.modules.common.di.ModulesComponent
+import com.sygic.modules.common.di.module.AppModule
 import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
@@ -76,7 +78,15 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
 
     protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
         if (!injected) {
-            block(builder.plus(modulesComponent).build())
+            block(
+                builder.plus(modulesComponent)
+                    .plus(
+                        DaggerAppComponent.builder()
+                            .appModule(AppModule(this))
+                            .build()
+                    )
+                    .build()
+            )
         }
         injected = true
     }

@@ -1,5 +1,6 @@
 package com.sygic.modules.browsemap.viewmodel
 
+import android.app.Application
 import android.content.res.TypedArray
 import android.util.Log
 import androidx.lifecycle.*
@@ -24,10 +25,11 @@ import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 @AutoFactory
 class BrowseMapFragmentViewModel internal constructor(
     @Assisted attributesTypedArray: TypedArray?,
+    app: Application,
     private val poiDataManager: PoiDataManager,
     private val extendedMapDataModel: ExtendedMapDataModel,
     private val mapInteractionManager: MapInteractionManager
-) : ViewModel(), MapInteractionManager.Listener, DefaultLifecycleObserver {
+) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver {
 
     @MapSelectionMode
     var mapSelectionMode: Int = MapSelectionMode.MARKERS_ONLY
@@ -84,9 +86,10 @@ class BrowseMapFragmentViewModel internal constructor(
                 getPoiDataAndNotifyObservers(firstViewObject)
             }
             MapSelectionMode.FULL -> {
-                val firstViewObject = viewObjects.first()
+                var firstViewObject = viewObjects.first()
                 if (firstViewObject !is MapMarker && onMapClickListener == null) {
-                    extendedMapDataModel.addOnClickMapMarker(MapMarker(firstViewObject))
+                    firstViewObject = MapMarker(firstViewObject)
+                    extendedMapDataModel.addOnClickMapMarker(firstViewObject)
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
@@ -113,7 +116,7 @@ class BrowseMapFragmentViewModel internal constructor(
                             super.onMeasured(width, height)
 
                             val markerHeight: Int = if (viewObject is MapMarker)
-                                viewObject.getBitmap(null)?.height ?: 0 else 0
+                                viewObject.getBitmap(getApplication())?.height ?: 0 else 0
 
                             setAnchor(0.5f - (factory.getXOffset() / width), 1f + ((markerHeight + factory.getYOffset()) / height))
                         }

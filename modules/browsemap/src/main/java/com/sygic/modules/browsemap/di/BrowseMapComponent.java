@@ -2,8 +2,9 @@ package com.sygic.modules.browsemap.di;
 
 import com.sygic.modules.browsemap.BrowseMapFragment;
 import com.sygic.modules.browsemap.di.module.ViewModelModule;
-import com.sygic.modules.common.di.util.ModuleBuilder;
+import com.sygic.modules.common.di.AppComponent;
 import com.sygic.modules.common.di.ModulesComponent;
+import com.sygic.modules.common.di.util.ModuleBuilder;
 import dagger.Component;
 
 import javax.inject.Scope;
@@ -20,7 +21,8 @@ import java.lang.annotation.RetentionPolicy;
                 ViewModelModule.class
         },
         dependencies = {
-                ModulesComponent.class
+                ModulesComponent.class,
+                AppComponent.class
         }
 )
 public interface BrowseMapComponent {
