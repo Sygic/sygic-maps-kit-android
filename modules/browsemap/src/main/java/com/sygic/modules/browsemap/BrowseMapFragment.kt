@@ -122,6 +122,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
         browseMapFragmentViewModel.setOnMapClickListener(onMapClickListener)
     }
 
+    /**
+     * Set a factory for details window generation. If non-null this factory will be used
+     * to show info about selected point instead of default default implementation.
+     *
+     * @param factory [DetailsViewFactory] used to generate details window
+     */
     fun setDetailsViewFactory(factory: DetailsViewFactory?) {
         browseMapFragmentViewModel.setDetailsViewFactory(factory)
     }
