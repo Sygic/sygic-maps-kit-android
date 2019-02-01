@@ -1,4 +1,4 @@
-package com.sygic.sample.detail
+package com.sygic.samples.detail
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.sygic.modules.browsemap.detail.DetailsViewFactory
-import com.sygic.sample.R
+import com.sygic.samples.R
 import com.sygic.ui.common.sdk.data.PoiData
 
 
@@ -39,7 +39,7 @@ class CustomDetailsViewFactory() : DetailsViewFactory() {
         return 10f
     }
 
-    constructor(parcel: Parcel) : this()
+    private constructor(parcel: Parcel) : this()
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
     }

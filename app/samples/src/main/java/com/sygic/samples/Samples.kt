@@ -28,6 +28,10 @@ object Samples {
         Sample(
             BrowseMapThemesActivity::class.java, R.drawable.preview_browsemap_themes,
             R.string.browse_map_themes, R.string.browse_map_themes_summary
+        ),
+        Sample(
+            BrowseMapDetailsWindowActivity::class.java, R.drawable.preview_browsemap_details_window,
+            R.string.browse_map_details_window, R.string.browse_map_details_window_summary
         )
     )
 }
