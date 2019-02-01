@@ -3,7 +3,7 @@
 A powerful open-source library based on [Sygic Maps SDK][5] which can be used to display rich map content and interact with it.
 (if you are looking for a iOS version, you can find it [here][4])
 
-![Sygic Logo](assets/images/sygic_logo.png)
+<p align="center"><img src="assets/images/sygic_logo.png" alt="Sygic Logo"></p>
 
 ## Getting Started
 
