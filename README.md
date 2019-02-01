@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-   implementation 'com.sygic.modules:browsemap:1.0.0'
+    implementation 'com.sygic.modules:browsemap:1.0.0'
 }
 ```
 
