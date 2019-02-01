@@ -37,12 +37,12 @@ Or use Gradle (coming soon):
 
 ```gradle
 repositories {
-  mavenCentral()
-  google()
+    mavenCentral()
+    google()
 }
 
 dependencies {
-  implementation 'com.sygic.modules:browsemap:1.0.0'
+   implementation 'com.sygic.modules:browsemap:1.0.0'
 }
 ```
 
@@ -65,13 +65,13 @@ Finally, you need to add your API key to the Android Manifest:
 
 ```xml
 <manifest
-	package="com.sygic.samples">
-	<application>
+    package="com.sygic.samples">
+    <application>
 
-		<meta-data
-			android:name="@string/com_sygic_api_key"
-			android:value="place your API key here" />
-	</application>
+    <meta-data
+        android:name="@string/com_sygic_api_key"
+        android:value="place your API key here" />
+    </application>
 </manifest>
 ```
 
