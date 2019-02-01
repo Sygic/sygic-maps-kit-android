@@ -11,6 +11,7 @@ import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
 import com.sygic.ui.common.sdk.ZOOM_ANIMATION
+import com.sygic.ui.common.sdk.model.ExtendedCameraModel
 import com.sygic.ui.view.zoomcontrols.TiltType
 import com.sygic.ui.view.zoomcontrols.ZoomControlsMenu
 import com.sygic.ui.view.zoomcontrols.ZoomType
@@ -29,7 +30,7 @@ private const val TILT_3D = 70f
 
 @AutoFactory
 class ZoomControlsViewModel internal constructor(
-    private val cameraModel: Camera.CameraModel
+    private val cameraModel: ExtendedCameraModel
 ) : ViewModel(), ZoomControlsMenu.InteractionListener, Camera.PositionChangedListener, DefaultLifecycleObserver {
 
     val tiltType: MutableLiveData<Int> = MutableLiveData()

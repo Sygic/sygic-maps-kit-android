@@ -29,7 +29,6 @@ import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
-import com.sygic.ui.common.sdk.skin.MapSkin
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
@@ -41,9 +40,11 @@ import com.sygic.ui.common.sdk.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.location.SETTING_ACTIVITY_REQUEST_CODE
 import com.sygic.ui.common.sdk.mapobject.MapMarker
+import com.sygic.ui.common.sdk.model.ExtendedCameraModel
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.skin.MapSkin
 import com.sygic.ui.common.sdk.skin.VehicleSkin
 import com.sygic.ui.common.sdk.skin.isMapSkinValid
 import javax.inject.Inject
@@ -60,13 +61,11 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     lateinit var viewModelFactory: ViewModelFactory
 
     @Inject
-    internal lateinit var cameraDataModel: Camera.CameraModel
+    internal lateinit var cameraDataModel: ExtendedCameraModel
     @Inject
     internal lateinit var mapDataModel: ExtendedMapDataModel
     @Inject
     internal lateinit var poiDataManager: PoiDataManager
-    @Inject
-    internal lateinit var extendedMapDataModel: ExtendedMapDataModel
     @Inject
     internal lateinit var mapInteractionManager: MapInteractionManager
     @Inject
@@ -137,6 +136,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         super.onCreate(savedInstanceState)
 
         lifecycle.addObserver(mapDataModel)
+        lifecycle.addObserver(cameraDataModel)
     }
 
     @CallSuper
@@ -250,6 +250,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         super.onDestroy()
 
         lifecycle.removeObserver(mapDataModel)
+        lifecycle.removeObserver(cameraDataModel)
     }
 }
 

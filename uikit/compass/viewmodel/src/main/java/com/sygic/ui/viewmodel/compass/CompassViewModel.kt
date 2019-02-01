@@ -8,12 +8,13 @@ import com.sygic.sdk.map.Camera
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.sdk.DEFAULT_ANIMATION
+import com.sygic.ui.common.sdk.model.ExtendedCameraModel
 
 private const val NORTH_UP = 0f
 
 @AutoFactory
 class CompassViewModel internal constructor(
-    private val cameraModel: Camera.CameraModel
+    private val cameraModel: ExtendedCameraModel
 ) : ViewModel(), Camera.PositionChangedListener, DefaultLifecycleObserver {
 
     val rotation: MutableLiveData<Float> = MutableLiveData()
