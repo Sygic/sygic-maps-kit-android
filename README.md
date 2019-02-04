@@ -102,7 +102,7 @@ First read the [Wiki][2] page, then try to search on [Stackoverflow][9] or visit
 
 ## Authors
 
-* **Miroslav Kacera** - *Team Leader* - [bio007][10]
+* **Miroslav Kacera** - *Primary contributor & Team Leader* - [bio007][10]
 * **Tomáš Valenta** - *Primary contributor* - [YAV][11]
 
 ## License
