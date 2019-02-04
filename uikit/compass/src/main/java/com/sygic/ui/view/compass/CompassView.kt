@@ -11,10 +11,11 @@ private const val DEFAULT_ANIMATION_DELAY = 500L
 private const val DEFAULT_ANIMATION_DURATION = 300L
 
 /**
- * A [CompassView] is a simple but powerful view with bundled virtual needle. The primary purpose of this child view is point
- * to the north relatively to the map rotation. The view can be simply controlled with the standard [setRotation] method.
+ * A [CompassView] is a simple view using virtual needle to point to the geographic north relatively to the map rotation.
+ * The view can be simply controlled with the standard [setRotation] method.
  *
- * The size, background drawable or color can be changed with the custom style or attribute. See "Sample app" for more info.
+ * The size, background drawable or color can be changed with the custom _compassStyle_ style or standard android
+ * attributes as _background_ or _accentColor_ definition.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class CompassView @JvmOverloads constructor(
@@ -25,7 +26,7 @@ open class CompassView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     /**
-     * A *[hideAnimationDelay]* modifies the [CompassView] auto hide delay. The default value is 500ms.
+     * A *[hideAnimationDelay]* modifies the [CompassView] auto hide delay. The default value is [DEFAULT_ANIMATION_DELAY].
      *
      * @param [Long] delay value in milliseconds.
      *
@@ -35,7 +36,7 @@ open class CompassView @JvmOverloads constructor(
         protected set
 
     /**
-     * A *[hideAnimationDuration]* modifies the [CompassView] auto hide animation duration. The default value is 300ms.
+     * A *[hideAnimationDuration]* modifies the [CompassView] auto hide animation duration. The default value is [DEFAULT_ANIMATION_DURATION].
      *
      * @param [Long] animation duration value in milliseconds.
      *

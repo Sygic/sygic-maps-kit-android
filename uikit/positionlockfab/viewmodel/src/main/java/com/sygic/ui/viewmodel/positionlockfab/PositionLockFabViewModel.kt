@@ -55,7 +55,7 @@ open class PositionLockFabViewModel internal constructor(
         modeChanged()
     }
 
-    protected fun modeChanged() {
+    private fun modeChanged() {
         when {
             cameraModel.movementMode == Camera.MovementMode.Free -> setState(LockState.UNLOCKED)
             cameraModel.rotationMode == Camera.RotationMode.Attitude -> setState(LockState.LOCKED_AUTOROTATE)

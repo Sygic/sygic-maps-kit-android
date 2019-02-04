@@ -46,7 +46,7 @@ open class ZoomControlsViewModel internal constructor(
     val tiltType: MutableLiveData<Int> = MutableLiveData()
 
     /**
-     * A *[zoomBaseLine]* defines the zoom base line value. The default value is 1F.
+     * A *[zoomBaseLine]* defines the zoom base line value. The default value is [DEFAULT_ZOOM_BASE_LINE].
      *
      * @param [Float] zoom base line value.
      *
@@ -56,7 +56,7 @@ open class ZoomControlsViewModel internal constructor(
         protected set
 
     /**
-     * A *[zoomFlowScale]* defines the zoom flow scale value. The default value is 0.05F.
+     * A *[zoomFlowScale]* defines the zoom flow scale value. The default value is [DEFAULT_ZOOM_FLOW_SCALE].
      *
      * @param [Float] zoom flow scale value.
      *
@@ -66,7 +66,8 @@ open class ZoomControlsViewModel internal constructor(
         protected set
 
     /**
-     * A *[zoomFlowTimeStep]* defines the zoom flow time step value used in the [zoomFlowJob] as delay. The default value is 20L.
+     * A *[zoomFlowTimeStep]* defines the zoom flow time step value used in the [zoomFlowJob] as delay. The default
+     * value is [DEFAULT_ZOOM_FLOW_TIME_STEP].
      *
      * @param [Long] zoom flow time step value.
      *
@@ -76,7 +77,7 @@ open class ZoomControlsViewModel internal constructor(
         protected set
 
     /**
-     * A *[tilt2d]* defines value, that is considered to be the tilt 2D boundary. The default value is 0F.
+     * A *[tilt2d]* defines value, that is considered to be the tilt 2D boundary. The default value is [DEFAULT_TILT_2D].
      *
      * @param [Float] tilt 2D value.
      *
@@ -86,7 +87,7 @@ open class ZoomControlsViewModel internal constructor(
         protected set
 
     /**
-     * A *[tilt3d]* defines value, that is considered to be the tilt 3D boundary. The default value is 70F.
+     * A *[tilt3d]* defines value, that is considered to be the tilt 3D boundary. The default value is [DEFAULT_TILT_3D].
      *
      * @param [Float] tilt 3D value.
      *

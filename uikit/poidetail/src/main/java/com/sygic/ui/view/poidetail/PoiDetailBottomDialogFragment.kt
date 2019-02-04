@@ -31,7 +31,8 @@ private const val POI_DATA = "poi_data"
  *
  * You can register an [DialogFragmentListener] using [setListener] method. Then you will be notified when dialog is dismissed.
  *
- * Content colors can be changed with the custom style or attribute. See "Sample app" for more info.
+ * Content colors can be changed with the standard _colorBackground_, _textColorPrimary_, _textColorSecondary_ or
+ * _colorAccent_ attribute.
 */
 open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 

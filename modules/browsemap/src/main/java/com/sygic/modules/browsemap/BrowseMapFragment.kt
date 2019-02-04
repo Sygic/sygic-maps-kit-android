@@ -171,7 +171,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
     }
 
     /**
-     * Register a callback to be invoked when a click to the map has been made.
+     * Register a custom callback to be invoked when a click to the map has been made.
      *
      * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */
@@ -182,7 +182,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
     }
 
     /**
-     * Register a callback to be invoked when a click to the map has been made.
+     * Register a custom callback to be invoked when a click to the map has been made. If null, default callback
+     * is executed showing details about the selected point.
      *
      * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */

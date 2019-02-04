@@ -19,7 +19,7 @@ private const val ANIMATION_DELAY_PER_ITEM = 50
  * interesting happens to the [ZoomControlsMenu] or it internal buttons. For example, you will be notified when the menu state
  * has been changed ([InteractionListener.onMenuOpened]) or when a ZoomInButton/ZoomOutButton/MapViewModeButton has been clicked.
  *
- * The size, background drawable or color can be changed with the custom style or attribute. See "Sample app" for more info.
+ * The size, background drawable or color can be changed with the custom _zoomControlsMenuStyle_ style or appropriate attributes.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class ZoomControlsMenu @JvmOverloads constructor(
@@ -52,7 +52,7 @@ open class ZoomControlsMenu @JvmOverloads constructor(
         /**
          * Called when a state of [ZoomControlsMenu] has been changed.
          *
-         * @param opened The state that was changed to.
+         * @param opened True if menu is opened, false otherwise.
          */
         fun onMenuOpened(opened: Boolean)
 

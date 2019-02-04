@@ -13,8 +13,8 @@ import com.sygic.ui.common.extensions.getColorFromAttr
  * As this class descends from [FloatingActionButton], [PositionLockFab] come also in two sizes: the default and the mini.
  * You can control the size with the fabSize attribute or setSize method.
  *
- * Unlike the [FloatingActionButton], background and icon color can be changed with the standard backgroundTint and
- * tint attribute. See "Sample app" for more info.
+ * Unlike the [FloatingActionButton], background and icon color can be changed with the custom _positionLockFabStyle_ or
+ * with the standard _backgroundTint_ and _tint_ attribute.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class PositionLockFab @JvmOverloads constructor(
