@@ -3,13 +3,11 @@ package com.sygic.samples
 import android.os.Bundle
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.samples.detail.CustomDetailsViewFactory
-import com.sygic.ui.common.extensions.classPathToUrl
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 
 class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
 
-    override val filePath: String =
-        "sample-browsemap-details-window/src/main/java/${BrowseMapDetailsWindowActivity::class.java.name.classPathToUrl()}.kt"
+    override val wikiModulePath: String = "Module-Browse-Map#browse-map---details-view"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
