@@ -1,7 +1,6 @@
 package com.sygic.samples.activities
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -34,11 +33,6 @@ class SamplesActivity : AppCompatActivity() {
                 this@SamplesActivity,
                 Observer<Fragment> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commit()
-                })
-            this.notImplementedToastObservable.observe(
-                this@SamplesActivity,
-                Observer<Any> {
-                    Toast.makeText(this@SamplesActivity, R.string.not_implemented_yet, Toast.LENGTH_SHORT).show()
                 })
             this.openLinkInBrowserObservable.observe(
                 this@SamplesActivity,

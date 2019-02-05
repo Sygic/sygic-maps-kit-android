@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -24,7 +25,16 @@ import com.sygic.ui.view.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
 private const val POI_DATA = "poi_data"
 
-class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
+/**
+ * A [PoiDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
+ * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiData] object.
+ *
+ * You can register an [DialogFragmentListener] using [setListener] method. Then you will be notified when dialog is dismissed.
+ *
+ * Content colors can be changed with the standard _colorBackground_, _textColorPrimary_, _textColorSecondary_ or
+ * _colorAccent_ attribute.
+*/
+open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     private var listener: DialogFragmentListener? = null
     private var viewModel: PoiDetailInternalViewModel? = null
@@ -32,10 +42,18 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     private lateinit var preferencesManager: PreferencesManager
     private lateinit var binding: LayoutPoiDetailInternalBinding
 
+    /**
+     * @see PoiDetailBottomDialogFragment
+     */
     companion object {
 
         const val TAG = "poi_detail_bottom_dialog_fragment"
 
+        /**
+         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You need to provide a valid [PoiData] object.
+         *
+         * @param poiData [PoiData] to be applied to the dialog content.
+         */
         @JvmStatic
         fun newInstance(poiData: PoiData): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {
             arguments = Bundle().apply {
@@ -77,11 +95,8 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         )
     }
 
-    /**
-     * Using requireActivity().layoutInflater instead of provided inflater from onCreateView
-     * fix DialogFragment styling problem
-     * (https://stackoverflow.com/q/32784009/3796931 or https://issuetracker.google.com/issues/37042151)
-     */
+    // Using LayoutInflater from AppCompatActivity instead of provided inflater from onCreateView fix DialogFragment
+    // styling problem (https://stackoverflow.com/q/32784009/3796931 or https://issuetracker.google.com/issues/37042151)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = LayoutPoiDetailInternalBinding.inflate(requireActivity().layoutInflater, container, false)
         return binding.root
@@ -108,6 +123,11 @@ class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
+    /**
+     * Register a callback to be invoked when a [PoiDetailBottomDialogFragment] is dismissed.
+     *
+     * @param listener [DialogFragmentListener] callback to invoke [PoiDetailBottomDialogFragment] dismiss.
+     */
     fun setListener(listener: DialogFragmentListener) {
         viewModel?.setListener(listener) ?: run { this.listener = listener }
     }

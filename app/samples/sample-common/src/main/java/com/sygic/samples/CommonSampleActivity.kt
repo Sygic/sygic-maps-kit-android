@@ -7,7 +7,7 @@ import com.sygic.ui.common.extensions.openUrl
 
 abstract class CommonSampleActivity : AppCompatActivity() {
 
-    abstract val filePath: String
+    abstract val wikiModulePath: String
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
@@ -16,7 +16,7 @@ abstract class CommonSampleActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.source_code) {
-            openUrl(BuildConfig.BASE_SOURCE_URL + filePath)
+            openUrl(BuildConfig.GITHUB_WIKI + wikiModulePath)
             return true
         }
         return super.onOptionsItemSelected(item)
