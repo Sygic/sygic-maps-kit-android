@@ -20,6 +20,12 @@ android {
     }
 
     buildTypes {
+        all {
+            buildConfigField "String", "GITHUB_REPO", '"https://github.com/Sygic/sygic-maps-kit-android/"'
+            buildConfigField "String", "GITHUB_WIKI", '"https://github.com/Sygic/sygic-maps-kit-android/wiki/"'
+            buildConfigField "String", "STACK_OVERFLOW", '"https://stackoverflow.com/questions/tagged/android+sygic"'
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

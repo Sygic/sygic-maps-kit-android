@@ -14,7 +14,7 @@ android {
 
     buildTypes {
         all {
-            buildConfigField "String", "BASE_SOURCE_URL", '"https://github.com/Sygic/sygic-maps-kit-android/blob/develop/app/samples/"'
+            buildConfigField "String", "GITHUB_WIKI", '"https://github.com/Sygic/sygic-maps-kit-android/wiki/"'
         }
 
         release {
