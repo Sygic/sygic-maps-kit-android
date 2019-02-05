@@ -13,8 +13,7 @@
         android:layout_height="32dp"
         android:layout_gravity="center"
         android:contentDescription="@string/place_info_description"
-        android:src="@drawable/ic_beenhere_black"
-        android:tint="?attr/colorAccent" />
+        android:src="@drawable/ic_beenhere"/>
 
     <LinearLayout
         android:layout_width="wrap_content"

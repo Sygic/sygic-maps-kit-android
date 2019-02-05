@@ -9,7 +9,7 @@ import com.sygic.ui.common.sdk.mapobject.MapMarker
 class BrowseMapMarkersActivity : CommonSampleActivity() {
 
     override val filePath: String =
-        "sample-browsemap-markers/src/main/java/" + BrowseMapMarkersActivity::class.java.name.classPathToUrl() + ".kt"
+        "sample-browsemap-markers/src/main/java/${BrowseMapMarkersActivity::class.java.name.classPathToUrl()}.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -35,18 +35,13 @@ class CustomDetailsViewFactory() : DetailsViewFactory() {
         return root
     }
 
-    override fun getYOffset(): Float {
-        return 10f
-    }
+    override fun getYOffset() = 10f
 
     private constructor(parcel: Parcel) : this()
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-    }
+    override fun writeToParcel(parcel: Parcel, flags: Int) {}
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<CustomDetailsViewFactory> {
         override fun createFromParcel(parcel: Parcel): CustomDetailsViewFactory {

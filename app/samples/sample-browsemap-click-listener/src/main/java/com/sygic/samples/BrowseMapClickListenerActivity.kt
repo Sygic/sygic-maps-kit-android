@@ -8,7 +8,7 @@ import com.sygic.ui.common.extensions.classPathToUrl
 class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
     override val filePath: String =
-        "sample-browsemap-click-listener/src/main/java/" + BrowseMapClickListenerActivity::class.java.name.classPathToUrl() + ".kt"
+        "sample-browsemap-click-listener/src/main/java/${BrowseMapClickListenerActivity::class.java.name.classPathToUrl()}.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -8,7 +8,7 @@ import com.sygic.ui.common.sdk.mapobject.MapMarker
 class BrowseMapThemesActivity : CommonSampleActivity() {
 
     override val filePath: String =
-        "sample-browsemap-themes/src/main/java/" + BrowseMapThemesActivity::class.java.name.classPathToUrl() + ".kt"
+        "sample-browsemap-themes/src/main/java/${BrowseMapThemesActivity::class.java.name.classPathToUrl()}.kt"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Sygic_Colored)

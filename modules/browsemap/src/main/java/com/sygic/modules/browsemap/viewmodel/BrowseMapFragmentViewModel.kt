@@ -169,6 +169,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun onDestroy(owner: LifecycleOwner) {
         onMapClickListener = null
+        detailsViewFactory = null
     }
 
     override fun onCleared() {
