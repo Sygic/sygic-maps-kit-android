@@ -4,7 +4,7 @@ import android.os.Bundle
 
 class BrowseMapDefaultActivity : CommonSampleActivity() {
 
-    override val filePath: String = "sample-browsemap-def/src/main/res/layout/activity_browsemap_default.xml"
+    override val wikiModulePath: String = "Module-Browse-Map#browse-map---default"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

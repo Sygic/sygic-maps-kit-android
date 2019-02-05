@@ -4,7 +4,7 @@ import android.os.Bundle
 
 class BrowseMapFullActivity : CommonSampleActivity() {
 
-    override val filePath: String = "sample-browsemap-full/src/main/res/layout/activity_browsemap_full.xml"
+    override val wikiModulePath: String = "Module-Browse-Map#browse-map---full"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -17,28 +17,25 @@
 
     <item android:title="@string/ui_kit">
         <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_ui_kit_compass"
-                    android:icon="@drawable/ic_compass"
-                    android:title="@string/compass" />
+            <item
+                android:id="@+id/nav_ui_kit_compass"
+                android:icon="@drawable/ic_compass"
+                android:title="@string/compass" />
 
-                <item
-                    android:id="@+id/nav_ui_kit_poi_detail"
-                    android:icon="@drawable/ic_poi_detail"
-                    android:title="@string/poi_detail" />
+            <item
+                android:id="@+id/nav_ui_kit_poi_detail"
+                android:icon="@drawable/ic_poi_detail"
+                android:title="@string/poi_detail" />
 
-                <item
-                    android:id="@+id/nav_ui_kit_position_lock_fab"
-                    android:icon="@drawable/ic_position_lock_fab"
-                    android:title="@string/position_lock_fab" />
+            <item
+                android:id="@+id/nav_ui_kit_position_lock_fab"
+                android:icon="@drawable/ic_position_lock_fab"
+                android:title="@string/position_lock_fab" />
 
-                <item
-                    android:id="@+id/nav_ui_kit_zoom_controls"
-                    android:icon="@drawable/ic_zoom_controls"
-                    android:title="@string/zoom_controls" />
-
-            </group>
+            <item
+                android:id="@+id/nav_ui_kit_zoom_controls"
+                android:icon="@drawable/ic_zoom_controls"
+                android:title="@string/zoom_controls" />
         </menu>
     </item>
 
