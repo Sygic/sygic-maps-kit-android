@@ -140,8 +140,7 @@ class BrowseMapFragmentViewModel internal constructor(
                     return
                 }
 
-                val factory = detailsViewFactory
-                if (factory != null) {
+                detailsViewFactory?.let { factory ->
                     poiDetailsView = object : UiObject(poiData.coordinates, PoiDataDetailsFactory(factory, poiData)) {
                         override fun onMeasured(width: Int, height: Int) {
                             super.onMeasured(width, height)
@@ -149,12 +148,15 @@ class BrowseMapFragmentViewModel internal constructor(
                             val markerHeight: Int = if (viewObject is MapMarker)
                                 viewObject.getBitmap(getApplication())?.height ?: 0 else 0
 
-                            setAnchor(0.5f - (factory.getXOffset() / width), 1f + ((markerHeight + factory.getYOffset()) / height))
+                            setAnchor(
+                                0.5f - (factory.getXOffset() / width),
+                                1f + ((markerHeight + factory.getYOffset()) / height)
+                            )
                         }
                     }.also {
                         extendedMapDataModel.addMapObject(it)
                     }
-                } else {
+                } ?: run {
                     poiDataObservable.asSingleEvent().value = poiData
                 }
             }
