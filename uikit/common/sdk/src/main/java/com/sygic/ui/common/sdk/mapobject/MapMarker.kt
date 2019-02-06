@@ -13,15 +13,15 @@ import com.sygic.ui.common.sdk.data.PoiData
 private const val MARKER_ANCHOR_POSITION_X = 0.5f
 private const val MARKER_ANCHOR_POSITION_Y = 1f
 
-private val DEFAULT_ICON: BitmapFactory by lazy { DrawableFactory(R.drawable.ic_map_pin) }
+private val DEFAULT_ICON = R.drawable.ic_map_pin
 
 // ToDo: Custom data / payload
 // ToDo: refactor SDK MapMarker, then remove it
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class MapMarker : com.sygic.sdk.map.`object`.MapMarker {
 
-    constructor(viewObject: ViewObject) : super(viewObject, DEFAULT_ICON) { this.data.coordinates = viewObject.position }
-    constructor(latitude: Double, longitude: Double) : super(GeoCoordinates(latitude, longitude), DEFAULT_ICON) { this.data.coordinates = GeoCoordinates(latitude, longitude) }
+    constructor(viewObject: ViewObject) : super(viewObject, DrawableFactory(DEFAULT_ICON)) { this.data.coordinates = viewObject.position }
+    constructor(latitude: Double, longitude: Double) : super(GeoCoordinates(latitude, longitude), DrawableFactory(DEFAULT_ICON)) { this.data.coordinates = GeoCoordinates(latitude, longitude) }
     constructor(latitude: Double, longitude: Double, icon: BitmapFactory) : super(GeoCoordinates(latitude, longitude), icon) { this.data.coordinates = GeoCoordinates(latitude, longitude) }
     constructor(latitude: Double, longitude: Double, icon: BitmapFactory, data: PoiData) : super(GeoCoordinates(latitude, longitude), icon) { this.data = data }
 
@@ -34,7 +34,7 @@ open class MapMarker : com.sygic.sdk.map.`object`.MapMarker {
     class Builder {
 
         private val data: PoiData = PoiData.EMPTY.copy()
-        private var bitmapFactory: BitmapFactory = DEFAULT_ICON
+        private var bitmapFactory: BitmapFactory = DrawableFactory(DEFAULT_ICON)
 
         fun coordinates(latitude: Double, longitude: Double): Builder = coordinates(GeoCoordinates(latitude, longitude))
         fun coordinates(coordinates: GeoCoordinates): Builder = this.apply { data.coordinates = coordinates }
