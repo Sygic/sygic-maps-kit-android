@@ -6,8 +6,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
 import com.sygic.ui.common.extensions.getColorFromAttr
 
+/**
+ * A [PositionLockFab] can be used for a visual representation of the camera movement and rotation mode. The view can be
+ * simply controlled with the [setState] method. The default state is [LockState.UNLOCKED].
+ *
+ * As this class descends from [FloatingActionButton], [PositionLockFab] come also in two sizes: the default and the mini.
+ * You can control the size with the fabSize attribute or setSize method.
+ *
+ * Unlike the [FloatingActionButton], background and icon color can be changed with the custom _positionLockFabStyle_ or
+ * with the standard _backgroundTint_ and _tint_ attribute.
+ */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class PositionLockFab @JvmOverloads constructor(
+open class PositionLockFab @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.positionLockFabStyle,
@@ -45,11 +55,11 @@ class PositionLockFab @JvmOverloads constructor(
     }
 
     /**
-     * Set the visual state of the button
+     * Set the visual state of the [PositionLockFab].
      *
-     * Supported values are [LockState.UNLOCKED], [LockState.LOCKED], [LockState.LOCKED_AUTOROTATE]
+     * Supported values are [LockState.UNLOCKED], [LockState.LOCKED], [LockState.LOCKED_AUTOROTATE].
      *
-     * @param state one of the supported states
+     * @param state [LockState] to be applied.
      */
     fun setState(@LockState state: Int) {
         when (state) {

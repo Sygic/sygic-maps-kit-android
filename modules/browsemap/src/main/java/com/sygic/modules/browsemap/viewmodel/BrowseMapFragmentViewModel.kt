@@ -3,6 +3,7 @@ package com.sygic.modules.browsemap.viewmodel
 import android.app.Application
 import android.content.res.TypedArray
 import android.util.Log
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
 import com.sygic.modules.browsemap.R
 import com.sygic.modules.browsemap.detail.DetailsViewFactory
@@ -26,6 +27,7 @@ import com.sygic.ui.common.sdk.permission.PermissionsManager
 import com.sygic.ui.common.sdk.utils.requestLocationAccess
 
 @AutoFactory
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BrowseMapFragmentViewModel internal constructor(
     @Assisted attributesTypedArray: TypedArray?,
     app: Application,

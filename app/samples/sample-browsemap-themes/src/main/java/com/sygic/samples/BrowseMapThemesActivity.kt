@@ -2,13 +2,11 @@ package com.sygic.samples
 
 import android.os.Bundle
 import com.sygic.modules.browsemap.BrowseMapFragment
-import com.sygic.ui.common.extensions.classPathToUrl
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 
 class BrowseMapThemesActivity : CommonSampleActivity() {
 
-    override val filePath: String =
-        "sample-browsemap-themes/src/main/java/${BrowseMapThemesActivity::class.java.name.classPathToUrl()}.kt"
+    override val wikiModulePath: String = "Module-Browse-Map#browse-map---themes"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Sygic_Colored)

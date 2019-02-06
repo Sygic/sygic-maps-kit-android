@@ -1,4 +1,4 @@
-package com.sygic.ui.view.zoomcontrols
+package com.sygic.ui.view.zoomcontrols.buttons
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -11,6 +11,8 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import com.sygic.ui.view.zoomcontrols.R
+import com.sygic.ui.view.zoomcontrols.ZoomControlsMenu
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 internal abstract class BaseZoomControlsButton @JvmOverloads constructor(

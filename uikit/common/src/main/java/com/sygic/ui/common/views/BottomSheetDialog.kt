@@ -3,7 +3,6 @@ package com.sygic.ui.common.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
@@ -25,7 +24,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 
 /**
- * Friendly and more usable alternative to the official material BottomSheetDialog
+ * Friendly and more usable alternative to the official material BottomSheetDialog with available BottomSheetBehavior
+ * and other minor improvements.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BottomSheetDialog @JvmOverloads constructor(
