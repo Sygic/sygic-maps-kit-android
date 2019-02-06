@@ -2,7 +2,18 @@ package com.sygic.ui.common.sdk.listener
 
 import com.sygic.ui.common.sdk.data.PoiData
 
+/**
+ * Interface definition for a callback to be invoked when a click to the map has been made.
+ */
 @FunctionalInterface
 interface OnMapClickListener {
-    fun onMapClick(poiData: PoiData) //ToDO: MS-4711 Custom payload
+
+    /**
+     * Called when click to the map has been made.
+     *
+     * @param poiData [PoiData] belonging to the click on the map.
+
+     * @return true if the callback consumed the click, false otherwise (click will be processed by the default behaviour).
+     */
+    fun onMapClick(poiData: PoiData) : Boolean //ToDO: MS-4711 Custom payload
 }
