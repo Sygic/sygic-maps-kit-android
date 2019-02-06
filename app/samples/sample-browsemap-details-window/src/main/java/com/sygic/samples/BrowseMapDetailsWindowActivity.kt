@@ -20,11 +20,17 @@ class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
         browseMapFragment.addMapMarkers(
             listOf(
                 MapMarker(48.143489, 17.150560),
-                MapMarker(48.162805, 17.101621),
                 MapMarker(48.165561, 17.139550),
                 MapMarker(48.155028, 17.155674),
                 MapMarker(48.141797, 17.097001),
-                MapMarker(48.134756, 17.127729)
+                MapMarker.Builder()
+                    .coordinates(48.162805, 17.101621)
+                    .title("My Marker 1")
+                    .build(),
+                MapMarker.Builder()
+                    .coordinates(48.134756, 17.127729)
+                    .title("My Marker 2")
+                    .build()
             )
         )
 

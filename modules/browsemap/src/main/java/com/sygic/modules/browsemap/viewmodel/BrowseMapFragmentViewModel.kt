@@ -95,15 +95,20 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
-        poiDetailsView?.let { extendedMapDataModel.removeMapObject(it) }
-        poiDetailsView = null
+        var firstViewObject = viewObjects.first()
+        poiDetailsView?.let {
+            extendedMapDataModel.removeMapObject(it)
+            poiDetailsView = null
+            if (firstViewObject !is MapMarker) {
+                return
+            }
+        }
 
         when (mapSelectionMode) {
             MapSelectionMode.NONE -> {
                 logWarning("NONE")
             }
             MapSelectionMode.MARKERS_ONLY -> {
-                val firstViewObject = viewObjects.first()
                 if (firstViewObject !is MapMarker) {
                     return
                 }
@@ -111,7 +116,6 @@ class BrowseMapFragmentViewModel internal constructor(
                 getPoiDataAndNotifyObservers(firstViewObject)
             }
             MapSelectionMode.FULL -> {
-                var firstViewObject = viewObjects.first()
                 if (firstViewObject !is MapMarker && onMapClickListener == null) {
                     firstViewObject = MapMarker(firstViewObject)
                     extendedMapDataModel.addOnClickMapMarker(firstViewObject)
