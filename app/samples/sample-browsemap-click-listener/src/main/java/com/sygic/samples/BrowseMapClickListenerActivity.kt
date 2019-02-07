@@ -16,6 +16,7 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         browseMapFragment.setOnMapClickListener {
             Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+            true
         }
     }
 }
