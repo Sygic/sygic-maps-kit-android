@@ -27,10 +27,10 @@ import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
-import com.sygic.ui.common.sdk.skin.MapSkin
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.`object`.ClusterLayer
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.tools.viewmodel.ViewModelFactory
@@ -42,6 +42,7 @@ import com.sygic.ui.common.sdk.mapobject.MapMarker
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
 import com.sygic.ui.common.sdk.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.ui.common.sdk.permission.PermissionsManager
+import com.sygic.ui.common.sdk.skin.MapSkin
 import com.sygic.ui.common.sdk.skin.VehicleSkin
 import com.sygic.ui.common.sdk.skin.isMapSkinValid
 import javax.inject.Inject
@@ -238,6 +239,19 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
      */
     fun addMapMarkers(markers: List<MapMarker>) {
         markers.forEach { addMapMarker(it) }
+    }
+
+    /**
+     * Adds a single [ClusterLayer] to the map. Cluster should consists of at least one Marker.
+     *
+     * @param cluster [ClusterLayer] to add
+     */
+    fun addCluster(cluster: ClusterLayer) {
+        if (!cluster.isValid) {
+            cluster.markers.forEach { mapDataModel.addMapObject(it) }
+        }
+
+        mapDataModel.addClusterLayer(cluster)
     }
 
     /**

@@ -1,0 +1,4 @@
+<resources>
+    <string name="browse_map_clusters">Browse Map - Clusters</string>
+    <string name="browse_map_clusters_summary">Browse Map module with clustering enabled</string>
+</resources>
