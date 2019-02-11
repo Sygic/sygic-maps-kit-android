@@ -1,0 +1,5 @@
+<resources>
+    <string name="browse_map_details_window">Browse Map - Details View</string>
+    <string name="browse_map_details_window_summary">Custom details view for map points</string>
+    <string name="place_info_description">Place info image</string>
+</resources>

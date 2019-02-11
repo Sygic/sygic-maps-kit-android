@@ -25,7 +25,8 @@ class SdkInitializationManagerImpl : SdkInitializationManager,
         }
 
         application.getApiKey()?.let { key ->
-            SygicEngine.Builder(application.getString(R.string.com_sygic_secret), key, "", application)
+            SygicEngine.Builder(application)
+                .setKeyAndSecret(application.getString(R.string.com_sygic_secret), key)
                 .setInitListener(this).init()
         }
     }

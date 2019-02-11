@@ -15,12 +15,12 @@ private const val MARKER_ANCHOR_POSITION_Y = 1f
 
 private val DEFAULT_ICON = R.drawable.ic_map_pin
 
-// ToDo: Custom data / payload
+// ToDo: Custom data / payload MS-4711
 // ToDo: refactor SDK MapMarker, then remove it
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class MapMarker : com.sygic.sdk.map.`object`.MapMarker {
 
-    constructor(viewObject: ViewObject) : super(viewObject, DrawableFactory(DEFAULT_ICON)) { this.data.coordinates = viewObject.position }
+    constructor(viewObject: ViewObject) : super(viewObject, DrawableFactory(DEFAULT_ICON))
     constructor(latitude: Double, longitude: Double) : super(GeoCoordinates(latitude, longitude), DrawableFactory(DEFAULT_ICON)) { this.data.coordinates = GeoCoordinates(latitude, longitude) }
     constructor(latitude: Double, longitude: Double, icon: BitmapFactory) : super(GeoCoordinates(latitude, longitude), icon) { this.data.coordinates = GeoCoordinates(latitude, longitude) }
     constructor(latitude: Double, longitude: Double, icon: BitmapFactory, data: PoiData) : super(GeoCoordinates(latitude, longitude), icon) { this.data = data }
