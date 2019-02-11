@@ -136,8 +136,9 @@ class BrowseMapFragmentViewModel internal constructor(
         poiDataManager.getPoiData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(poiData: PoiData) {
                 onMapClickListener?.let {
-                    it.onMapClick(poiData)
-                    return
+                    if (it.onMapClick(poiData)) {
+                        return
+                    }
                 }
 
                 detailsViewFactory?.let { factory ->

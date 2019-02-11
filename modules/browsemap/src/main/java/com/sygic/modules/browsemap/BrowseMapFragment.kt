@@ -176,7 +176,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
      *
      * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */
-    fun setOnMapClickListener(onMapClickListener: (poiData: PoiData) -> Unit) {
+    fun setOnMapClickListener(onMapClickListener: (poiData: PoiData) -> Boolean) {
         setOnMapClickListener(object : OnMapClickListener {
             override fun onMapClick(poiData: PoiData) = onMapClickListener(poiData)
         })
