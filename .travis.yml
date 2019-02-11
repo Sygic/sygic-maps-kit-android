@@ -11,7 +11,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-  - ./gradlew clean build
+  - ./gradlew clean build -P"sygic.sdk.key"=$SYGIC_API_KEY
 
 android:
  components:

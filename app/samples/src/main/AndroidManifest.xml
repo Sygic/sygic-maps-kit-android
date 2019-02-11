@@ -41,6 +41,10 @@
         <activity
             android:name=".BrowseMapThemesActivity"
             android:label="@string/browse_map_themes" />
+        <activity
+            android:name=".BrowseMapDetailsWindowActivity"
+            android:label="@string/browse_map_details_window">
+        </activity>
 
         <meta-data
             android:name="@string/com_sygic_api_key"

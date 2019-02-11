@@ -3,6 +3,8 @@ package com.sygic.samples
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.sygic.samples.common.BuildConfig
+import com.sygic.samples.common.R
 import com.sygic.ui.common.extensions.openUrl
 
 abstract class CommonSampleActivity : AppCompatActivity() {

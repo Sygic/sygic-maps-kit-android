@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
+import com.sygic.modules.browsemap.detail.DetailsViewFactory
 import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
@@ -189,6 +190,16 @@ class BrowseMapFragment : MapFragmentWrapper() {
      */
     fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
         browseMapFragmentViewModel.setOnMapClickListener(onMapClickListener)
+    }
+
+    /**
+     * Set a factory for details window generation. If non-null this factory will be used
+     * to show info about selected point instead of default implementation.
+     *
+     * @param factory [DetailsViewFactory] used to generate details window.
+     */
+    fun setDetailsViewFactory(factory: DetailsViewFactory?) {
+        browseMapFragmentViewModel.setDetailsViewFactory(factory)
     }
 
     private fun showPoiDetail(poiData: PoiData) {

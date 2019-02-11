@@ -22,6 +22,10 @@ object Samples {
             R.string.browse_map_markers, R.string.browse_map_markers_summary
         ),
         Sample(
+            BrowseMapDetailsWindowActivity::class.java, R.drawable.preview_browsemap_details_window,
+            R.string.browse_map_details_window, R.string.browse_map_details_window_summary
+        ),
+        Sample(
             BrowseMapClickListenerActivity::class.java, R.drawable.preview_browsemap_click_listener,
             R.string.browse_map_click_listener, R.string.browse_map_click_listener_summary
         ),
