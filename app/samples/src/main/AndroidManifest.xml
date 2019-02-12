@@ -25,26 +25,32 @@
         </activity>
         <activity
             android:name=".BrowseMapDefaultActivity"
-            android:label="@string/browse_map_default" />
+            android:label="@string/browse_map_default"
+            android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
             android:name=".BrowseMapFullActivity"
-            android:label="@string/browse_map_full" />
+            android:label="@string/browse_map_full"
+            android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
             android:name=".BrowseMapModesActivity"
-            android:label="@string/browse_map_modes" />
+            android:label="@string/browse_map_modes"
+            android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
             android:name=".BrowseMapClickListenerActivity"
-            android:label="@string/browse_map_click_listener" />
+            android:label="@string/browse_map_click_listener"
+            android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
             android:name=".BrowseMapMarkersActivity"
-            android:label="@string/browse_map_markers" />
+            android:label="@string/browse_map_markers"
+            android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
             android:name=".BrowseMapThemesActivity"
-            android:label="@string/browse_map_themes" />
+            android:label="@string/browse_map_themes"
+            android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
             android:name=".BrowseMapDetailsWindowActivity"
-            android:label="@string/browse_map_details_window">
-        </activity>
+            android:label="@string/browse_map_details_window"
+            android:theme="@style/AppTheme.NoExitAnimation" />
 
         <meta-data
             android:name="@string/com_sygic_api_key"

@@ -106,7 +106,7 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.poiDetailInternalViewModel = viewModel
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
     }
 
     override fun onResume() {
