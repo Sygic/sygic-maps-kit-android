@@ -9,6 +9,16 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="AppTheme.NoExitAnimation">
+        <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>
+    </style>
+
+    <style name="WindowAnimationStyle" parent="@android:style/Animation.Activity">
+        <item name="android:windowExitAnimation">@anim/no_animation</item>
+        <item name="android:activityCloseExitAnimation">@anim/no_animation</item>
+        <item name="android:activityCloseEnterAnimation">@anim/no_animation</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 

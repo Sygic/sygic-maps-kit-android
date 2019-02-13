@@ -13,7 +13,6 @@ class SamplesListViewModel : ViewModel(), SamplesRecyclerViewAdapter.ClickListen
 
     @Bindable
     val adapter: SamplesRecyclerViewAdapter = SamplesRecyclerViewAdapter()
-
     val startActivityObservable: LiveData<Class<out CommonSampleActivity>> = SingleLiveEvent()
 
     init {
