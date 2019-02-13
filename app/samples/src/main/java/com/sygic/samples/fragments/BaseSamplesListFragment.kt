@@ -37,7 +37,7 @@ abstract class BaseSamplesListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: LayoutSamplesListBinding = LayoutSamplesListBinding.inflate(inflater, container, false)
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.samplesListViewModel = samplesListViewModel
         return binding.root
