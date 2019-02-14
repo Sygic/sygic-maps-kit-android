@@ -7,20 +7,19 @@ import androidx.lifecycle.Observer
 import com.sygic.sdk.position.PositionManager
 import com.sygic.ui.common.sdk.location.livedata.LocationProviderCheckLiveEvent
 import com.sygic.ui.common.sdk.location.livedata.LocationRequestLiveEvent
-import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
+import com.sygic.ui.common.sdk.utils.POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class LocationManagerImpl(private val extendedMapDataModel: ExtendedMapDataModel) : LocationManager {
+class LocationManagerImpl : LocationManager {
 
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 
     private val providerCheck: LocationProviderCheckLiveEvent = LocationProviderCheckLiveEvent()
     private val locationRequest: LocationRequestLiveEvent = LocationRequestLiveEvent()
 
-    override var positionOnMapEnabled: Boolean
-        get() = extendedMapDataModel.positionOnMapEnabled
+    override var positionOnMapEnabled: Boolean = POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
         set(value) {
-            extendedMapDataModel.positionOnMapEnabled = value
+            field = value
             setSdkPositionUpdatingEnabled(value)
         }
 

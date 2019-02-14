@@ -5,7 +5,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.ui.common.sdk.mapobject.MapMarker
-import com.sygic.ui.common.sdk.utils.POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
 
 object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
@@ -13,8 +12,6 @@ object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
         object DayNight : SkinLayer(0)
         object Vehicle : SkinLayer(1)
     }
-
-    var positionOnMapEnabled: Boolean = POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
 
     private var currentOnClickMapMarker: MapMarker? = null
 

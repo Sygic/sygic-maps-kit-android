@@ -22,7 +22,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.component.MapFragmentComponent
+import com.sygic.modules.common.component.MapFragmentInitComponent
 import com.sygic.modules.common.delegate.ModulesComponentSingletonDelegate
 import com.sygic.modules.common.di.DaggerAppComponent
 import com.sygic.modules.common.di.module.AppModule
@@ -54,9 +54,8 @@ import javax.inject.Inject
 abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected abstract fun executeInjector()
-    protected open fun resolveAttributes(attrs: AttributeSet?) {}
 
-    protected val mapFragmentComponent = MapFragmentComponent
+    protected val mapFragmentInitComponent = MapFragmentInitComponent()
     protected val modulesComponent by ModulesComponentSingletonDelegate()
 
     @Inject
@@ -103,18 +102,13 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         getMapAsync(this)
     }
 
-    override fun getCameraDataModel(): ExtendedCameraModel {
-        return mapFragmentComponent.cameraDataModel
-    }
-
-    override fun getMapDataModel(): ExtendedMapDataModel {
-        return mapFragmentComponent.mapDataModel
-    }
+    override fun getCameraDataModel() = ExtendedCameraModel
+    override fun getMapDataModel() = ExtendedMapDataModel
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         executeInjector()
         super.onInflate(context, attrs, savedInstanceState)
-        resolveAttributes(attrs)
+        mapFragmentInitComponent.attributes = attrs
     }
 
     override fun onAttach(context: Context) {
@@ -141,7 +135,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(mapFragmentComponent)
+        lifecycle.addObserver(mapDataModel)
+        lifecycle.addObserver(cameraDataModel)
     }
 
     @CallSuper
@@ -276,6 +271,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     override fun onDestroy() {
         super.onDestroy()
 
-        lifecycle.removeObserver(mapFragmentComponent)
+        lifecycle.removeObserver(mapDataModel)
+        lifecycle.removeObserver(cameraDataModel)
     }
 }
