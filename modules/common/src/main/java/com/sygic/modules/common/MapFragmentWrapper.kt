@@ -102,8 +102,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         getMapAsync(this)
     }
 
-    override fun getCameraDataModel() = ExtendedCameraModel
     override fun getMapDataModel() = ExtendedMapDataModel
+    override fun getCameraDataModel() = ExtendedCameraModel
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         executeInjector()

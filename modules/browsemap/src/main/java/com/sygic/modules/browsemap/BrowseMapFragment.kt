@@ -1,18 +1,16 @@
 package com.sygic.modules.browsemap
 
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
-import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
-import com.sygic.modules.browsemap.extensions.resolveAttributes
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
+import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.listener.OnMapClickListener

@@ -6,8 +6,8 @@ import com.sygic.modules.browsemap.R
 import com.sygic.modules.common.component.*
 
 @SuppressLint("Recycle")
-fun MapFragmentInitComponent.resolveAttributes(application: Application) {
-    application.obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)?.let { typedArray ->
+fun MapFragmentInitComponent.resolveAttributes(app: Application) {
+    app.obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)?.let { typedArray ->
         if (typedArray.hasValue(R.styleable.BrowseMapFragment_sygic_map_selectionMode)) {
             mapSelectionMode =
                 typedArray.getInt(
