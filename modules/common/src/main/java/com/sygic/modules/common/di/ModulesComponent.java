@@ -1,5 +1,6 @@
 package com.sygic.modules.common.di;
 
+import com.sygic.modules.common.component.MapFragmentComponent;
 import com.sygic.modules.common.di.module.*;
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager;
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager;
@@ -23,6 +24,7 @@ import javax.inject.Singleton;
         }
 )
 public interface ModulesComponent {
+    MapFragmentComponent getFragmentComponent();
     ExtendedMapDataModel getMapDataModel();
     ExtendedCameraModel getCameraModel();
     MapInteractionManager getMapInteractionManager();

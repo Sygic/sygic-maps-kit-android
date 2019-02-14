@@ -1,7 +1,5 @@
 package com.sygic.modules.browsemap
 
-import android.content.Context
-import android.content.res.TypedArray
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -9,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sygic.modules.browsemap.databinding.LayoutBrowseMapBinding
-import com.sygic.modules.browsemap.detail.DetailsViewFactory
+import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.browsemap.di.BrowseMapComponent
 import com.sygic.modules.browsemap.di.DaggerBrowseMapComponent
+import com.sygic.modules.browsemap.extensions.resolveAttributes
 import com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
@@ -34,12 +33,13 @@ import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragmentWrapper() {
 
-    private var attributesTypedArray: TypedArray? = null
-
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
+
+    override fun executeInjector() = injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
+    override fun resolveAttributes(attrs: AttributeSet?) = resolveAttributes(mapFragmentComponent, attrs)
 
     /**
      * A *[MapSelectionMode]* defines the three available [BrowseMapFragment] selection modes.
@@ -52,9 +52,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
      */
     @MapSelectionMode
     var mapSelectionMode: Int
-        get() = browseMapFragmentViewModel.mapSelectionMode
+        get() = mapFragmentComponent.mapSelectionMode
         set(value) {
-            browseMapFragmentViewModel.mapSelectionMode = value
+            mapFragmentComponent.mapSelectionMode = value
         }
 
     /**
@@ -65,9 +65,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the [CompassView] is on or off.
      */
     var compassEnabled: Boolean
-        get() = browseMapFragmentViewModel.compassEnabled.value!!
+        get() = mapFragmentComponent.compassEnabled.value!!
         set(value) {
-            browseMapFragmentViewModel.compassEnabled.value = value
+            mapFragmentComponent.compassEnabled.value = value
         }
 
     /**
@@ -78,9 +78,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the [CompassView] auto hide behaviour is on or off.
      */
     var compassHideIfNorthUp: Boolean
-        get() = browseMapFragmentViewModel.compassHideIfNorthUp.value!!
+        get() = mapFragmentComponent.compassHideIfNorthUp.value!!
         set(value) {
-            browseMapFragmentViewModel.compassHideIfNorthUp.value = value
+            mapFragmentComponent.compassHideIfNorthUp.value = value
         }
 
     /**
@@ -91,9 +91,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the "my position" indicator is on or off.
      */
     var positionOnMapEnabled: Boolean
-        get() = browseMapFragmentViewModel.positionOnMapEnabled
+        get() = mapFragmentComponent.positionOnMapEnabled
         set(value) {
-            browseMapFragmentViewModel.positionOnMapEnabled = value
+            mapFragmentComponent.positionOnMapEnabled = value
         }
 
     /**
@@ -104,9 +104,9 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the [PositionLockFab] is on or off.
      */
     var positionLockFabEnabled: Boolean
-        get() = browseMapFragmentViewModel.positionLockFabEnabled.value!!
+        get() = mapFragmentComponent.positionLockFabEnabled.value!!
         set(value) {
-            browseMapFragmentViewModel.positionLockFabEnabled.value = value
+            mapFragmentComponent.positionLockFabEnabled.value = value
         }
 
     /**
@@ -117,27 +117,15 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the [ZoomControlsMenu] is on or off.
      */
     var zoomControlsEnabled: Boolean
-        get() = browseMapFragmentViewModel.zoomControlsEnabled.value!!
+        get() = mapFragmentComponent.zoomControlsEnabled.value!!
         set(value) {
-            browseMapFragmentViewModel.zoomControlsEnabled.value = value
+            mapFragmentComponent.zoomControlsEnabled.value = value
         }
-
-    override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
-        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
-        super.onInflate(context, attrs, savedInstanceState)
-
-        attributesTypedArray = context.obtainStyledAttributes(attrs, R.styleable.BrowseMapFragment)
-    }
-
-    override fun onAttach(context: Context) {
-        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
-        super.onAttach(context)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, attributesTypedArray)
+        browseMapFragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java)
         browseMapFragmentViewModel.poiDataObservable.observe(this, Observer<PoiData> { showPoiDetail(it) })
         savedInstanceState?.let { setPoiDetailListener() }
 
@@ -189,7 +177,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */
     fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
-        browseMapFragmentViewModel.setOnMapClickListener(onMapClickListener)
+        mapFragmentComponent.onMapClickListener = onMapClickListener
     }
 
     /**
@@ -199,7 +187,7 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @param factory [DetailsViewFactory] used to generate details window.
      */
     fun setDetailsViewFactory(factory: DetailsViewFactory?) {
-        browseMapFragmentViewModel.setDetailsViewFactory(factory)
+        mapFragmentComponent.detailsViewFactory = factory
     }
 
     private fun showPoiDetail(poiData: PoiData) {

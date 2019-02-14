@@ -1,5 +1,6 @@
 package com.sygic.modules.common.di.module;
 
+import com.sygic.modules.common.component.MapFragmentComponent;
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager;
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManagerImpl;
 import com.sygic.ui.common.sdk.model.ExtendedCameraModel;
@@ -14,14 +15,20 @@ public class MapModule {
 
     @Singleton
     @Provides
+    MapFragmentComponent provideFragmentComponent() {
+        return MapFragmentComponent.INSTANCE;
+    }
+
+    @Singleton
+    @Provides
     ExtendedMapDataModel provideDataModel() {
-        return new ExtendedMapDataModel();
+        return ExtendedMapDataModel.INSTANCE;
     }
 
     @Singleton
     @Provides
     ExtendedCameraModel provideCameraModel() {
-        return new ExtendedCameraModel();
+        return ExtendedCameraModel.INSTANCE;
     }
 
     @Singleton

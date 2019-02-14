@@ -1,19 +1,20 @@
 package com.sygic.ui.common.sdk.model
 
-import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.ui.common.sdk.mapobject.MapMarker
+import com.sygic.ui.common.sdk.utils.POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
+object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     sealed class SkinLayer(val position: Int) {
         object DayNight : SkinLayer(0)
         object Vehicle : SkinLayer(1)
     }
+
+    var positionOnMapEnabled: Boolean = POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
 
     private var currentOnClickMapMarker: MapMarker? = null
 
