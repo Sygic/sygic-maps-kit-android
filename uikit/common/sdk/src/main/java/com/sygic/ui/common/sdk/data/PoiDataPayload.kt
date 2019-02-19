@@ -3,13 +3,13 @@ package com.sygic.ui.common.sdk.data
 import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
+import com.sygic.sdk.map.`object`.payload.Payload
 import com.sygic.sdk.places.PoiInfo
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.ui.common.extensions.EMPTY_STRING
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 
-// Todo: Builder for Java
-data class PoiData(
+data class PoiDataPayload(
     var coordinates: GeoCoordinates = GeoCoordinates.Invalid,
     var name: String? = null,
     var iso: String? = null,
@@ -22,37 +22,56 @@ data class PoiData(
     var phone: String? = null,
     var email: String? = null,
     var url: String? = null
-) : Parcelable {
+) : Payload {
 
-    class AddressComponent(private val title: String? = null, private val subtitle: String? = null) {
-        val formattedTitle: String
-            get() = title?.let { it } ?: EMPTY_STRING
-        val formattedSubtitle: String
-            get() = subtitle?.let { it } ?: EMPTY_STRING
-    }
+    val isEmpty: Boolean
+        get() = coordinates == GeoCoordinates.Invalid
 
-    fun isEmpty() = coordinates == GeoCoordinates.Invalid
+    val addressComponent: AddressComponent
+        get() {
+            name?.let {
+                if (it.isNotEmpty()) {
+                    return AddressComponent(it, getStreetWithHouseNumberAndCityWithPostal())
+                }
+            }
+            street?.let { street ->
+                if (street.isNotEmpty()) {
+                    return AddressComponent(
+                        getStreetWithHouseNumber(),
+                        city?.let { if (it.isNotEmpty()) getCityWithPostal() else null })
+                }
+            }
+            city?.let {
+                if (it.isNotEmpty()) {
+                    return AddressComponent(getCityWithPostal())
+                }
+            }
 
-    fun getAddressComponent(): AddressComponent {
-        name?.let {
-            if (it.isNotEmpty()) {
-                return AddressComponent(it, getStreetWithHouseNumberAndCityWithPostal())
-            }
-        }
-        street?.let { street ->
-            if (street.isNotEmpty()) {
-                return AddressComponent(
-                    getStreetWithHouseNumber(),
-                    city?.let { if (it.isNotEmpty()) getCityWithPostal() else null })
-            }
-        }
-        city?.let {
-            if (it.isNotEmpty()) {
-                return AddressComponent(getCityWithPostal())
-            }
+            return AddressComponent(coordinates.getFormattedLocation())
         }
 
-        return AddressComponent(coordinates.getFormattedLocation())
+    override fun getGeoCoordinates(): GeoCoordinates = coordinates
+
+    override fun getTitle(): String = addressComponent.formattedTitle
+
+    override fun getDescription(): String = addressComponent.formattedSubtitle
+
+    override fun toString(): String {
+        val builder = StringBuilder()
+
+        builder.append(javaClass.simpleName)
+        builder.append("\n").append("${coordinates.latitude}, ${coordinates.longitude}")
+        name?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        city?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        street?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        houseNumber?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        postal?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        iso?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        phone?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        email?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        url?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+
+        return builder.toString()
     }
 
     /**
@@ -119,17 +138,24 @@ data class PoiData(
     companion object {
 
         @JvmField
-        val EMPTY = PoiData()
+        val EMPTY = PoiDataPayload()
 
         @JvmField
-        val CREATOR = object : Parcelable.Creator<PoiData> {
-            override fun createFromParcel(parcel: Parcel): PoiData {
-                return PoiData(parcel)
+        val CREATOR = object : Parcelable.Creator<PoiDataPayload> {
+            override fun createFromParcel(parcel: Parcel): PoiDataPayload {
+                return PoiDataPayload(parcel)
             }
 
-            override fun newArray(size: Int): Array<PoiData?> {
+            override fun newArray(size: Int): Array<PoiDataPayload?> {
                 return arrayOfNulls(size)
             }
         }
+    }
+
+    class AddressComponent(private val title: String? = null, private val subtitle: String? = null) {
+        val formattedTitle: String
+            get() = title?.let { it } ?: EMPTY_STRING
+        val formattedSubtitle: String
+            get() = subtitle?.let { it } ?: EMPTY_STRING
     }
 }

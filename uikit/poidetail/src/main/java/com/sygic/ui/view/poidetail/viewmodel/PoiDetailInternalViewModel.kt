@@ -1,12 +1,15 @@
 package com.sygic.ui.view.poidetail.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.sdk.map.`object`.payload.Payload
 import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 import com.sygic.ui.common.extensions.asSingleEvent
 import com.sygic.ui.common.listeners.DialogFragmentListener
 import com.sygic.ui.common.livedata.SingleLiveEvent
-import com.sygic.ui.common.sdk.data.PoiData
+import com.sygic.ui.common.sdk.data.PoiDataPayload
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
 import kotlinx.coroutines.*
@@ -16,16 +19,16 @@ private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
 const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
 const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED
 
-internal class PoiDetailInternalViewModel(poiData: PoiData,
-                                 private val preferencesManager: PreferencesManager) : ViewModel(),
+internal class PoiDetailInternalViewModel(data: Payload,
+                                          private val preferencesManager: PreferencesManager) : ViewModel(),
     BottomSheetBehaviorWrapper.StateListener {
 
-    val titleText: String
-    val subtitleText: String
-    val coordinatesText: String?
-    val urlText: String? = poiData.url
-    val emailText: String? = poiData.email
-    val phoneText: String? = poiData.phone
+    val titleText: String = data.title
+    val subtitleText: String = data.description
+    val coordinatesText: String? = data.geoCoordinates.getFormattedLocation()
+    val urlText: String? = if (data is PoiDataPayload) data.url else null
+    val emailText: String? = if (data is PoiDataPayload) data.email else null
+    val phoneText: String? = if (data is PoiDataPayload) data.phone else null
 
     val expandObservable: LiveData<Any> = SingleLiveEvent()
     val collapseObservable: LiveData<Any> = SingleLiveEvent()
@@ -36,13 +39,6 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
 
     private var listener: DialogFragmentListener? = null
     private var showcaseLaunch: Job? = null
-
-    init {
-        val addressComponent = poiData.getAddressComponent()
-        titleText = addressComponent.formattedTitle
-        subtitleText = addressComponent.formattedSubtitle
-        coordinatesText = poiData.coordinates.getFormattedLocation()
-    }
 
     fun onHeaderClick() {
         expandObservable.asSingleEvent().call()
@@ -96,12 +92,12 @@ internal class PoiDetailInternalViewModel(poiData: PoiData,
         listener = null
     }
 
-    class ViewModelFactory(private val poiData: PoiData,
+    class ViewModelFactory(private val data: Payload,
                            private val preferencesManager: PreferencesManager) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return PoiDetailInternalViewModel(poiData, preferencesManager) as T
+            return PoiDetailInternalViewModel(data, preferencesManager) as T
         }
     }
 }

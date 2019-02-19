@@ -5,7 +5,7 @@ import android.view.Gravity
 import androidx.appcompat.widget.PopupMenu
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
-import com.sygic.ui.common.sdk.mapobject.MapMarker
+import com.sygic.sdk.map.`object`.MapMarker
 import kotlinx.android.synthetic.main.activity_browsemap_modes.*
 
 class BrowseMapModesActivity : CommonSampleActivity() {

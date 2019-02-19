@@ -3,8 +3,8 @@ package com.sygic.ui.common.sdk.model
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.data.SimpleMapDataModel
-import com.sygic.ui.common.sdk.mapobject.MapMarker
 
 object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 

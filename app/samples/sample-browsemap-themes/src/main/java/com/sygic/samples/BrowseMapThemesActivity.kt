@@ -2,7 +2,7 @@ package com.sygic.samples
 
 import android.os.Bundle
 import com.sygic.modules.browsemap.BrowseMapFragment
-import com.sygic.ui.common.sdk.mapobject.MapMarker
+import com.sygic.sdk.map.`object`.MapMarker
 
 class BrowseMapThemesActivity : CommonSampleActivity() {
 

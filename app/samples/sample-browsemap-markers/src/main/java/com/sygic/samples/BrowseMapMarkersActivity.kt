@@ -2,8 +2,8 @@ package com.sygic.samples
 
 import android.os.Bundle
 import com.sygic.modules.browsemap.BrowseMapFragment
+import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.factory.DrawableFactory
-import com.sygic.ui.common.sdk.mapobject.MapMarker
 
 class BrowseMapMarkersActivity : CommonSampleActivity() {
 
@@ -16,12 +16,13 @@ class BrowseMapMarkersActivity : CommonSampleActivity() {
 
         val markerFromBuilder = MapMarker.Builder()
             .coordinates(48.130550, 17.173795)
-            .title("Marker created by Builder")
+            .title("Marker created by Builder (default icon)")
             .build()
 
         val markerFromBuilderWithCustomIcon = MapMarker.Builder()
             .coordinates(48.127531, 17.076463)
             .title("Marker created by Builder (custom icon)")
+            .description("And with stunning description :-D")
             .iconDrawable(R.drawable.ic_android)
             .build()
 

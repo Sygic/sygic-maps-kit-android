@@ -10,12 +10,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.sdk.map.`object`.payload.Payload
 import com.sygic.ui.common.extensions.copyToClipboard
 import com.sygic.ui.common.extensions.openEmail
 import com.sygic.ui.common.extensions.openPhone
 import com.sygic.ui.common.extensions.openUrl
 import com.sygic.ui.common.listeners.DialogFragmentListener
-import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.views.BottomSheetDialog
 import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
@@ -23,11 +23,11 @@ import com.sygic.ui.view.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
 import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
 import com.sygic.ui.view.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
-private const val POI_DATA = "poi_data"
+private const val DATA_PAYLOAD = "data_payload"
 
 /**
  * A [PoiDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
- * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiData] object.
+ * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [Payload] object.
  *
  * You can register an [DialogFragmentListener] using [setListener] method. Then you will be notified when dialog is dismissed.
  *
@@ -50,14 +50,14 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         const val TAG = "poi_detail_bottom_dialog_fragment"
 
         /**
-         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You need to provide a valid [PoiData] object.
+         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You need to provide a valid [Payload] object.
          *
-         * @param poiData [PoiData] to be applied to the dialog content.
+         * @param data [Payload] to be applied to the dialog content.
          */
         @JvmStatic
-        fun newInstance(poiData: PoiData): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {
+        fun newInstance(data: Payload): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {
             arguments = Bundle().apply {
-                putParcelable(POI_DATA, poiData)
+                putParcelable(DATA_PAYLOAD, data)
             }
         }
     }
@@ -70,7 +70,7 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         viewModel = ViewModelProviders.of(
             this,
             PoiDetailInternalViewModel.ViewModelFactory(
-                arguments?.getParcelable(POI_DATA)!!,
+                arguments?.getParcelable(DATA_PAYLOAD)!!,
                 preferencesManager
             )
         )[PoiDetailInternalViewModel::class.java].apply {
