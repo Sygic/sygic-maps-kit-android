@@ -50,7 +50,7 @@ data class PoiDataPayload(
             return AddressComponent(coordinates.getFormattedLocation())
         }
 
-    override fun getGeoCoordinates(): GeoCoordinates = coordinates
+    override fun getPosition(): GeoCoordinates = coordinates
 
     override fun getTitle(): String = addressComponent.formattedTitle
 

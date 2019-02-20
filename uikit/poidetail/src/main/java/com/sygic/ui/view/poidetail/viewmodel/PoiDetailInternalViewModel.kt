@@ -25,7 +25,7 @@ internal class PoiDetailInternalViewModel(data: Payload,
 
     val titleText: String = data.title
     val subtitleText: String = data.description
-    val coordinatesText: String? = data.geoCoordinates.getFormattedLocation()
+    val coordinatesText: String? = data.position.getFormattedLocation()
     val urlText: String? = if (data is PoiDataPayload) data.url else null
     val emailText: String? = if (data is PoiDataPayload) data.email else null
     val phoneText: String? = if (data is PoiDataPayload) data.phone else null

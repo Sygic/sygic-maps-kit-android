@@ -142,7 +142,7 @@ class BrowseMapFragmentViewModel internal constructor(
                 }
 
                 detailsViewFactory?.let { factory ->
-                    poiDetailsView = object : UiObject(data.geoCoordinates, PoiDataDetailsFactory(factory, data)) {
+                    poiDetailsView = object : UiObject(data.position, PoiDataDetailsFactory(factory, data)) {
                         override fun onMeasured(width: Int, height: Int) {
                             super.onMeasured(width, height)
 
