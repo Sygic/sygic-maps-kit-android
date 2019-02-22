@@ -15,6 +15,8 @@ import com.sygic.ui.common.sdk.extension.getFirst
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PoiDataManager {
 
+    fun getPayloadData(viewObject: ViewObject, callback: Callback)
+
     abstract class Callback : Places.PlaceListener, ReverseGeocoder.ReverseSearchResultsListener {
         abstract fun onDataLoaded(data: Payload)
 
@@ -53,6 +55,4 @@ interface PoiDataManager {
             )
         }
     }
-
-    fun getPoiData(viewObject: ViewObject, callback: Callback)
 }

@@ -133,7 +133,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject) {
-        poiDataManager.getPoiData(viewObject, object : PoiDataManager.Callback() {
+        poiDataManager.getPayloadData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(data: Payload) {
                 onMapClickListener?.let {
                     if (it.onMapClick(data)) {

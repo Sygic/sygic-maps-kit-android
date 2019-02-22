@@ -5,6 +5,7 @@ import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ProxyPoi
 import com.sygic.sdk.map.`object`.ViewObject
+import com.sygic.sdk.map.`object`.payload.ProxyPayload
 import com.sygic.sdk.places.Places
 import com.sygic.sdk.search.ReverseGeocoder
 
@@ -14,13 +15,13 @@ class PoiDataManagerImpl : PoiDataManager {
     private val places: Places by lazy { Places() }
     private val reverseGeocoder: ReverseGeocoder by lazy { ReverseGeocoder() }
 
-    override fun getPoiData(viewObject: ViewObject, callback: PoiDataManager.Callback) {
+    override fun getPayloadData(viewObject: ViewObject, callback: PoiDataManager.Callback) {
         when (viewObject.objectType) {
             ViewObject.ObjectType.Map -> {
                 if (viewObject is MapMarker) {
                     viewObject.payload.let { payload ->
-                        if (payload is ViewObject) {
-                            getPoiData(payload, callback)
+                        if (payload is ProxyPayload) {
+                            getPayloadData(payload.viewObjectPayload, callback)
                         } else {
                             callback.onDataLoaded(payload)
                         }
