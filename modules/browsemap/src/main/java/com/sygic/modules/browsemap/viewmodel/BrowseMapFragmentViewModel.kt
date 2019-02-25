@@ -40,7 +40,7 @@ class BrowseMapFragmentViewModel internal constructor(
 ) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver {
 
     @MapSelectionMode
-    var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
+    var mapSelectionMode: Int
     var positionOnMapEnabled: Boolean
         get() = locationManager.positionOnMapEnabled
         set(value) {
