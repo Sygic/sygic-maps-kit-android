@@ -97,7 +97,6 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
         if (viewObjects.isEmpty()) {
-            mapDataModel.removeOnClickMapMarker()
             return
         }
 
