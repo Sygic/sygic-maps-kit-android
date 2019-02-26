@@ -7,7 +7,6 @@ import androidx.lifecycle.*
 import com.sygic.modules.browsemap.detail.PoiDataDetailsFactory
 import com.sygic.modules.browsemap.extensions.resolveAttributes
 import com.sygic.modules.common.component.MapFragmentInitComponent
-import com.sygic.modules.common.component.MAP_SELECTION_MODE_DEFAULT_VALUE
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
@@ -40,7 +39,7 @@ class BrowseMapFragmentViewModel internal constructor(
 ) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver {
 
     @MapSelectionMode
-    var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
+    var mapSelectionMode: Int
     var positionOnMapEnabled: Boolean
         get() = locationManager.positionOnMapEnabled
         set(value) {
@@ -97,6 +96,10 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
+        if (viewObjects.isEmpty()) {
+            return
+        }
+
         var firstViewObject = viewObjects.first()
         poiDetailsView?.let {
             mapDataModel.removeMapObject(it)
