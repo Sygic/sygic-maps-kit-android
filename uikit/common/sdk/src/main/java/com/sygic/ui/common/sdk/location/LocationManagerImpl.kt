@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import com.sygic.sdk.position.PositionManager
 import com.sygic.ui.common.sdk.location.livedata.LocationProviderCheckLiveEvent
 import com.sygic.ui.common.sdk.location.livedata.LocationRequestLiveEvent
-import com.sygic.ui.common.sdk.utils.POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class LocationManagerImpl : LocationManager {
@@ -17,7 +16,7 @@ class LocationManagerImpl : LocationManager {
     private val providerCheck: LocationProviderCheckLiveEvent = LocationProviderCheckLiveEvent()
     private val locationRequest: LocationRequestLiveEvent = LocationRequestLiveEvent()
 
-    override var positionOnMapEnabled: Boolean = POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
+    override var positionOnMapEnabled: Boolean = false
         set(value) {
             field = value
             setSdkPositionUpdatingEnabled(value)

@@ -5,10 +5,9 @@ import androidx.annotation.RestrictTo
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.ui.common.sdk.listener.OnMapClickListener
-import com.sygic.ui.common.sdk.utils.POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
 
 const val MAP_SELECTION_MODE_DEFAULT_VALUE = MapSelectionMode.MARKERS_ONLY
-const val POSITION_ON_MAP_ENABLED_DEFAULT_VALUE = POSITION_ON_MAP_ENABLED_BASE_DEFAULT_VALUE
+const val POSITION_ON_MAP_ENABLED_DEFAULT_VALUE = false
 const val COMPASS_ENABLED_DEFAULT_VALUE = false
 const val COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE = false
 const val POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE = false
