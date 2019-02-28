@@ -11,7 +11,6 @@ import android.util.AttributeSet
 import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -24,9 +23,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.modules.common.component.MapFragmentInitComponent
-import com.sygic.modules.common.delegate.ModulesComponentSingletonDelegate
-import com.sygic.modules.common.di.DaggerModulesComponent
-import com.sygic.modules.common.di.ModulesComponent
+import com.sygic.modules.common.delegate.ModulesComponentDelegate
 import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
