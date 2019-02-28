@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import android.provider.Settings
+import android.util.AttributeSet
 import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
@@ -22,15 +23,15 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.sygic.modules.common.component.MapFragmentInitComponent
+import com.sygic.modules.common.delegate.ModulesComponentSingletonDelegate
 import com.sygic.modules.common.di.DaggerModulesComponent
 import com.sygic.modules.common.di.ModulesComponent
-import com.sygic.modules.common.di.module.AppModule
 import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
 import com.sygic.modules.common.theme.ThemeManager
-import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
@@ -54,15 +55,14 @@ import javax.inject.Inject
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
+    protected abstract fun executeInjector()
+
+    protected val mapFragmentInitComponent = MapFragmentInitComponent()
     protected val modulesComponent = ModulesComponentDelegate()
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    @Inject
-    internal lateinit var cameraDataModel: ExtendedCameraModel
-    @Inject
-    internal lateinit var mapDataModel: ExtendedMapDataModel
     @Inject
     internal lateinit var poiDataManager: PoiDataManager
     @Inject
@@ -101,15 +101,17 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         getMapAsync(this)
     }
 
-    override fun getCameraDataModel(): Camera.CameraModel {
-        return cameraDataModel
-    }
+    override fun getMapDataModel() = ExtendedMapDataModel
+    override fun getCameraDataModel() = ExtendedCameraModel
 
-    override fun getMapDataModel(): ExtendedMapDataModel {
-        return mapDataModel
+    override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+        executeInjector()
+        super.onInflate(context, attrs, savedInstanceState)
+        mapFragmentInitComponent.attributes = attrs
     }
 
     override fun onAttach(context: Context) {
+        executeInjector()
         super.onAttach(context)
 
         sdkInitializationManager.initialize((context as Activity).application, this)
@@ -271,18 +273,4 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
         lifecycle.removeObserver(mapDataModel)
         lifecycle.removeObserver(cameraDataModel)
     }
-}
-
-class ModulesComponentDelegate {
-
-    companion object {
-        private var component: ModulesComponent? = null
-    }
-
-    fun getInstance(fragment: Fragment): ModulesComponent = component?.let {
-        it
-    } ?: DaggerModulesComponent.builder()
-        .appModule(AppModule(fragment))
-        .build()
-        .also { component = it }
 }

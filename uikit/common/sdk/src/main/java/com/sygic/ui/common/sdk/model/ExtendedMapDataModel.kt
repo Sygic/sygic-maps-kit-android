@@ -1,14 +1,12 @@
 package com.sygic.ui.common.sdk.model
 
-import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.ui.common.sdk.mapobject.MapMarker
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
+object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     private var currentOnClickMapMarker: MapMarker? = null
 

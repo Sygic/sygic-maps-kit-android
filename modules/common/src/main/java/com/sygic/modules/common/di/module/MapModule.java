@@ -15,13 +15,13 @@ public class MapModule {
     @Singleton
     @Provides
     ExtendedMapDataModel provideDataModel() {
-        return new ExtendedMapDataModel();
+        return ExtendedMapDataModel.INSTANCE;
     }
 
     @Singleton
     @Provides
     ExtendedCameraModel provideCameraModel() {
-        return new ExtendedCameraModel();
+        return ExtendedCameraModel.INSTANCE;
     }
 
     @Singleton

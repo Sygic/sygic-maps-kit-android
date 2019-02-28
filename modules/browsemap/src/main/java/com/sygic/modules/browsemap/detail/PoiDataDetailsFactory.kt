@@ -5,12 +5,15 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.ui.common.sdk.data.PoiData
 
+internal class PoiDataDetailsFactory(
+    private val factory: DetailsViewFactory,
+    private val poiData: PoiData
+) : UiObject.ViewFactory {
 
-internal class PoiDataDetailsFactory(private val factory: DetailsViewFactory, private val poiData: PoiData) :
-    UiObject.ViewFactory {
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(DetailsViewFactory::class.java.classLoader)!!,
         parcel.readParcelable(PoiData::class.java.classLoader)!!

@@ -1,12 +1,10 @@
-package com.sygic.modules.browsemap.detail
+package com.sygic.modules.common.detail
 
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.ui.common.sdk.data.PoiData
-
 
 /**
  * Factory class that can be used to change the default behavior of showing
