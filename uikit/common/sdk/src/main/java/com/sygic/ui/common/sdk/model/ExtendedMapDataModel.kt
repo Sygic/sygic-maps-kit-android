@@ -10,11 +10,6 @@ import com.sygic.ui.common.sdk.mapobject.MapMarker
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
-    sealed class SkinLayer(val position: Int) {
-        object DayNight : SkinLayer(0)
-        object Vehicle : SkinLayer(1)
-    }
-
     private var currentOnClickMapMarker: MapMarker? = null
 
     fun addOnClickMapMarker(onClickMapMarker: MapMarker) {
@@ -24,12 +19,6 @@ class ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     fun removeOnClickMapMarker() {
         currentOnClickMapMarker?.let { removeMapObject(it) }
-    }
-
-    fun setSkinAtLayer(skinLayer: SkinLayer, desiredSkin: String) {
-        val skins: MutableList<String> = ArrayList(skin)
-        skins[skinLayer.position] = desiredSkin
-        skin = skins
     }
 
     override fun onDestroy(owner: LifecycleOwner) {

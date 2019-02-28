@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -21,7 +22,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.modules.common.di.DaggerAppComponent
 import com.sygic.modules.common.di.DaggerModulesComponent
 import com.sygic.modules.common.di.ModulesComponent
 import com.sygic.modules.common.di.module.AppModule
@@ -29,6 +29,7 @@ import com.sygic.modules.common.di.util.ModuleBuilder
 import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.modules.common.theme.ThemeManager
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
@@ -48,14 +49,12 @@ import com.sygic.ui.common.sdk.skin.MapSkin
 import com.sygic.ui.common.sdk.skin.VehicleSkin
 import com.sygic.ui.common.sdk.skin.isMapSkinValid
 import javax.inject.Inject
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
-    protected val modulesComponent: ModulesComponent by SingletonDelegate()
+    protected val modulesComponent = ModulesComponentDelegate()
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -74,6 +73,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     internal lateinit var permissionManager: PermissionsManager
     @Inject
     internal lateinit var locationManager: LocationManager
+    @Inject
+    internal lateinit var themeManager: ThemeManager
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
@@ -83,12 +84,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
         if (!injected) {
             block(
-                builder.plus(modulesComponent)
-                    .plus(
-                        DaggerAppComponent.builder()
-                            .appModule(AppModule(this))
-                            .build()
-                    )
+                builder
+                    .plus(modulesComponent.getInstance(this))
                     .build()
             )
         }
@@ -256,7 +253,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
      * @param mapSkin [MapSkin] to be applied to the map.
      */
     fun setMapSkin(@MapSkin mapSkin: String) {
-        mapDataModel.setSkinAtLayer(ExtendedMapDataModel.SkinLayer.DayNight, mapSkin)
+        themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, mapSkin)
     }
 
     /**
@@ -265,7 +262,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
      * @param vehicleSkin [VehicleSkin] to be applied to the vehicle indicator.
      */
     fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
-        mapDataModel.setSkinAtLayer(ExtendedMapDataModel.SkinLayer.Vehicle, vehicleSkin)
+        themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, vehicleSkin)
     }
 
     override fun onDestroy() {
@@ -276,14 +273,16 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     }
 }
 
-class SingletonDelegate : ReadOnlyProperty<Any, ModulesComponent> {
+class ModulesComponentDelegate {
 
     companion object {
-        private val component: ModulesComponent by lazy {
-            DaggerModulesComponent.builder()
-                .build()
-        }
+        private var component: ModulesComponent? = null
     }
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): ModulesComponent = component
+    fun getInstance(fragment: Fragment): ModulesComponent = component?.let {
+        it
+    } ?: DaggerModulesComponent.builder()
+        .appModule(AppModule(fragment))
+        .build()
+        .also { component = it }
 }
