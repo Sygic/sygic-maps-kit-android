@@ -27,8 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 )
 public interface BrowseMapComponent {
     @Component.Builder
-    abstract class Builder implements ModuleBuilder<BrowseMapComponent> {
-    }
+    abstract class Builder implements ModuleBuilder<BrowseMapComponent> {}
 
     void inject(BrowseMapFragment fragment);
 }

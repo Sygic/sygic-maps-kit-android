@@ -6,10 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.sygic.modules.browsemap.detail.DetailsViewFactory
+import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.samples.R
 import com.sygic.ui.common.sdk.data.PoiData
-
 
 class CustomDetailsViewFactory() : DetailsViewFactory() {
 

@@ -1,13 +1,13 @@
 package com.sygic.modules.browsemap.viewmodel
 
 import android.app.Application
-import android.content.res.TypedArray
 import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
-import com.sygic.modules.browsemap.R
-import com.sygic.modules.browsemap.detail.DetailsViewFactory
 import com.sygic.modules.browsemap.detail.PoiDataDetailsFactory
+import com.sygic.modules.browsemap.extensions.resolveAttributes
+import com.sygic.modules.common.component.MapFragmentInitComponent
+import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
@@ -29,17 +29,17 @@ import com.sygic.ui.common.sdk.utils.requestLocationAccess
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BrowseMapFragmentViewModel internal constructor(
-    @Assisted attributesTypedArray: TypedArray?,
     app: Application,
+    @Assisted initComponent: MapFragmentInitComponent,
+    private val mapDataModel: ExtendedMapDataModel,
     private val poiDataManager: PoiDataManager,
-    private val extendedMapDataModel: ExtendedMapDataModel,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager
 ) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver {
 
     @MapSelectionMode
-    var mapSelectionMode: Int = MapSelectionMode.MARKERS_ONLY
+    var mapSelectionMode: Int
     var positionOnMapEnabled: Boolean
         get() = locationManager.positionOnMapEnabled
         set(value) {
@@ -57,31 +57,30 @@ class BrowseMapFragmentViewModel internal constructor(
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
 
+    var onMapClickListener: OnMapClickListener? = null
+    var detailsViewFactory: DetailsViewFactory? = null
+
     val poiDataObservable: LiveData<PoiData> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
-            extendedMapDataModel.removeOnClickMapMarker()
+            mapDataModel.removeOnClickMapMarker()
         }
     }
 
-    private var onMapClickListener: OnMapClickListener? = null
-    private var detailsViewFactory: DetailsViewFactory? = null
     private var poiDetailsView: UiObject? = null
 
     init {
-        attributesTypedArray?.let {
-            mapSelectionMode =
-                    it.getInt(R.styleable.BrowseMapFragment_sygic_map_selectionMode, MapSelectionMode.MARKERS_ONLY)
-            positionOnMapEnabled = it.getBoolean(R.styleable.BrowseMapFragment_sygic_positionOnMap_enabled, false)
-
-            compassEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compass_enabled, false)
-            compassHideIfNorthUp.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_compass_hideIfNorthUp, false)
-            positionLockFabEnabled.value =
-                    it.getBoolean(R.styleable.BrowseMapFragment_sygic_positionLockFab_enabled, false)
-            zoomControlsEnabled.value = it.getBoolean(R.styleable.BrowseMapFragment_sygic_zoomControls_enabled, false)
-            it.recycle()
-        }
+        initComponent.resolveAttributes(app)
+        mapSelectionMode = initComponent.mapSelectionMode
+        positionOnMapEnabled = initComponent.positionOnMapEnabled
+        compassEnabled.value = initComponent.compassEnabled
+        compassHideIfNorthUp.value = initComponent.compassHideIfNorthUp
+        positionLockFabEnabled.value = initComponent.positionLockFabEnabled
+        zoomControlsEnabled.value = initComponent.zoomControlsEnabled
+        onMapClickListener = initComponent.onMapClickListener
+        detailsViewFactory = initComponent.detailsViewFactory
+        initComponent.recycle()
 
         mapInteractionManager.addOnMapClickListener(this)
     }
@@ -93,13 +92,17 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onMapObjectsRequestStarted() {
-        extendedMapDataModel.removeOnClickMapMarker()
+        mapDataModel.removeOnClickMapMarker()
     }
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
+        if (viewObjects.isEmpty()) {
+            return
+        }
+
         var firstViewObject = viewObjects.first()
         poiDetailsView?.let {
-            extendedMapDataModel.removeMapObject(it)
+            mapDataModel.removeMapObject(it)
             poiDetailsView = null
             if (firstViewObject !is MapMarker) {
                 return
@@ -120,7 +123,7 @@ class BrowseMapFragmentViewModel internal constructor(
             MapSelectionMode.FULL -> {
                 if (firstViewObject !is MapMarker && onMapClickListener == null) {
                     firstViewObject = MapMarker(firstViewObject)
-                    extendedMapDataModel.addOnClickMapMarker(firstViewObject)
+                    mapDataModel.addOnClickMapMarker(firstViewObject)
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
@@ -155,21 +158,13 @@ class BrowseMapFragmentViewModel internal constructor(
                             )
                         }
                     }.also {
-                        extendedMapDataModel.addMapObject(it)
+                        mapDataModel.addMapObject(it)
                     }
                 } ?: run {
                     poiDataObservable.asSingleEvent().value = poiData
                 }
             }
         })
-    }
-
-    fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
-        this.onMapClickListener = onMapClickListener
-    }
-
-    fun setDetailsViewFactory(factory: DetailsViewFactory?) {
-        this.detailsViewFactory = factory
     }
 
     override fun onStop(owner: LifecycleOwner) {
