@@ -29,11 +29,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // modules
     api project(':uikit-common-sdk')
 
+    // libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "com.google.android.material:material:$materialVersion"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+
+    // test libraries
+
 }

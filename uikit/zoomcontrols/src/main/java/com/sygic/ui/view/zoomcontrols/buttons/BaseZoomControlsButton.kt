@@ -42,6 +42,7 @@ internal abstract class BaseZoomControlsButton @JvmOverloads constructor(
     private fun createButtonIcon(context: Context, attrs: AttributeSet?,
                                  defStyleAttr: Int, @DrawableRes resourceId: Int): ImageView {
         val imageView = ImageView(context, attrs, defStyleAttr)
+        imageView.id = View.NO_ID
         imageView.setImageResource(resourceId)
         imageView.layoutParams =
                 LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER }

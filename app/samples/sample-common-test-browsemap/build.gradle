@@ -1,0 +1,38 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargerSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        gradle.resolveFlavors(it)
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // modules
+    api project(':modules-browsemap')
+    api project(':app-samples-common-test')
+
+    // libraries + test libraries
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "androidx.test:rules:$testRunnerVersion"
+    implementation "androidx.test:runner:$testRunnerVersion"
+    implementation "androidx.test.ext:junit:$extJUnitVersion"
+    implementation "androidx.test.espresso:espresso-core:$espressoVersion"
+}

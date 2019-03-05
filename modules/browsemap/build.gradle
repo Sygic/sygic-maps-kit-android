@@ -29,9 +29,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // modules
     api project(':modules-common')
     api project(':uikit-poidetail')
 
+    // libraries
     implementation project(':uikit-compass-viewmodel')
     implementation project(':uikit-positionlockfab-viewmodel')
     implementation project(':uikit-zoomcontrols-viewmodel')
@@ -45,6 +48,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
+    // test libraries
     testImplementation "junit:junit:$junitVersion"
     testImplementation "androidx.test:core:$robolectricVersion"
     testImplementation "androidx.arch.core:core-testing:$lifecycleVersion"

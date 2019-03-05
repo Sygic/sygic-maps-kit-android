@@ -24,15 +24,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':uikit-common')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-
-    api "com.google.dagger:dagger-android-support:$daggerVersion"
-
-    // Sygic Maps SDK
+    // sdk
     if (!gradle.buildSdkFromSource()) {
         // use aar from maven
         api("com.sygic.sdk:maps-android:${sygicSdkVersion}@aar") {
@@ -44,4 +37,16 @@ dependencies {
         // compile sdk yourself (with correctly included sdk module of course)
         api project(':sdk')
     }
+
+    // modules
+    api project(':uikit-common')
+
+    // libraries
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    api "com.google.dagger:dagger-android-support:$daggerVersion"
+
+    // test libraries
+
 }

@@ -25,15 +25,21 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // modules
     api project(':uikit-common-sdk')
     api project(':uikit-compass')
     implementation project(':tools-injector-viewmodel')
     annotationProcessor project(':tools-injector')
 
+    // libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // test libraries
+
 }

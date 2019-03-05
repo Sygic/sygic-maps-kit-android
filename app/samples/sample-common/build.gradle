@@ -10,6 +10,8 @@ android {
         targetSdkVersion androidTargerSdkVersion
         versionCode 1
         versionName "1.0"
+
+        gradle.resolveFlavors(it)
     }
 
     buildTypes {
@@ -26,8 +28,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':uikit-common')
 
+    // modules
+    api project(':modules-common')
+
+    // libraries
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+
+    // test libraries
+
 }
