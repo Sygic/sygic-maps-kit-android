@@ -1,7 +1,5 @@
 package com.sygic.modules.common.theme
 
-import com.sygic.ui.common.sdk.skin.MapSkin
-
 
 interface ThemeManager {
 
@@ -10,5 +8,5 @@ interface ThemeManager {
         object Vehicle : SkinLayer(1)
     }
 
-    fun setSkinAtLayer(skinLayer: SkinLayer, @MapSkin desiredSkin: String)
+    fun setSkinAtLayer(skinLayer: SkinLayer, desiredSkin: String)
 }

@@ -29,6 +29,7 @@ import com.sygic.modules.common.initialization.manager.SdkInitializationManager
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
 import com.sygic.modules.common.theme.ThemeManager
+import com.sygic.modules.common.theme.ThemeSupportedViewModel
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
@@ -50,7 +51,7 @@ import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
+abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected abstract fun executeInjector()
 
@@ -70,8 +71,8 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
     internal lateinit var permissionManager: PermissionsManager
     @Inject
     internal lateinit var locationManager: LocationManager
-    @Inject
-    internal lateinit var themeManager: ThemeManager
+
+    protected abstract var fragmentViewModel: T
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
@@ -252,7 +253,11 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
      * @param mapSkin [MapSkin] to be applied to the map.
      */
     fun setMapSkin(@MapSkin mapSkin: String) {
-        themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, mapSkin)
+        try {
+            fragmentViewModel.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, mapSkin)
+        } catch (e: UninitializedPropertyAccessException) {
+            mapFragmentInitComponent.skins[ThemeManager.SkinLayer.DayNight] = mapSkin
+        }
     }
 
     /**
@@ -261,7 +266,11 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
      * @param vehicleSkin [VehicleSkin] to be applied to the vehicle indicator.
      */
     fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
-        themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, vehicleSkin)
+        try {
+            fragmentViewModel.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, vehicleSkin)
+        } catch (e: UninitializedPropertyAccessException) {
+            mapFragmentInitComponent.skins[ThemeManager.SkinLayer.Vehicle] = vehicleSkin
+        }
     }
 
     override fun onDestroy() {

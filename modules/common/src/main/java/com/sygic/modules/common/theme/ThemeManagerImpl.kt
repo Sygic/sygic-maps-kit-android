@@ -17,24 +17,6 @@ class ThemeManagerImpl(app: Application, private val mapDataModel: ExtendedMapDa
 
     init {
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
-            override fun onActivityPaused(activity: Activity) {
-            }
-
-            override fun onActivityResumed(activity: Activity) {
-            }
-
-            override fun onActivityStarted(activity: Activity) {
-            }
-
-            override fun onActivityDestroyed(activity: Activity) {
-            }
-
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
-            }
-
-            override fun onActivityStopped(activity: Activity) {
-            }
-
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 activity.window.decorView.viewTreeObserver.addOnPreDrawListener(object :
                     ViewTreeObserver.OnPreDrawListener {
@@ -54,20 +36,31 @@ class ThemeManagerImpl(app: Application, private val mapDataModel: ExtendedMapDa
                 })
             }
 
+            override fun onActivityPaused(activity: Activity) {}
+
+            override fun onActivityResumed(activity: Activity) {}
+
+            override fun onActivityStarted(activity: Activity) {}
+
+            override fun onActivityDestroyed(activity: Activity) {}
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {}
+
+            override fun onActivityStopped(activity: Activity) {}
         })
     }
 
-    override fun setSkinAtLayer(skinLayer: ThemeManager.SkinLayer, @MapSkin desiredSkin: String) {
+    override fun setSkinAtLayer(skinLayer: ThemeManager.SkinLayer, desiredSkin: String) {
         setSkinAtLayer(skinLayer, desiredSkin, true)
     }
 
     private fun setSkinAtLayer(
-        skinLayer: ThemeManager.SkinLayer, @MapSkin desiredSkin: String,
+        skinLayer: ThemeManager.SkinLayer, desiredSkin: String,
         replaceDefault: Boolean
     ) {
         isDefaultSkin = !(replaceDefault && MapSkin.DEFAULT != desiredSkin)
 
-        @MapSkin val newSkin = if (MapSkin.DEFAULT == desiredSkin) {
+        val newSkin = if (MapSkin.DEFAULT == desiredSkin) {
             getMapMode(currentNightMode)
         } else {
             desiredSkin
