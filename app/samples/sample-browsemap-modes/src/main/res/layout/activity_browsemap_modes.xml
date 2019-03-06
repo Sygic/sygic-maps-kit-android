@@ -17,7 +17,7 @@
         app:sygic_zoomControls_enabled="true" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/selectionModeButton"
+        android:id="@id/selectionModeButton"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

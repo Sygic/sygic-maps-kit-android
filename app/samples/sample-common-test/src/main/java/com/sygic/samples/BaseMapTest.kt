@@ -6,6 +6,7 @@ import androidx.test.espresso.IdlingResource
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.sygic.samples.idling.MapReadyIdlingResource
+import com.sygic.samples.rules.DisableAnimationsRule
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -13,7 +14,10 @@ import org.junit.Rule
 open class BaseMapTest(activityClass: Class<out CommonSampleActivity>) {
 
     @get:Rule
-    val activityRule : ActivityTestRule<out CommonSampleActivity> = ActivityTestRule(activityClass)
+    val disableAnimationsRule = DisableAnimationsRule()
+
+    @get:Rule
+    val activityRule = ActivityTestRule(activityClass)
 
     @get:Rule
     val grantLocationPermissionRule: GrantPermissionRule =

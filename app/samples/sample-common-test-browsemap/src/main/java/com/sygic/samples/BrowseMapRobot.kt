@@ -2,8 +2,10 @@ package com.sygic.samples
 
 import android.view.InputDevice
 import android.view.MotionEvent
+import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.CoordinatesProvider
 import androidx.test.espresso.action.GeneralClickAction
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.espresso.action.Press
@@ -43,12 +45,36 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) {
         onView(allOf(withId(zoomControlsMenuId), withParent(withId(browseMapFragmentId)))).check(matches(isDisplayed()))
     }
 
-    fun clickOnMap() {
+    fun clickOnMapToCenter() {
         onView(withId(browseMapFragmentId)).perform(
             actionWithAssertions(
                 GeneralClickAction(
                     Tap.SINGLE,
                     GeneralLocation.CENTER,
+                    Press.FINGER,
+                    InputDevice.SOURCE_TOUCHSCREEN,
+                    MotionEvent.BUTTON_PRIMARY
+                )
+            )
+        )
+    }
+
+    fun clickOnMapToCoordinates(x: Int, y: Int) {
+        onView(withId(browseMapFragmentId)).perform(
+            actionWithAssertions(
+                GeneralClickAction(
+                    Tap.SINGLE,
+                    object : CoordinatesProvider {
+                        override fun calculateCoordinates(view: View): FloatArray {
+                            val screenPos = IntArray(2)
+                            view.getLocationOnScreen(screenPos)
+
+                            val screenX = (screenPos[0] + x).toFloat()
+                            val screenY = (screenPos[1] + y).toFloat()
+
+                            return floatArrayOf(screenX, screenY)
+                        }
+                    },
                     Press.FINGER,
                     InputDevice.SOURCE_TOUCHSCREEN,
                     MotionEvent.BUTTON_PRIMARY

@@ -3,16 +3,16 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/selection_mode_none"
+            android:id="@id/selectionModeNone"
             android:title="@string/none"
             tools:checked="true" />
 
         <item
-            android:id="@+id/selection_mode_markers_only"
+            android:id="@id/selectionModeMarkersOnly"
             android:title="@string/markers_only" />
 
         <item
-            android:id="@+id/selection_mode_full"
+            android:id="@id/selectionModeFull"
             android:title="@string/full" />
     </group>
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="selectionModeButton" type="id" />
+    <item name="selectionModeNone" type="id" />
+    <item name="selectionModeMarkersOnly" type="id" />
+    <item name="selectionModeFull" type="id" />
+</resources>

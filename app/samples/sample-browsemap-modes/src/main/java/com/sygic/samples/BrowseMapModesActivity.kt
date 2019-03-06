@@ -70,19 +70,19 @@ class BrowseMapModesActivity : CommonSampleActivity() {
 
     private fun getItemId(mapSelectionMode: Int): Int {
         return when (mapSelectionMode) {
-            MapSelectionMode.NONE -> R.id.selection_mode_none
-            MapSelectionMode.MARKERS_ONLY -> R.id.selection_mode_markers_only
-            MapSelectionMode.FULL -> R.id.selection_mode_full
-            else -> R.id.selection_mode_none
+            MapSelectionMode.NONE -> R.id.selectionModeNone
+            MapSelectionMode.MARKERS_ONLY -> R.id.selectionModeMarkersOnly
+            MapSelectionMode.FULL -> R.id.selectionModeFull
+            else -> R.id.selectionModeNone
         }
     }
 
     @MapSelectionMode
     private fun getMapSelectionMode(itemId: Int): Int {
         return when (itemId) {
-            R.id.selection_mode_none -> MapSelectionMode.NONE
-            R.id.selection_mode_markers_only -> MapSelectionMode.MARKERS_ONLY
-            R.id.selection_mode_full -> MapSelectionMode.FULL
+            R.id.selectionModeNone -> MapSelectionMode.NONE
+            R.id.selectionModeMarkersOnly -> MapSelectionMode.MARKERS_ONLY
+            R.id.selectionModeFull -> MapSelectionMode.FULL
             else -> MapSelectionMode.NONE
         }
     }

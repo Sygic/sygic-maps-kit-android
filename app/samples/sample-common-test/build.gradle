@@ -34,4 +34,5 @@ dependencies {
     api "androidx.test:runner:$testRunnerVersion"
     api "androidx.test.ext:junit:$extJUnitVersion"
     api "androidx.test.espresso:espresso-core:$espressoVersion"
+    api "androidx.test.uiautomator:uiautomator:$uiAutomatorVersion"
 }

@@ -20,7 +20,7 @@ class BrowseMapFullEspressoTest : BaseMapTest(BrowseMapFullActivity::class.java)
     fun clickOnMap_poiDetailVisible() {
         browseMap(activity) {
             isPoiDetailHidden()
-            clickOnMap()
+            clickOnMapToCenter()
             isPoiDetailVisible()
         }
     }
