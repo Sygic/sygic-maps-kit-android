@@ -2,13 +2,15 @@ package com.sygic.samples
 
 import android.os.Bundle
 import android.view.Gravity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.PopupMenu
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.sdk.map.`object`.MapMarker
-import kotlinx.android.synthetic.main.activity_browsemap_modes.*
 
 class BrowseMapModesActivity : CommonSampleActivity() {
+
+    private val selectionModeButton: AppCompatButton? by lazy { findViewById<AppCompatButton>(R.id.selectionModeButton) }
 
     override val wikiModulePath: String = "Module-Browse-Map#browse-map---modes"
 
@@ -18,22 +20,22 @@ class BrowseMapModesActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_browsemap_modes)
 
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        val selectionModeMenu = PopupMenu(this, selectionModeButton, Gravity.END).apply {
-            menuInflater.inflate(R.menu.selection_modes_menu, menu)
-            menu.findItem(getItemId(browseMapFragment.mapSelectionMode)).let {
-                it.isChecked = true
-                setSelectionModeText(it.title)
+        selectionModeButton?.let {
+            val selectionModeMenu = PopupMenu(this, it, Gravity.END).apply {
+                menuInflater.inflate(R.menu.selection_modes_menu, menu)
+                menu.findItem(getItemId(browseMapFragment.mapSelectionMode)).let { menuItem ->
+                    menuItem.isChecked = true
+                    setSelectionModeText(menuItem.title)
+                }
+                setOnMenuItemClickListener { item ->
+                    browseMapFragment.mapSelectionMode = getMapSelectionMode(item.itemId)
+                    item.isChecked = true
+                    setSelectionModeText(item.title)
+                    true
+                }
             }
-            setOnMenuItemClickListener { item ->
-                browseMapFragment.mapSelectionMode = getMapSelectionMode(item.itemId)
-                item.isChecked = true
-                setSelectionModeText(item.title)
-                true
-            }
-        }
 
-        selectionModeButton.setOnClickListener {
-            selectionModeMenu.show()
+            it.setOnClickListener { selectionModeMenu.show() }
         }
 
         browseMapFragment.addMapMarkers(
@@ -86,6 +88,6 @@ class BrowseMapModesActivity : CommonSampleActivity() {
     }
 
     private fun setSelectionModeText(mode: CharSequence) {
-        selectionModeButton.text = "${getString(R.string.selection_mode_is)}: $mode"
+        selectionModeButton?.text = "${getString(R.string.selection_mode_is)}: $mode"
     }
 }
