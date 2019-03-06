@@ -15,7 +15,7 @@ public class ThemeModule {
 
     @Singleton
     @Provides
-    ThemeManager providePermissionManager(@NonNull final Application app, @NonNull final ExtendedMapDataModel model) {
+    ThemeManager provideThemeManager(@NonNull final Application app, @NonNull final ExtendedMapDataModel model) {
         return new ThemeManagerImpl(app, model);
     }
 }
