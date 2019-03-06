@@ -29,9 +29,10 @@ dependencies {
     api project(':app-samples-common')
 
     // libraries + test libraries
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.test:rules:$testRunnerVersion"
-    implementation "androidx.test:runner:$testRunnerVersion"
-    implementation "androidx.test.ext:junit:$extJUnitVersion"
-    implementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    api "com.google.android.material:material:$materialVersion"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    api "androidx.test:rules:$testRunnerVersion"
+    api "androidx.test:runner:$testRunnerVersion"
+    api "androidx.test.ext:junit:$extJUnitVersion"
+    api "androidx.test.espresso:espresso-core:$espressoVersion"
 }

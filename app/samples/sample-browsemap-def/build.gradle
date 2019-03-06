@@ -77,8 +77,4 @@ dependencies {
 
     // test modules and libraries
     androidTestImplementation project(':app-samples-common-test-browsemap')
-    androidTestImplementation "androidx.test:rules:$testRunnerVersion"
-    androidTestImplementation "androidx.test:runner:$testRunnerVersion"
-    androidTestImplementation "androidx.test.ext:junit:$extJUnitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }

@@ -16,7 +16,7 @@ open class BaseMapTest(activityClass: Class<out CommonSampleActivity>) {
     val activityRule : ActivityTestRule<out CommonSampleActivity> = ActivityTestRule(activityClass)
 
     @get:Rule
-    val grantPermissionRuleLocation: GrantPermissionRule =
+    val grantLocationPermissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
 
     private val idlingResources = mutableListOf<IdlingResource>()
