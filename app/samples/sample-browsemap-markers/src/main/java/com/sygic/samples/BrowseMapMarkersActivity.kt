@@ -2,6 +2,7 @@ package com.sygic.samples
 
 import android.os.Bundle
 import com.sygic.modules.browsemap.BrowseMapFragment
+import com.sygic.samples.utils.MapMarkers
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.factory.DrawableFactory
 
@@ -30,14 +31,15 @@ class BrowseMapMarkersActivity : CommonSampleActivity() {
         browseMapFragment.addMapMarkers(
             listOf(
                 MapMarker(48.143489, 17.150560),
-                MapMarker(48.162805, 17.101621),
-                MapMarker(48.165561, 17.139550),
-                MapMarker(48.155028, 17.155674),
-                MapMarker(48.141797, 17.097001),
-                MapMarker(48.134756, 17.127729),
+                MapMarker(48.144921, 17.114853, DrawableFactory(R.drawable.ic_favorite)),
                 markerFromBuilder,
                 markerFromBuilderWithCustomIcon,
-                MapMarker(48.144921, 17.114853, DrawableFactory(R.drawable.ic_favorite))
+                MapMarkers.testMarkerOne,
+                MapMarkers.testMarkerTwo,
+                MapMarkers.testMarkerThree,
+                MapMarkers.testMarkerFour,
+                MapMarkers.testMarkerFive,
+                MapMarkers.testMarkerSix
             )
         )
     }

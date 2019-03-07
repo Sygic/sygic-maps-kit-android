@@ -6,7 +6,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.PopupMenu
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
-import com.sygic.samples.utils.Markers
+import com.sygic.samples.utils.MapMarkers
 import com.sygic.sdk.map.`object`.MapMarker
 
 class BrowseMapModesActivity : CommonSampleActivity() {
@@ -65,7 +65,7 @@ class BrowseMapModesActivity : CommonSampleActivity() {
                     .coordinates(48.134756, 17.127729)
                     .title("Marker 6")
                     .build(),
-                Markers.testMarker
+                MapMarkers.testMarkerOne
             )
         )
     }

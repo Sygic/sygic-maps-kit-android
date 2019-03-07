@@ -5,7 +5,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class BrowseMapDefaultTest : BaseMapTest(BrowseMapDefaultActivity::class.java) {
+class BrowseMapDefaultEspressoTest : BaseMapTest(BrowseMapDefaultActivity::class.java) {
 
     @Test
     fun browseMapDisplayed() {

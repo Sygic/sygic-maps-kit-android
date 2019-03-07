@@ -14,8 +14,7 @@ import androidx.test.espresso.action.GeneralLocation
 import org.hamcrest.CoreMatchers
 import androidx.test.espresso.matcher.RootMatchers
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
-import com.sygic.samples.utils.Markers
-
+import com.sygic.samples.utils.MapMarkers
 
 @RunWith(AndroidJUnit4::class)
 class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.java) {
@@ -38,7 +37,7 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
             isPoiDetailHidden()
             clickOnMapToLocation(GeneralLocation.CENTER_RIGHT)
             isPoiDetailHidden()
-            clickOnMapMarker(Markers.testMarker)
+            clickOnMapMarker(MapMarkers.testMarkerOne)
             isPoiDetailHidden()
 
             onView(withId(selectionModeButtonId)).perform(click())
@@ -50,7 +49,7 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
 
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
             isPoiDetailHidden()
-            clickOnMapMarker(Markers.testMarker)
+            clickOnMapMarker(MapMarkers.testMarkerOne)
             isPoiDetailVisible()
             pressBack()
             isPoiDetailHidden()
@@ -65,7 +64,7 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
             isPoiDetailVisible()
             pressBack()
-            clickOnMapMarker(Markers.testMarker)
+            clickOnMapMarker(MapMarkers.testMarkerOne)
             isPoiDetailVisible()
             pressBack()
             isPoiDetailHidden()

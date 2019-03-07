@@ -16,6 +16,8 @@ android {
         gradle.resolveFlavors(it)
 
         manifestPlaceholders = [sygicApiKey: gradle.getSdkKey()]
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -44,6 +46,10 @@ android {
     }
     /* -= APK Split =- */
 
+    testOptions {
+        animationsDisabled = true
+    }
+
     //todo: MS-4504
     dataBinding {
         enabled = true
@@ -67,6 +73,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
 
-    // test libraries
-
+    // test modules and libraries
+    androidTestImplementation project(':app-samples-common-test-browsemap')
 }
