@@ -1,5 +1,6 @@
 package com.sygic.samples
 
+import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +21,7 @@ class BrowseMapFullEspressoTest : BaseMapTest(BrowseMapFullActivity::class.java)
     fun clickOnMap_poiDetailVisible() {
         browseMap(activity) {
             isPoiDetailHidden()
-            clickOnMapToCenter()
+            clickOnMapToLocation(GeneralLocation.CENTER)
             isPoiDetailVisible()
         }
     }

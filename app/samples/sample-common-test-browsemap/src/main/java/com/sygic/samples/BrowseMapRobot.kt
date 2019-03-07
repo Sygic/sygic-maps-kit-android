@@ -1,5 +1,6 @@
 package com.sygic.samples
 
+import android.graphics.Point
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
@@ -16,11 +17,14 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.samples.idling.PoiDetailVisibilityIdlingResource
+import com.sygic.sdk.map.MapFragment
+import com.sygic.sdk.map.`object`.MapMarker
 import org.hamcrest.core.AllOf.allOf
 
 fun browseMap(commonSampleActivity: CommonSampleActivity, func: BrowseMapRobot.() -> Unit) =
     BrowseMapRobot(commonSampleActivity).apply { func() }
 
+@Suppress("MemberVisibilityCanBePrivate")
 class BrowseMapRobot(private val activity: CommonSampleActivity) {
 
     private val browseMapFragmentId = com.sygic.modules.browsemap.R.id.browseMapFragment
@@ -45,12 +49,12 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) {
         onView(allOf(withId(zoomControlsMenuId), withParent(withId(browseMapFragmentId)))).check(matches(isDisplayed()))
     }
 
-    fun clickOnMapToCenter() {
+    fun clickOnMapToLocation(generalLocation: GeneralLocation) {
         onView(withId(browseMapFragmentId)).perform(
             actionWithAssertions(
                 GeneralClickAction(
                     Tap.SINGLE,
-                    GeneralLocation.CENTER,
+                    generalLocation,
                     Press.FINGER,
                     InputDevice.SOURCE_TOUCHSCREEN,
                     MotionEvent.BUTTON_PRIMARY
@@ -59,7 +63,12 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) {
         )
     }
 
-    fun clickOnMapToCoordinates(x: Int, y: Int) {
+    fun clickOnMapMarker(mapMarker: MapMarker) {
+        // Small offset in Y axis need to be applied, because the SDK does not have any click tolerance
+        getScreenPointFromMapMarker(mapMarker)?.let { clickOnMapToPoint(it.x, it.y - 1) }
+    }
+
+    fun clickOnMapToPoint(x: Int, y: Int) {
         onView(withId(browseMapFragmentId)).perform(
             actionWithAssertions(
                 GeneralClickAction(
@@ -102,4 +111,17 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) {
             IdlingRegistry.getInstance().unregister(it)
         }
     }
+
+    private fun getScreenPointFromMapMarker(mapMarker: MapMarker): Point? {
+        activity.supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment is MapFragment) {
+                fragment.mapView?.let {
+                    return it.screenPointsFromGeoCoordinates(listOf(mapMarker.position)).first()
+                }
+            }
+        }
+
+        return null
+    }
+
 }
