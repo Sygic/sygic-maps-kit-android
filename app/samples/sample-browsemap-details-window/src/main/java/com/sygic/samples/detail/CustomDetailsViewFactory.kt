@@ -1,7 +1,5 @@
 package com.sygic.samples.detail
 
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +8,10 @@ import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.samples.R
 import com.sygic.sdk.map.`object`.payload.Payload
 import com.sygic.ui.common.sdk.data.PoiDataPayload
+import kotlinx.android.parcel.Parcelize
 
-class CustomDetailsViewFactory() : DetailsViewFactory() {
+@Parcelize
+class CustomDetailsViewFactory : DetailsViewFactory() {
 
     override fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: Payload): View {
         val root = inflater.inflate(R.layout.layout_info_window, container, false)
@@ -45,20 +45,4 @@ class CustomDetailsViewFactory() : DetailsViewFactory() {
     }
 
     override fun getYOffset() = 10f
-
-    private constructor(parcel: Parcel) : this()
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {}
-
-    override fun describeContents() = 0
-
-    companion object CREATOR : Parcelable.Creator<CustomDetailsViewFactory> {
-        override fun createFromParcel(parcel: Parcel): CustomDetailsViewFactory {
-            return CustomDetailsViewFactory(parcel)
-        }
-
-        override fun newArray(size: Int): Array<CustomDetailsViewFactory?> {
-            return arrayOfNulls(size)
-        }
-    }
 }

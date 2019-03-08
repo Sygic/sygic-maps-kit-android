@@ -2,6 +2,7 @@ import com.android.build.OutputFile
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -72,6 +73,10 @@ android {
         }
     }
     /* -= APK Split =- */
+
+    androidExtensions {
+        experimental = true
+    }
 
     //todo: MS-4504
     dataBinding {
