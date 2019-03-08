@@ -11,6 +11,8 @@ import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.modules.common.theme.ThemeManager
+import com.sygic.modules.common.theme.ThemeSupportedViewModel
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.tools.annotations.Assisted
@@ -35,8 +37,9 @@ class BrowseMapFragmentViewModel internal constructor(
     private val poiDataManager: PoiDataManager,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager
-) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver {
+    private val permissionsManager: PermissionsManager,
+    private val themeManager: ThemeManager
+) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver, ThemeSupportedViewModel {
 
     @MapSelectionMode
     var mapSelectionMode: Int
@@ -80,6 +83,7 @@ class BrowseMapFragmentViewModel internal constructor(
         zoomControlsEnabled.value = initComponent.zoomControlsEnabled
         onMapClickListener = initComponent.onMapClickListener
         detailsViewFactory = initComponent.detailsViewFactory
+        initComponent.skins.forEach { entry -> themeManager.setSkinAtLayer(entry.key, entry.value) }
         initComponent.recycle()
 
         mapInteractionManager.addOnMapClickListener(this)
@@ -165,6 +169,10 @@ class BrowseMapFragmentViewModel internal constructor(
                 }
             }
         })
+    }
+
+    override fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) {
+        themeManager.setSkinAtLayer(layer, skin)
     }
 
     override fun onStop(owner: LifecycleOwner) {

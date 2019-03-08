@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 @Module
 public class AppModule {
 
@@ -14,6 +16,7 @@ public class AppModule {
         app = fragment.requireActivity().getApplication();
     }
 
+    @Singleton
     @Provides
     Application provideApplication() {
         return app;

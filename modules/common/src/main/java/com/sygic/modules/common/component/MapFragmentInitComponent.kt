@@ -4,6 +4,7 @@ import android.util.AttributeSet
 import androidx.annotation.RestrictTo
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
+import com.sygic.modules.common.theme.ThemeManager
 import com.sygic.ui.common.sdk.listener.OnMapClickListener
 
 const val MAP_SELECTION_MODE_DEFAULT_VALUE = MapSelectionMode.MARKERS_ONLY
@@ -26,6 +27,8 @@ class MapFragmentInitComponent {
     var positionLockFabEnabled: Boolean = POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE
     var zoomControlsEnabled: Boolean = ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE
 
+    val skins: MutableMap<ThemeManager.SkinLayer, String> = mutableMapOf()
+
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
 
@@ -38,6 +41,8 @@ class MapFragmentInitComponent {
         compassHideIfNorthUp = COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE
         positionLockFabEnabled = POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE
         zoomControlsEnabled = ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE
+
+        skins.clear()
 
         onMapClickListener = null
         detailsViewFactory = null
