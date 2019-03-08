@@ -23,7 +23,7 @@ class ThemeManagerImpl(app: Application, private val mapDataModel: ExtendedMapDa
                     override fun onPreDraw(): Boolean {
                         activity.window.decorView.viewTreeObserver.removeOnPreDrawListener(this)
 
-                        //set skin only if default(== auto) mode is set
+                        // set skin only if default(== auto) mode is set
                         if (isDefaultSkin) {
                             setSkinAtLayer(
                                 ThemeManager.SkinLayer.DayNight,
@@ -37,15 +37,10 @@ class ThemeManagerImpl(app: Application, private val mapDataModel: ExtendedMapDa
             }
 
             override fun onActivityPaused(activity: Activity) {}
-
             override fun onActivityResumed(activity: Activity) {}
-
             override fun onActivityStarted(activity: Activity) {}
-
             override fun onActivityDestroyed(activity: Activity) {}
-
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {}
-
             override fun onActivityStopped(activity: Activity) {}
         })
     }
@@ -54,10 +49,7 @@ class ThemeManagerImpl(app: Application, private val mapDataModel: ExtendedMapDa
         setSkinAtLayer(skinLayer, desiredSkin, true)
     }
 
-    private fun setSkinAtLayer(
-        skinLayer: ThemeManager.SkinLayer, desiredSkin: String,
-        replaceDefault: Boolean
-    ) {
+    private fun setSkinAtLayer(skinLayer: ThemeManager.SkinLayer, desiredSkin: String, replaceDefault: Boolean) {
         isDefaultSkin = !(replaceDefault && MapSkin.DEFAULT != desiredSkin)
 
         val newSkin = if (MapSkin.DEFAULT == desiredSkin) {

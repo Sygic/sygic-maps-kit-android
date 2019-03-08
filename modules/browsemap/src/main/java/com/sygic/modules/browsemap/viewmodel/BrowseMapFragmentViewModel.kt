@@ -83,9 +83,7 @@ class BrowseMapFragmentViewModel internal constructor(
         zoomControlsEnabled.value = initComponent.zoomControlsEnabled
         onMapClickListener = initComponent.onMapClickListener
         detailsViewFactory = initComponent.detailsViewFactory
-        initComponent.skins.forEach { entry ->
-            themeManager.setSkinAtLayer(entry.key, entry.value)
-        }
+        initComponent.skins.forEach { entry -> themeManager.setSkinAtLayer(entry.key, entry.value) }
         initComponent.recycle()
 
         mapInteractionManager.addOnMapClickListener(this)
