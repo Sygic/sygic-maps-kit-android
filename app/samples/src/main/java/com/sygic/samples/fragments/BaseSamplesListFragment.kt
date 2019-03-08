@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_samples.*
 
 abstract class BaseSamplesListFragment : Fragment() {
 
+    @get:StringRes
     protected abstract val title: Int
     protected abstract val items: List<Sample>
 
@@ -27,8 +29,7 @@ abstract class BaseSamplesListFragment : Fragment() {
 
         requireActivity().toolbar?.setTitle(title)
         samplesListViewModel =
-                ViewModelProviders.of(this).get(SamplesListViewModel::class.java).apply {
-                    adapter.items = items
+                ViewModelProviders.of(this, SamplesListViewModel.Factory(items)).get(SamplesListViewModel::class.java).apply {
                     this.startActivityObservable.observe(
                         this@BaseSamplesListFragment,
                         Observer<Class<out AppCompatActivity>> { requireContext().openActivity(it) })
