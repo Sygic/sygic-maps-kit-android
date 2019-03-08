@@ -20,6 +20,9 @@ import com.sygic.samples.idling.PoiDetailVisibilityIdlingResource
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.`object`.MapMarker
 import org.hamcrest.core.AllOf.allOf
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import org.hamcrest.Matchers.not
 
 fun browseMap(commonSampleActivity: CommonSampleActivity, func: BrowseMapRobot.() -> Unit) =
     BrowseMapRobot(commonSampleActivity).apply { func() }
@@ -110,6 +113,11 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) {
 
             IdlingRegistry.getInstance().unregister(it)
         }
+    }
+
+    fun isToastVisible() {
+        onView(withId(android.R.id.message)).inRoot(withDecorView(not(activity.window.decorView)))
+            .check(matches(isDisplayed()))
     }
 
     private fun getScreenPointFromMapMarker(mapMarker: MapMarker): Point? {
