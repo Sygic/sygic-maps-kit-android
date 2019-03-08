@@ -15,21 +15,14 @@ buildscript {
         constraintLayoutVersion = '1.1.3'
         annotationsVersion = '1.0.0'
         playServicesLocationVersion = '16.0.0'
-        sygicSdkVersion = '8.2.1'
+        sygicSdkVersion = '9.2.0'
         daggerVersion = '2.16'
         javaxInjectVersion = '1'
         javaPoetVersion = '1.11.1'
     }
-    repositories {
-        maven { url "https://repository.sygic.com/repository/maven-public/" }
-        if (gradle.buildSdkFromSource()) {
-            maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" }
-        }
-        google()
-        jcenter()
-    }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         if (gradle.buildSdkFromSource()) {
@@ -40,11 +33,20 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+
+    repositories {
+        if (gradle.buildSdkFromSource()) {
+            maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" }
+        }
+        maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
+        google()
+        jcenter()
+    }
 }
 
 allprojects {
     repositories {
-        maven { url "https://repository.sygic.com/repository/maven-public/" }
+        maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
         google()
         jcenter()
     }
