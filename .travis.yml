@@ -24,11 +24,25 @@ cache:
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
 
-#before_install:
-#- yes | sdkmanager --licenses
+before_install:
+- yes | sdkmanager "platforms;android-28"
 
-script:
-- ./gradlew clean build check -P"sygic.sdk.key"=$SYGIC_API_KEY
+stages:
+- name: compile
+#  if: branch =~ ^\d+\.\d+\.\d+$
+- name: test
+#  if: branch = master OR branch =~ ^\d+\.\d+\.\d+$
+- name: deploy
+#  if: branch =~ ^\d+\.\d+\.\d+$
+
+jobs:
+  include:
+  - stage: compile
+    script: ./gradlew clean assembleDebug -P"sygic.sdk.key"=$SYGIC_API_KEY
+  - stage: test
+    script: ./gradlew test #todo ./gradlew check # UI tests?
+  - stage: deploy
+    script: echo 'deploing job done' #todo
 
 after_failure:
 - cat $TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml
