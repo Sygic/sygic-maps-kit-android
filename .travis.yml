@@ -40,9 +40,14 @@ jobs:
   - stage: compile
     script: ./gradlew clean assembleDebug -P"sygic.sdk.key"=$SYGIC_API_KEY
   - stage: test
+    skip_cleanup: true
     script: ./gradlew test #todo ./gradlew check # UI tests?
   - stage: deploy
+    skip_cleanup: true
     script: echo 'deploing job done' #todo
+
+after_success:
+- cat $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/debug/app-samples-arm64-v8a-debug.apk
 
 after_failure:
 - cat $TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml
