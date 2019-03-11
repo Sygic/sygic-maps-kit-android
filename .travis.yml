@@ -28,24 +28,30 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
-- name: compile
-#  if: branch =~ ^\d+\.\d+\.\d+$
-- name: test
-#  if: branch = master OR branch =~ ^\d+\.\d+\.\d+$
-- name: deploy
-#  if: branch =~ ^\d+\.\d+\.\d+$
+- name: debugBuild
+#  if: branch =~ ^\d+\.\d+\.\d+$ todo
+- name: releaseBuild
+#  if: branch = master OR branch =~ ^\d+\.\d+\.\d+$ todo
 
 jobs:
   include:
-  - stage: compile
-    script: ./gradlew clean assembleDebug -P"sygic.sdk.key"=$SYGIC_API_KEY
-    after_success: cat $TRAVIS_BUILD_DIR #/app/samples/build/outputs/apk/debug/app-samples-arm64-v8a-debug.apk
-  - stage: test
-    skip_cleanup: true
-    script: ./gradlew test #todo ./gradlew check # UI tests?
-  - stage: deploy
-    skip_cleanup: true
-    script: echo 'deploing job done' #todo
+  - stage: debugBuild
+    script:
+    - ./gradlew clean test #todo ./gradlew check # UI tests?
+    - ./gradlew assembleDebug -P"sygic.sdk.key"=$SYGIC_API_KEY
+  - stage: releaseBuild
+    script:
+    - ./gradlew clean test #todo ./gradlew check # UI tests?
+    - ./gradlew assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
+    deploy:
+      provider: script
+      script: echo 'deploing job done' #todo
+      file: $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/app-samples-arm64-v8a-release.apk
+      skip_cleanup: true
+      on:
+        tags: true
+    after_deploy:
+    - rm -rf $TRAVIS_BUILD_DIR/app/samples/build/outputs
 
 after_failure:
 - cat $TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml
