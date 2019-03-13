@@ -34,21 +34,38 @@ after_failure:
 - cat $TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml
 
 stages:
-- name: debugBuild
-  if: branch != master
-- name: releaseBuild
-  if: branch = master
+- name: tests
+- name: compile-uikit
+- name: compile-modules
+- name: compile-samples
+- name: deploy
+  if: tag =~ ^\d+\.\d+\.\d+$
 
 jobs:
   include:
-  - stage: debugBuild
+  - stage: tests #todo: if debug or release? #todo UI tests!
     script:
-    - ./gradlew clean check -P"sygic.sdk.key"=$SYGIC_API_KEY
-    - ./gradlew assembleDebug -P"sygic.sdk.key"=$SYGIC_API_KEY
-  - stage: releaseBuild
+    - ./gradlew check -P"sygic.sdk.key"=$SYGIC_API_KEY #todo run parallel tests by module?
+  - stage: compile-uikit #todo: if debug or release?
     script:
-    - ./gradlew clean check -P"sygic.sdk.key"=$SYGIC_API_KEY
-    #todo UI tests!
+    - ./gradlew :uikit-common:build
+    - ./gradlew :uikit-common-sdk:build
+    - ./gradlew :uikit-compass:build
+    - ./gradlew :uikit-compass-viewmodel:build
+    - ./gradlew :uikit-poidetail:build
+    - ./gradlew :uikit-positionlockfab:build
+    - ./gradlew :uikit-positionlockfab-viewmodel:build
+    - ./gradlew :uikit-zoomcontrols:build
+    - ./gradlew :uikit-zoomcontrols-viewmodel:build
+  - stage: compile-modules #todo: if debug or release?
+    script:
+    - ./gradlew :modules-common:build
+    - ./gradlew :modules-browsemap:build
+  - stage: compile-samples #todo: if debug or release?
+    script:
+    - ./gradlew :app-samples:build
+  - stage: deploy #todo: if debug or release?
+    script:
     - ./gradlew assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY #todo credentials?
     deploy:
       provider: script #todo provider: releases
