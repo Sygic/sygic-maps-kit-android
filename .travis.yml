@@ -40,7 +40,7 @@ stages:
 - name: compile-samples
 - name: deploy
   if: tag =~ ^\d+\.\d+\.\d+$
-###
+####
 jobs:
   include:
   - stage: tests #todo UI tests!
