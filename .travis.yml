@@ -2,7 +2,7 @@ language: android
 jdk: oraclejdk8
 sudo: false
 
-if: type == pull_request OR (type == push AND branch =~ /^release\/.*$/)
+if: type == pull_request OR tag =~ ^\d+\.\d+\.\d+$ OR (type == push AND branch =~ /^release\/.*$/)
 
 env:
   global:
@@ -43,10 +43,10 @@ stages:
 
 jobs:
   include:
-  - stage: tests #todo: if debug or release? #todo UI tests!
+  - stage: tests #todo UI tests!
     script:
     - ./gradlew check -P"sygic.sdk.key"=$SYGIC_API_KEY #todo run parallel tests by module?
-  - stage: compile-uikit #todo: if debug or release?
+  - stage: compile-uikit
     script:
     - ./gradlew :uikit-common:build
     - ./gradlew :uikit-common-sdk:build
@@ -57,14 +57,14 @@ jobs:
     - ./gradlew :uikit-positionlockfab-viewmodel:build
     - ./gradlew :uikit-zoomcontrols:build
     - ./gradlew :uikit-zoomcontrols-viewmodel:build
-  - stage: compile-modules #todo: if debug or release?
+  - stage: compile-modules
     script:
     - ./gradlew :modules-common:build
     - ./gradlew :modules-browsemap:build
-  - stage: compile-samples #todo: if debug or release?
+  - stage: compile-samples
     script:
     - ./gradlew :app-samples:build
-  - stage: deploy #todo: if debug or release?
+  - stage: deploy
     script:
     - ./gradlew assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY #todo credentials?
     deploy:
@@ -72,7 +72,5 @@ jobs:
       script: echo 'deploing job done' #todo real deploy ;)
       file: $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/app-samples-arm64-v8a-release.apk
       skip_cleanup: true
-      on:
-        tags: true
     after_deploy:
     - rm -rf $TRAVIS_BUILD_DIR/app/samples/build/outputs
