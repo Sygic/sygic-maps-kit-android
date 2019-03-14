@@ -33,10 +33,11 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
+- name: ui tests
 - name: compile and test uikit
 - name: compile and test modules
 - name: compile and test samples
-- name: ui tests
+#todo
 - name: deploy
   if: tag =~ ^\d+\.\d+\.\d+$
 
@@ -85,7 +86,7 @@ jobs:
   - stage: ui tests
     name: browsemap-default
     before_script:
-    - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_ABI -c 400M
+    - echo no | android create avd --force -n test -t android-${ANDROID_API_LEVEL} --abi ${ANDROID_ABI} -c 400M
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
@@ -144,9 +145,14 @@ jobs:
     script:
     - ./gradlew assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY #todo credentials?
     deploy:
-      provider: script #todo provider: releases
-      script: echo 'deploing job done' #todo real deploy ;)
-      file: $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/app-samples-arm64-v8a-release.apk
+      provider: releases
+      api_key: $TRAVIS_RELEASE
+      name: dev-build-$TRAVIS_TAG #todo
+      file:
+      - $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/app-samples-arm64-v8a-release.apk #todo
+      - "FILE 2" #todo
       skip_cleanup: true
+      on:
+        tags: true
     after_deploy:
     - rm -rf $TRAVIS_BUILD_DIR/app/samples/build/outputs
