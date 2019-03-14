@@ -30,40 +30,77 @@ cache:
 before_install:
 - yes | sdkmanager "platforms;android-28"
 
-after_failure:
-- cat $TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml
-
 stages:
-- name: tests
-- name: compile Uikit
-- name: compile Modules
-- name: compile Samples
+- name: compile and test uikit
+- name: compile and test modules
+- name: compile and test samples
+- name: ui tests
 - name: deploy
   if: tag =~ ^\d+\.\d+\.\d+$
 
 jobs:
   include:
-  - stage: tests #todo UI tests!
+  - stage: compile and test uikit
+    name: common
+    script: ./gradlew :uikit-common:check
+  - stage: compile and test uikit
+    name: common-sdk
+    script: ./gradlew :uikit-common-sdk:check
+  - stage: compile and test uikit
+    name: compass
+    script: ./gradlew :uikit-compass:check
+  - stage: compile and test uikit
+    name: compass-viewmodel
+    script: ./gradlew :uikit-compass-viewmodel:check
+  - stage: compile and test uikit
+    name: poidetail
+    script: ./gradlew :uikit-poidetail:check
+  - stage: compile and test uikit
+    name: positionlockfab
+    script: ./gradlew :uikit-positionlockfab:check
+  - stage: compile and test uikit
+    name: positionlockfab-viewmodel
+    script: ./gradlew :uikit-positionlockfab-viewmodel:check
+  - stage: compile and test uikit
+    name: zoomcontrols
+    script: ./gradlew :uikit-zoomcontrols:check
+  - stage: compile and test uikit
+    name: zoomcontrols-viewmodel
+    script: ./gradlew :uikit-zoomcontrols-viewmodel:check
+
+  - stage: compile and test modules
+    name: common
+    script: ./gradlew :modules-common:check
+  - stage: compile and test modules
+    name: browsemap
+    script: ./gradlew :modules-browsemap:check
+
+  - stage: compile and test samples
     script:
-    - ./gradlew check -P"sygic.sdk.key"=$SYGIC_API_KEY #todo run parallel tests by module?
-  - stage: compile Uikit
-    script:
-    - ./gradlew :uikit-common:build
-    - ./gradlew :uikit-common-sdk:build
-    - ./gradlew :uikit-compass:build
-    - ./gradlew :uikit-compass-viewmodel:build
-    - ./gradlew :uikit-poidetail:build
-    - ./gradlew :uikit-positionlockfab:build
-    - ./gradlew :uikit-positionlockfab-viewmodel:build
-    - ./gradlew :uikit-zoomcontrols:build
-    - ./gradlew :uikit-zoomcontrols-viewmodel:build
-  - stage: compile Modules
-    script:
-    - ./gradlew :modules-common:build
-    - ./gradlew :modules-browsemap:build
-  - stage: compile Samples
-    script:
-    - ./gradlew :app-samples:build
+    - ./gradlew :app-samples:check
+
+  - stage: ui tests #todo: start emulator first?
+    name: browsemap-default
+    script: ./gradlew :app-samples-browsemap-default:connectedAndroidTest
+  - stage: ui tests
+    name: browsemap-full
+    script: ./gradlew :app-samples-browsemap-full:connectedAndroidTest
+  - stage: ui tests
+    name: browsemap-modes
+    script: ./gradlew :app-samples-browsemap-modes:connectedAndroidTest
+  - stage: ui tests
+    name: browsemap-markers
+    script: ./gradlew :app-samples-browsemap-markers:connectedAndroidTest
+  - stage: ui tests
+    name: browsemap-details-window
+    script: ./gradlew :app-samples-browsemap-details-window:connectedAndroidTest
+  - stage: ui tests
+    name: browsemap-click-listener
+    script: ./gradlew :app-samples-browsemap-click-listener:connectedAndroidTest
+  - stage: ui tests
+    name: browsemap-themes
+    script: ./gradlew :app-samples-browsemap-themes:connectedAndroidTest
+
   - stage: deploy
     script:
     - ./gradlew assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY #todo credentials?
