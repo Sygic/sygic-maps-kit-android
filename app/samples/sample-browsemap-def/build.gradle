@@ -17,6 +17,8 @@ android {
         gradle.resolveFlavors(it)
 
         manifestPlaceholders = [sygicApiKey: gradle.getSdkKey()]
+
+        testApplicationId "com.sygic.samples.browsemap.def"
     }
 
     buildTypes {
