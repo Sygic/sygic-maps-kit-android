@@ -5,7 +5,7 @@ import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.factory.DrawableFactory
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.ui.common.sdk.data.BasicPayload
+import com.sygic.ui.common.sdk.data.BasicMarkerData
 
 class BrowseMapMarkersActivity : CommonSampleActivity() {
 
@@ -17,14 +17,14 @@ class BrowseMapMarkersActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_browsemap_markers)
 
         val markerFromBuilder = MapMarker.from(
-            BasicPayload(
+            BasicMarkerData(
                 "Marker created by Builder (default icon)",
                 position = GeoCoordinates(48.130550, 17.173795)
             )
         ).build()
 
         val markerFromBuilderWithCustomIcon = MapMarker.from(
-            BasicPayload(
+            BasicMarkerData(
                 "Marker created by Builder (custom icon)",
                 "And with stunning description :-D",
                 GeoCoordinates(48.127531, 17.076463)

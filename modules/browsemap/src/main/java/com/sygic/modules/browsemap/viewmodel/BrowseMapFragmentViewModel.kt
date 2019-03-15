@@ -15,7 +15,7 @@ import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ProxyPoi
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
-import com.sygic.sdk.map.`object`.payload.Payload
+import com.sygic.sdk.map.`object`.payload.MarkerData
 import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.extensions.asSingleEvent
@@ -61,7 +61,7 @@ class BrowseMapFragmentViewModel internal constructor(
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
 
-    val dataPayloadObservable: LiveData<Payload> = SingleLiveEvent()
+    val mapDataObservable: LiveData<MarkerData> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
@@ -140,7 +140,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject) {
         poiDataManager.getPayloadData(viewObject, object : PoiDataManager.Callback() {
-            override fun onDataLoaded(data: Payload) {
+            override fun onDataLoaded(data: MarkerData) {
                 onMapClickListener?.let {
                     if (it.onMapClick(data)) {
                         return
@@ -164,7 +164,7 @@ class BrowseMapFragmentViewModel internal constructor(
                         mapDataModel.addMapObject(it)
                     }
                 } ?: run {
-                    dataPayloadObservable.asSingleEvent().value = data
+                    mapDataObservable.asSingleEvent().value = data
                 }
             }
         })

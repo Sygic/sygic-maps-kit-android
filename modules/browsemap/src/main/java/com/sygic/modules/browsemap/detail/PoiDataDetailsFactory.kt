@@ -7,16 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.sdk.map.`object`.UiObject
-import com.sygic.sdk.map.`object`.payload.Payload
+import com.sygic.sdk.map.`object`.payload.MarkerData
 
 internal class PoiDataDetailsFactory(
     private val factory: DetailsViewFactory,
-    private val data: Payload
+    private val data: MarkerData
 ) : UiObject.ViewFactory {
 
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(DetailsViewFactory::class.java.classLoader)!!,
-        parcel.readParcelable(Payload::class.java.classLoader)!!
+        parcel.readParcelable(MarkerData::class.java.classLoader)!!
     )
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

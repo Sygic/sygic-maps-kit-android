@@ -5,8 +5,8 @@ import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ProxyPoi
 import com.sygic.sdk.map.`object`.ViewObject
-import com.sygic.sdk.map.`object`.payload.Payload
-import com.sygic.sdk.map.`object`.payload.ProxyPayload
+import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.payload.ProxyMarkerData
 import com.sygic.sdk.places.Places
 import com.sygic.sdk.search.ReverseGeocoder
 
@@ -22,8 +22,8 @@ class PoiDataManagerImpl : PoiDataManager {
                 if (viewObject is MapMarker<*>) {
                     viewObject.payload.let { payload ->
                         when (payload.type) {
-                            Payload.TYPE_PROXY -> getPayloadData((payload as ProxyPayload).proxyObject, callback)
-                            Payload.TYPE_POSITION -> reverseGeocoder.search(viewObject.position, callback)
+                            MarkerData.TYPE_PROXY -> getPayloadData((payload as ProxyMarkerData).proxyObject, callback)
+                            MarkerData.TYPE_POSITION -> reverseGeocoder.search(viewObject.position, callback)
                             else -> callback.onDataLoaded(payload)
                         }
                     }

@@ -7,7 +7,7 @@ import com.sygic.sdk.places.PoiInfo
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 
-data class PoiDataPayload(
+data class PoiMarkerData(
     var coordinates: GeoCoordinates = GeoCoordinates.Invalid,
     var name: String? = null,
     var iso: String? = null,
@@ -20,7 +20,7 @@ data class PoiDataPayload(
     var phone: String? = null,
     var email: String? = null,
     var url: String? = null
-) : BasicPayload(createAddressDescription(name, street, houseNumber, city, postal, coordinates), coordinates) {
+) : BasicMarkerData(createAddressDescription(name, street, houseNumber, city, postal, coordinates), coordinates) {
 
     val isEmpty: Boolean
         get() = coordinates == GeoCoordinates.Invalid
@@ -87,15 +87,15 @@ data class PoiDataPayload(
         const val TYPE_POI = "payload_poi"
 
         @JvmField
-        val EMPTY = PoiDataPayload()
+        val EMPTY = PoiMarkerData()
 
         @JvmField
-        val CREATOR = object : Parcelable.Creator<PoiDataPayload> {
-            override fun createFromParcel(parcel: Parcel): PoiDataPayload {
-                return PoiDataPayload(parcel)
+        val CREATOR = object : Parcelable.Creator<PoiMarkerData> {
+            override fun createFromParcel(parcel: Parcel): PoiMarkerData {
+                return PoiMarkerData(parcel)
             }
 
-            override fun newArray(size: Int): Array<PoiDataPayload?> {
+            override fun newArray(size: Int): Array<PoiMarkerData?> {
                 return arrayOfNulls(size)
             }
         }

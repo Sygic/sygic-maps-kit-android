@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.sdk.map.`object`.payload.Payload
+import com.sygic.sdk.map.`object`.payload.MarkerData
 import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 import com.sygic.ui.common.extensions.asSingleEvent
 import com.sygic.ui.common.listeners.DialogFragmentListener
 import com.sygic.ui.common.livedata.SingleLiveEvent
-import com.sygic.ui.common.sdk.data.BasicPayload
-import com.sygic.ui.common.sdk.data.PoiDataPayload
+import com.sygic.ui.common.sdk.data.BasicMarkerData
+import com.sygic.ui.common.sdk.data.PoiMarkerData
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
 import kotlinx.coroutines.*
@@ -20,16 +20,16 @@ private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
 const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
 const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED
 
-internal class PoiDetailInternalViewModel(data: Payload,
+internal class PoiDetailInternalViewModel(data: MarkerData,
                                           private val preferencesManager: PreferencesManager) : ViewModel(),
     BottomSheetBehaviorWrapper.StateListener {
 
-    val titleText: String = if (data is BasicPayload) data.title else ""
-    val subtitleText: String = if (data is BasicPayload) data.description else ""
+    val titleText: String = if (data is BasicMarkerData) data.title else ""
+    val subtitleText: String = if (data is BasicMarkerData) data.description else ""
     val coordinatesText: String? = data.position.getFormattedLocation()
-    val urlText: String? = if (data is PoiDataPayload) data.url else null
-    val emailText: String? = if (data is PoiDataPayload) data.email else null
-    val phoneText: String? = if (data is PoiDataPayload) data.phone else null
+    val urlText: String? = if (data is PoiMarkerData) data.url else null
+    val emailText: String? = if (data is PoiMarkerData) data.email else null
+    val phoneText: String? = if (data is PoiMarkerData) data.phone else null
 
     val expandObservable: LiveData<Any> = SingleLiveEvent()
     val collapseObservable: LiveData<Any> = SingleLiveEvent()
@@ -93,7 +93,7 @@ internal class PoiDetailInternalViewModel(data: Payload,
         listener = null
     }
 
-    class ViewModelFactory(private val data: Payload,
+    class ViewModelFactory(private val data: MarkerData,
                            private val preferencesManager: PreferencesManager) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

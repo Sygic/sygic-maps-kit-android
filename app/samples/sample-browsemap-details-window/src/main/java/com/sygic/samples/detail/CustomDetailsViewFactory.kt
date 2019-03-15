@@ -8,18 +8,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.samples.R
-import com.sygic.sdk.map.`object`.payload.Payload
-import com.sygic.ui.common.sdk.data.BasicPayload
+import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.ui.common.sdk.data.BasicMarkerData
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 
 class CustomDetailsViewFactory : DetailsViewFactory() {
 
-    override fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: Payload): View {
+    override fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: MarkerData): View {
         val root = inflater.inflate(R.layout.layout_info_window, container, false)
 
         //fill layout with data from marker's Data
         when (data) {
-            is BasicPayload -> {
+            is BasicMarkerData -> {
                 data.title.let {
                     if (it.isEmpty()) {
                         root.findViewById<TextView>(R.id.title).visibility = View.GONE

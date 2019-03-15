@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.sdk.map.`object`.payload.Payload
+import com.sygic.sdk.map.`object`.payload.MarkerData
 import com.sygic.ui.common.extensions.copyToClipboard
 import com.sygic.ui.common.extensions.openEmail
 import com.sygic.ui.common.extensions.openPhone
@@ -27,7 +27,7 @@ private const val DATA_PAYLOAD = "data_payload"
 
 /**
  * A [PoiDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
- * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [Payload] object.
+ * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [MarkerData] object.
  *
  * You can register an [DialogFragmentListener] using [setListener] method. Then you will be notified when dialog is dismissed.
  *
@@ -50,12 +50,12 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         const val TAG = "poi_detail_bottom_dialog_fragment"
 
         /**
-         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You need to provide a valid [Payload] object.
+         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You need to provide a valid [MarkerData] object.
          *
-         * @param data [Payload] to be applied to the dialog content.
+         * @param data [MarkerData] to be applied to the dialog content.
          */
         @JvmStatic
-        fun newInstance(data: Payload): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {
+        fun newInstance(data: MarkerData): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(DATA_PAYLOAD, data)
             }

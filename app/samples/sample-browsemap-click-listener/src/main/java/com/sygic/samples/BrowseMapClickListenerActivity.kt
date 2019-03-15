@@ -3,7 +3,7 @@ package com.sygic.samples
 import android.os.Bundle
 import android.widget.Toast
 import com.sygic.modules.browsemap.BrowseMapFragment
-import com.sygic.samples.payload.CustomPayload
+import com.sygic.samples.payload.CustomMarkerData
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.position.GeoCoordinates
 
@@ -17,7 +17,7 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_browsemap_click_listener)
 
         val markerFromBuilder = MapMarker.from(
-                CustomPayload(
+                CustomMarkerData(
                     GeoCoordinates(48.146514, 17.124175),
                     "Custom Payload title",
                     "Custom Payload description",
@@ -30,7 +30,7 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
         browseMapFragment.addMapMarker(markerFromBuilder)
         browseMapFragment.setOnMapClickListener { data ->
             when (data) {
-                is CustomPayload -> {
+                is CustomMarkerData -> {
                     // Note: This is my custom payload
                     Toast.makeText(this, "CustomPayload\n${data.customString}", Toast.LENGTH_LONG).show()
                 }

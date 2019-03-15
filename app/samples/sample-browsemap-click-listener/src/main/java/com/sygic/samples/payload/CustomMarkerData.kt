@@ -3,9 +3,9 @@ package com.sygic.samples.payload
 import android.os.Parcel
 import android.os.Parcelable
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.ui.common.sdk.data.BasicPayload
+import com.sygic.ui.common.sdk.data.BasicMarkerData
 
-class CustomPayload : BasicPayload {
+class CustomMarkerData : BasicMarkerData {
 
     val customString: String
 
@@ -35,12 +35,12 @@ class CustomPayload : BasicPayload {
         const val TYPE_CUSTOM = "payload_custom"
 
         @JvmField
-        val CREATOR = object : Parcelable.Creator<CustomPayload> {
-            override fun createFromParcel(parcel: Parcel): CustomPayload {
-                return CustomPayload(parcel)
+        val CREATOR = object : Parcelable.Creator<CustomMarkerData> {
+            override fun createFromParcel(parcel: Parcel): CustomMarkerData {
+                return CustomMarkerData(parcel)
             }
 
-            override fun newArray(size: Int): Array<CustomPayload?> {
+            override fun newArray(size: Int): Array<CustomMarkerData?> {
                 return arrayOfNulls(size)
             }
         }

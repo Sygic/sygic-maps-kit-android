@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
-import com.sygic.sdk.map.`object`.payload.Payload
+import com.sygic.sdk.map.`object`.payload.MarkerData
 
 /**
  * Factory class that can be used to change the default behavior of showing
@@ -23,12 +23,12 @@ abstract class DetailsViewFactory : Parcelable {
      * @param container This is the parent [ViewGroup] that the details view
      * will be attached to. You should not add the view itself,
      * this can only be used to generate the [LayoutParams] of the view.
-     * @param data [Payload] associated with selected point / marker.
+     * @param data [MarkerData] associated with selected point / marker.
      * which can be used to enrich the layout with information.
      *
      * @return the view which will be used as an details view for selected points.
      */
-    abstract fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: Payload): View
+    abstract fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: MarkerData): View
 
     /**
      * Define the X offset for the details window.

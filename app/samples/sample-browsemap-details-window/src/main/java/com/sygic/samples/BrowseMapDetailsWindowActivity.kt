@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.samples.detail.CustomDetailsViewFactory
 import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.ui.common.sdk.data.BasicPayload
+import com.sygic.ui.common.sdk.data.BasicMarkerData
 
 class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
 
@@ -23,7 +23,7 @@ class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
                 MapMarker.from(48.155028, 17.155674).build(),
                 MapMarker.from(48.141797, 17.097001).build(),
                 MapMarker.from(
-                    BasicPayload(
+                    BasicMarkerData(
                         "My Marker 1",
                         latitude = 48.162805,
                         longitude = 17.101621
@@ -31,7 +31,7 @@ class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
                 )
                     .build(),
                 MapMarker.from(
-                    BasicPayload(
+                    BasicMarkerData(
                         "My Marker 2",
                         latitude = 48.134756,
                         longitude = 17.127729
