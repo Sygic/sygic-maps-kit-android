@@ -16,8 +16,7 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_browsemap_click_listener)
 
-        val markerFromBuilder = MapMarker.Builder()
-            .payload(
+        val markerFromBuilder = MapMarker.from(
                 CustomPayload(
                     GeoCoordinates(48.146514, 17.124175),
                     "Custom Payload title",

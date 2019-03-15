@@ -6,6 +6,7 @@ import androidx.appcompat.widget.PopupMenu
 import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.ui.common.sdk.data.BasicPayload
 import kotlinx.android.synthetic.main.activity_browsemap_modes.*
 
 class BrowseMapModesActivity : CommonSampleActivity() {
@@ -38,29 +39,17 @@ class BrowseMapModesActivity : CommonSampleActivity() {
 
         browseMapFragment.addMapMarkers(
             listOf(
-                MapMarker.Builder()
-                    .coordinates(48.143489, 17.150560)
-                    .title("Marker 1")
+                MapMarker.from(BasicPayload("Marker 1", latitude = 48.143489, longitude = 17.150560))
                     .build(),
-                MapMarker.Builder()
-                    .coordinates(48.162805, 17.101621)
-                    .title("Marker 2")
+                MapMarker.from(BasicPayload("Marker 2", latitude = 48.162805, longitude = 17.101621))
                     .build(),
-                MapMarker.Builder()
-                    .coordinates(48.165561, 17.139550)
-                    .title("Marker 3")
+                MapMarker.from(BasicPayload("Marker 3", latitude = 48.165561, longitude = 17.139550))
                     .build(),
-                MapMarker.Builder()
-                    .coordinates(48.155028, 17.155674)
-                    .title("Marker 4")
+                MapMarker.from(BasicPayload("Marker 4", latitude = 48.155028, longitude = 17.155674))
                     .build(),
-                MapMarker.Builder()
-                    .coordinates(48.141797, 17.097001)
-                    .title("Marker 5")
+                MapMarker.from(BasicPayload("Marker 5", latitude = 48.141797, longitude = 17.097001))
                     .build(),
-                MapMarker.Builder()
-                    .coordinates(48.134756, 17.127729)
-                    .title("Marker 6")
+                MapMarker.from(BasicPayload("Marker 6", latitude = 48.134756, longitude = 17.127729))
                     .build()
             )
         )

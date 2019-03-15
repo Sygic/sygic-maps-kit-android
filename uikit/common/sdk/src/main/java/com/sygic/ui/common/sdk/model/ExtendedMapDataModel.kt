@@ -13,9 +13,9 @@ object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
         object Vehicle : SkinLayer(1)
     }
 
-    private var currentOnClickMapMarker: MapMarker? = null
+    private var currentOnClickMapMarker: MapMarker<*>? = null
 
-    fun addOnClickMapMarker(onClickMapMarker: MapMarker) {
+    fun addOnClickMapMarker(onClickMapMarker: MapMarker<*>) {
         currentOnClickMapMarker = onClickMapMarker
         addMapObject(onClickMapMarker)
     }

@@ -236,7 +236,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
      *
      * @param marker [MapMarker] object to be added.
      */
-    fun addMapMarker(marker: MapMarker) {
+    fun addMapMarker(marker: MapMarker<*>) {
         mapDataModel.addMapObject(marker)
     }
 
@@ -246,7 +246,7 @@ abstract class MapFragmentWrapper : MapFragment(), SdkInitializationManager.Call
      *
      * @param markers [List] of [MapMarker]-s objects to be added.
      */
-    fun addMapMarkers(markers: List<MapMarker>) {
+    fun addMapMarkers(markers: List<MapMarker<*>>) {
         markers.forEach { addMapMarker(it) }
     }
 

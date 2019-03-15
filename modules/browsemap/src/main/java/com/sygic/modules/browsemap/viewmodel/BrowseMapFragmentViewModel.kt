@@ -12,6 +12,7 @@ import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
 import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.map.`object`.ProxyPoi
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.payload.Payload
@@ -104,7 +105,7 @@ class BrowseMapFragmentViewModel internal constructor(
         poiDetailsView?.let {
             mapDataModel.removeMapObject(it)
             poiDetailsView = null
-            if (firstViewObject !is MapMarker) {
+            if (firstViewObject !is MapMarker<*>) {
                 return
             }
         }
@@ -114,16 +115,18 @@ class BrowseMapFragmentViewModel internal constructor(
                 logWarning("NONE")
             }
             MapSelectionMode.MARKERS_ONLY -> {
-                if (firstViewObject !is MapMarker) {
+                if (firstViewObject !is MapMarker<*>) {
                     return
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
             }
             MapSelectionMode.FULL -> {
-                if (firstViewObject !is MapMarker && onMapClickListener == null) {
-                    firstViewObject = MapMarker(firstViewObject)
-                    mapDataModel.addOnClickMapMarker(firstViewObject)
+                if (firstViewObject !is MapMarker<*> && onMapClickListener == null) {
+                    mapDataModel.addOnClickMapMarker(when (firstViewObject) {
+                        is ProxyPoi -> MapMarker.from(firstViewObject).build()
+                        else -> MapMarker.from(firstViewObject.position).build()
+                    }.also { firstViewObject = it })
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
@@ -149,7 +152,7 @@ class BrowseMapFragmentViewModel internal constructor(
                         override fun onMeasured(width: Int, height: Int) {
                             super.onMeasured(width, height)
 
-                            val markerHeight: Int = if (viewObject is MapMarker)
+                            val markerHeight: Int = if (viewObject is MapMarker<*>)
                                 viewObject.getBitmap(getApplication())?.height ?: 0 else 0
 
                             setAnchor(

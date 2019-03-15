@@ -9,6 +9,7 @@ import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 import com.sygic.ui.common.extensions.asSingleEvent
 import com.sygic.ui.common.listeners.DialogFragmentListener
 import com.sygic.ui.common.livedata.SingleLiveEvent
+import com.sygic.ui.common.sdk.data.BasicPayload
 import com.sygic.ui.common.sdk.data.PoiDataPayload
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
@@ -23,8 +24,8 @@ internal class PoiDetailInternalViewModel(data: Payload,
                                           private val preferencesManager: PreferencesManager) : ViewModel(),
     BottomSheetBehaviorWrapper.StateListener {
 
-    val titleText: String = data.title
-    val subtitleText: String = data.description
+    val titleText: String = if (data is BasicPayload) data.title else ""
+    val subtitleText: String = if (data is BasicPayload) data.description else ""
     val coordinatesText: String? = data.position.getFormattedLocation()
     val urlText: String? = if (data is PoiDataPayload) data.url else null
     val emailText: String? = if (data is PoiDataPayload) data.email else null
