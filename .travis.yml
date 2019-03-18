@@ -16,7 +16,7 @@ android:
   - platform-tools
   - android-$ANDROID_API_LEVEL
   - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-  - sys-img-$ANDROID_ABI-google_apis-ANDROID_API_LEVEL
+  - sys-img-$ANDROID_ABI-google_apis-$ANDROID_API_LEVEL
 
 licenses:
 - android-sdk-preview-license-.+
