@@ -18,6 +18,7 @@ android:
   - android-$ANDROID_API_LEVEL
   - build-tools-$ANDROID_BUILD_TOOLS_VERSION
   - sys-img-$ANDROID_ABI-google_apis-$ANDROID_EMULATOR_LEVEL
+  - sys-img-armeabi-v8a-google_apis-$ANDROID_API_LEVEL
 
 licenses:
 - android-sdk-preview-license-.+
@@ -88,7 +89,7 @@ jobs:
     name: browsemap-default
     before_script:
     - android list targets
-    - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a
+    - echo no | android create avd --force -n test -t android-28 --abi google_apis/armeabi-v8a -c 1024M
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
