@@ -6,3 +6,5 @@ echo no | android create avd --force -n test -t android-${ANDROID_API_LEVEL} --a
 emulator -avd test -no-audio -no-window &
 android-wait-for-emulator
 adb shell input keyevent 82 &
+
+exit 0
