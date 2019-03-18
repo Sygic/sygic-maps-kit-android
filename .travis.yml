@@ -85,59 +85,31 @@ jobs:
 
   - stage: ui tests
     name: browsemap-default
-    before_script:
-    - echo no | android create avd --force -n test -t android-${ANDROID_API_LEVEL} --abi ${ANDROID_ABI} -c 400M
-    - emulator -avd test -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+    before_script: ./travis/prepare_emulator.sh
     script: ./gradlew :app-samples-browsemap-default:connectedAndroidTest
   - stage: ui tests
     name: browsemap-full
-    before_script:
-    - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_ABI -c 400M
-    - emulator -avd test -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+    before_script: ./travis/prepare_emulator.sh
     script: ./gradlew :app-samples-browsemap-full:connectedAndroidTest
   - stage: ui tests
     name: browsemap-modes
-    before_script:
-    - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_ABI -c 400M
-    - emulator -avd test -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+    before_script: ./travis/prepare_emulator.sh
     script: ./gradlew :app-samples-browsemap-modes:connectedAndroidTest
   - stage: ui tests
     name: browsemap-markers
-    before_script:
-    - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_ABI -c 400M
-    - emulator -avd test -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+    before_script: ./travis/prepare_emulator.sh
     script: ./gradlew :app-samples-browsemap-markers:connectedAndroidTest
   - stage: ui tests
     name: browsemap-details-window
-    before_script:
-    - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_ABI -c 400M
-    - emulator -avd test -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+    before_script: ./travis/prepare_emulator.sh
     script: ./gradlew :app-samples-browsemap-details-window:connectedAndroidTest
   - stage: ui tests
     name: browsemap-click-listener
-    before_script:
-    - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_ABI -c 400M
-    - emulator -avd test -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+    before_script: ./travis/prepare_emulator.sh
     script: ./gradlew :app-samples-browsemap-click-listener:connectedAndroidTest
   - stage: ui tests
     name: browsemap-themes
-    before_script:
-    - echo no | android create avd --force -n test -t android-$ANDROID_API_LEVEL --abi $ANDROID_ABI -c 400M
-    - emulator -avd test -no-audio -no-window &
-    - android-wait-for-emulator
-    - adb shell input keyevent 82 &
+    before_script: ./travis/prepare_emulator.sh
     script: ./gradlew :app-samples-browsemap-themes:connectedAndroidTest
 
   - stage: deploy
