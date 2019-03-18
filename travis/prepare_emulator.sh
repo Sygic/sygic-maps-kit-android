@@ -3,8 +3,8 @@
 set -e
 
 target="system-images;android-${ANDROID_API_LEVEL};default;${ANDROID_ABI}"
-# echo y | sdkmanager --update
-# echo y | sdkmanager --install $target
+echo y | sdkmanager --update
+echo y | sdkmanager --install $target
 avdmanager create avd --force -n test -k $target --device "Nexus 4" -c 2048M
 QEMU_AUDIO_DRV=none $ANDROID_HOME/emulator/emulator -avd test -no-window -memory 2048 &
 
