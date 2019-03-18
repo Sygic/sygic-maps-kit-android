@@ -86,15 +86,15 @@ jobs:
   - stage: ui tests
     name: browsemap-default
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86 -c 400M
-    - emulator -avd test -no-audio -no-window &
+    - echo no | android create avd --force -n test -t android-28 --abi google_apis/x86 -no-accel
+    - emulator -avd test -no-skin -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script: ./gradlew :app-samples-browsemap-default:connectedAndroidTest
   - stage: ui tests
     name: browsemap-full
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86 -c 400M
+    - echo no | android create avd --force -n test -t android-28 --abi x86 -no-accel
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
@@ -102,7 +102,7 @@ jobs:
   - stage: ui tests
     name: browsemap-modes
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86 -c 400M
+    - echo no | android create avd --force -n test -t android-28 --abi x86 -no-accel
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
@@ -110,7 +110,7 @@ jobs:
   - stage: ui tests
     name: browsemap-markers
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86 -c 400M
+    - echo no | android create avd --force -n test -t android-28 --abi x86 -no-accel
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
@@ -118,7 +118,7 @@ jobs:
   - stage: ui tests
     name: browsemap-details-window
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86 -c 400M
+    - echo no | android create avd --force -n test -t android-28 --abi x86 -no-accel
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
@@ -126,7 +126,7 @@ jobs:
   - stage: ui tests
     name: browsemap-click-listener
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86 -c 400M
+    - echo no | android create avd --force -n test -t android-28 --abi x86 -no-accel
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
@@ -134,7 +134,7 @@ jobs:
   - stage: ui tests
     name: browsemap-themes
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86 -c 400M
+    - echo no | android create avd --force -n test -t android-28 --abi x86 -no-accel
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
