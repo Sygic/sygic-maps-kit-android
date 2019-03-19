@@ -1,29 +1,155 @@
 version: 2.1
 
-jobs:
-  build:
-    working_directory: ~/sygic-maps-kit-android
+references:
+
+  # Cache
+  cache_key: &cache_key
+    key: cache-{{ checksum "build.gradle" }}-{{ checksum "app/samples/build.gradle" }}-{{ checksum "modules/browsemap/build.gradle" }}-{{ checksum "modules/common/build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "gradle.properties" }}
+  restore_cache: &restore_cache
+    restore_cache:
+      <<: *cache_key
+  save_cache: &save_cache
+    save_cache:
+      <<: *cache_key
+      paths:
+      - ~/.gradle
+
+  ## Workspace
+  workspace: &workspace
+    ~/workspace
+  attach_debug_workspace: &attach_debug_workspace
+    attach_workspace:
+      at: *workspace
+  persist_debug_workspace: &persist_debug_workspace
+    persist_to_workspace:
+      root: *workspace
+      paths:
+      - app/samples/build/intermediates
+      - app/samples/build/outputs/androidTest-results
+      - app/samples/build/outputs/apk
+      - app/samples/build/outputs/code-coverage
+      - app/samples/build/test-results
+#  attach_firebase_workspace: &attach_firebase_workspace
+#  attach_workspace:
+#    at: *workspace
+#  persist_firebase_workspace: &persist_firebase_workspace
+#    persist_to_workspace:
+#      root: *workspace
+#      paths:
+#      - firebase
+
+  # Docker images
+  android_config: &android_config
+    working_directory: *workspace
     docker:
-    - image: circleci/android:api-28 #todo: api-28-ndk ?
+    - image: circleci/android:api-28
     environment:
       JVM_OPTS: -Xmx3200m
+      TERM: dumb
+      # https://blogs.oracle.com/java-platform-group/java-se-support-for-docker-cpu-and-memory-limits
+      _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
+  gcloud_config: &gcloud_config
+    working_directory: *workspace
+    docker:
+    - image: google/cloud-sdk:latest
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
+  # Google Cloud Service
+#  export_gcloud_key: &export_gcloud_key
+#    run:
+#      name: Export Google Cloud Service key environment variable
+#      command: echo 'export GCLOUD_SERVICE_KEY="$GCLOUD_SERVICE_KEY"' >> $BASH_ENV
+#  decode_gcloud_key: &decode_gcloud_key
+#    run:
+#      name: Decode Google Cloud credentials
+#      command: echo $GCLOUD_SERVICE_KEY | base64 -di > ${HOME}/client-secret.json
+
+jobs:
+
+  build:
+    <<: *android_config
     steps:
     - checkout
-
-    - restore_cache:
-        keys:
-        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/samples/build.gradle" }}
-
+    - *restore_cache
+#    - run:
+#        name: Download Dependencies
+#        command: ./gradlew androidDependencies
     - run:
-        name: Download Dependencies
-        command: ./gradlew androidDependencies
+        name: Gradle build
+        command: ./gradlew build
+    - *save_cache
+    - *persist_debug_workspace
+    - store_artifacts:
+        path: app/samples/build/outputs/apk/
+        destination: /apk/
+    - store_artifacts:
+        path: app/samples/build/reports/
+        destination: /samples-app/
 
-    - save_cache:
-        paths:
-        - ~/.gradle
-        key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/samples/build.gradle" }}
-
+  unit_tests:
+    <<: *android_config
+    steps:
+    - checkout
+    # - *restore_cache
+    #    - run:
+    #        name: Download Dependencies
+    #        command: ./gradlew androidDependencies
     - run:
-        name: Run Tests
-        command: ./gradlew check
+        name: Modules common check
+        command: ./gradlew :modules-common:check
+    - run:
+        name: Modules browsemap check
+        command: ./gradlew :modules-browsemap:check
+
+#  test_instrumented:
+#    <<: *gcloud_config
+#    steps:
+#    - *attach_debug_workspace
+#    - *export_gcloud_key
+#    - *decode_gcloud_key
+#    - run:
+#        name: Authenticate with Google Cloud
+#        command: gcloud auth activate-service-account firebase-adminsdk-fmjy6@android-ui-testing.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
+#    - run:
+#        name: Set Google Cloud target project
+#        command: gcloud config set project android-ui-testing
+#    - run:
+#        name: Run instrumented test on Firebase Test Lab
+#        command: >
+#          gcloud firebase test android run
+#          --type instrumentation
+#          --app test-app/build/outputs/apk/debug/test-app-debug.apk
+#          --test test-app/build/outputs/apk/androidTest/debug/test-app-debug-androidTest.apk
+#          --device model=Nexus5,version=19,locale=en_US,orientation=portrait
+#          --device model=Nexus5,version=22,locale=en_US,orientation=portrait
+#          --device model=Nexus5X,version=24,locale=en_US,orientation=portrait
+#          --directories-to-pull=/sdcard/tmp
+#          --use-orchestrator
+#          --no-record-video
+#          --timeout 20m
+#    - run:
+#        name: Create directory to store test results
+#        command: mkdir firebase
+#        when: always
+#    - run:
+#        name: Download instrumented test results from Firebase Test Lab
+#        command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-jaj2sjjxxd1rs-kznjs5irhfqas | tail -1`*" /root/workspace/firebase/
+#        when: always
+#    - *persist_firebase_workspace
+#    - store_artifacts:
+#        path: firebase/
+#        destination: /firebase/
+
+workflows:
+  build-test-and-deploy:
+    jobs:
+    - build
+    - unit_tests:
+        requires:
+        - build
+#    - ui_tests:
+#        requires:
+#        - unit_tests
