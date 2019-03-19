@@ -1,9 +1,10 @@
-version: 2
+version: 2.1
+
 jobs:
   build:
-    working_directory: ~/code
+    working_directory: ~/sygic-maps-kit-android
     docker:
-    - image: circleci/android:api-28
+    - image: circleci/android:api-28 #todo: api-28-ndk ?
     environment:
       JVM_OPTS: -Xmx3200m
 
