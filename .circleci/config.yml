@@ -22,7 +22,7 @@ references:
       JVM_OPTS: -Xmx3200m
 
 jobs:
-  build-test-and-deploy:
+  build: #todo build-test-and-deploy:
     <<: *android_config
 
     steps:
