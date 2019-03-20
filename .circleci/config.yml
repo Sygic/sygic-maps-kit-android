@@ -247,7 +247,7 @@ jobs:
         name: Run Browsemap Ui tests
         command: echo 'done'
 
-  deploy: #todo on tag only
+  deploy:
     <<: *default_config
     steps:
     - *attach_workspace
