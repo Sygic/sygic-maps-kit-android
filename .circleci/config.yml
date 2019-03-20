@@ -103,6 +103,7 @@ jobs:
 
   test:
     <<: *default_config
+    parallelism: 4
     steps:
     - *attach_workspace
 
