@@ -263,12 +263,21 @@ workflows:
   build-test-deploy:
     jobs:
     - build
+      filters:
+        tags:
+          only: /.*/
     - test:
         requires:
         - build
+        filters:
+          tags:
+            only: /.*/
     - ui_test:
         requires:
         - test
+        filters:
+          tags:
+            only: /.*/
     - deploy:
         requires:
         - test
@@ -276,3 +285,5 @@ workflows:
         filters:
           tags:
             only: /^\d+\.\d+\.\d+$/
+        branches:
+          ignore: /.*/
