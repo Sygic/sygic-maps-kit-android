@@ -103,7 +103,6 @@ jobs:
 
   test:
     <<: *default_config
-    parallelism: 4
     steps:
     - *attach_workspace
 
@@ -111,9 +110,21 @@ jobs:
         name: Run UiKit Common tests
         command: ./gradlew :uikit-common:check
 
+    - store_test_results:
+        path: uikit/common/build/reports
+
+    - store_test_results:
+        path: uikit/common/build/test-results
+
     - run:
         name: Run UiKit Common SDK tests
         command: ./gradlew :uikit-common-sdk:check
+
+    - store_test_results:
+        path: uikit/common/sdk/build/reports
+
+    - store_test_results:
+        path: uikit/common/sdk/build/test-results
 
     - run:
         name: Run UiKit Compass tests
@@ -166,11 +177,10 @@ jobs:
     - *attach_workspace
 
     - run: #todo
-        name: Store artifacts
+        name: Store release artifacts
         command: echo 'done'
 
-    - run: #todo
-        name: Deploy to GitHub
+    - deploy: #todo
         command: echo 'done'
 
 workflows:
