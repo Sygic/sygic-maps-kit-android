@@ -14,12 +14,12 @@ references:
       paths:
       - ~/.gradle
 
-  # Workspace (https://discuss.circleci.com/t/why-cant-you-persist-the-entire-workspace-root/19469/2)
+  # Workspace
   workspace: &workspace
                ~/workspace/sygic-maps-kit-android
   attach_debug_workspace: &attach_workspace
     attach_workspace:
-      at: *workspace
+      at: ~/workspace
   persist_debug_workspace: &persist_workspace
     persist_to_workspace:
       root: ~/workspace
