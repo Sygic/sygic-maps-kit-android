@@ -34,11 +34,10 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
-- name: ui tests
 - name: compile and test uikit
 - name: compile and test modules
 - name: compile and test samples
-#todo
+- name: ui tests
 - name: deploy
   if: tag =~ ^\d+\.\d+\.\d+$
 
@@ -87,7 +86,6 @@ jobs:
   - stage: ui tests
     name: browsemap-default
     before_script:
-    - android list targets
     - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a -c 2048M
     - emulator -avd test -no-audio -no-window -memory 1024 &
     - android-wait-for-emulator
@@ -96,48 +94,48 @@ jobs:
   - stage: ui tests
     name: browsemap-full
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86
-    - emulator -avd test -no-audio -no-window &
+    - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a -c 2048M
+    - emulator -avd test -no-audio -no-window -memory 1024 &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script: ./gradlew :app-samples-browsemap-full:connectedAndroidTest
   - stage: ui tests
     name: browsemap-modes
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86
-    - emulator -avd test -no-audio -no-window &
+    - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a -c 2048M
+    - emulator -avd test -no-audio -no-window -memory 1024 &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script: ./gradlew :app-samples-browsemap-modes:connectedAndroidTest
   - stage: ui tests
     name: browsemap-markers
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86
-    - emulator -avd test -no-audio -no-window &
+    - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a -c 2048M
+    - emulator -avd test -no-audio -no-window -memory 1024 &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script: ./gradlew :app-samples-browsemap-markers:connectedAndroidTest
   - stage: ui tests
     name: browsemap-details-window
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86
-    - emulator -avd test -no-audio -no-window &
+    - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a -c 2048M
+    - emulator -avd test -no-audio -no-window -memory 1024 &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script: ./gradlew :app-samples-browsemap-details-window:connectedAndroidTest
   - stage: ui tests
     name: browsemap-click-listener
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86
-    - emulator -avd test -no-audio -no-window &
+    - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a -c 2048M
+    - emulator -avd test -no-audio -no-window -memory 1024 &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script: ./gradlew :app-samples-browsemap-click-listener:connectedAndroidTest
   - stage: ui tests
     name: browsemap-themes
     before_script:
-    - echo no | android create avd --force -n test -t android-28 --abi x86
-    - emulator -avd test -no-audio -no-window &
+    - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a -c 2048M
+    - emulator -avd test -no-audio -no-window -memory 1024 &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script: ./gradlew :app-samples-browsemap-themes:connectedAndroidTest
