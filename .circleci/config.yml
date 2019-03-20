@@ -1,9 +1,10 @@
 version: 2.1
 
 references:
+
   # Cache
   cache_key: &cache_key
-    key: cache-{{ checksum "build.gradle" }}-{{ checksum "app/samples/build.gradle" }}-{{ checksum "modules/browsemap/build.gradle" }}-{{ checksum "modules/common/build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "gradle.properties" }}
+    key: cache-{{ checksum "build.gradle" }}-{{ checksum "app/samples/build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "gradle.properties" }}
   restore_cache: &restore_cache
     restore_cache:
       <<: *cache_key
@@ -13,18 +14,30 @@ references:
       paths:
       - ~/.gradle
 
+  # Workspace (https://discuss.circleci.com/t/why-cant-you-persist-the-entire-workspace-root/19469/2)
+  workspace: &workspace
+               ~/workspace/sygic-maps-kit-android
+  attach_debug_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace
+  persist_debug_workspace: &persist_workspace
+    persist_to_workspace:
+      root: ~/workspace
+      paths:
+      - sygic-maps-kit-android
+
   # Docker
-  android_config: &android_config
-    working_directory: ~/sygic-maps-kit-android
+  android_config: &default_config
+    working_directory: *workspace
     docker:
     - image: circleci/android:api-28 #todo: api-28-ndk ?
     environment:
       JVM_OPTS: -Xmx3200m
 
 jobs:
-  build: #todo build-test-and-deploy:
-    <<: *android_config
 
+  build:
+    <<: *default_config
     steps:
     - checkout
     - *restore_cache
@@ -41,14 +54,57 @@ jobs:
         name: Build UiKit Common SDK
         command: ./gradlew :uikit-common-sdk:assembleDebug
 
-    #    - store_artifacts:
-    #        path: app/samples/build/outputs/apk/
-    #        destination: /apk/
-    #    - store_artifacts:
-    #        path: app/samples/build/reports/
-    #        destination: /samples-app/
+    - run:
+        name: Build UiKit Compass
+        command: ./gradlew :uikit-compass:assembleDebug
+
+    - run:
+        name: Build UiKit Compass ViewModel
+        command: ./gradlew :uikit-compass-viewmodel:assembleDebug
+
+    - run:
+        name: Build UiKit Poidetail
+        command: ./gradlew :uikit-poidetail:assembleDebug
+
+    - run:
+        name: Build UiKit Positionlockfab
+        command: ./gradlew :uikit-positionlockfab:assembleDebug
+
+    - run:
+        name: Build UiKit Positionlockfab ViewModel
+        command: ./gradlew :uikit-positionlockfab-viewmodel:assembleDebug
+
+    - run:
+        name: Build UiKit Zoomcontrols
+        command: ./gradlew :uikit-zoomcontrols:assembleDebug
+
+    - run:
+        name: Build UiKit Zoomcontrols ViewModel
+        command: ./gradlew :uikit-zoomcontrols-viewmodel:assembleDebug
+
+    - run:
+        name: Build Module Common
+        command: ./gradlew :modules-common:assembleDebug
+
+    - run:
+        name: Build Module Browsemap
+        command: ./gradlew :modules-browsemap:assembleDebug
+
+    - run:
+        name: Build Sample App
+        command: ./gradlew :app-samples:assembleDebug
+
+    - store_artifacts:
+        path: app/samples/build/outputs/apk/
+        destination: /apk/
 
     - *save_cache
+    - *persist_workspace
+
+  test:
+    <<: *default_config
+    steps:
+    - *attach_workspace
 
     - run:
         name: Run UiKit Common tests
@@ -58,13 +114,75 @@ jobs:
         name: Run UiKit Common SDK tests
         command: ./gradlew :uikit-common-sdk:check
 
-#workflows:
-#  build-test-and-deploy:
-#    jobs:
-#    - build
-#    - unit_tests:
-#        requires:
-#        - build
-#    - ui_tests:
-#        requires:
-#        - unit_tests
+    - run:
+        name: Run UiKit Compass tests
+        command: ./gradlew :uikit-compass:check
+
+    - run:
+        name: Run UiKit Compass ViewModel tests
+        command: ./gradlew :uikit-compass-viewmodel:check
+
+    - run:
+        name: Run UiKit Poidetail tests
+        command: ./gradlew :uikit-poidetail:check
+
+    - run:
+        name: Run UiKit Positionlockfab tests
+        command: ./gradlew :uikit-positionlockfab:check
+
+    - run:
+        name: Run UiKit Positionlockfab ViewModel tests
+        command: ./gradlew :uikit-positionlockfab-viewmodel:check
+
+    - run:
+        name: Run UiKit Zoomcontrols tests
+        command: ./gradlew :uikit-zoomcontrols:check
+
+    - run:
+        name: Run UiKit Zoomcontrols ViewModel tests
+        command: ./gradlew :uikit-zoomcontrols-viewmodel:check
+
+    - run:
+        name: Run Module Common tests
+        command: ./gradlew :modules-common:check
+
+    - run:
+        name: Run Module Browsemap tests
+        command: ./gradlew :modules-browsemap:check
+
+  ui_test:
+    <<: *default_config
+    steps:
+    - *attach_workspace
+
+    - run: #todo
+        name: Run Browsemap Ui tests
+        command: echo 'done'
+
+  deploy: #todo on tag only
+    <<: *default_config
+    steps:
+    - *attach_workspace
+
+    - run: #todo
+        name: Store artifacts
+        command: echo 'done'
+
+    - run: #todo
+        name: Deploy to GitHub
+        command: echo 'done'
+
+workflows:
+  build-test-deploy:
+    jobs:
+    - build
+    - test:
+        requires:
+        - build
+    - ui_test:
+        requires:
+        - test
+    - deploy:
+        requires:
+        - test
+        - ui_test
