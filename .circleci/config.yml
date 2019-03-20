@@ -112,11 +112,11 @@ jobs:
 
     - store_artifacts:
         path: uikit/common/build/reports
-        destination: lint
+        destination: uikit-common-lint
 
     - store_artifacts:
         path: uikit/common/build/test-results
-        destination: test-results
+        destination: uikit-common-test-results
 
     - run:
         name: Run UiKit Common SDK tests
@@ -124,11 +124,11 @@ jobs:
 
     - store_artifacts:
         path: uikit/common/sdk/build/reports
-        destination: lint
+        destination: uikit-common-sdk-lint
 
     - store_artifacts:
         path: uikit/common/sdk/build/test-results
-        destination: test-results
+        destination: uikit-common-sdk-test-results
 
     - run:
         name: Run UiKit Compass tests
