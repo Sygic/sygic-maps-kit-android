@@ -110,21 +110,25 @@ jobs:
         name: Run UiKit Common tests
         command: ./gradlew :uikit-common:check
 
-    - store_test_results:
+    - store_artifacts:
         path: uikit/common/build/reports
+        destination: lint
 
-    - store_test_results:
+    - store_artifacts:
         path: uikit/common/build/test-results
+        destination: test-results
 
     - run:
         name: Run UiKit Common SDK tests
         command: ./gradlew :uikit-common-sdk:check
 
-    - store_test_results:
+    - store_artifacts:
         path: uikit/common/sdk/build/reports
+        destination: lint
 
-    - store_test_results:
+    - store_artifacts:
         path: uikit/common/sdk/build/test-results
+        destination: test-results
 
     - run:
         name: Run UiKit Compass tests
