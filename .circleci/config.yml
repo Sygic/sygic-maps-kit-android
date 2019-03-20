@@ -134,37 +134,109 @@ jobs:
         name: Run UiKit Compass tests
         command: ./gradlew :uikit-compass:check
 
+    - store_artifacts:
+        path: uikit/compass/build/reports
+        destination: uikit-compass-lint
+
+    - store_artifacts:
+        path: uikit/compass/build/test-results
+        destination: uikit-compass-test-results
+
     - run:
         name: Run UiKit Compass ViewModel tests
         command: ./gradlew :uikit-compass-viewmodel:check
+
+    - store_artifacts:
+        path: uikit/compass/viewmodel/build/reports
+        destination: uikit-compass-viewmodel-lint
+
+    - store_artifacts:
+        path: uikit/compass/viewmodel/build/test-results
+        destination: uikit-compass-viewmodel-test-results
 
     - run:
         name: Run UiKit Poidetail tests
         command: ./gradlew :uikit-poidetail:check
 
+    - store_artifacts:
+        path: uikit/poidetail/build/reports
+        destination: uikit-poidetail-lint
+
+    - store_artifacts:
+        path: uikit/poidetail/build/test-results
+        destination: uikit-poidetail-test-results
+
     - run:
         name: Run UiKit Positionlockfab tests
         command: ./gradlew :uikit-positionlockfab:check
+
+    - store_artifacts:
+        path: uikit/positionlockfab/build/reports
+        destination: uikit-positionlockfab-lint
+
+    - store_artifacts:
+        path: uikit/positionlockfab/build/test-results
+        destination: uikit-positionlockfab-test-results
 
     - run:
         name: Run UiKit Positionlockfab ViewModel tests
         command: ./gradlew :uikit-positionlockfab-viewmodel:check
 
+    - store_artifacts:
+        path: uikit/positionlockfab/viewmodel/build/reports
+        destination: uikit-positionlockfab-viewmodel-lint
+
+    - store_artifacts:
+        path: uikit/positionlockfab/viewmodel/build/test-results
+        destination: uikit-positionlockfab-viewmodel-test-results
+
     - run:
         name: Run UiKit Zoomcontrols tests
         command: ./gradlew :uikit-zoomcontrols:check
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/build/reports
+        destination: uikit-zoomcontrols-lint
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/build/test-results
+        destination: uikit-zoomcontrols-test-results
 
     - run:
         name: Run UiKit Zoomcontrols ViewModel tests
         command: ./gradlew :uikit-zoomcontrols-viewmodel:check
 
+    - store_artifacts:
+        path: uikit/zoomcontrols/viewmodel/build/reports
+        destination: uikit-zoomcontrols-viewmodel-lint
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/viewmodel/build/test-results
+        destination: uikit-zoomcontrols-viewmodel-test-results
+
     - run:
         name: Run Module Common tests
         command: ./gradlew :modules-common:check
 
+    - store_artifacts:
+        path: modules/common/build/reports
+        destination: modules-common-lint
+
+    - store_artifacts:
+        path: modules/common/build/test-results
+        destination: modules-common-test-results
+
     - run:
         name: Run Module Browsemap tests
         command: ./gradlew :modules-browsemap:check
+
+    - store_artifacts:
+        path: modules/browsemap/build/reports
+        destination: modules-browsemap-lint
+
+    - store_artifacts:
+        path: modules/browsemap/build/test-results
+        destination: modules-browsemap-test-results
 
   ui_test:
     <<: *default_config
@@ -201,3 +273,6 @@ workflows:
         requires:
         - test
         - ui_test
+        filters:
+          tags:
+            only: /^\d+\.\d+\.\d+$/
