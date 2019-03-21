@@ -29,7 +29,7 @@ import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
  * [PoiDetailBottomDialogFragment].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
+open class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
 
     override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel

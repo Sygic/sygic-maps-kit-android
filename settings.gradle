@@ -6,6 +6,7 @@ include ':app-samples',
         ':app-samples-browsemap-modes',
         ':app-samples-browsemap-click-listener',
         ':app-samples-browsemap-markers',
+        ':app-samples-browsemap-split',
         ':app-samples-browsemap-themes',
         ':app-samples-browsemap-details-window',
         ':app-samples-common',
@@ -30,6 +31,7 @@ project(':app-samples-browsemap-full').projectDir = new File("app/samples/sample
 project(':app-samples-browsemap-modes').projectDir = new File("app/samples/sample-browsemap-modes")
 project(':app-samples-browsemap-click-listener').projectDir = new File("app/samples/sample-browsemap-click-listener")
 project(':app-samples-browsemap-markers').projectDir = new File("app/samples/sample-browsemap-markers")
+project(':app-samples-browsemap-split').projectDir = new File("app/samples/sample-browsemap-split")
 project(':app-samples-browsemap-themes').projectDir = new File("app/samples/sample-browsemap-themes")
 project(':app-samples-browsemap-details-window').projectDir = new File("app/samples/sample-browsemap-details-window")
 project(':modules-common').projectDir = new File("modules/common")

@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -30,6 +31,7 @@ import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
 import com.sygic.modules.common.theme.ThemeManager
 import com.sygic.modules.common.theme.ThemeSupportedViewModel
+import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.listeners.OnMapInitListener
@@ -99,8 +101,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         getMapAsync(this)
     }
 
-    override fun getMapDataModel() = ExtendedMapDataModel
-    override fun getCameraDataModel() = ExtendedCameraModel
+    override fun getMapDataModel(): MapView.MapDataModel = ExtendedMapDataModel
+    override fun getCameraDataModel(): Camera.CameraModel = ExtendedCameraModel
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         executeInjector()
@@ -132,8 +134,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(mapDataModel)
-        lifecycle.addObserver(cameraDataModel)
+        mapDataModel.let { if (it is DefaultLifecycleObserver) lifecycle.addObserver(it) }
+        cameraDataModel.let { if (it is DefaultLifecycleObserver) lifecycle.addObserver(it) }
     }
 
     @CallSuper
@@ -276,7 +278,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     override fun onDestroy() {
         super.onDestroy()
 
-        lifecycle.removeObserver(mapDataModel)
-        lifecycle.removeObserver(cameraDataModel)
+        mapDataModel.let { if (it is DefaultLifecycleObserver) lifecycle.removeObserver(it) }
+        cameraDataModel.let { if (it is DefaultLifecycleObserver) lifecycle.removeObserver(it) }
     }
 }
