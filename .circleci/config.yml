@@ -369,7 +369,8 @@ jobs:
 workflows:
   build-test-deploy:
     jobs:
-    - build:
+     - build
+#    - build:
 #        filters:
 #          tags:
 #            only: /.*/
