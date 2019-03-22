@@ -312,7 +312,6 @@ jobs:
   deploy:
     <<: *default_config
     steps:
-    - *attach_workspace
 
     - run:
         name: Build release apk's and aar's
