@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.sdk.map.`object`.UiObject
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 
 internal class PoiDataDetailsFactory(
     private val factory: DetailsViewFactory,

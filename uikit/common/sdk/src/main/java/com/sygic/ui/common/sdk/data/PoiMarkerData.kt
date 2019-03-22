@@ -48,10 +48,6 @@ data class PoiMarkerData(
         return builder.toString()
     }
 
-    override fun getType(): String {
-        return TYPE_POI
-    }
-
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeParcelable(coordinates, flags)
         parcel.writeString(name)
@@ -83,8 +79,6 @@ data class PoiMarkerData(
     )
 
     companion object {
-
-        const val TYPE_POI = "payload_poi"
 
         @JvmField
         val EMPTY = PoiMarkerData()

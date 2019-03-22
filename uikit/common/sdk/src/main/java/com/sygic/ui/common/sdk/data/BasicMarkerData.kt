@@ -2,11 +2,10 @@ package com.sygic.ui.common.sdk.data
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.sygic.sdk.map.`object`.payload.PositionMarkerData
+import com.sygic.sdk.map.`object`.data.PositionMarkerData
 import com.sygic.sdk.position.GeoCoordinates
 
-
-open class BasicMarkerData : PositionMarkerData {
+open class BasicMarkerData : PositionMarkerData { //todo
 
     protected val basicDescription: BasicDescription
 
@@ -31,18 +30,12 @@ open class BasicMarkerData : PositionMarkerData {
         this.basicDescription = BasicDescription(parcel.readString(), parcel.readString())
     }
 
-    override fun getType(): String {
-        return TYPE_BASIC
-    }
-
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(basicDescription.formattedTitle)
         parcel.writeString(basicDescription.formattedSubtitle)
     }
 
     companion object {
-        const val TYPE_BASIC = "payload_basic"
-
         @JvmField
         val CREATOR = object : Parcelable.Creator<BasicMarkerData> {
             override fun createFromParcel(parcel: Parcel): BasicMarkerData {

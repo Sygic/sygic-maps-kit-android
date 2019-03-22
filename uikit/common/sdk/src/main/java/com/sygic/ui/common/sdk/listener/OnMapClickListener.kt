@@ -1,6 +1,6 @@
 package com.sygic.ui.common.sdk.listener
 
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 
 /**
  * Interface definition for a callback to be invoked when a click to the map has been made.

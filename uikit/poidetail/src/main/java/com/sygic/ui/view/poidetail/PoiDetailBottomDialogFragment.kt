@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 import com.sygic.ui.common.extensions.copyToClipboard
 import com.sygic.ui.common.extensions.openEmail
 import com.sygic.ui.common.extensions.openPhone

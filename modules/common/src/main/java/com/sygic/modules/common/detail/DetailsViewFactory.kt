@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 
 /**
  * Factory class that can be used to change the default behavior of showing

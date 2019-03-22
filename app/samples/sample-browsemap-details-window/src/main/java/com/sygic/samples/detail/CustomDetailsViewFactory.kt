@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.samples.R
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 import com.sygic.ui.common.sdk.data.BasicMarkerData
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 

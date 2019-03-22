@@ -18,10 +18,6 @@ class CustomMarkerData : BasicMarkerData {
         this.customString = customString
     }
 
-    override fun getType(): String {
-        return TYPE_CUSTOM
-    }
-
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
         parcel.writeString(customString)
@@ -32,8 +28,6 @@ class CustomMarkerData : BasicMarkerData {
     }
 
     companion object {
-        const val TYPE_CUSTOM = "payload_custom"
-
         @JvmField
         val CREATOR = object : Parcelable.Creator<CustomMarkerData> {
             override fun createFromParcel(parcel: Parcel): CustomMarkerData {

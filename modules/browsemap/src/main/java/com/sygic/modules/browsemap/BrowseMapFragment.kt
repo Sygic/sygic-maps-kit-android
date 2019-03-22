@@ -13,7 +13,7 @@ import com.sygic.modules.common.MapFragmentWrapper
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 import com.sygic.ui.common.sdk.listener.OnMapClickListener
 import com.sygic.ui.view.compass.CompassView
 import com.sygic.ui.view.poidetail.PoiDetailBottomDialogFragment

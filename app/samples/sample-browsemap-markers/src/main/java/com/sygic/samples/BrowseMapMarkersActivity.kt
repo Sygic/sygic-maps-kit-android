@@ -36,12 +36,12 @@ class BrowseMapMarkersActivity : CommonSampleActivity() {
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         browseMapFragment.addMapMarkers(
             listOf(
-                MapMarker.from(48.143489, 17.150560).build(),
-                MapMarker.from(48.162805, 17.101621).build(),
-                MapMarker.from(48.165561, 17.139550).build(),
-                MapMarker.from(48.155028, 17.155674).build(),
-                MapMarker.from(48.141797, 17.097001).build(),
-                MapMarker.from(48.134756, 17.127729).build(),
+                MapMarker(48.143489, 17.150560),
+                MapMarker(48.162805, 17.101621),
+                MapMarker(48.165561, 17.139550),
+                MapMarker(48.155028, 17.155674),
+                MapMarker(48.141797, 17.097001),
+                MapMarker(48.134756, 17.127729),
                 markerFromBuilder,
                 markerFromBuilderWithCustomIcon,
                 MapMarker.from(48.144921, 17.114853)

@@ -18,26 +18,24 @@ class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         browseMapFragment.addMapMarkers(
             listOf(
-                MapMarker.from(48.143489, 17.150560).build(),
-                MapMarker.from(48.165561, 17.139550).build(),
-                MapMarker.from(48.155028, 17.155674).build(),
-                MapMarker.from(48.141797, 17.097001).build(),
+                MapMarker(48.143489, 17.150560),
+                MapMarker(48.165561, 17.139550),
+                MapMarker(48.155028, 17.155674),
+                MapMarker(48.141797, 17.097001),
                 MapMarker.from(
                     BasicMarkerData(
                         "My Marker 1",
                         latitude = 48.162805,
                         longitude = 17.101621
                     )
-                )
-                    .build(),
+                ).build(),
                 MapMarker.from(
                     BasicMarkerData(
                         "My Marker 2",
                         latitude = 48.134756,
                         longitude = 17.127729
                     )
-                )
-                    .build()
+                ).build()
             )
         )
 

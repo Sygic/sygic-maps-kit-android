@@ -15,7 +15,7 @@ import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ProxyPoi
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.extensions.asSingleEvent
@@ -125,7 +125,7 @@ class BrowseMapFragmentViewModel internal constructor(
                 if (firstViewObject !is MapMarker<*> && onMapClickListener == null) {
                     mapDataModel.addOnClickMapMarker(when (firstViewObject) {
                         is ProxyPoi -> MapMarker.from(firstViewObject).build()
-                        else -> MapMarker.from(firstViewObject.position).build()
+                        else -> MapMarker(firstViewObject.position)
                     }.also { firstViewObject = it })
                 }
 

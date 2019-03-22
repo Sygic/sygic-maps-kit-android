@@ -2,7 +2,7 @@ package com.sygic.modules.common.poi.manager
 
 import androidx.annotation.RestrictTo
 import com.sygic.sdk.map.`object`.ViewObject
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.places.Place
 import com.sygic.sdk.places.Places

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.sdk.map.`object`.payload.MarkerData
+import com.sygic.sdk.map.`object`.data.MarkerData
 import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
 import com.sygic.ui.common.extensions.asSingleEvent
 import com.sygic.ui.common.listeners.DialogFragmentListener
@@ -24,8 +24,8 @@ internal class PoiDetailInternalViewModel(data: MarkerData,
                                           private val preferencesManager: PreferencesManager) : ViewModel(),
     BottomSheetBehaviorWrapper.StateListener {
 
-    val titleText: String = if (data is BasicMarkerData) data.title else ""
-    val subtitleText: String = if (data is BasicMarkerData) data.description else ""
+    val titleText: String = if (data is BasicMarkerData) data.title else "" //todo
+    val subtitleText: String = if (data is BasicMarkerData) data.description else "" //todo
     val coordinatesText: String? = data.position.getFormattedLocation()
     val urlText: String? = if (data is PoiMarkerData) data.url else null
     val emailText: String? = if (data is PoiMarkerData) data.email else null
