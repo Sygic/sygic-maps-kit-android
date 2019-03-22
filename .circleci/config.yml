@@ -314,38 +314,83 @@ jobs:
     steps:
     - *attach_workspace
 
-    - run: #todo
-        name: Store release artifacts
-        command: echo 'done'
+    - run:
+        name: Build release apk's and aar's
+        command: ./gradlew assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
+
+    - store_artifacts:
+        path: app/samples/build/outputs/apk/release
+        destination: /apk/
+
+    - store_artifacts:
+        path: modules/browsemap/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: modules/common/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/common/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/compass/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/compass/viewmodel/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/poidetail/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/positionlockfab/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/positionlockfab/viewmodel/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/viewmodel/build/outputs/aar/
+        destination: /aar/
 
     - deploy: #todo
         command: echo 'done'
 
+#todo
 workflows:
   build-test-deploy:
     jobs:
     - build:
-        filters:
-          tags:
-            only: /.*/
+#        filters:
+#          tags:
+#            only: /.*/
     - test:
         requires:
         - build
-        filters:
-          tags:
-            only: /.*/
+#        filters:
+#          tags:
+#            only: /.*/
     - ui_test:
         requires:
         - test
-        filters:
-          tags:
-            only: /.*/
+#        filters:
+#          tags:
+#            only: /.*/
     - deploy:
         requires:
         - test
         - ui_test
-        filters:
-          tags:
-            only: /^\d+\.\d+\.\d+$/
-          branches:
-            ignore: /.*/
+#        filters:
+#          tags:
+#            only: /^\d+\.\d+\.\d+$/
+#          branches:
+#            ignore: /.*/
