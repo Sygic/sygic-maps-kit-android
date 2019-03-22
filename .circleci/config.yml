@@ -312,6 +312,7 @@ jobs:
   deploy:
     <<: *default_config
     steps:
+    - checkout
 
     - run:
         name: Build release apk's and aar's
