@@ -30,9 +30,9 @@ import com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel
  * [PoiDetailBottomDialogFragment].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper() {
+class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
 
-    private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
+    override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
@@ -51,12 +51,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
      */
     @MapSelectionMode
     var mapSelectionMode: Int
-        get() = if (::browseMapFragmentViewModel.isInitialized) {
-            browseMapFragmentViewModel.mapSelectionMode
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.mapSelectionMode
         } else mapFragmentInitComponent.mapSelectionMode
         set(value) {
-            if (::browseMapFragmentViewModel.isInitialized) {
-                browseMapFragmentViewModel.mapSelectionMode = value
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.mapSelectionMode = value
             } else mapFragmentInitComponent.mapSelectionMode = value
         }
 
@@ -68,12 +68,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the [CompassView] is on or off.
      */
     var compassEnabled: Boolean
-        get() = if (::browseMapFragmentViewModel.isInitialized) {
-            browseMapFragmentViewModel.compassEnabled.value!!
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.compassEnabled.value!!
         } else mapFragmentInitComponent.compassEnabled
         set(value) {
-            if (::browseMapFragmentViewModel.isInitialized) {
-                browseMapFragmentViewModel.compassEnabled.value = value
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.compassEnabled.value = value
             } else mapFragmentInitComponent.compassEnabled = value
         }
 
@@ -85,12 +85,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the [CompassView] auto hide behaviour is on or off.
      */
     var compassHideIfNorthUp: Boolean
-        get() = if (::browseMapFragmentViewModel.isInitialized) {
-            browseMapFragmentViewModel.compassHideIfNorthUp.value!!
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.compassHideIfNorthUp.value!!
         } else mapFragmentInitComponent.compassHideIfNorthUp
         set(value) {
-            if (::browseMapFragmentViewModel.isInitialized) {
-                browseMapFragmentViewModel.compassHideIfNorthUp.value = value
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.compassHideIfNorthUp.value = value
             } else mapFragmentInitComponent.compassHideIfNorthUp = value
         }
 
@@ -102,12 +102,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the "my position" indicator is on or off.
      */
     var positionOnMapEnabled: Boolean
-        get() = if (::browseMapFragmentViewModel.isInitialized) {
-            browseMapFragmentViewModel.positionOnMapEnabled
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.positionOnMapEnabled
         } else mapFragmentInitComponent.positionOnMapEnabled
         set(value) {
-            if (::browseMapFragmentViewModel.isInitialized) {
-                browseMapFragmentViewModel.positionOnMapEnabled = value
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.positionOnMapEnabled = value
             } else mapFragmentInitComponent.positionOnMapEnabled = value
         }
 
@@ -119,12 +119,12 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the [PositionLockFab] is on or off.
      */
     var positionLockFabEnabled: Boolean
-        get() = if (::browseMapFragmentViewModel.isInitialized) {
-            browseMapFragmentViewModel.positionLockFabEnabled.value!!
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.positionLockFabEnabled.value!!
         } else mapFragmentInitComponent.positionLockFabEnabled
         set(value) {
-            if (::browseMapFragmentViewModel.isInitialized) {
-                browseMapFragmentViewModel.positionLockFabEnabled.value = value
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.positionLockFabEnabled.value = value
             } else mapFragmentInitComponent.positionLockFabEnabled = value
         }
 
@@ -136,27 +136,27 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @return whether the [ZoomControlsMenu] is on or off.
      */
     var zoomControlsEnabled: Boolean
-        get() = if (::browseMapFragmentViewModel.isInitialized) {
-            browseMapFragmentViewModel.zoomControlsEnabled.value!!
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.zoomControlsEnabled.value!!
         } else mapFragmentInitComponent.zoomControlsEnabled
         set(value) {
-            if (::browseMapFragmentViewModel.isInitialized) {
-                browseMapFragmentViewModel.zoomControlsEnabled.value = value
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.zoomControlsEnabled.value = value
             } else mapFragmentInitComponent.zoomControlsEnabled = value
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        browseMapFragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent)
-        browseMapFragmentViewModel.mapDataObservable.observe(this, Observer<ViewObjectData> { showPoiDetail(it) })
+        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent)
+        fragmentViewModel.mapDataObservable.observe(this, Observer<ViewObjectData> { showPoiDetail(it) })
         savedInstanceState?.let { setPoiDetailListener() }
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
         zoomControlsViewModel = viewModelOf(ZoomControlsViewModel::class.java)
 
-        lifecycle.addObserver(browseMapFragmentViewModel)
+        lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(compassViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
@@ -164,14 +164,14 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     private fun setPoiDetailListener() {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setListener(browseMapFragmentViewModel.dialogFragmentListener)
+            (fragment as PoiDetailBottomDialogFragment).setListener(fragmentViewModel.dialogFragmentListener)
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: LayoutBrowseMapBinding = LayoutBrowseMapBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        binding.browseMapFragmentViewModel = browseMapFragmentViewModel
+        binding.browseMapFragmentViewModel = fragmentViewModel
         binding.compassViewModel = compassViewModel
         binding.positionLockFabViewModel = positionLockFabViewModel
         binding.zoomControlsViewModel = zoomControlsViewModel
@@ -200,8 +200,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */
     fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
-        if (::browseMapFragmentViewModel.isInitialized) {
-            browseMapFragmentViewModel.onMapClickListener = onMapClickListener
+        if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.onMapClickListener = onMapClickListener
         } else {
             mapFragmentInitComponent.onMapClickListener = onMapClickListener
         }
@@ -214,8 +214,8 @@ class BrowseMapFragment : MapFragmentWrapper() {
      * @param factory [DetailsViewFactory] used to generate details window.
      */
     fun setDetailsViewFactory(factory: DetailsViewFactory?) {
-        if (::browseMapFragmentViewModel.isInitialized) {
-            browseMapFragmentViewModel.detailsViewFactory = factory
+        if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.detailsViewFactory = factory
         } else {
             mapFragmentInitComponent.detailsViewFactory = factory
         }
@@ -223,14 +223,14 @@ class BrowseMapFragment : MapFragmentWrapper() {
 
     private fun showPoiDetail(data: ViewObjectData) {
         val dialog = PoiDetailBottomDialogFragment.newInstance(data)
-        dialog.setListener(browseMapFragmentViewModel.dialogFragmentListener)
+        dialog.setListener(fragmentViewModel.dialogFragmentListener)
         dialog.show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        lifecycle.removeObserver(browseMapFragmentViewModel)
+        lifecycle.removeObserver(fragmentViewModel)
         lifecycle.removeObserver(compassViewModel)
         lifecycle.removeObserver(positionLockFabViewModel)
         lifecycle.removeObserver(zoomControlsViewModel)
