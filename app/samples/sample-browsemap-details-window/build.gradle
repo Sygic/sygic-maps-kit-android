@@ -45,6 +45,10 @@ android {
     }
     /* -= APK Split =- */
 
+    androidExtensions {
+        experimental = true
+    }
+
     //todo: MS-4504
     dataBinding {
         enabled = true

@@ -20,6 +20,10 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
