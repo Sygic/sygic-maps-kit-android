@@ -1,0 +1,21 @@
+<skin>
+    <searching memo="options: depth, breadth" policy="depth" />
+    <set name="poi_groups" file="skin_poi_groups.xml" hidden="true" memo="POI groups" />
+    <set name="poi_categories" file="skin_poi_categories.xml" hidden="true" memo="POI categories" />
+    <set name="poi_groups_car" file="skin_poi_groups_car.xml" hidden="true" memo="POI groups" />
+    <set name="roadsigns" file="skin_roadsigns.xml" hidden="true" memo="Roadsigns" />
+    <set name="default_sdk" file="skin_default.xml" hidden="true" memo="default with all resources for a day" parent="poi_groups,poi_categories,roadsigns" />
+    <set name="default" file="skin_custom.xml" memo="customized values for SygicMapsKit" parent="default_sdk" />
+    <set name="low_performance" file="skin_low_performance.xml" />
+    <set name="day" file="skin_day.xml" memo="no special resources" />
+    <set name="night" file="skin_night.xml" />
+    <set name="car" file="skin_car.xml" parent="poi_groups_car" />
+    <set name="car_no_signal" file="skin_car_no_signal.xml" parent="car" />
+    <set name="car_custom" file="skin_car_custom.xml" />
+    <set name="pedestrian" file="skin_pedestrian.xml" />
+    <set name="pedestrian_no_signal" file="skin_pedestrian_no_signal.xml" parent="pedestrian" />
+    <set name="navigation" file="skin_navigation.xml" />
+    <set name="browse" file="skin_browse.xml" />
+    <set name="scout" file="skin_scout.xml" />
+    <set name="realview" file="skin_realview.xml" />
+</skin>

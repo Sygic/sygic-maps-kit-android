@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.sdk.map.`object`.payload.Payload
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.ui.common.behaviors.BottomSheetBehaviorWrapper
+import com.sygic.ui.common.extensions.EMPTY_STRING
 import com.sygic.ui.common.extensions.asSingleEvent
 import com.sygic.ui.common.listeners.DialogFragmentListener
 import com.sygic.ui.common.livedata.SingleLiveEvent
-import com.sygic.ui.common.sdk.data.PoiDataPayload
+import com.sygic.ui.common.sdk.data.BasicData
+import com.sygic.ui.common.sdk.data.PoiData
 import com.sygic.ui.common.sdk.extension.getFormattedLocation
 import com.sygic.ui.view.poidetail.manager.PreferencesManager
 import kotlinx.coroutines.*
@@ -19,16 +21,19 @@ private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
 const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
 const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED
 
-internal class PoiDetailInternalViewModel(data: Payload,
-                                          private val preferencesManager: PreferencesManager) : ViewModel(),
-    BottomSheetBehaviorWrapper.StateListener {
+internal class PoiDetailInternalViewModel(
+    data: ViewObjectData,
+    private val preferencesManager: PreferencesManager
+) : ViewModel(), BottomSheetBehaviorWrapper.StateListener {
 
-    val titleText: String = data.title
-    val subtitleText: String = data.description
-    val coordinatesText: String? = data.position.getFormattedLocation()
-    val urlText: String? = if (data is PoiDataPayload) data.url else null
-    val emailText: String? = if (data is PoiDataPayload) data.email else null
-    val phoneText: String? = if (data is PoiDataPayload) data.phone else null
+    val coordinatesText: String? = data.position.getFormattedLocation().let { if (!it.isEmpty()) it else null }
+
+    private val payload = data.payload
+    val titleText: String = if (payload is BasicData) payload.title else data.position.getFormattedLocation()
+    val subtitleText: String = if (payload is BasicData) payload.description else EMPTY_STRING
+    val urlText: String? = if (payload is PoiData) payload.url else null
+    val emailText: String? = if (payload is PoiData) payload.email else null
+    val phoneText: String? = if (payload is PoiData) payload.phone else null
 
     val expandObservable: LiveData<Any> = SingleLiveEvent()
     val collapseObservable: LiveData<Any> = SingleLiveEvent()
@@ -92,8 +97,10 @@ internal class PoiDetailInternalViewModel(data: Payload,
         listener = null
     }
 
-    class ViewModelFactory(private val data: Payload,
-                           private val preferencesManager: PreferencesManager) : ViewModelProvider.NewInstanceFactory() {
+    class ViewModelFactory(
+        private val data: ViewObjectData,
+        private val preferencesManager: PreferencesManager
+    ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")

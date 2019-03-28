@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skin>
+    <map>
+        <settings>
+            <object name="function.max_tilt_by_distance" type="CLinearFunction">
+                <parent type="CFunctionObject">
+                    <definition>
+                        <x value="68.000000" />
+                        <y value="15.000000" />
+                        <z value="5.000000" />
+                        <w value="48000.000000" />
+                    </definition>
+                </parent>
+            </object>
+        </settings>
+    </map>
+</skin>

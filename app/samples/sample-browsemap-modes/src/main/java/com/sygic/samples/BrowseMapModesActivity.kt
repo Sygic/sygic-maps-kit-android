@@ -8,6 +8,7 @@ import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.samples.utils.MapMarkers
 import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.ui.common.sdk.data.BasicData
 
 class BrowseMapModesActivity : CommonSampleActivity() {
 
@@ -41,30 +42,12 @@ class BrowseMapModesActivity : CommonSampleActivity() {
 
         browseMapFragment.addMapMarkers(
             listOf(
-                MapMarker.Builder()
-                    .coordinates(48.143489, 17.150560)
-                    .title("Marker 1")
-                    .build(),
-                MapMarker.Builder()
-                    .coordinates(48.162805, 17.101621)
-                    .title("Marker 2")
-                    .build(),
-                MapMarker.Builder()
-                    .coordinates(48.165561, 17.139550)
-                    .title("Marker 3")
-                    .build(),
-                MapMarker.Builder()
-                    .coordinates(48.155028, 17.155674)
-                    .title("Marker 4")
-                    .build(),
-                MapMarker.Builder()
-                    .coordinates(48.141797, 17.097001)
-                    .title("Marker 5")
-                    .build(),
-                MapMarker.Builder()
-                    .coordinates(48.134756, 17.127729)
-                    .title("Marker 6")
-                    .build(),
+                MapMarker.from(48.143489, 17.150560).payload(BasicData("Marker 1")).build(),
+                MapMarker.from(48.162805, 17.101621).payload(BasicData("Marker 2")).build(),
+                MapMarker.from(48.165561, 17.139550).payload(BasicData("Marker 3")).build(),
+                MapMarker.from(48.155028, 17.155674).payload(BasicData("Marker 4")).build(),
+                MapMarker.from(48.141797, 17.097001).payload(BasicData("Marker 5")).build(),
+                MapMarker.from(48.134756, 17.127729).payload(BasicData("Marker 6")).build(),
                 MapMarkers.testMarkerOne
             )
         )

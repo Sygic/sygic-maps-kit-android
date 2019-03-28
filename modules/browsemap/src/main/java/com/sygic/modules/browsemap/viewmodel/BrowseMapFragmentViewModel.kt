@@ -11,10 +11,13 @@ import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.modules.common.theme.ThemeManager
+import com.sygic.modules.common.theme.ThemeSupportedViewModel
 import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.map.`object`.ProxyPoi
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
-import com.sygic.sdk.map.`object`.payload.Payload
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.tools.annotations.Assisted
 import com.sygic.tools.annotations.AutoFactory
 import com.sygic.ui.common.extensions.asSingleEvent
@@ -35,8 +38,9 @@ class BrowseMapFragmentViewModel internal constructor(
     private val poiDataManager: PoiDataManager,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager
-) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver {
+    private val permissionsManager: PermissionsManager,
+    private val themeManager: ThemeManager
+) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver, ThemeSupportedViewModel {
 
     @MapSelectionMode
     var mapSelectionMode: Int
@@ -60,7 +64,7 @@ class BrowseMapFragmentViewModel internal constructor(
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
 
-    val dataPayloadObservable: LiveData<Payload> = SingleLiveEvent()
+    val mapDataObservable: LiveData<ViewObjectData> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
@@ -80,6 +84,7 @@ class BrowseMapFragmentViewModel internal constructor(
         zoomControlsEnabled.value = initComponent.zoomControlsEnabled
         onMapClickListener = initComponent.onMapClickListener
         detailsViewFactory = initComponent.detailsViewFactory
+        initComponent.skins.forEach { entry -> themeManager.setSkinAtLayer(entry.key, entry.value) }
         initComponent.recycle()
 
         mapInteractionManager.addOnMapClickListener(this)
@@ -122,8 +127,10 @@ class BrowseMapFragmentViewModel internal constructor(
             }
             MapSelectionMode.FULL -> {
                 if (firstViewObject !is MapMarker && onMapClickListener == null) {
-                    firstViewObject = MapMarker(firstViewObject)
-                    mapDataModel.addOnClickMapMarker(firstViewObject)
+                    mapDataModel.addOnClickMapMarker(when (firstViewObject) {
+                        is ProxyPoi -> MapMarker.from(firstViewObject).build()
+                        else -> MapMarker.from(firstViewObject.position).build()
+                    }.also { firstViewObject = it })
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
@@ -137,7 +144,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject) {
         poiDataManager.getPayloadData(viewObject, object : PoiDataManager.Callback() {
-            override fun onDataLoaded(data: Payload) {
+            override fun onDataLoaded(data: ViewObjectData) {
                 onMapClickListener?.let {
                     if (it.onMapClick(data)) {
                         return
@@ -150,7 +157,7 @@ class BrowseMapFragmentViewModel internal constructor(
                             super.onMeasured(width, height)
 
                             val markerHeight: Int = if (viewObject is MapMarker)
-                                viewObject.getBitmap(getApplication())?.height ?: 0 else 0
+                                viewObject.markerData.getBitmap(getApplication())?.height ?: 0 else 0
 
                             setAnchor(
                                 0.5f - (factory.getXOffset() / width),
@@ -161,10 +168,14 @@ class BrowseMapFragmentViewModel internal constructor(
                         mapDataModel.addMapObject(it)
                     }
                 } ?: run {
-                    dataPayloadObservable.asSingleEvent().value = data
+                    mapDataObservable.asSingleEvent().value = data
                 }
             }
         })
+    }
+
+    override fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) {
+        themeManager.setSkinAtLayer(layer, skin)
     }
 
     override fun onStop(owner: LifecycleOwner) {

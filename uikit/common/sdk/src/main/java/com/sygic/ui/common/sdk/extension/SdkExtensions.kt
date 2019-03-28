@@ -10,9 +10,9 @@ fun LocationInfo.getFirst(@LocationInfo.LocationType locationType: Int): String?
     return locationData?.get(locationType)?.firstOrNull()
 }
 
-fun GeoCoordinates.getFormattedLocation(): String? {
+fun GeoCoordinates.getFormattedLocation(): String {
     if (!isValid) {
-        return null
+        return EMPTY_STRING
     }
 
     return String.format(Locale.US, "%.6f, %.6f", latitude, longitude)

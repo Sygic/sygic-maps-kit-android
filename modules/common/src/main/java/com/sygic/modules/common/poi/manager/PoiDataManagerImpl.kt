@@ -1,11 +1,8 @@
 package com.sygic.modules.common.poi.manager
 
 import androidx.annotation.RestrictTo
-import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.`object`.ProxyObject
-import com.sygic.sdk.map.`object`.ProxyPoi
-import com.sygic.sdk.map.`object`.ViewObject
-import com.sygic.sdk.map.`object`.payload.ProxyPayload
+import com.sygic.sdk.map.`object`.*
+import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
 import com.sygic.sdk.places.Places
 import com.sygic.sdk.search.ReverseGeocoder
 
@@ -19,11 +16,11 @@ class PoiDataManagerImpl : PoiDataManager {
         when (viewObject.objectType) {
             ViewObject.ObjectType.Map -> {
                 if (viewObject is MapMarker) {
-                    viewObject.payload.let { payload ->
-                        if (payload is ProxyPayload) {
-                            getPayloadData(payload.viewObjectPayload, callback)
-                        } else {
-                            callback.onDataLoaded(payload)
+                    viewObject.markerData.payload.let { payload ->
+                        when (payload) {
+                            is ProxyPoi -> getPayloadData(payload, callback)
+                            is UiObject, is EmptyPayload -> reverseGeocoder.search(viewObject.position, callback)
+                            else -> callback.onDataLoaded(viewObject.markerData)
                         }
                     }
                     return
@@ -31,14 +28,14 @@ class PoiDataManagerImpl : PoiDataManager {
 
                 reverseGeocoder.search(viewObject.position, callback)
             }
+
             ViewObject.ObjectType.Proxy -> {
                 when ((viewObject as ProxyObject).proxyObjectType) {
-                    ProxyObject.ProxyObjectType.Poi -> {
-                        places.loadPoiObject(viewObject as ProxyPoi, callback)
-                    }
+                    ProxyObject.ProxyObjectType.Poi -> places.loadPoiObject(viewObject as ProxyPoi, callback)
                     else -> reverseGeocoder.search(viewObject.position, callback)
                 }
             }
+
             ViewObject.ObjectType.Screen, ViewObject.ObjectType.Unknown -> {
                 reverseGeocoder.search(viewObject.position, callback)
             }

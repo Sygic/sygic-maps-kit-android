@@ -6,38 +6,33 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.samples.R
-import com.sygic.sdk.map.`object`.payload.Payload
-import com.sygic.ui.common.sdk.data.PoiDataPayload
+import com.sygic.sdk.map.`object`.data.ViewObjectData
+import com.sygic.ui.common.sdk.data.BasicData
+import com.sygic.ui.common.sdk.extension.getFormattedLocation
 import kotlinx.android.parcel.Parcelize
 
-@Parcelize
-class CustomDetailsViewFactory : DetailsViewFactory() {
+class CustomDetailsViewFactory() : DetailsViewFactory() {
 
-    override fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: Payload): View {
+    override fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: ViewObjectData): View {
         val root = inflater.inflate(R.layout.layout_info_window, container, false)
 
-        //fill layout with data from marker's Data
-        when (data) {
-            is PoiDataPayload -> {
-                val addressComponent = data.addressComponent
-                addressComponent.formattedTitle.let {
-                    if (it.isEmpty()) {
-                        root.findViewById<TextView>(R.id.title).visibility = View.GONE
-                    } else {
-                        root.findViewById<TextView>(R.id.title).text = it
+        // fill layout with data from marker's Data
+        data.payload.let { payload ->
+            when (payload) {
+                is BasicData -> {
+                    payload.title.let {
+                        root.findViewById<TextView>(R.id.title).text =
+                            if (!it.isEmpty()) it else data.position.getFormattedLocation()
+                    }
+                    payload.description.let { description ->
+                        if (description.isEmpty()) {
+                            root.findViewById<TextView>(R.id.snippet).visibility = View.GONE
+                        } else {
+                            root.findViewById<TextView>(R.id.snippet).text = description
+                        }
                     }
                 }
-                addressComponent.formattedSubtitle.let {
-                    if (it.isEmpty()) {
-                        root.findViewById<TextView>(R.id.snippet).visibility = View.GONE
-                    } else {
-                        root.findViewById<TextView>(R.id.snippet).text = it
-                    }
-                }
-            }
-            else -> {
-                root.findViewById<TextView>(R.id.title).text = data.title
-                root.findViewById<TextView>(R.id.snippet).text = data.description
+                else -> root.findViewById<TextView>(R.id.title).text = data.position.getFormattedLocation()
             }
         }
 

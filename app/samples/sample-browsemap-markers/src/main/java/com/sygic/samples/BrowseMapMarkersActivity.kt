@@ -5,6 +5,7 @@ import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.samples.utils.MapMarkers
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.factory.DrawableFactory
+import com.sygic.ui.common.sdk.data.BasicData
 
 class BrowseMapMarkersActivity : CommonSampleActivity() {
 
@@ -15,23 +16,19 @@ class BrowseMapMarkersActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_browsemap_markers)
 
-        val markerFromBuilder = MapMarker.Builder()
-            .coordinates(48.130550, 17.173795)
-            .title("Marker created by Builder (default icon)")
+        val markerFromBuilder = MapMarker.from(48.130550, 17.173795)
+            .payload(BasicData("Marker created by Builder (default icon)"))
             .build()
 
-        val markerFromBuilderWithCustomIcon = MapMarker.Builder()
-            .coordinates(48.127531, 17.076463)
-            .title("Marker created by Builder (custom icon)")
-            .description("And with stunning description :-D")
-            .iconDrawable(R.drawable.ic_android)
-            .build()
+        val markerFromBuilderWithCustomIcon = MapMarker.from(48.127531, 17.076463)
+            .payload(BasicData("Marker created by Builder (custom icon)", "And with stunning description :-D"))
+            .iconDrawable(R.drawable.ic_android).build()
 
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         browseMapFragment.addMapMarkers(
             listOf(
-                MapMarker(48.143489, 17.150560),
-                MapMarker(48.144921, 17.114853, DrawableFactory(R.drawable.ic_favorite)),
+                MapMarker.from(48.143489, 17.150560).build(),
+                MapMarker.from(48.144921, 17.114853).iconFactory(DrawableFactory(R.drawable.ic_favorite)).build(),
                 markerFromBuilder,
                 markerFromBuilderWithCustomIcon,
                 MapMarkers.testMarkerOne,

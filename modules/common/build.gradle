@@ -22,12 +22,12 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
-    }
-
     androidExtensions {
         experimental = true
+    }
+
+    dataBinding {
+        enabled = true
     }
 }
 
