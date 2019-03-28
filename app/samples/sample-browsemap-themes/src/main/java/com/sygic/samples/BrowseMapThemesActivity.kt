@@ -5,7 +5,7 @@ import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.ui.common.sdk.data.BasicData
 
-class BrowseMapThemesActivity : CommonSampleActivity() { //todo: wiki update
+class BrowseMapThemesActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Browse-Map#browse-map---themes"
 

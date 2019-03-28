@@ -6,7 +6,7 @@ import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.factory.DrawableFactory
 import com.sygic.ui.common.sdk.data.BasicData
 
-class BrowseMapMarkersActivity : CommonSampleActivity() { //todo: wiki update
+class BrowseMapMarkersActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Browse-Map#browse-map---markers"
 

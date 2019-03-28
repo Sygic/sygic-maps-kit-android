@@ -6,7 +6,7 @@ import com.sygic.modules.browsemap.BrowseMapFragment
 import com.sygic.samples.payload.CustomDataPayload
 import com.sygic.sdk.map.`object`.MapMarker
 
-class BrowseMapClickListenerActivity : CommonSampleActivity() { //todo: wiki update
+class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Browse-Map#browse-map---click-listener"
 

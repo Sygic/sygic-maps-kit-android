@@ -6,7 +6,7 @@ import com.sygic.samples.detail.CustomDetailsViewFactory
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.ui.common.sdk.data.BasicData
 
-class BrowseMapDetailsWindowActivity : CommonSampleActivity() { //todo: wiki update
+class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Browse-Map#browse-map---details-view"
 

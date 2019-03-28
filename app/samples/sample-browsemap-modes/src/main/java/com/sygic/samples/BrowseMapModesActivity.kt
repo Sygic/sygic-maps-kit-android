@@ -9,7 +9,7 @@ import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.ui.common.sdk.data.BasicData
 import kotlinx.android.synthetic.main.activity_browsemap_modes.*
 
-class BrowseMapModesActivity : CommonSampleActivity() { //todo: wiki update
+class BrowseMapModesActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Browse-Map#browse-map---modes"
 
