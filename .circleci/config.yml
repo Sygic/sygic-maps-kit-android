@@ -247,10 +247,10 @@ jobs:
         name: Setup emulator
         command: sdkmanager "system-images;android-22;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-22;default;armeabi-v7a"
 
-    - run:
-        name: Launch emulator
-        command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
-        background: true
+#    - run:
+#        name: Launch emulator
+#        command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+#        background: true
 
     - run:
         name: Run Browsemap Default Ui tests
@@ -380,16 +380,16 @@ workflows:
 #          tags:
 #            only: /.*/
 # ToDo: Ui testing temporary disabled: https://support.circleci.com/hc/en-us/articles/360000028928-Testing-with-Android-emulator-on-CircleCI-2-0
-#    - ui_test:
-#        requires:
-#        - test
+    - ui_test:
+        requires:
+        - test
 #        filters:
 #          tags:
 #            only: /.*/
     - deploy:
         requires:
         - test
-#        - ui_test
+        - ui_test
 #        filters:
 #          tags:
 #            only: /^\d+\.\d+\.\d+$/
