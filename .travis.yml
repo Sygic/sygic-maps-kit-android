@@ -6,18 +6,22 @@ if: type == pull_request OR tag IS present
 
 env:
   global:
-  - ANDROID_API_LEVEL=28
-  - ANDROID_EMULATOR_LEVEL=22
-  - ANDROID_BUILD_TOOLS_VERSION=28.0.3
-  - ANDROID_ABI=armeabi-v7a
+  - COMPILE_SDK_VERSION=28
+  - BUILD_TOOLS_VERSION=28.0.3
+  - EMULATOR_API=22
+  - ABI=armeabi-v7a
+  - ADB_INSTALL_TIMEOUT=5 # minutes
 
 android:
   components:
   - tools
   - platform-tools
-  - android-$ANDROID_API_LEVEL
-  - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-  - sys-img-$ANDROID_ABI-google_apis-$ANDROID_EMULATOR_LEVEL
+  - tools # to update to the newest
+  - build-tools-${BUILD_TOOLS_VERSION}
+  - android-${COMPILE_SDK_VERSION}
+  - android-${EMULATOR_API}
+  - extra-android-m2repository
+  - sys-img-${ABI}-android-${EMULATOR_API}
 
 licenses:
 - android-sdk-preview-license-.+
@@ -34,10 +38,11 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
+- name: ui tests #todo
 - name: compile and test uikit
 - name: compile and test modules
 - name: compile and test samples
-- name: ui tests
+
 - name: deploy
   if: tag =~ ^\d+\.\d+\.\d+$
 
@@ -86,8 +91,8 @@ jobs:
   - stage: ui tests
     name: browsemap
     before_script:
-    - echo no | android create avd --force -n test -t android-${ANDROID_EMULATOR_LEVEL} --abi google_apis/${ANDROID_ABI} #todo -c 2048M ?
-    - emulator -avd test -no-audio -no-window & #todo -memory 1024
+    - echo no | android create avd --force -n test -t android-${EMULATOR_API} --abi ${ABI}
+    - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script:
