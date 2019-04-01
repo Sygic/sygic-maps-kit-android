@@ -19,6 +19,15 @@ android {
         manifestPlaceholders = [sygicApiKey: gradle.getSdkKey()]
     }
 
+    signingConfigs {
+        release {
+            keyAlias System.getenv('RELEASE_KEY_ALIAS')
+            keyPassword System.getenv('RELEASE_KEY_PASSWORD')
+            storeFile file(rootDir.getCanonicalPath() + '/' + System.getenv('RELEASE_KEYSTORE_FILE'))
+            storePassword System.getenv('RELEASE_KEYSTORE_PASSWORD')
+        }
+    }
+
     buildTypes {
         all {
             buildConfigField "String", "GITHUB_REPO", '"https://github.com/Sygic/sygic-maps-kit-android/"'
@@ -28,6 +37,7 @@ android {
 
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

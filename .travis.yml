@@ -17,6 +17,7 @@ android:
   - platform-tools
   - build-tools-${BUILD_TOOLS_VERSION}
   - android-${API_LEVEL}
+  - android-${EMULATOR_LEVEL} #todo
   - sys-img-${ABI}-android-${EMULATOR_LEVEL}
 
 licenses:
@@ -102,8 +103,10 @@ jobs:
 
   - stage: deploy
     name: assembleRelease
+    before_script:
+    - echo $RELEASE_KEYSTORE_BASE64 | base64 -d > $RELEASE_KEYSTORE_FILE
     script:
-    - ./gradlew assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew clean assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
     deploy:
       provider: releases
       api_key: $TRAVIS_RELEASE
@@ -112,7 +115,7 @@ jobs:
       - $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/app-samples-arm64-v8a-release.apk #todo
       - "FILE 2" #todo
       skip_cleanup: true
-      on:
-        tags: true
+#      on:
+#        tags: true
     after_deploy:
     - rm -rf $TRAVIS_BUILD_DIR/app/samples/build/outputs
