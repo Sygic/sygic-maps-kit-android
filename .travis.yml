@@ -6,22 +6,19 @@ if: type == pull_request OR tag IS present
 
 env:
   global:
-  - COMPILE_SDK_VERSION=28
+  - API_LEVEL=28
+  - EMULATOR_LEVEL=22
   - BUILD_TOOLS_VERSION=28.0.3
-  - EMULATOR_API=22
   - ABI=armeabi-v7a
-  - ADB_INSTALL_TIMEOUT=5 # minutes
 
 android:
   components:
   - tools
   - platform-tools
-  - tools # to update to the newest
   - build-tools-${BUILD_TOOLS_VERSION}
-  - android-${COMPILE_SDK_VERSION}
-  - android-${EMULATOR_API}
-  - extra-android-m2repository
-  - sys-img-${ABI}-android-${EMULATOR_API}
+  - android-${API_LEVEL}
+  - android-${EMULATOR_LEVEL} #todo
+  - sys-img-${ABI}-android-${EMULATOR_LEVEL}
 
 licenses:
 - android-sdk-preview-license-.+
@@ -91,18 +88,18 @@ jobs:
   - stage: ui tests
     name: browsemap
     before_script:
-    - echo no | android create avd --force -n test -t android-${EMULATOR_API} --abi ${ABI}
-    - emulator -avd test -no-audio -no-window &
+    - echo no | android create avd --force -n test -t android-${EMULATOR_LEVEL} --abi ${ABI} #todo google_apis/${ANDROID_ABI} -c 2048M ?
+    - emulator -avd test -no-audio -no-window & #todo -memory 1024
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script:
-    - ./gradlew :app-samples-browsemap-default:connectedAndroidTest
-    - ./gradlew :app-samples-browsemap-full:connectedAndroidTest
-    - ./gradlew :app-samples-browsemap-modes:connectedAndroidTest
-    - ./gradlew :app-samples-browsemap-markers:connectedAndroidTest
-    - ./gradlew :app-samples-browsemap-details-window:connectedAndroidTest
-    - ./gradlew :app-samples-browsemap-click-listener:connectedAndroidTest
-    - ./gradlew :app-samples-browsemap-themes:connectedAndroidTest
+    - ./gradlew :app-samples-browsemap-default:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew :app-samples-browsemap-full:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew :app-samples-browsemap-modes:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew :app-samples-browsemap-markers:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew :app-samples-browsemap-details-window:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew :app-samples-browsemap-click-listener:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew :app-samples-browsemap-themes:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
 
   - stage: deploy
     name: assembleRelease
