@@ -17,7 +17,6 @@ android:
   - platform-tools
   - build-tools-${BUILD_TOOLS_VERSION}
   - android-${API_LEVEL}
-  - android-${EMULATOR_LEVEL} #todo
   - sys-img-${ABI}-android-${EMULATOR_LEVEL}
 
 licenses:
@@ -35,13 +34,13 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
-- name: ui tests #todo
+- name: deploy #todo
 - name: compile and test uikit
 - name: compile and test modules
 - name: compile and test samples
+- name: ui tests
 
-- name: deploy
-  if: tag =~ ^\d+\.\d+\.\d+$
+#  if: tag =~ ^\d+\.\d+\.\d+$
 
 jobs:
   include:
@@ -88,8 +87,8 @@ jobs:
   - stage: ui tests
     name: browsemap
     before_script:
-    - echo no | android create avd --force -n test -t android-${EMULATOR_LEVEL} --abi ${ABI} #todo google_apis/${ANDROID_ABI} -c 2048M ?
-    - emulator -avd test -no-audio -no-window & #todo -memory 1024
+    - echo no | android create avd --force -n test -t android-${EMULATOR_LEVEL} --abi ${ABI}
+    - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script:
