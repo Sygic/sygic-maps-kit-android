@@ -43,7 +43,7 @@ interface PoiDataManager {
 
         final override fun onSearchResults(results: List<ReverseSearchResult>, position: GeoCoordinates) {
             if (results.isEmpty()) {
-                onDataLoaded(ViewObjectData(position, PoiData()))
+                onDataLoaded(ViewObjectData(position))
                 return
             }
 
