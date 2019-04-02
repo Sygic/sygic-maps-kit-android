@@ -23,20 +23,20 @@ open class BaseMapTest(activityClass: Class<out CommonSampleActivity>) {
     val grantLocationPermissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val idlingResources = mutableListOf<IdlingResource>()
+    private var mapReadyIdlingResource: IdlingResource? = null
 
     protected val activity: CommonSampleActivity
         get() = activityRule.activity
 
     @Before
     fun registerIdlingResource() {
-        idlingResources.add(MapReadyIdlingResource(activity))
+        mapReadyIdlingResource = MapReadyIdlingResource(activity)
 
-        IdlingRegistry.getInstance().register(*idlingResources.toTypedArray())
+        IdlingRegistry.getInstance().register(mapReadyIdlingResource)
     }
 
     @After
     fun unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(*idlingResources.toTypedArray())
+        mapReadyIdlingResource?.let { IdlingRegistry.getInstance().unregister(it) }
     }
 }

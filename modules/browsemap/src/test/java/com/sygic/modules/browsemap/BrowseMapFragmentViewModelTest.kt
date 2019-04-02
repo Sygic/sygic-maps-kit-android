@@ -11,11 +11,14 @@ import com.sygic.modules.common.detail.DetailsViewFactory
 import com.sygic.modules.common.mapinteraction.MapSelectionMode
 import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.modules.common.poi.manager.PoiDataManager
+import com.sygic.modules.common.theme.ThemeManager
 import com.sygic.sdk.map.`object`.MapCircle
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.MapRoute
-import com.sygic.sdk.map.`object`.payload.BasicPayload
+import com.sygic.sdk.map.`object`.data.MarkerData
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.ui.common.sdk.data.BasicData
 import com.sygic.ui.common.sdk.listener.OnMapClickListener
 import com.sygic.ui.common.sdk.location.LocationManager
 import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
@@ -47,6 +50,8 @@ class BrowseMapFragmentViewModelTest {
     private lateinit var locationManager: LocationManager
     @Mock
     internal lateinit var permissionsManager: PermissionsManager
+    @Mock
+    internal lateinit var themeManager: ThemeManager
 
     private lateinit var mapFragmentInitComponent: MapFragmentInitComponent
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
@@ -82,7 +87,8 @@ class BrowseMapFragmentViewModelTest {
             poiDataManager,
             mapInteractionManager,
             locationManager,
-            permissionsManager
+            permissionsManager,
+            themeManager
         )
     }
 
@@ -105,13 +111,14 @@ class BrowseMapFragmentViewModelTest {
     }
 
     @Test
-    fun onStartTest() {
+    fun onStartTestPositionOnMapEnabled() {
         whenever(locationManager.positionOnMapEnabled).thenReturn(true)
         browseMapFragmentViewModel.onStart(mock())
         verify(locationManager).setSdkPositionUpdatingEnabled(true)
+    }
 
-        reset(locationManager)
-
+    @Test
+    fun onStartTestPositionOnMapDisabled() {
         whenever(locationManager.positionOnMapEnabled).thenReturn(false)
         browseMapFragmentViewModel.onStart(mock())
         verify(locationManager, never()).setSdkPositionUpdatingEnabled(true)
@@ -131,7 +138,7 @@ class BrowseMapFragmentViewModelTest {
 
     @Test
     fun onMapObjectsReceivedSelectionModeNoneTest() {
-        val testMapMarker = MapMarker(48.143489, 17.150560)
+        val testMapMarker = MapMarker.from(48.143489, 17.150560).build()
 
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.NONE
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker, mock()))
@@ -149,29 +156,29 @@ class BrowseMapFragmentViewModelTest {
 
     @Test
     fun onMapObjectsReceivedSelectionModeMarkersOnlyMapMarkerListTest() {
-        val testMapMarker = MapMarker(48.143489, 17.150560)
-        val testPayload = BasicPayload(GeoCoordinates(48.143489, 17.150560), "Test", "")
+        val testMarkerData = MarkerData(48.143489, 17.150560, BasicData("Test"))
+        val testMapMarker = MapMarker.from(testMarkerData).build()
 
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getPayloadData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testPayload)
+                callback.firstValue.onDataLoaded(testMarkerData)
             }
         }
 
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.MARKERS_ONLY
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker, mock()))
         verify(poiDataManager).getPayloadData(eq(testMapMarker), any())
-        browseMapFragmentViewModel.dataPayloadObservable.test().assertValue(testPayload)
+        browseMapFragmentViewModel.mapDataObservable.test().assertValue(testMarkerData)
     }
 
     @Test
     fun onMapObjectsReceivedSelectionModeFullMapRouteTest() {
         val tesViewObject = MapRoute(mock(), MapRoute.RouteType.Primary)
-        val testPayload = BasicPayload(GeoCoordinates(48.143489, 17.150560), "Test", "")
+        val testViewObjectData = ViewObjectData(48.143489, 17.150560, BasicData("Test"))
 
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getPayloadData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testPayload)
+                callback.firstValue.onDataLoaded(testViewObjectData)
             }
         }
 
@@ -179,88 +186,88 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(tesViewObject))
         verify(poiDataManager).getPayloadData(any(), any())
         verify(extendedMapDataModel).addOnClickMapMarker(any())
-        browseMapFragmentViewModel.dataPayloadObservable.test().assertValue(testPayload)
+        browseMapFragmentViewModel.mapDataObservable.test().assertValue(testViewObjectData)
     }
 
     @Test
     fun onMapObjectsReceivedSelectionModeFullMapMarkerTest() {
-        val testPayload = BasicPayload(GeoCoordinates(48.143489, 17.150560), "Test", "")
-        val tesMapMarker = MapMarker.Builder().payload(testPayload).build()
+        val testMarkerData = MarkerData(48.143489, 17.150560, BasicData("Test"))
+        val testMapMarker = MapMarker.from(testMarkerData).build()
 
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getPayloadData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testPayload)
+                callback.firstValue.onDataLoaded(testMarkerData)
             }
         }
 
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        browseMapFragmentViewModel.onMapObjectsReceived(listOf(tesMapMarker))
-        verify(poiDataManager).getPayloadData(eq(tesMapMarker), any())
-        browseMapFragmentViewModel.dataPayloadObservable.test().assertValue(testPayload)
+        browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker))
+        verify(poiDataManager).getPayloadData(eq(testMapMarker), any())
+        browseMapFragmentViewModel.mapDataObservable.test().assertValue(testMarkerData)
     }
 
     @Test
     fun customOnMapClickListenerConsumedTest() {
-        val testPayload = BasicPayload(GeoCoordinates(48.143489, 17.150560), "Test", "")
-        val tesMapMarker = MapMarker.Builder().payload(testPayload).build()
+        val testMarkerData = MarkerData(48.143489, 17.150560, BasicData("Test"))
+        val testMapMarker = MapMarker.from(testMarkerData).build()
         val onMapClickListener = mock<OnMapClickListener>()
 
         whenever(onMapClickListener.onMapClick(any())).thenReturn(true)
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getPayloadData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testPayload)
+                callback.firstValue.onDataLoaded(testMarkerData)
             }
         }
 
         browseMapFragmentViewModel.onMapClickListener = onMapClickListener
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        browseMapFragmentViewModel.onMapObjectsReceived(listOf(tesMapMarker))
+        browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker))
         verify(extendedMapDataModel, never()).addOnClickMapMarker(any())
-        verify(poiDataManager).getPayloadData(eq(tesMapMarker), any())
-        verify(onMapClickListener).onMapClick(eq(testPayload))
-        browseMapFragmentViewModel.dataPayloadObservable.test().assertNoValue()
+        verify(poiDataManager).getPayloadData(eq(testMapMarker), any())
+        verify(onMapClickListener).onMapClick(eq(testMarkerData))
+        browseMapFragmentViewModel.mapDataObservable.test().assertNoValue()
     }
 
     @Test
     fun customOnMapClickListenerNotConsumedTest() {
-        val testPayload = BasicPayload(GeoCoordinates(48.143489, 17.150560), "Test", "")
-        val tesMapMarker = MapMarker.Builder().payload(testPayload).build()
+        val testMarkerData = MarkerData(48.143489, 17.150560, BasicData("Test"))
+        val testMapMarker = MapMarker.from(testMarkerData).build()
         val onMapClickListener = mock<OnMapClickListener>()
 
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getPayloadData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testPayload)
+                callback.firstValue.onDataLoaded(testMarkerData)
             }
         }
 
         browseMapFragmentViewModel.onMapClickListener = onMapClickListener
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        browseMapFragmentViewModel.onMapObjectsReceived(listOf(tesMapMarker))
+        browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker))
         verify(extendedMapDataModel, never()).addOnClickMapMarker(any())
-        verify(poiDataManager).getPayloadData(eq(tesMapMarker), any())
-        verify(onMapClickListener).onMapClick(eq(testPayload))
-        browseMapFragmentViewModel.dataPayloadObservable.test().assertHasValue()
+        verify(poiDataManager).getPayloadData(eq(testMapMarker), any())
+        verify(onMapClickListener).onMapClick(eq(testMarkerData))
+        browseMapFragmentViewModel.mapDataObservable.test().assertHasValue()
     }
 
     @Test
     fun poiDetailsViewTest() {
-        val testPayload = BasicPayload(GeoCoordinates(48.143489, 17.150560), "Test", "")
-        val tesMapMarker = MapMarker.Builder().payload(testPayload).build()
+        val testMarkerData = MarkerData(48.143489, 17.150560, BasicData("Test"))
+        val testMapMarker = MapMarker.from(testMarkerData).build()
         val detailsViewFactory = mock<DetailsViewFactory>()
 
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getPayloadData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testPayload)
+                callback.firstValue.onDataLoaded(testMarkerData)
             }
         }
 
         browseMapFragmentViewModel.detailsViewFactory = detailsViewFactory
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        browseMapFragmentViewModel.onMapObjectsReceived(listOf(tesMapMarker))
+        browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker))
         verify(extendedMapDataModel, never()).addOnClickMapMarker(any())
-        verify(poiDataManager).getPayloadData(eq(tesMapMarker), any())
+        verify(poiDataManager).getPayloadData(eq(testMapMarker), any())
         verify(extendedMapDataModel).addMapObject(isA())
-        browseMapFragmentViewModel.dataPayloadObservable.test().assertNoValue()
+        browseMapFragmentViewModel.mapDataObservable.test().assertNoValue()
     }
 
     @Test
