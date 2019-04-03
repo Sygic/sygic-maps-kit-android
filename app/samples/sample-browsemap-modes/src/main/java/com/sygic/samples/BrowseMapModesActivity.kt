@@ -48,7 +48,7 @@ class BrowseMapModesActivity : CommonSampleActivity() {
                 MapMarker.from(48.155028, 17.155674).withPayload(BasicData("Marker 4")).build(),
                 MapMarker.from(48.141797, 17.097001).withPayload(BasicData("Marker 5")).build(),
                 MapMarker.from(48.134756, 17.127729).withPayload(BasicData("Marker 6")).build(),
-                MapMarkers.testMarkerOne
+                MapMarkers.sampleMarkerOne
             )
         )
     }

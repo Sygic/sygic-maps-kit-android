@@ -28,27 +28,27 @@ class BrowseMapMarkersEspressoTest : BaseMapTest(BrowseMapMarkersActivity::class
             clickOnMapToLocation(GeneralLocation.BOTTOM_CENTER)
             isPoiDetailHidden()
 
-            clickOnMapMarker(MapMarkers.testMarkerOne)
+            clickOnMapMarker(MapMarkers.sampleMarkerOne)
             isPoiDetailVisible()
             pressBack()
 
-            clickOnMapMarker(MapMarkers.testMarkerTwo)
+            clickOnMapMarker(MapMarkers.sampleMarkerTwo)
             isPoiDetailVisible()
             pressBack()
 
-            clickOnMapMarker(MapMarkers.testMarkerThree)
+            clickOnMapMarker(MapMarkers.sampleMarkerThree)
             isPoiDetailVisible()
             pressBack()
 
-            clickOnMapMarker(MapMarkers.testMarkerFour)
+            clickOnMapMarker(MapMarkers.sampleMarkerFour)
             isPoiDetailVisible()
             pressBack()
 
-            clickOnMapMarker(MapMarkers.testMarkerFive)
+            clickOnMapMarker(MapMarkers.sampleMarkerFive)
             isPoiDetailVisible()
             pressBack()
 
-            clickOnMapMarker(MapMarkers.testMarkerSix)
+            clickOnMapMarker(MapMarkers.sampleMarkerSix)
             isPoiDetailVisible()
             pressBack()
 

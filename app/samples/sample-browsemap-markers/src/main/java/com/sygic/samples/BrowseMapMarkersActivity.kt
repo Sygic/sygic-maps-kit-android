@@ -31,12 +31,12 @@ class BrowseMapMarkersActivity : CommonSampleActivity() {
                 MapMarker.from(48.144921, 17.114853).withIcon(DrawableFactory(R.drawable.ic_favorite)).build(),
                 markerFromBuilder,
                 markerFromBuilderWithCustomIcon,
-                MapMarkers.testMarkerOne,
-                MapMarkers.testMarkerTwo,
-                MapMarkers.testMarkerThree,
-                MapMarkers.testMarkerFour,
-                MapMarkers.testMarkerFive,
-                MapMarkers.testMarkerSix
+                MapMarkers.sampleMarkerOne,
+                MapMarkers.sampleMarkerTwo,
+                MapMarkers.sampleMarkerThree,
+                MapMarkers.sampleMarkerFour,
+                MapMarkers.sampleMarkerFive,
+                MapMarkers.sampleMarkerSix
             )
         )
     }

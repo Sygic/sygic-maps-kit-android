@@ -7,14 +7,9 @@ class MapReadyIdlingResource(activity: CommonSampleActivity) : BaseIdlingResourc
 
     override fun getName(): String = "MapReadyIdlingResource"
 
-    override fun isIdleNow(): Boolean {
+    override fun isIdle(): Boolean {
         activity.supportFragmentManager.fragments.forEach { fragment ->
-            if (fragment is MapFragment) {
-                fragment.mapView?.let {
-                    callback?.onTransitionToIdle()
-                    return true
-                }
-            }
+            if (fragment is MapFragment) return fragment.mapView != null
         }
 
         return false

@@ -37,7 +37,7 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
             isPoiDetailHidden()
             clickOnMapToLocation(GeneralLocation.CENTER_RIGHT)
             isPoiDetailHidden()
-            clickOnMapMarker(MapMarkers.testMarkerOne)
+            clickOnMapMarker(MapMarkers.sampleMarkerOne)
             isPoiDetailHidden()
 
             onView(withId(selectionModeButtonId)).perform(click())
@@ -49,7 +49,7 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
 
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
             isPoiDetailHidden()
-            clickOnMapMarker(MapMarkers.testMarkerOne)
+            clickOnMapMarker(MapMarkers.sampleMarkerOne)
             isPoiDetailVisible()
             pressBack()
             isPoiDetailHidden()
@@ -64,7 +64,7 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
             isPoiDetailVisible()
             pressBack()
-            clickOnMapMarker(MapMarkers.testMarkerOne)
+            clickOnMapMarker(MapMarkers.sampleMarkerOne)
             isPoiDetailVisible()
             pressBack()
             isPoiDetailHidden()

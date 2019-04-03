@@ -14,7 +14,7 @@ class PoiDetailVisibilityIdlingResource(
 
     override fun getName(): String = "PoiDetailVisibilityIdlingResource"
 
-    override fun isIdleNow(): Boolean {
+    override fun isIdle(): Boolean {
         when (expectedBottomSheetState) {
             BottomSheetBehavior.STATE_EXPANDED,
             BottomSheetBehavior.STATE_HALF_EXPANDED,
@@ -22,17 +22,11 @@ class PoiDetailVisibilityIdlingResource(
             BottomSheetBehavior.STATE_SETTLING,
             BottomSheetBehavior.STATE_DRAGGING -> {
                 poiDetailBottomDialogFragment?.let { fragment ->
-                    if ((fragment as PoiDetailBottomDialogFragment).currentState == expectedBottomSheetState) {
-                        callback?.onTransitionToIdle()
-                        return true
-                    }
+                    return ((fragment as PoiDetailBottomDialogFragment).currentState == expectedBottomSheetState)
                 }
             }
             BottomSheetBehavior.STATE_HIDDEN -> {
-                if (poiDetailBottomDialogFragment == null) {
-                    callback?.onTransitionToIdle()
-                    return true
-                }
+                return poiDetailBottomDialogFragment == null
             }
         }
 

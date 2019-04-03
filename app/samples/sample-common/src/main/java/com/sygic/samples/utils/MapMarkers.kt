@@ -5,33 +5,33 @@ import com.sygic.ui.common.sdk.data.BasicData
 
 object MapMarkers {
 
-    val testMarkerOne: MapMarker = MapMarker
+    val sampleMarkerOne: MapMarker = MapMarker
         .from(48.182684, 17.094457)
-        .payload(BasicData("Test Marker 1"))
+        .withPayload(BasicData("Test Marker 1"))
         .build()
 
-    val testMarkerTwo: MapMarker = MapMarker
+    val sampleMarkerTwo: MapMarker = MapMarker
         .from(48.162805, 17.101621)
-        .payload(BasicData("Test Marker 2"))
+        .withPayload(BasicData("Test Marker 2"))
         .build()
 
-    val testMarkerThree: MapMarker = MapMarker
+    val sampleMarkerThree: MapMarker = MapMarker
         .from(48.165561, 17.139550)
-        .payload(BasicData("Test Marker 3"))
+        .withPayload(BasicData("Test Marker 3"))
         .build()
 
-    val testMarkerFour: MapMarker = MapMarker
+    val sampleMarkerFour: MapMarker = MapMarker
         .from(48.128453, 17.118402)
-        .payload(BasicData("Test Marker 4"))
+        .withPayload(BasicData("Test Marker 4"))
         .build()
 
-    val testMarkerFive: MapMarker = MapMarker
+    val sampleMarkerFive: MapMarker = MapMarker
         .from(48.141797, 17.097001)
-        .payload(BasicData("Test Marker 5"))
+        .withPayload(BasicData("Test Marker 5"))
         .build()
 
-    val testMarkerSix: MapMarker = MapMarker
+    val sampleMarkerSix: MapMarker = MapMarker
         .from(48.134756, 17.127729)
-        .payload(BasicData("Test Marker 6"))
+        .withPayload(BasicData("Test Marker 6"))
         .build()
 }
