@@ -22,8 +22,8 @@ class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
                 MapMarker.from(48.165561, 17.139550).build(),
                 MapMarker.from(48.155028, 17.155674).build(),
                 MapMarker.from(48.141797, 17.097001).build(),
-                MapMarker.from(48.162805, 17.101621).payload(BasicData("My Marker 1")).build(),
-                MapMarker.from(48.134756, 17.127729).payload(BasicData("My Marker 2")).build()
+                MapMarker.from(48.162805, 17.101621).withPayload(BasicData("My Marker 1")).build(),
+                MapMarker.from(48.134756, 17.127729).withPayload(BasicData("My Marker 2")).build()
             )
         )
 
