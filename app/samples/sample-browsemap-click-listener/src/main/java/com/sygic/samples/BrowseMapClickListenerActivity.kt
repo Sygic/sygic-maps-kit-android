@@ -17,7 +17,7 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
         val markerFromBuilder = MapMarker
             .from(48.146514, 17.124175)
-            .payload(CustomDataPayload("This is my custom payload"))
+            .withPayload(CustomDataPayload("This is my custom payload"))
             .build()
 
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
