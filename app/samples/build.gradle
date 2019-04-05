@@ -70,6 +70,7 @@ android {
 
     androidGitVersion {
         codeFormat 'AMMNNPP'
+        format '%tag%%-dirty%'
         variants applicationVariants
     }
 
