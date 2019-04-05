@@ -128,4 +128,5 @@ jobs:
       - $TRAVIS_BUILD_DIR/tools/injector/viewmodel/build/outputs/aar/*.aar
       skip_cleanup: true
       on:
+        all_branches: true #todo
         tags: true
