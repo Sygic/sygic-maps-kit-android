@@ -19,4 +19,9 @@
     <string name="source_code">Source code</string>
     <string name="wiki">Wiki</string>
     <string name="qa">Q&amp;A</string>
+    <string name="about">About</string>
+    <string name="sample_app_version_name">Sample App Version Name:</string>
+    <string name="sample_app_version_code">Sample App Version Code:</string>
+    <string name="sygic_sdk_version">Sygic SDK Version:</string>
+    <string name="abi">ABI:</string>
 </resources>

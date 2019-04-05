@@ -361,37 +361,34 @@ jobs:
         path: uikit/zoomcontrols/viewmodel/build/outputs/aar/
         destination: /aar/
 
-    - deploy: #todo
+    - deploy:
         command: echo 'done'
 
-#todo
 workflows:
   build-test-deploy:
     jobs:
-    - build
-#    - build:
-#        filters:
-#          tags:
-#            only: /.*/
+    - build:
+        filters:
+          tags:
+            only: /.*/
     - test:
         requires:
         - build
-#        filters:
-#          tags:
-#            only: /.*/
-# ToDo: Ui testing temporary disabled: https://support.circleci.com/hc/en-us/articles/360000028928-Testing-with-Android-emulator-on-CircleCI-2-0
+        filters:
+          tags:
+            only: /.*/
     - ui_test:
         requires:
         - test
-#        filters:
-#          tags:
-#            only: /.*/
+        filters:
+          tags:
+            only: /.*/
     - deploy:
         requires:
         - test
         - ui_test
-#        filters:
-#          tags:
-#            only: /^\d+\.\d+\.\d+$/
-#          branches:
-#            ignore: /.*/
+        filters:
+          tags:
+            only: /^\d+\.\d+\.\d+$/
+          branches:
+            ignore: /.*/

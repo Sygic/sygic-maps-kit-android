@@ -1,8 +1,11 @@
 package com.sygic.samples.activities
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -37,6 +40,11 @@ class SamplesActivity : AppCompatActivity() {
             this.openLinkInBrowserObservable.observe(
                 this@SamplesActivity,
                 Observer<String> { openUrl(it) })
+            this.openDialogFragmentObservable.observe(
+                this@SamplesActivity,
+                Observer<Class<out AppCompatDialogFragment>> {
+                    it.newInstance().show(supportFragmentManager, null)
+                })
         }
         binding.samplesActivityViewModel = samplesActivityViewModel
         lifecycle.addObserver(samplesActivityViewModel)
@@ -57,6 +65,15 @@ class SamplesActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.samples_toolbar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return samplesActivityViewModel.onOptionsItemSelected(item.itemId)
     }
 
     override fun onDestroy() {

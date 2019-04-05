@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionName uikitCommonSdkVersion
+        archivesBaseName = "uikit-common-sdk-$versionName"
 
         gradle.resolveFlavors(it)
     }

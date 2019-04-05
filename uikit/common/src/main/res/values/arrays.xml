@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="all_abis_ids">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>6</item>
+        <item>8</item>
+        <item>9</item>
+    </integer-array>
+    <string-array name="all_abis_values">
+        <item>armeabi</item>
+        <item>armeabi-v7a</item>
+        <item>arm64-v8a</item>
+        <item>mips</item>
+        <item>mips64</item>
+        <item>x86</item>
+        <item>x86_64</item>
+    </string-array>
+</resources>

@@ -1,5 +1,3 @@
-import com.android.build.OutputFile
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -28,31 +26,19 @@ android {
         }
     }
 
-    /* -= APK Split =- */
-    def abiCodes = ['x86':1, 'x86_64':2, 'armeabi-v7a':3, 'arm64-v8a':4]
-    android.applicationVariants.all { variant ->
-        variant.outputs.each {
-            output ->
-                def abiName = output.getFilter(OutputFile.ABI)
-                output.versionCodeOverride = abiCodes.get(abiName, 0) * 100000 + variant.versionCode
-        }
-    }
     splits {
         abi {
             enable true
             reset()
-            include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            include (*supportedAbis)
             universalApk false
         }
     }
-    /* -= APK Split =- */
 
-    //todo: MS-4504
     dataBinding {
         enabled = true
     }
 
-    //todo: MS-4504
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8

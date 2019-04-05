@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionName moduleBrowsemapVersion
+        archivesBaseName = "module-browsemap-$versionName"
 
         gradle.resolveFlavors(it)
     }

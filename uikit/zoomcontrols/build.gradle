@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionName uikitZoomcontrolsVersion
+        archivesBaseName = "uikit-zoomcontrols-$versionName"
     }
 
     buildTypes {

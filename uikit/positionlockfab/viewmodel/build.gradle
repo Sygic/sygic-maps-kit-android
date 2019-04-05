@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionName uikitPositionlockfabViewmodelVersion
+        archivesBaseName = "uikit-positionlockfab-viewmodel-$versionName"
 
         gradle.resolveFlavors(it)
     }
