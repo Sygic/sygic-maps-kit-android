@@ -2,7 +2,6 @@ package com.sygic.modules.common.initialization.manager
 
 import android.app.Application
 import androidx.annotation.RestrictTo
-import com.sygic.modules.common.R
 import com.sygic.modules.common.utils.getApiKey
 import com.sygic.sdk.SygicEngine
 import java.util.*
@@ -26,7 +25,7 @@ class SdkInitializationManagerImpl : SdkInitializationManager,
 
         application.getApiKey()?.let { key ->
             SygicEngine.Builder(application)
-                .setKeyAndSecret(application.getString(R.string.com_sygic_secret), key)
+                .setKeyAndSecret(application.packageName, key)
                 .setInitListener(this).init()
         }
     }

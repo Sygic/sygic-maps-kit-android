@@ -17,7 +17,7 @@ android:
   - platform-tools
   - build-tools-${BUILD_TOOLS_VERSION}
   - android-${API_LEVEL}
-  - android-${EMULATOR_LEVEL} #todo
+  - android-${EMULATOR_LEVEL}
   - sys-img-${ABI}-android-${EMULATOR_LEVEL}
 
 licenses:
@@ -129,5 +129,5 @@ jobs:
       - $TRAVIS_BUILD_DIR/tools/injector/viewmodel/build/outputs/aar/*.aar
       skip_cleanup: true
       on:
-        all_branches: true #todo
+        all_branches: true
         tags: true

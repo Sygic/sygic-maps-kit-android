@@ -1,4 +1,3 @@
 <resources>
-    <string name="com_sygic_secret">sygic.android.maps.sample</string>
     <string name="com_sygic_api_key">com-sygic-api-key</string>
 </resources>
