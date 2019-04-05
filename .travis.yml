@@ -112,6 +112,7 @@ jobs:
       provider: releases
       api_key: $TRAVIS_RELEASE
       name: SygicMapsKit Android $TRAVIS_TAG
+      file_glob: true
       file:
       - $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/*.apk
       - $TRAVIS_BUILD_DIR/modules/common/build/outputs/aar/*.aar
