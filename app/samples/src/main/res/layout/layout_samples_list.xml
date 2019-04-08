@@ -7,7 +7,7 @@
 
         <variable
             name="samplesListViewModel"
-            type="com.sygic.samples.viewmodels.SamplesListViewModel" />
+            type="com.sygic.samples.app.viewmodels.SamplesListViewModel" />
 
     </data>
 

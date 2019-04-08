@@ -29,18 +29,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':modules-common')
-    api project(':uikit-poidetail')
+    api project(':module-common')
 
-    implementation project(':uikit-compass-viewmodel')
-    implementation project(':uikit-positionlockfab-viewmodel')
-    implementation project(':uikit-zoomcontrols-viewmodel')
-    implementation project(':tools-injector-viewmodel')
-    annotationProcessor project(':tools-injector')
+    implementation project(':tool-viewmodel-factory')
+    annotationProcessor project(':tool-annotation-processor')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    api "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"

@@ -9,19 +9,19 @@
 
         <variable
             name="browseMapFragmentViewModel"
-            type="com.sygic.modules.browsemap.viewmodel.BrowseMapFragmentViewModel" />
+            type="com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel" />
 
         <variable
             name="compassViewModel"
-            type="com.sygic.ui.viewmodel.compass.CompassViewModel" />
+            type="com.sygic.maps.uikit.viewmodels.compass.CompassViewModel" />
 
         <variable
             name="positionLockFabViewModel"
-            type="com.sygic.ui.viewmodel.positionlockfab.PositionLockFabViewModel" />
+            type="com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel" />
 
         <variable
             name="zoomControlsViewModel"
-            type="com.sygic.ui.viewmodel.zoomcontrols.ZoomControlsViewModel" />
+            type="com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel" />
 
     </data>
 
@@ -30,7 +30,7 @@
         android:layout_height="match_parent"
         android:clipChildren="false">
 
-        <com.sygic.ui.view.compass.CompassView
+        <com.sygic.maps.uikit.views.compass.CompassView
             android:id="@+id/compassView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             tools:rotation="45"
             tools:visibility="visible" />
 
-        <com.sygic.ui.view.positionlockfab.PositionLockFab
+        <com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
             android:id="@+id/positionLockFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             app:state="@{safeUnbox(positionLockFabViewModel.currentState)}"
             tools:visibility="visible" />
 
-        <com.sygic.ui.view.zoomcontrols.ZoomControlsMenu
+        <com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
             android:id="@+id/zoomControlsMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

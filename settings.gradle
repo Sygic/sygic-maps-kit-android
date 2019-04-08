@@ -1,50 +1,20 @@
 apply from: 'buildSdk.gradle'
 
 include ':app-samples',
-        ':app-samples-browsemap-default',
-        ':app-samples-browsemap-full',
-        ':app-samples-browsemap-modes',
-        ':app-samples-browsemap-click-listener',
-        ':app-samples-browsemap-markers',
-        ':app-samples-browsemap-themes',
-        ':app-samples-browsemap-details-window',
-        ':app-samples-common',
-        ':modules-common',
-        ':modules-browsemap',
-        ':tools-injector',
-        ':tools-injector-viewmodel',
-        ':uikit-common',
-        ':uikit-common-sdk',
-        ':uikit-compass',
-        ':uikit-compass-viewmodel',
-        ':uikit-poidetail',
-        ':uikit-positionlockfab',
-        ':uikit-positionlockfab-viewmodel',
-        ':uikit-zoomcontrols',
-        ':uikit-zoomcontrols-viewmodel'
+        ':module-common',
+        ':module-browsemap',
+        ':tool-annotation-processor',
+        ':tool-viewmodel-factory',
+        ':uikit-views',
+        ':uikit-viewmodels'
 
 project(':app-samples').projectDir = new File("app/samples")
-project(':app-samples-common').projectDir = new File("app/samples/sample-common")
-project(':app-samples-browsemap-default').projectDir = new File("app/samples/sample-browsemap-def")
-project(':app-samples-browsemap-full').projectDir = new File("app/samples/sample-browsemap-full")
-project(':app-samples-browsemap-modes').projectDir = new File("app/samples/sample-browsemap-modes")
-project(':app-samples-browsemap-click-listener').projectDir = new File("app/samples/sample-browsemap-click-listener")
-project(':app-samples-browsemap-markers').projectDir = new File("app/samples/sample-browsemap-markers")
-project(':app-samples-browsemap-themes').projectDir = new File("app/samples/sample-browsemap-themes")
-project(':app-samples-browsemap-details-window').projectDir = new File("app/samples/sample-browsemap-details-window")
-project(':modules-common').projectDir = new File("modules/common")
-project(':modules-browsemap').projectDir = new File("modules/browsemap")
-project(':tools-injector').projectDir = new File("tools/injector")
-project(':tools-injector-viewmodel').projectDir = new File("tools/injector/viewmodel")
-project(':uikit-common').projectDir = new File("uikit/common")
-project(':uikit-common-sdk').projectDir = new File("uikit/common/sdk")
-project(':uikit-compass').projectDir = new File("uikit/compass")
-project(':uikit-compass-viewmodel').projectDir = new File("uikit/compass/viewmodel")
-project(':uikit-poidetail').projectDir = new File("uikit/poidetail")
-project(':uikit-positionlockfab').projectDir = new File("uikit/positionlockfab")
-project(':uikit-positionlockfab-viewmodel').projectDir = new File("uikit/positionlockfab/viewmodel")
-project(':uikit-zoomcontrols').projectDir = new File("uikit/zoomcontrols")
-project(':uikit-zoomcontrols-viewmodel').projectDir = new File("uikit/zoomcontrols/viewmodel")
+project(':module-common').projectDir = new File("modules/common")
+project(':module-browsemap').projectDir = new File("modules/browsemap")
+project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
+project(':tool-viewmodel-factory').projectDir = new File("tools/viewmodel-factory")
+project(':uikit-views').projectDir = new File("uikit/views")
+project(':uikit-viewmodels').projectDir = new File("uikit/viewmodels")
 
 if (gradle.buildSdkFromSource()) {
     include ':sdk'

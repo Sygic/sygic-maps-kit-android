@@ -45,29 +45,6 @@ android {
         }
     }
 
-    sourceSets {
-        main.java.srcDirs += 'sample-browsemap-def/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-def/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-full/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-full/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-modes/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-modes/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-click-listener/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-click-listener/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-markers/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-markers/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-themes/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-themes/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-details-window/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-details-window/src/main/res'
-    }
-
     androidGitVersion {
         codeFormat 'AMMNNPP'
         format '%tag%%-dirty%'
@@ -95,11 +72,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-browsemap')
-    implementation project(':app-samples-common')
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation project(':module-browsemap')
 }

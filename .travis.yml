@@ -35,53 +35,35 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
-- name: deploy #todo
 - name: compile and test uikit
 - name: compile and test modules
 - name: compile and test samples
 - name: ui tests
-
-#  if: tag =~ ^\d+\.\d+\.\d+$
+- name: deploy
+  if: tag =~ ^\d+\.\d+\.\d+$
 
 jobs:
   include:
-  - stage: compile and test uikit
-    name: common
-    script: ./gradlew :uikit-common:check
-  - stage: compile and test uikit
-    name: common-sdk
-    script: ./gradlew :uikit-common-sdk:check
-  - stage: compile and test uikit
-    name: compass
-    script: ./gradlew :uikit-compass:check
-  - stage: compile and test uikit
-    name: compass-viewmodel
-    script: ./gradlew :uikit-compass-viewmodel:check
-  - stage: compile and test uikit
-    name: poidetail
-    script: ./gradlew :uikit-poidetail:check
-  - stage: compile and test uikit
-    name: positionlockfab
-    script: ./gradlew :uikit-positionlockfab:check
-  - stage: compile and test uikit
-    name: positionlockfab-viewmodel
-    script: ./gradlew :uikit-positionlockfab-viewmodel:check
-  - stage: compile and test uikit
-    name: zoomcontrols
-    script: ./gradlew :uikit-zoomcontrols:check
-  - stage: compile and test uikit
-    name: zoomcontrols-viewmodel
-    script: ./gradlew :uikit-zoomcontrols-viewmodel:check
+  - stage: compile tools
+    name: tool-viewmodel-factory
+    script: ./gradlew :tool-viewmodel-factory:check
+
+  - stage: compile and test uikit views
+    name: uikit-views
+    script: ./gradlew :uikit-views:check
+  - stage: compile and test uikit viewmodels
+    name: uikit-viewmodels
+    script: ./gradlew :uikit-viewmodels:check
 
   - stage: compile and test modules
-    name: common
-    script: ./gradlew :modules-common:check
+    name: module-common
+    script: ./gradlew :module-common:check
   - stage: compile and test modules
-    name: browsemap
-    script: ./gradlew :modules-browsemap:check
+    name: module-browsemap
+    script: ./gradlew :module-browsemap:check
 
   - stage: compile and test samples
-    name: sample app
+    name: sample-app
     script:
     - ./gradlew :app-samples:check
 
@@ -93,13 +75,7 @@ jobs:
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script:
-    - ./gradlew :app-samples-browsemap-default:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
-    - ./gradlew :app-samples-browsemap-full:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
-    - ./gradlew :app-samples-browsemap-modes:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
-    - ./gradlew :app-samples-browsemap-markers:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
-    - ./gradlew :app-samples-browsemap-details-window:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
-    - ./gradlew :app-samples-browsemap-click-listener:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
-    - ./gradlew :app-samples-browsemap-themes:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew :app-samples:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
 
   - stage: deploy
     name: assembleRelease
@@ -107,7 +83,7 @@ jobs:
     - echo $RELEASE_KEYSTORE_BASE64 | base64 -d > $RELEASE_KEYSTORE_FILE
     script:
     - ./gradlew clean assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
-#    todo: deploy to maven here - ./gradlew clean uploadArchives ?
+    #    todo: deploy to maven here - ./gradlew clean uploadArchives ?
     deploy:
       provider: releases
       api_key: $TRAVIS_RELEASE
@@ -117,16 +93,9 @@ jobs:
       - $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/*.apk
       - $TRAVIS_BUILD_DIR/modules/common/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/modules/browsemap/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/common/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/common/sdk/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/compass/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/compass/viewmodel/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/poidetail/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/positionlockfab/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/positionlockfab/viewmodel/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/zoomcontrols/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/uikit/zoomcontrols/viewmodel/build/outputs/aar/*.aar
-      - $TRAVIS_BUILD_DIR/tools/injector/viewmodel/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/uikit/views/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/uikit/viewmodels/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/tools/viewmodel-factory/build/outputs/aar/*.aar
       skip_cleanup: true
       on:
         all_branches: true

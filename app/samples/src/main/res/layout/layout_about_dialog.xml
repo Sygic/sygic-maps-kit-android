@@ -7,7 +7,7 @@
 
         <variable
             name="aboutDialogViewModel"
-            type="com.sygic.samples.viewmodels.AboutDialogViewModel" />
+            type="com.sygic.samples.app.viewmodels.AboutDialogViewModel" />
 
     </data>
 

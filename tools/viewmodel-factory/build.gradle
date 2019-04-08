@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargerSdkVersion
+        versionName toolsViewmodelFactoryVersion
+        archivesBaseName = "tools-viewmodel-factory-$versionName"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':tool-annotation-processor')
+
+    annotationProcessor project(':tool-annotation-processor')
+
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    api "javax.inject:javax.inject:$javaxInjectVersion"
+}

@@ -44,7 +44,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.sygic.modules:browsemap:1.0.0'
+    implementation 'com.sygic.maps:module-browsemap:1.0.0'
 }
 ```
 
@@ -52,14 +52,14 @@ Or checkout the repo and include it to your project:
 
 *settings.gradle*
  ```gradle
-include ':modules-browsemap'
-project(':modules-browsemap').projectDir = new File("path to the repo root folder/modules/browsemap")
+include ':module-browsemap'
+project(':module-browsemap').projectDir = new File("path to the repo root folder/modules/browsemap")
 ```
 *build.gradle*
 ```gradle
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-browsemap')
+    implementation project(':module-browsemap')
 }
 ```
 
@@ -89,7 +89,7 @@ Simply put the BrowseMapFragment to your layout container:
 
     <fragment
         android:id="@+id/browseMapFragment"
-        class="com.sygic.modules.browsemap.BrowseMapFragment"
+        class="com.sygic.maps.module.browsemap.BrowseMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

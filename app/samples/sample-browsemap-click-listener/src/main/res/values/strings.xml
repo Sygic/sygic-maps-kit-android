@@ -1,4 +1,0 @@
-<resources>
-    <string name="browse_map_click_listener">Browse Map - Click listener</string>
-    <string name="browse_map_click_listener_summary">Browse Map module with own click listener</string>
-</resources>

@@ -14,7 +14,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".activities.SamplesActivity"
+            android:name="com.sygic.samples.app.activities.SamplesActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -24,31 +24,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BrowseMapDefaultActivity"
+            android:name=".browsemap.BrowseMapDefaultActivity"
             android:label="@string/browse_map_default"
             android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
-            android:name=".BrowseMapFullActivity"
+            android:name=".browsemap.BrowseMapFullActivity"
             android:label="@string/browse_map_full"
             android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
-            android:name=".BrowseMapModesActivity"
+            android:name=".browsemap.BrowseMapModesActivity"
             android:label="@string/browse_map_modes"
             android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
-            android:name=".BrowseMapClickListenerActivity"
+            android:name=".browsemap.BrowseMapClickListenerActivity"
             android:label="@string/browse_map_click_listener"
             android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
-            android:name=".BrowseMapMarkersActivity"
+            android:name=".browsemap.BrowseMapMarkersActivity"
             android:label="@string/browse_map_markers"
             android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
-            android:name=".BrowseMapThemesActivity"
+            android:name=".browsemap.BrowseMapThemesActivity"
             android:label="@string/browse_map_themes"
             android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
-            android:name=".BrowseMapDetailsWindowActivity"
+            android:name=".browsemap.BrowseMapDetailsWindowActivity"
             android:label="@string/browse_map_details_window"
             android:theme="@style/AppTheme.NoExitAnimation" />
 

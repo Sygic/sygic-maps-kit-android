@@ -1,6 +1,7 @@
 package com.sygic.samples
 
-import com.sygic.samples.models.Sample
+import com.sygic.samples.browsemap.*
+import com.sygic.samples.app.models.Sample
 
 object Samples {
 

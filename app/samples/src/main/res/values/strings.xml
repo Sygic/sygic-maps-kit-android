@@ -24,4 +24,24 @@
     <string name="sample_app_version_code">Sample App Version Code:</string>
     <string name="sygic_sdk_version">Sygic SDK Version:</string>
     <string name="abi">ABI:</string>
+    <string name="browse_map_click_listener">Browse Map - Click listener</string>
+    <string name="browse_map_click_listener_summary">Browse Map module with own click listener</string>
+    <string name="browse_map_default">Browse Map - Default</string>
+    <string name="browse_map_default_summary">Browse Map module with no configuration</string>
+    <string name="browse_map_details_window">Browse Map - Details View</string>
+    <string name="browse_map_details_window_summary">Custom details view for map points</string>
+    <string name="place_info_description">Place info image</string>
+    <string name="browse_map_full">Browse Map - Full</string>
+    <string name="browse_map_full_summary">Browse Map module with full configuration</string>
+    <string name="browse_map_markers">Browse Map - Markers</string>
+    <string name="browse_map_markers_summary">Browse Map module with own custom map markers</string>
+    <string name="browse_map_modes">Browse Map - Modes</string>
+    <string name="browse_map_modes_summary">Browse Map module with all available modes</string>
+    <string name="selection_mode">Selection mode</string>
+    <string name="selection_mode_is">Selection mode is</string>
+    <string name="none">None</string>
+    <string name="markers_only">MarkersOnly</string>
+    <string name="full">Full</string>
+    <string name="browse_map_themes">Browse Map - Themes</string>
+    <string name="browse_map_themes_summary">Browse Map module with custom theme</string>
 </resources>

@@ -29,15 +29,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':uikit-common')
-    api project(':uikit-common-sdk')
-    implementation project(':tools-injector-viewmodel')
-    annotationProcessor project(':tools-injector')
+    api project(':uikit-viewmodels')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation project(':tool-viewmodel-factory')
+    annotationProcessor project(':tool-annotation-processor')
+
     implementation "com.google.android.gms:play-services-location:$playServicesLocationVersion"
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
 
     api "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
