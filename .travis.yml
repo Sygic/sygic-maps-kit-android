@@ -35,6 +35,7 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
+- name: compile tools
 - name: compile and test uikit
 - name: compile and test modules
 - name: compile and test samples
@@ -48,10 +49,10 @@ jobs:
     name: tool-viewmodel-factory
     script: ./gradlew :tool-viewmodel-factory:check
 
-  - stage: compile and test uikit views
+  - stage: compile and test uikit
     name: uikit-views
     script: ./gradlew :uikit-views:check
-  - stage: compile and test uikit viewmodels
+  - stage: compile and test uikit
     name: uikit-viewmodels
     script: ./gradlew :uikit-viewmodels:check
 
