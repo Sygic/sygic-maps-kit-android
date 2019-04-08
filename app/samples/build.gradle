@@ -5,6 +5,10 @@ plugins {
     id 'com.gladed.androidgitversion' version '0.4.9'
 }
 
+androidGitVersion {
+    baseCode 1
+}
+
 android {
     compileSdkVersion androidCompileSdkVersion
 
