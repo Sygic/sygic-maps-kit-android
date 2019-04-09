@@ -1,5 +1,7 @@
 # SygicMapsKit - Android
 
+[![Build Status](https://travis-ci.com/Sygic/sygic-maps-kit-android.svg?branch=master)][8] [![GitHub release](https://img.shields.io/github/release/Sygic/sygic-maps-kit-android.svg)][1] [![License: MIT](https://img.shields.io/github/license/Sygic/sygic-maps-kit-android.svg)][12] ![Minimal API version level 21](https://img.shields.io/badge/API_level-21-green.svg)
+
 A powerful open-source library based on [Sygic Maps SDK][5] which can be used to display rich map content and interact with it.
 (if you are looking for a iOS version, you can find it [here][4])
 
@@ -7,7 +9,9 @@ A powerful open-source library based on [Sygic Maps SDK][5] which can be used to
 
 ## Getting Started
 
-To get familiar with all the features available, you can first try out our Sample App. Get it from [Google Play][7] or download [APK][8] (coming soon).
+To get familiar with all the features available, you can first try out our Sample App:
+
+[<img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">][7] or download [APK][1].
 
 [![Screenshot](assets/images/screenshot_0.png)](assets/images/screenshot_0_orig.png)[![Screenshot](assets/images/screenshot_1.png)](assets/images/screenshot_1_orig.png)[![Screenshot](assets/images/screenshot_2.png)](assets/images/screenshot_2_orig.png)[![Screenshot](assets/images/screenshot_3.png)](assets/images/screenshot_3_orig.png)
 
@@ -33,22 +37,20 @@ To get familiar with all the features available, you can first try out our Sampl
 
 ### Installing
 
-You can download a AAR from GitHub's [releases page][1].
-
-Or use Gradle (coming soon):
+Using Gradle:
 
 ```gradle
-repositories {
-    mavenCentral()
-    google()
-}
-
 dependencies {
     implementation 'com.sygic.maps:module-browsemap:1.0.0'
+    implementation 'com.sygic.maps:module-search:1.0.0' (coming soon)
+    implementation 'com.sygic.maps:module-navigation:1.0.0' (coming soon)
+    ...
 }
 ```
 
-Or checkout the repo and include it to your project:
+Or download a AAR's from GitHub's [releases page][1] and manually include it to your project (but you have to solve the dependencies yourself).
+
+Or checkout the repo and include the required module to your project:
 
 *settings.gradle*
  ```gradle
@@ -74,6 +76,7 @@ Finally, you need to add your API key to the Android Manifest:
         android:name="@string/com_sygic_api_key"
         android:value="place your API key here" />
     </application>
+
 </manifest>
 ```
 
@@ -131,8 +134,9 @@ First read the [Wiki][2] page, then try to search on [Stackoverflow][9] or visit
 [4]: https://github.com/Sygic/sygic-maps-kit-ios/
 [5]: https://www.sygic.com/enterprise/maps-navigation-sdk-api-developers
 [6]: https://www.sygic.com/enterprise/get-api-key/
-[7]: #
-[8]: #
+[7]: https://play.google.com/store/apps/details?id=com.sygic.samples
+[8]: https://github.com/Sygic/sygic-maps-kit-android/
 [9]: https://stackoverflow.com/questions/tagged/android+sygic
 [10]: https://github.com/bio007
 [11]: https://github.com/TomasValenta
+[12]: https://github.com/Sygic/sygic-maps-kit-android/blob/master/LICENSE
