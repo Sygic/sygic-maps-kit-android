@@ -9,9 +9,7 @@ A powerful open-source library based on [Sygic Maps SDK][5] which can be used to
 
 ## Getting Started
 
-To get familiar with all the features available, you can first try out our Sample App:
-
-[<img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">][7] or download [APK][1].
+To get familiar with all the features available, you can first try out our Sample App. Download [APK][1] or [<img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">][7]
 
 [![Screenshot](assets/images/screenshot_0.png)](assets/images/screenshot_0_orig.png)[![Screenshot](assets/images/screenshot_1.png)](assets/images/screenshot_1_orig.png)[![Screenshot](assets/images/screenshot_2.png)](assets/images/screenshot_2_orig.png)[![Screenshot](assets/images/screenshot_3.png)](assets/images/screenshot_3_orig.png)
 
@@ -37,7 +35,7 @@ To get familiar with all the features available, you can first try out our Sampl
 
 ### Installing
 
-Using Gradle:
+Gradle:
 
 ```gradle
 dependencies {
@@ -45,23 +43,6 @@ dependencies {
     implementation 'com.sygic.maps:module-search:1.0.0' (coming soon)
     implementation 'com.sygic.maps:module-navigation:1.0.0' (coming soon)
     ...
-}
-```
-
-Or download a AAR's from GitHub's [releases page][1] and manually include it to your project (but you have to solve the dependencies yourself).
-
-Or checkout the repo and include the required module to your project:
-
-*settings.gradle*
- ```gradle
-include ':module-browsemap'
-project(':module-browsemap').projectDir = new File("path to the repo root folder/modules/browsemap")
-```
-*build.gradle*
-```gradle
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':module-browsemap')
 }
 ```
 
