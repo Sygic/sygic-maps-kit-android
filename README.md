@@ -11,8 +11,7 @@ A powerful open-source library based on [Sygic Maps SDK][5] which can be used to
 
 To get familiar with all the features available, you can first try out our Sample App.
 
-[![Screenshot](assets/images/screenshot_0.png)](assets/images/screenshot_0_orig.png)[![Screenshot](assets/images/screenshot_1.png)](assets/images/screenshot_1_orig.png)[![Screenshot](assets/images/screenshot_2.png)](assets/images/screenshot_2_orig.png)[![Screenshot](assets/images/screenshot_3.png)](assets/images/screenshot_3_orig.png)
-
+<p align="center"><a href="assets/images/screenshots_orig.png" target="_blank"><img src="assets/images/screenshots.png" alt="Screenshots"></a></p>
 <p align="center"><a href="https://play.google.com/store/apps/details?id=com.sygic.samples" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80"></a></p>
 
 ### Prerequisites
