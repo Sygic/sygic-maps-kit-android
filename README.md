@@ -9,9 +9,11 @@ A powerful open-source library based on [Sygic Maps SDK][5] which can be used to
 
 ## Getting Started
 
-To get familiar with all the features available, you can first try out our Sample App. Try [APK][1] or [<img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">][7]
+To get familiar with all the features available, you can first try out our Sample App.
 
 [![Screenshot](assets/images/screenshot_0.png)](assets/images/screenshot_0_orig.png)[![Screenshot](assets/images/screenshot_1.png)](assets/images/screenshot_1_orig.png)[![Screenshot](assets/images/screenshot_2.png)](assets/images/screenshot_2_orig.png)[![Screenshot](assets/images/screenshot_3.png)](assets/images/screenshot_3_orig.png)
+
+[<img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">][7]
 
 ### Prerequisites
 
