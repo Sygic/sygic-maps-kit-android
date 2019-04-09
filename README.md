@@ -13,7 +13,7 @@ To get familiar with all the features available, you can first try out our Sampl
 
 [![Screenshot](assets/images/screenshot_0.png)](assets/images/screenshot_0_orig.png)[![Screenshot](assets/images/screenshot_1.png)](assets/images/screenshot_1_orig.png)[![Screenshot](assets/images/screenshot_2.png)](assets/images/screenshot_2_orig.png)[![Screenshot](assets/images/screenshot_3.png)](assets/images/screenshot_3_orig.png)
 
-[<img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">][7]
+<p align="center"><a href="https://play.google.com/store/apps/details?id=com.sygic.samples" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80"></a></p>
 
 ### Prerequisites
 
@@ -117,7 +117,7 @@ First read the [Wiki][2] page, then try to search on [Stackoverflow][9] or visit
 [4]: https://github.com/Sygic/sygic-maps-kit-ios/
 [5]: https://www.sygic.com/enterprise/maps-navigation-sdk-api-developers
 [6]: https://www.sygic.com/enterprise/get-api-key/
-[7]: https://play.google.com/store/apps/details?id=com.sygic.samples
+[7]: #
 [8]: https://github.com/Sygic/sygic-maps-kit-android/
 [9]: https://stackoverflow.com/questions/tagged/android+sygic
 [10]: https://github.com/bio007
