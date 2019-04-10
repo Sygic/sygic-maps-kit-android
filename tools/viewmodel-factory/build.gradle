@@ -23,8 +23,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':tool-annotation-processor')
 
+    compileOnly project(':tool-annotation-processor')
     annotationProcessor project(':tool-annotation-processor')
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
