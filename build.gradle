@@ -16,6 +16,7 @@ buildscript {
         uikitViewsVersion = '1.0.0'
         uikitViewmodelsVersion = '1.0.0'
         toolsViewmodelFactoryVersion = '1.0.0'
+        toolsAnnotationProcessorVersion = '1.0.0'
 
         kotlinVersion = '1.3.21'
         kotlinCoroutinesVersion = '1.0.1'

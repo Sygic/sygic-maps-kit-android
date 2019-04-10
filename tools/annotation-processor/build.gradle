@@ -1,5 +1,8 @@
 apply plugin: 'java-library'
 
+ext.bintrayPublishVersion = toolsAnnotationProcessorVersion
+apply from: '../../bintrayConfig.gradle'
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.squareup:javapoet:$javaPoetVersion"

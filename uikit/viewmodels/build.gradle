@@ -2,6 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+
+ext.bintrayPublishVersion = uikitViewmodelsVersion
 apply from: '../../bintrayConfig.gradle'
 
 android {

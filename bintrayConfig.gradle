@@ -4,7 +4,7 @@ publish {
     userOrg = organization
     groupId = groupIdentifier
     artifactId = project.name
-    publishVersion = moduleBrowsemapVersion
+    publishVersion = bintrayPublishVersion
     desc = projectDescription
     website = projectWebsite
     dryRun = false
