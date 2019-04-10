@@ -5,6 +5,7 @@ buildscript {
         organization = 'sygic'
         groupIdentifier = 'com.sygic.maps'
         projectWebsite = 'https://github.com/Sygic/sygic-maps-kit-android'
+        projectDescription = 'Part of Sygic Maps Kit framework.'
 
         androidMinSdkVersion = 21
         androidCompileSdkVersion = 28

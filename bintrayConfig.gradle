@@ -3,10 +3,9 @@ apply plugin: 'com.novoda.bintray-release'
 publish {
     userOrg = organization
     groupId = groupIdentifier
-    //uploadName = project.name //todo: required?
     artifactId = project.name
     publishVersion = moduleBrowsemapVersion
-    desc = 'desc' //todo: fill me up
+    desc = projectDescription
     website = projectWebsite
     dryRun = false
 }
