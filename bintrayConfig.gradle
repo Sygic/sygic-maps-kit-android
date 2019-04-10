@@ -4,6 +4,7 @@ publish {
     userOrg = organization
     groupId = groupIdentifier
     artifactId = project.name
+    uploadName = "$projectIdentifier:$project.name"
     publishVersion = bintrayPublishVersion
     desc = projectDescription
     website = projectWebsite
