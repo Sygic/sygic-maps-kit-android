@@ -18,7 +18,7 @@ android {
         targetSdkVersion androidTargerSdkVersion
         versionCode androidGitVersion.code()
         versionName androidGitVersion.name()
-        archivesBaseName = "app-sample-$versionName"
+        archivesBaseName = "$project.name-$versionName"
 
         gradle.resolveFlavors(it)
 
@@ -37,8 +37,8 @@ android {
 
     buildTypes {
         all {
-            buildConfigField "String", "GITHUB_REPO", '"https://github.com/Sygic/sygic-maps-kit-android/"'
-            buildConfigField "String", "GITHUB_WIKI", '"https://github.com/Sygic/sygic-maps-kit-android/wiki/"'
+            buildConfigField "String", "GITHUB_REPO", "\"$projectWebsite\""
+            buildConfigField "String", "GITHUB_WIKI", "\"$projectWebsite/wiki/\""
             buildConfigField "String", "STACK_OVERFLOW", '"https://stackoverflow.com/questions/tagged/android+sygic"'
         }
 

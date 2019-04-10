@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply from: '../../bintrayconfig.gradle'
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -9,7 +10,7 @@ android {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
         versionName uikitViewsVersion
-        archivesBaseName = "uikit-views-$versionName"
+        archivesBaseName = "$project.name-$versionName"
     }
 
     buildTypes {

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: '../../bintrayconfig.gradle'
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -7,7 +8,7 @@ android {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
         versionName toolsViewmodelFactoryVersion
-        archivesBaseName = "tools-viewmodel-factory-$versionName"
+        archivesBaseName = "$project.name-$versionName"
     }
 
     buildTypes {

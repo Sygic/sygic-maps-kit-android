@@ -34,7 +34,7 @@ To get familiar with all the features available, you can first try out our Sampl
 
 3. Min API **21** (Android 5.0 Lollipop)
 
-### Installing
+### Implementation
 
 Gradle:
 

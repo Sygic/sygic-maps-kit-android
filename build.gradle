@@ -2,16 +2,18 @@
 
 buildscript {
     ext {
+        organization = 'sygic'
+        groupIdentifier = 'com.sygic.maps'
+        projectWebsite = 'https://github.com/Sygic/sygic-maps-kit-android'
+
         androidMinSdkVersion = 21
         androidCompileSdkVersion = 28
         androidTargerSdkVersion = androidCompileSdkVersion
 
         moduleBrowsemapVersion = '1.0.0'
         moduleCommonVersion = '1.0.0'
-
         uikitViewsVersion = '1.0.0'
         uikitViewmodelsVersion = '1.0.0'
-
         toolsViewmodelFactoryVersion = '1.0.0'
 
         kotlinVersion = '1.3.21'
@@ -32,6 +34,7 @@ buildscript {
     }
 
     dependencies {
+        classpath 'com.novoda:bintray-release:0.9'
         classpath 'com.android.tools.build:gradle:3.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 

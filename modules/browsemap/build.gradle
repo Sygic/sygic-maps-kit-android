@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply from: '../../bintrayconfig.gradle'
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -10,7 +11,7 @@ android {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
         versionName moduleBrowsemapVersion
-        archivesBaseName = "module-browsemap-$versionName"
+        archivesBaseName = "$project.name-$versionName"
 
         gradle.resolveFlavors(it)
     }

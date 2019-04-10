@@ -35,13 +35,14 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
+- name: deploy #todo
 - name: compile tools
 - name: compile and test uikit
 - name: compile and test modules
 - name: compile and test samples
 - name: ui tests
-- name: deploy
-  if: tag =~ ^\d+\.\d+\.\d+$
+
+#  if: tag =~ ^\d+\.\d+\.\d+$ #todo
 
 jobs:
   include:
@@ -84,7 +85,7 @@ jobs:
     - echo $RELEASE_KEYSTORE_BASE64 | base64 -d > $RELEASE_KEYSTORE_FILE
     script:
     - ./gradlew clean assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
-    #    todo: deploy to maven here - ./gradlew clean uploadArchives ?
+    - ./gradlew build bintrayUpload -PbintrayUser=$BINTRAY_USERNAME -PbintrayKey=$BINTRAY_KEY
     deploy:
       provider: releases
       api_key: $TRAVIS_RELEASE
