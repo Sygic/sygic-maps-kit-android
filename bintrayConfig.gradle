@@ -8,5 +8,6 @@ publish {
     publishVersion = bintrayPublishVersion
     desc = projectDescription
     website = projectWebsite
+    licences = projectLicences
     dryRun = false
 }

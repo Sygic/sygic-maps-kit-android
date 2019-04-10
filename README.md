@@ -22,9 +22,11 @@ To get familiar with all the features available, you can first try out our Sampl
 
     ```gradle
     android {
+        ...
         dataBinding {
             enabled = true
         }
+    
         compileOptions {
             sourceCompatibility 1.8
             targetCompatibility 1.8
@@ -36,31 +38,82 @@ To get familiar with all the features available, you can first try out our Sampl
 
 ### Implementation
 
-Gradle:
+1. Gradle **project file**:
 
-```gradle
-dependencies {
-    implementation 'com.sygic.maps:module-browsemap:1.0.0'
-    implementation 'com.sygic.maps:module-search:1.0.0' (coming soon)
-    implementation 'com.sygic.maps:module-navigation:1.0.0' (coming soon)
+    ```gradle
+    allprojects {
+        repositories {
+            google()
+            jcenter()
+            maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
+        }
+    }
+    ```
+
+2. Gradle **module file**:
+
+    ```gradle
+    dependencies {
+        // Pattern: implementation 'sygic-prefix:module-name:version'
+        implementation 'com.sygic.maps:module-browsemap:1.0.0'
+        implementation 'com.sygic.maps:module-search:1.2.0' (coming soon)
+        implementation 'com.sygic.maps:module-navigation:1.0.1' (coming soon)
+        ...
+    }
+    ```
+
+3. Finally, you need to add your **API key** to the **Android Manifest**:
+
+    ```xml
+    <manifest package="com.sygic.samples">
+        <application>
+    
+            ...
+     
+            <meta-data
+                android:name="@string/com_sygic_api_key"
+                android:value="place your API key here" />
+    
+        </application>
+    </manifest>
+    ```
+
+4. Optional, but recommended. Configure APK split to reduce final application size:
+
+    ```gradle
+    import com.android.build.OutputFile
+    
     ...
-}
-```
+    
+    android {
+        ...
+        defaultConfig {
+            ...
+            versionCode 1
+        }
+    
+        def abiCodes = ['armeabi-v7a':2, 'arm64-v8a':3, 'x86':8, 'x86_64':9 ]
+        android.applicationVariants.all { variant ->
+            variant.outputs.each {
+                output ->
+                    def abiName = output.getFilter(OutputFile.ABI)
+                    output.versionCodeOverride = abiCodes.get(abiName, 0) * 100000 + variant.versionCode
+            }
+        }
+        splits {
+            abi {
+                enable true
+                reset()
+                include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+                universalApk false
+            }
+        }
+    }
+    
+    ...
+    ```
 
-Finally, you need to add your API key to the Android Manifest:
-
-```xml
-<manifest
-    package="com.sygic.samples">
-    <application>
-
-    <meta-data
-        android:name="@string/com_sygic_api_key"
-        android:value="place your API key here" />
-    </application>
-
-</manifest>
-```
+For more info visit [this page][7].
 
 ### Basic Usage
 
@@ -116,7 +169,7 @@ First read the [Wiki][2] page, then try to search on [Stackoverflow][9] or visit
 [4]: https://github.com/Sygic/sygic-maps-kit-ios/
 [5]: https://www.sygic.com/enterprise/maps-navigation-sdk-api-developers
 [6]: https://www.sygic.com/enterprise/get-api-key/
-[7]: #
+[7]: https://developer.android.com/studio/build/configure-apk-splits
 [8]: https://github.com/Sygic/sygic-maps-kit-android/
 [9]: https://stackoverflow.com/questions/tagged/android+sygic
 [10]: https://github.com/bio007
