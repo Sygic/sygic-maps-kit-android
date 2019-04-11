@@ -10,4 +10,5 @@ publish {
     website = projectWebsite
     licences = projectLicences
     dryRun = false
+    override = true
 }
