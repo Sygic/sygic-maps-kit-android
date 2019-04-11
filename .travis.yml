@@ -35,14 +35,13 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 stages:
-- name: deploy #todo
 - name: compile tools
 - name: compile and test uikit
 - name: compile and test modules
 - name: compile and test samples
 - name: ui tests
-
-#  if: tag =~ ^\d+\.\d+\.\d+$ #todo
+- name: deploy
+  if: tag =~ ^\d+\.\d+\.\d+$
 
 jobs:
   include:
@@ -86,6 +85,7 @@ jobs:
     script:
     - ./gradlew clean assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
     - ./gradlew build bintrayUpload -PbintrayUser=$BINTRAY_USERNAME -PbintrayKey=$BINTRAY_KEY
+    - #todo GP auto deploy?
     deploy:
       provider: releases
       api_key: $TRAVIS_RELEASE
