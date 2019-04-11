@@ -102,13 +102,7 @@ android {
 }
 
 play {
-    def gpKeyJsonFileExist = System.getenv("GP_KEY_JSON_FILE") == "true"
-    if (gpKeyJsonFileExist) {
-        serviceAccountCredentials = file(rootDir.getCanonicalPath() + '/' + System.getenv("GP_KEY_JSON_FILE"))
-        artifactDir = file(rootDir.getCanonicalPath() + '/' + "app/samples/build/outputs/apk/release")
-    } else{
-        serviceAccountCredentials = file('areYouHappy.json')
-    }
+    serviceAccountCredentials = file(System.getenv('CI') == 'true' ? System.getenv('GP_KEY_JSON_FILE') : 'areYouHappy.json')
 }
 
 dependencies {

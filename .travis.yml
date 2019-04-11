@@ -87,9 +87,8 @@ jobs:
     - echo $RELEASE_KEYSTORE_BASE64 | base64 -d > $RELEASE_KEYSTORE_FILE
     - echo $GP_KEY_JSON_BASE64 | base64 -d > $GP_KEY_JSON_FILE
     script:
-    - ./gradlew clean assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
-    - ./gradlew build bintrayUpload -PbintrayUser=$BINTRAY_USERNAME -PbintrayKey=$BINTRAY_KEY
-    - ./gradlew publishReleaseApk
+    - ./gradlew clean assembleRelease bintrayUpload -PbintrayUser=$BINTRAY_USERNAME -PbintrayKey=$BINTRAY_KEY -P"sygic.sdk.key"=$SYGIC_API_KEY
+    - ./gradlew publishReleaseApk --artifact-dir $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release
     deploy:
       provider: releases
       api_key: $TRAVIS_RELEASE
