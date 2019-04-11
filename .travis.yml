@@ -46,6 +46,9 @@ stages:
 jobs:
   include:
   - stage: compile tools
+    name: tool-annotation-processor
+    script: ./gradlew :tool-annotation-processor:check
+  - stage: compile tools
     name: tool-viewmodel-factory
     script: ./gradlew :tool-viewmodel-factory:check
 
@@ -63,7 +66,7 @@ jobs:
     name: module-browsemap
     script: ./gradlew :module-browsemap:check
 
-  - stage: compile and test samples
+  - stage: compile and test sample app
     name: sample-app
     script:
     - ./gradlew :app-samples:check
@@ -82,10 +85,11 @@ jobs:
     name: assembleRelease
     before_script:
     - echo $RELEASE_KEYSTORE_BASE64 | base64 -d > $RELEASE_KEYSTORE_FILE
+    - echo $GP_KEY_JSON_BASE64 | base64 -d > $GP_KEY_JSON_FILE
     script:
     - ./gradlew clean assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
     - ./gradlew build bintrayUpload -PbintrayUser=$BINTRAY_USERNAME -PbintrayKey=$BINTRAY_KEY
-    - #todo GP auto deploy?
+    - ./gradlew publishReleaseApk
     deploy:
       provider: releases
       api_key: $TRAVIS_RELEASE

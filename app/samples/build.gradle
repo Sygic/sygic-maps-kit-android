@@ -26,7 +26,10 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+
+    // https://github.com/gradle/gradle/issues/3593
     id 'com.gladed.androidgitversion' version '0.4.9'
+    id 'com.github.triplet.play' version '2.2.0'
 }
 
 androidGitVersion {
@@ -95,6 +98,16 @@ android {
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
+    }
+}
+
+play {
+    def gpKeyJsonFileExist = System.getenv("GP_KEY_JSON_FILE") == "true"
+    if (gpKeyJsonFileExist) {
+        serviceAccountCredentials = file(rootDir.getCanonicalPath() + '/' + System.getenv("GP_KEY_JSON_FILE"))
+        artifactDir = file(rootDir.getCanonicalPath() + '/' + "app/samples/build/outputs/apk/release")
+    } else{
+        serviceAccountCredentials = file('areYouHappy.json')
     }
 }
 
