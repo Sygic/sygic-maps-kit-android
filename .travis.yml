@@ -38,7 +38,7 @@ stages:
 - name: compile tools
 - name: compile and test uikit
 - name: compile and test modules
-- name: compile and test samples
+- name: compile and test sample app
 - name: ui tests
 - name: deploy
   if: tag =~ ^\d+\.\d+\.\d+$
