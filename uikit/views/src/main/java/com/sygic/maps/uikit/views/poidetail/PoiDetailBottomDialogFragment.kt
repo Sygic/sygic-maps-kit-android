@@ -34,24 +34,25 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.sdk.map.`object`.data.ViewObjectData
-import com.sygic.ui.common.extensions.copyToClipboard
-import com.sygic.ui.common.extensions.openEmail
-import com.sygic.ui.common.extensions.openPhone
-import com.sygic.ui.common.extensions.openUrl
-import com.sygic.ui.common.listeners.DialogFragmentListener
-import com.sygic.ui.common.views.BottomSheetDialog
-import com.sygic.ui.view.poidetail.databinding.LayoutPoiDetailInternalBinding
-import com.sygic.ui.view.poidetail.manager.PreferencesManager
-import com.sygic.ui.view.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
-import com.sygic.ui.view.poidetail.viewmodel.PoiDetailInternalViewModel
-import com.sygic.ui.view.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
+import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.copyToClipboard
+import com.sygic.maps.uikit.views.common.extensions.openEmail
+import com.sygic.maps.uikit.views.common.extensions.openPhone
+import com.sygic.maps.uikit.views.common.extensions.openUrl
+import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
+import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.poidetail.dialog.BottomSheetDialog
+import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
+import com.sygic.maps.uikit.views.poidetail.manager.PreferencesManager
+import com.sygic.maps.uikit.views.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
+import com.sygic.maps.uikit.views.poidetail.viewmodel.PoiDetailInternalViewModel
+import com.sygic.maps.uikit.views.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
-private const val DATA_PAYLOAD = "data_payload"
+private const val POI_DETAIL_DATA = "poi_detail_data"
 
 /**
  * A [PoiDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
- * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [ViewObjectData] object.
+ * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiDetailData] object.
  *
  * You can register an [DialogFragmentListener] using [setListener] method. Then you will be notified when dialog is dismissed.
  *
@@ -74,14 +75,14 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         const val TAG = "poi_detail_bottom_dialog_fragment"
 
         /**
-         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You need to provide a valid [ViewObjectData] object.
+         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You need to provide a valid [PoiDetailData] object.
          *
-         * @param data [ViewObjectData] to be applied to the dialog content.
+         * @param poiDetailData [PoiDetailData] to be applied to the dialog content.
          */
         @JvmStatic
-        fun newInstance(data: ViewObjectData): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {
+        fun newInstance(poiDetailData: PoiDetailData): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {
             arguments = Bundle().apply {
-                putParcelable(DATA_PAYLOAD, data)
+                putParcelable(POI_DETAIL_DATA, poiDetailData)
             }
         }
     }
@@ -94,7 +95,7 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         viewModel = ViewModelProviders.of(
             this,
             PoiDetailInternalViewModel.ViewModelFactory(
-                arguments?.getParcelable(DATA_PAYLOAD)!!,
+                arguments?.getParcelable(POI_DETAIL_DATA)!!,
                 preferencesManager
             )
         )[PoiDetailInternalViewModel::class.java].apply {

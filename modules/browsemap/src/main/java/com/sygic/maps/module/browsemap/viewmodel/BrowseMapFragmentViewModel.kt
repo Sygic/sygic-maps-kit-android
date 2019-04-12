@@ -28,30 +28,32 @@ import android.app.Application
 import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
-import com.sygic.modules.browsemap.detail.PoiDataDetailsFactory
-import com.sygic.modules.browsemap.extensions.resolveAttributes
-import com.sygic.modules.common.component.MapFragmentInitComponent
-import com.sygic.modules.common.detail.DetailsViewFactory
-import com.sygic.modules.common.mapinteraction.MapSelectionMode
-import com.sygic.modules.common.mapinteraction.manager.MapInteractionManager
-import com.sygic.modules.common.poi.manager.PoiDataManager
-import com.sygic.modules.common.theme.ThemeManager
-import com.sygic.modules.common.theme.ThemeSupportedViewModel
+import com.sygic.maps.module.browsemap.detail.PoiDataDetailsFactory
+import com.sygic.maps.module.browsemap.extensions.resolveAttributes
+import com.sygic.maps.module.common.component.MapFragmentInitComponent
+import com.sygic.maps.module.common.detail.DetailsViewFactory
+import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
+import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
+import com.sygic.maps.module.common.poi.manager.PoiDataManager
+import com.sygic.maps.module.common.theme.ThemeManager
+import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
+import com.sygic.maps.tools.annotations.Assisted
+import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
+import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
+import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
+import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ProxyPoi
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
-import com.sygic.tools.annotations.Assisted
-import com.sygic.tools.annotations.AutoFactory
-import com.sygic.ui.common.extensions.asSingleEvent
-import com.sygic.ui.common.listeners.DialogFragmentListener
-import com.sygic.ui.common.livedata.SingleLiveEvent
-import com.sygic.ui.common.sdk.listener.OnMapClickListener
-import com.sygic.ui.common.sdk.location.LocationManager
-import com.sygic.ui.common.sdk.model.ExtendedMapDataModel
-import com.sygic.ui.common.sdk.permission.PermissionsManager
-import com.sygic.ui.common.sdk.utils.requestLocationAccess
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -88,7 +90,7 @@ class BrowseMapFragmentViewModel internal constructor(
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
 
-    val mapDataObservable: LiveData<ViewObjectData> = SingleLiveEvent()
+    val poiDetailDataObservable: LiveData<PoiDetailData> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
@@ -167,7 +169,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject) {
-        poiDataManager.getPayloadData(viewObject, object : PoiDataManager.Callback() {
+        poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(data: ViewObjectData) {
                 onMapClickListener?.let {
                     if (it.onMapClick(data)) {
@@ -192,7 +194,7 @@ class BrowseMapFragmentViewModel internal constructor(
                         mapDataModel.addMapObject(it)
                     }
                 } ?: run {
-                    mapDataObservable.asSingleEvent().value = data.toPoiDetailData()
+                    poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
                 }
             }
         })
@@ -215,10 +217,4 @@ class BrowseMapFragmentViewModel internal constructor(
         super.onCleared()
         mapInteractionManager.removeOnMapClickListener(this)
     }
-}
-
-// ToDo: Update me when PR Feature - SDK MapMarker refactor 2/2 is done
-private fun PoiData.toPoiDetailData(): PoiDetailData {
-    val addressComponent = getAddressComponent()
-    return PoiDetailData(addressComponent.formattedTitle, addressComponent.formattedSubtitle, url, email, phone, coordinates.getFormattedLocation())
 }

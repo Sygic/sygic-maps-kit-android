@@ -29,6 +29,8 @@ import android.widget.Toast
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.browsemap.payload.CustomDataPayload
+import com.sygic.sdk.map.`object`.MapMarker
 
 class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
@@ -39,9 +41,23 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_browsemap_click_listener)
 
+        val markerFromBuilder = MapMarker
+            .from(48.146514, 17.124175)
+            .withPayload(CustomDataPayload("This is my custom payload"))
+            .build()
+
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        browseMapFragment.setOnMapClickListener {
-            Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+        browseMapFragment.addMapMarker(markerFromBuilder)
+        browseMapFragment.setOnMapClickListener { data ->
+            data.payload.let { payload ->
+                when (payload) {
+                    is CustomDataPayload -> {
+                        // Note: This is my custom payload
+                        Toast.makeText(this, payload.customString, Toast.LENGTH_LONG).show()
+                    }
+                    else -> Toast.makeText(this, payload.toString(), Toast.LENGTH_LONG).show()
+                }
+            }
             true
         }
     }

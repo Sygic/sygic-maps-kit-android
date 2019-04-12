@@ -27,10 +27,12 @@ package com.sygic.samples.browsemap
 import android.os.Bundle
 import android.view.Gravity
 import androidx.appcompat.widget.PopupMenu
-import com.sygic.modules.browsemap.BrowseMapFragment
-import com.sygic.modules.common.mapinteraction.MapSelectionMode
+import com.sygic.maps.module.browsemap.BrowseMapFragment
+import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.ui.common.sdk.data.BasicData
+import com.sygic.maps.uikit.viewmodels.common.data.BasicData
+import com.sygic.samples.R
+import com.sygic.samples.app.activities.CommonSampleActivity
 import kotlinx.android.synthetic.main.activity_browsemap_modes.*
 
 class BrowseMapModesActivity : CommonSampleActivity() {

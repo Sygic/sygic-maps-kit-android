@@ -39,7 +39,7 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.getFirst
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PoiDataManager {
 
-    fun getPayloadData(viewObject: ViewObject, callback: Callback)
+    fun getViewObjectData(viewObject: ViewObject, callback: Callback)
 
     abstract class Callback : Places.PlaceListener, ReverseGeocoder.ReverseSearchResultsListener {
         abstract fun onDataLoaded(data: ViewObjectData)

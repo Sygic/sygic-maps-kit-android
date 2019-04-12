@@ -25,13 +25,10 @@
 package com.sygic.maps.module.common.poi.manager
 
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.data.PoiData
-import com.sygic.sdk.map.`object`.ProxyObject
-import com.sygic.sdk.map.`object`.ProxyPoi
-import com.sygic.sdk.map.`object`.ViewObject
+import com.sygic.sdk.map.`object`.*
+import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
 import com.sygic.sdk.places.Places
 import com.sygic.sdk.search.ReverseGeocoder
-import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PoiDataManagerImpl : PoiDataManager {
@@ -39,13 +36,13 @@ class PoiDataManagerImpl : PoiDataManager {
     private val places: Places by lazy { Places() }
     private val reverseGeocoder: ReverseGeocoder by lazy { ReverseGeocoder() }
 
-    override fun getPayloadData(viewObject: ViewObject, callback: PoiDataManager.Callback) {
+    override fun getViewObjectData(viewObject: ViewObject, callback: PoiDataManager.Callback) {
         when (viewObject.objectType) {
             ViewObject.ObjectType.Map -> {
                 if (viewObject is MapMarker) {
                     viewObject.markerData.payload.let { payload ->
                         when (payload) {
-                            is ProxyPoi -> getPayloadData(payload, callback)
+                            is ProxyPoi -> getViewObjectData(payload, callback)
                             is UiObject, is EmptyPayload -> reverseGeocoder.search(viewObject.position, callback)
                             else -> callback.onDataLoaded(viewObject.markerData)
                         }

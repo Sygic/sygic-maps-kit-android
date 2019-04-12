@@ -29,11 +29,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.sygic.maps.module.common.detail.DetailsViewFactory
-import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.samples.R
 import com.sygic.sdk.map.`object`.data.ViewObjectData
-import com.sygic.ui.common.sdk.data.BasicData
-import com.sygic.ui.common.sdk.extension.getFormattedLocation
+import com.sygic.maps.uikit.viewmodels.common.data.BasicData
+import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

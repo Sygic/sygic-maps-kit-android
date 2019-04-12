@@ -26,6 +26,8 @@ package com.sygic.samples.browsemap
 
 import android.os.Bundle
 import com.sygic.maps.module.browsemap.BrowseMapFragment
+import com.sygic.maps.uikit.viewmodels.common.data.BasicData
+import com.sygic.samples.R
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.factory.DrawableFactory
 import com.sygic.samples.app.activities.CommonSampleActivity
