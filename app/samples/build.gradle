@@ -102,6 +102,8 @@ android {
 }
 
 play {
+    track = "production"
+    releaseStatus = "completed"
     serviceAccountCredentials = file(System.getenv('CI') == 'true'
             ? '../../' + System.getenv('GP_KEY_JSON_FILE') : 'areYouHappy.json')
 }
