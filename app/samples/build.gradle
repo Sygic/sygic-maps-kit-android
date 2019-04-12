@@ -103,7 +103,7 @@ android {
 
 play {
     serviceAccountCredentials = file(System.getenv('CI') == 'true'
-            ? project.rootDir.getCanonicalPath() + '/' + System.getenv('GP_KEY_JSON_FILE') : 'areYouHappy.json')
+            ? '../../' + System.getenv('GP_KEY_JSON_FILE') : 'areYouHappy.json')
 }
 
 dependencies {
