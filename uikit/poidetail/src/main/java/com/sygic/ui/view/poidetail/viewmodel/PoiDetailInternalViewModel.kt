@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ *
+ * This project is licensed under the MIT License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.sygic.ui.view.poidetail.viewmodel
 
 import androidx.lifecycle.LiveData
@@ -26,14 +50,13 @@ internal class PoiDetailInternalViewModel(
     private val preferencesManager: PreferencesManager
 ) : ViewModel(), BottomSheetBehaviorWrapper.StateListener {
 
-    val coordinatesText: String? = data.position.getFormattedLocation().let { if (!it.isEmpty()) it else null }
-
     private val payload = data.payload
     val titleText: String = if (payload is BasicData) payload.title else data.position.getFormattedLocation()
     val subtitleText: String = if (payload is BasicData) payload.description else EMPTY_STRING
     val urlText: String? = if (payload is PoiData) payload.url else null
     val emailText: String? = if (payload is PoiData) payload.email else null
     val phoneText: String? = if (payload is PoiData) payload.phone else null
+    val coordinatesText: String? = data.position.getFormattedLocation()
 
     val expandObservable: LiveData<Any> = SingleLiveEvent()
     val collapseObservable: LiveData<Any> = SingleLiveEvent()
