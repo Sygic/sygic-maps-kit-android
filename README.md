@@ -1,5 +1,7 @@
 # SygicMapsKit - Android
 
+[![Build Status](https://travis-ci.com/Sygic/sygic-maps-kit-android.svg?branch=master)][8] [![GitHub release](https://img.shields.io/github/release/Sygic/sygic-maps-kit-android.svg)][1] [![License: MIT](https://img.shields.io/github/license/Sygic/sygic-maps-kit-android.svg)][12] ![Minimal API version level 21](https://img.shields.io/badge/API_level-21-green.svg)
+
 A powerful open-source library based on [Sygic Maps SDK][5] which can be used to display rich map content and interact with it.
 (if you are looking for a iOS version, you can find it [here][4])
 
@@ -7,9 +9,10 @@ A powerful open-source library based on [Sygic Maps SDK][5] which can be used to
 
 ## Getting Started
 
-To get familiar with all the features available, you can first try out our Sample App. Get it from [Google Play][7] or download [APK][8] (coming soon).
+To get familiar with all the features available, you can first try out our Sample App.
 
-[![Screenshot](assets/images/screenshot_0.png)](assets/images/screenshot_0_orig.png)[![Screenshot](assets/images/screenshot_1.png)](assets/images/screenshot_1_orig.png)[![Screenshot](assets/images/screenshot_2.png)](assets/images/screenshot_2_orig.png)[![Screenshot](assets/images/screenshot_3.png)](assets/images/screenshot_3_orig.png)
+<p align="center"><a href="assets/images/screenshots_orig.png" target="_blank"><img src="assets/images/screenshots.png" alt="Screenshots"></a></p>
+<p align="center"><a href="https://play.google.com/store/apps/details?id=com.sygic.samples" target="_blank"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80"></a></p>
 
 ### Prerequisites
 
@@ -19,9 +22,11 @@ To get familiar with all the features available, you can first try out our Sampl
 
     ```gradle
     android {
+        ...
         dataBinding {
             enabled = true
         }
+    
         compileOptions {
             sourceCompatibility 1.8
             targetCompatibility 1.8
@@ -31,51 +36,88 @@ To get familiar with all the features available, you can first try out our Sampl
 
 3. Min API **21** (Android 5.0 Lollipop)
 
-### Installing
+### Implementation
 
-You can download a AAR from GitHub's [releases page][1].
+1. Gradle **project file**:
 
-Or use Gradle (coming soon):
+    ```gradle
+    allprojects {
+        repositories {
+            google()
+            jcenter()
+            maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
+        }
+    }
+    ```
 
-```gradle
-repositories {
-    mavenCentral()
-    google()
-}
+2. Gradle **module file**:
 
-dependencies {
-    implementation 'com.sygic.modules:browsemap:1.0.0'
-}
-```
+    ```gradle
+    dependencies {
+        ...
+        // Pattern: implementation 'sygic-prefix:module-name:version'
+        implementation 'com.sygic.maps:module-browsemap:1.0.0'
 
-Or checkout the repo and include it to your project:
+        //implementation 'com.sygic.maps:module-search:1.2.0' (coming soon)
+        //implementation 'com.sygic.maps:module-navigation:1.0.1' (coming soon)
+        ...
+    }
+    ```
+    
+    all available modules can be found on the [release page][1].
 
-*settings.gradle*
- ```gradle
-include ':modules-browsemap'
-project(':modules-browsemap').projectDir = new File("path to the repo root folder/modules/browsemap")
-```
-*build.gradle*
-```gradle
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-browsemap')
-}
-```
+3. Finally, you need to add your **API key** to the **Android Manifest**:
 
-Finally, you need to add your API key to the Android Manifest:
+    ```xml
+    <manifest package="com.sygic.samples">
+        <application>
+    
+            ...
+     
+            <meta-data
+                android:name="@string/com_sygic_api_key"
+                android:value="place your API key here" />
+    
+        </application>
+    </manifest>
+    ```
 
-```xml
-<manifest
-    package="com.sygic.samples">
-    <application>
+4. Optional, but recommended. Configure APK split to reduce final application size:
 
-    <meta-data
-        android:name="@string/com_sygic_api_key"
-        android:value="place your API key here" />
-    </application>
-</manifest>
-```
+    ```gradle
+    import com.android.build.OutputFile
+    
+    ...
+    
+    android {
+        ...
+        defaultConfig {
+            ...
+            versionCode 1
+        }
+    
+        def abiCodes = ['armeabi-v7a':2, 'arm64-v8a':3, 'x86':8, 'x86_64':9 ]
+        android.applicationVariants.all { variant ->
+            variant.outputs.each {
+                output ->
+                    def abiName = output.getFilter(OutputFile.ABI)
+                    output.versionCodeOverride = abiCodes.get(abiName, 0) * 100000 + variant.versionCode
+            }
+        }
+        splits {
+            abi {
+                enable true
+                reset()
+                include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+                universalApk false
+            }
+        }
+    }
+    
+    ...
+    ```
+
+    for more info visit [this page][7].
 
 ### Basic Usage
 
@@ -89,7 +131,7 @@ Simply put the BrowseMapFragment to your layout container:
 
     <fragment
         android:id="@+id/browseMapFragment"
-        class="com.sygic.modules.browsemap.BrowseMapFragment"
+        class="com.sygic.maps.module.browsemap.BrowseMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -111,19 +153,25 @@ First read the [Wiki][2] page, then try to search on [Stackoverflow][9] or visit
 
     This project is licensed under the MIT License
 
-    Copyright (c) 2019 - Sygic a.s.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+    Copyright (c) 2019 Sygic a.s.
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
     
 [1]: https://github.com/Sygic/sygic-maps-kit-android/releases
 [2]: https://github.com/Sygic/sygic-maps-kit-android/wiki
@@ -131,8 +179,9 @@ First read the [Wiki][2] page, then try to search on [Stackoverflow][9] or visit
 [4]: https://github.com/Sygic/sygic-maps-kit-ios/
 [5]: https://www.sygic.com/enterprise/maps-navigation-sdk-api-developers
 [6]: https://www.sygic.com/enterprise/get-api-key/
-[7]: #
-[8]: #
+[7]: https://developer.android.com/studio/build/configure-apk-splits
+[8]: https://github.com/Sygic/sygic-maps-kit-android/
 [9]: https://stackoverflow.com/questions/tagged/android+sygic
 [10]: https://github.com/bio007
 [11]: https://github.com/TomasValenta
+[12]: https://github.com/Sygic/sygic-maps-kit-android/blob/master/LICENSE

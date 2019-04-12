@@ -1,8 +1,40 @@
-import com.android.build.OutputFile
+/*
+ * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ *
+ * This project is licensed under the MIT License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+
+    // https://github.com/gradle/gradle/issues/3593
+    id 'com.gladed.androidgitversion' version '0.4.9'
+    id 'com.github.triplet.play' version '2.2.0'
+}
+
+androidGitVersion {
+    baseCode 1
+}
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -11,92 +43,72 @@ android {
         applicationId "com.sygic.samples"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode androidGitVersion.code()
+        versionName androidGitVersion.name()
+        archivesBaseName = "$project.name-$versionName"
 
         gradle.resolveFlavors(it)
 
         manifestPlaceholders = [sygicApiKey: gradle.getSdkKey()]
+        buildConfigField "String", "SDK_VERSION", "\"${sygicSdkVersion}\""
+    }
+
+    signingConfigs {
+        release {
+            keyAlias System.getenv('RELEASE_KEY_ALIAS')
+            keyPassword System.getenv('RELEASE_KEY_PASSWORD')
+            storeFile file(rootDir.getCanonicalPath() + '/' + System.getenv('RELEASE_KEYSTORE_FILE'))
+            storePassword System.getenv('RELEASE_KEYSTORE_PASSWORD')
+        }
     }
 
     buildTypes {
         all {
-            buildConfigField "String", "GITHUB_REPO", '"https://github.com/Sygic/sygic-maps-kit-android/"'
-            buildConfigField "String", "GITHUB_WIKI", '"https://github.com/Sygic/sygic-maps-kit-android/wiki/"'
+            buildConfigField "String", "GITHUB_REPO", "\"$projectWebsite\""
+            buildConfigField "String", "GITHUB_WIKI", "\"$projectWebsite/wiki/\""
             buildConfigField "String", "STACK_OVERFLOW", '"https://stackoverflow.com/questions/tagged/android+sygic"'
         }
 
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
-    sourceSets {
-        main.java.srcDirs += 'sample-browsemap-def/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-def/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-full/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-full/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-modes/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-modes/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-click-listener/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-click-listener/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-markers/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-markers/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-themes/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-themes/src/main/res'
-
-        main.java.srcDirs += 'sample-browsemap-details-window/src/main/java'
-        main.res.srcDirs += 'sample-browsemap-details-window/src/main/res'
+    androidGitVersion {
+        codeFormat 'AMMNNPP'
+        format '%tag%%-dirty%'
+        variants applicationVariants
     }
 
-    /* -= APK Split =- */
-    def abiCodes = ['x86':1, 'x86_64':2, 'armeabi-v7a':3, 'arm64-v8a':4]
-    android.applicationVariants.all { variant ->
-        variant.outputs.each {
-            output ->
-                def abiName = output.getFilter(OutputFile.ABI)
-                output.versionCodeOverride = abiCodes.get(abiName, 0) * 100000 + variant.versionCode
-        }
-    }
     splits {
         abi {
             enable true
             reset()
-            include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            include (*supportedAbis)
             universalApk false
         }
     }
-    /* -= APK Split =- */
 
-    androidExtensions {
-        experimental = true
-    }
-
-    //todo: MS-4504
     dataBinding {
         enabled = true
     }
 
-    //todo: MS-4504
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
 }
 
+play {
+    track = "production"
+    releaseStatus = "completed"
+    serviceAccountCredentials = file(System.getenv('CI') == 'true'
+            ? '../../' + System.getenv('GP_KEY_JSON_FILE') : 'areYouHappy.json')
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':modules-browsemap')
-    implementation project(':app-samples-common')
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation project(':module-browsemap')
 }
