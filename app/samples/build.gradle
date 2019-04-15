@@ -51,6 +51,8 @@ android {
 
         manifestPlaceholders = [sygicApiKey: gradle.getSdkKey()]
         buildConfigField "String", "SDK_VERSION", "\"${sygicSdkVersion}\""
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -103,6 +105,10 @@ android {
     androidExtensions {
         experimental = true
     }
+
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 play {
@@ -114,5 +120,16 @@ play {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // modules
     implementation project(':module-browsemap')
+
+    // test libraries
+    androidTestImplementation "com.google.android.material:material:$materialVersion"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    androidTestImplementation "androidx.test:rules:$testRunnerVersion"
+    androidTestImplementation "androidx.test:runner:$testRunnerVersion"
+    androidTestImplementation "androidx.test.ext:junit:$extJUnitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiAutomatorVersion"
 }

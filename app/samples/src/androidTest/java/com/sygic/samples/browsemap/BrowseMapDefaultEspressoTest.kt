@@ -22,37 +22,19 @@
  * SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
+package com.sygic.samples.browsemap
 
-ext.bintrayPublishVersion = toolsViewmodelFactoryVersion
-apply from: '../../bintrayConfig.gradle'
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sygic.samples.base.BaseMapTest
+import com.sygic.samples.browsemap.robot.browseMap
+import org.junit.Test
+import org.junit.runner.RunWith
 
-android {
-    compileSdkVersion androidCompileSdkVersion
+@RunWith(AndroidJUnit4::class)
+class BrowseMapDefaultEspressoTest : BaseMapTest(BrowseMapDefaultActivity::class.java) {
 
-    defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargerSdkVersion
-        versionName toolsViewmodelFactoryVersion
-        archivesBaseName = "$project.name-$versionName"
+    @Test
+    fun browseMapDisplayed() {
+        browseMap(activity) {}
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // modules
-    compileOnly project(':tool-annotation-processor')
-    annotationProcessor project(':tool-annotation-processor')
-
-    // libraries
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "javax.inject:javax.inject:$javaxInjectVersion"
 }
