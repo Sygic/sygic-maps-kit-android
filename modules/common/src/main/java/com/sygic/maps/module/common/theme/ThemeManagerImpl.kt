@@ -29,34 +29,17 @@ import android.app.Application
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.view.ViewTreeObserver
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.MapSkin
 
 class ThemeManagerImpl(app: Application, private val mapDataModel: ExtendedMapDataModel) : ThemeManager {
 
-    private var isDefaultSkin = true
     private var currentNightMode: Int = Configuration.UI_MODE_NIGHT_UNDEFINED
 
     init {
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                activity.window.decorView.viewTreeObserver.addOnPreDrawListener(object :
-                    ViewTreeObserver.OnPreDrawListener {
-                    override fun onPreDraw(): Boolean {
-                        activity.window.decorView.viewTreeObserver.removeOnPreDrawListener(this)
-
-                        // set skin only if default(== auto) mode is set
-                        if (isDefaultSkin) {
-                            setSkinAtLayer(
-                                ThemeManager.SkinLayer.DayNight,
-                                getCurrentMapMode(activity.resources),
-                                false
-                            )
-                        }
-                        return true
-                    }
-                })
+                setSkinAtLayer(ThemeManager.SkinLayer.DayNight, getCurrentMapMode(activity.resources))
             }
 
             override fun onActivityPaused(activity: Activity) {}
@@ -66,15 +49,11 @@ class ThemeManagerImpl(app: Application, private val mapDataModel: ExtendedMapDa
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {}
             override fun onActivityStopped(activity: Activity) {}
         })
+
+        setSkinAtLayer(ThemeManager.SkinLayer.DayNight, getCurrentMapMode(app.resources))
     }
 
     override fun setSkinAtLayer(skinLayer: ThemeManager.SkinLayer, desiredSkin: String) {
-        setSkinAtLayer(skinLayer, desiredSkin, true)
-    }
-
-    private fun setSkinAtLayer(skinLayer: ThemeManager.SkinLayer, desiredSkin: String, replaceDefault: Boolean) {
-        isDefaultSkin = !(replaceDefault && MapSkin.DEFAULT != desiredSkin)
-
         val newSkin = if (MapSkin.DEFAULT == desiredSkin) {
             getMapMode(currentNightMode)
         } else {
