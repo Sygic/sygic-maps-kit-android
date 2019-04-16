@@ -26,6 +26,8 @@ package com.sygic.maps.module.common.poi.manager
 
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
+import com.sygic.maps.uikit.viewmodels.common.extensions.getFirst
+import com.sygic.sdk.map.`object`.ScreenObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.places.LocationInfo
@@ -34,20 +36,18 @@ import com.sygic.sdk.places.Places
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.ReverseGeocoder
 import com.sygic.sdk.search.ReverseSearchResult
-import com.sygic.maps.uikit.viewmodels.common.extensions.getFirst
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PoiDataManager {
 
-    fun getViewObjectData(viewObject: ViewObject, callback: Callback)
+    fun getViewObjectData(viewObject: ViewObject<*>, callback: Callback)
 
     abstract class Callback : Places.PlaceListener, ReverseGeocoder.ReverseSearchResultsListener {
         abstract fun onDataLoaded(data: ViewObjectData)
 
         final override fun onPlaceLoaded(place: Place) {
-            onDataLoaded(
-                ViewObjectData(
-                    place.coordinates,
+            val placeObject = ScreenObject.at(place.coordinates)
+                .withPayload(
                     PoiData(
                         name = place.name,
                         iso = place.iso,
@@ -61,28 +61,28 @@ interface PoiDataManager {
                         email = place.locationInfo.getFirst(LocationInfo.LocationType.Mail),
                         url = place.locationInfo.getFirst(LocationInfo.LocationType.Url)
                     )
-                )
-            )
+                ).build()
+
+            onDataLoaded(placeObject.data)
         }
 
         final override fun onSearchResults(results: List<ReverseSearchResult>, position: GeoCoordinates) {
-            if (results.isEmpty()) {
-                onDataLoaded(ViewObjectData(position))
-                return
-            }
-
-            val reverseSearchResult = results.first()
-            onDataLoaded(
-                ViewObjectData(
-                    reverseSearchResult.position,
-                    PoiData(
-                        iso = reverseSearchResult.names.countryIso,
-                        city = reverseSearchResult.names.city,
-                        street = reverseSearchResult.names.street,
-                        houseNumber = reverseSearchResult.names.houseNumber
+            val builder =
+                if (results.isEmpty()) {
+                    ScreenObject.at(position)
+                } else {
+                    val reverseSearchResult = results.first()
+                    ScreenObject.at(position).withPayload(
+                        PoiData(
+                            iso = reverseSearchResult.names.countryIso,
+                            city = reverseSearchResult.names.city,
+                            street = reverseSearchResult.names.street,
+                            houseNumber = reverseSearchResult.names.houseNumber
+                        )
                     )
-                )
-            )
+                }
+
+            onDataLoaded(builder.build().data)
         }
     }
 }

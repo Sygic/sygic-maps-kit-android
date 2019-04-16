@@ -28,7 +28,7 @@ import android.app.Application
 import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
-import com.sygic.maps.module.browsemap.detail.PoiDataDetailsFactory
+import com.sygic.maps.module.browsemap.detail.PoiDetailsObject
 import com.sygic.maps.module.browsemap.extensions.resolveAttributes
 import com.sygic.maps.module.common.component.MapFragmentInitComponent
 import com.sygic.maps.module.common.detail.DetailsViewFactory
@@ -126,7 +126,7 @@ class BrowseMapFragmentViewModel internal constructor(
         mapDataModel.removeOnClickMapMarker()
     }
 
-    override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
+    override fun onMapObjectsReceived(viewObjects: List<ViewObject<*>>) {
         if (viewObjects.isEmpty()) {
             return
         }
@@ -155,7 +155,7 @@ class BrowseMapFragmentViewModel internal constructor(
                 if (firstViewObject !is MapMarker && onMapClickListener == null) {
                     mapDataModel.addOnClickMapMarker(when (firstViewObject) {
                         is ProxyPoi -> MapMarker.from(firstViewObject).build()
-                        else -> MapMarker.from(firstViewObject.position).build()
+                        else -> MapMarker.at(firstViewObject.position).build()
                     }.also { firstViewObject = it })
                 }
 
@@ -168,7 +168,7 @@ class BrowseMapFragmentViewModel internal constructor(
         onMapClickListener?.let { Log.w("OnMapClickListener", "The listener is set, but map selection mode is $mode.") }
     }
 
-    private fun getPoiDataAndNotifyObservers(viewObject: ViewObject) {
+    private fun getPoiDataAndNotifyObservers(viewObject: ViewObject<*>) {
         poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(data: ViewObjectData) {
                 onMapClickListener?.let {
@@ -178,21 +178,10 @@ class BrowseMapFragmentViewModel internal constructor(
                 }
 
                 detailsViewFactory?.let { factory ->
-                    poiDetailsView = object : UiObject(data.position, PoiDataDetailsFactory(factory, data)) {
-                        override fun onMeasured(width: Int, height: Int) {
-                            super.onMeasured(width, height)
-
-                            val markerHeight: Int = if (viewObject is MapMarker)
-                                viewObject.markerData.getBitmap(getApplication())?.height ?: 0 else 0
-
-                            setAnchor(
-                                0.5f - (factory.getXOffset() / width),
-                                1f + ((markerHeight + factory.getYOffset()) / height)
-                            )
+                    poiDetailsView = PoiDetailsObject.create(data, factory, viewObject)
+                        .also {
+                            mapDataModel.addMapObject(it)
                         }
-                    }.also {
-                        mapDataModel.addMapObject(it)
-                    }
                 } ?: run {
                     poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
                 }
