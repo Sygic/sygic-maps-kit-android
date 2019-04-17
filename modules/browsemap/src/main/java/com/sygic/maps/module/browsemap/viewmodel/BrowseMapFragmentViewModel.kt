@@ -124,6 +124,12 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun onMapObjectsRequestStarted() {
         mapDataModel.removeOnClickMapMarker()
+        onMapClickListener?.let {
+            when (mapSelectionMode) {
+                MapSelectionMode.NONE -> logWarning("NONE")
+                MapSelectionMode.MARKERS_ONLY, MapSelectionMode.FULL -> it.onMapClick()
+            }
+        }
     }
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
@@ -172,7 +178,7 @@ class BrowseMapFragmentViewModel internal constructor(
         poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(data: ViewObjectData) {
                 onMapClickListener?.let {
-                    if (it.onMapClick(data)) {
+                    if (it.onMapDataReceived(data)) {
                         return
                     }
                 }

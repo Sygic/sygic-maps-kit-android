@@ -45,7 +45,6 @@ import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
-import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.MapMarker
 
 /**
@@ -205,17 +204,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
             root.addView(it, 0)
         }
         return root
-    }
-
-    /**
-     * Register a custom callback to be invoked when a click to the map has been made.
-     *
-     * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
-     */
-    fun setOnMapClickListener(onMapClickListener: (data: ViewObjectData) -> Boolean) {
-        setOnMapClickListener(object : OnMapClickListener {
-            override fun onMapClick(data: ViewObjectData) = onMapClickListener(data)
-        })
     }
 
     /**
