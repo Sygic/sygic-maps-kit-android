@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
   ~
@@ -23,25 +22,4 @@
   ~ SOFTWARE.
   -->
 
-<resources>
-
-    <attr name="sygicMapSkin" format="string" />
-
-    <declare-styleable name="Theme">
-        <attr name="compassStyle" format="reference"/>
-        <attr name="positionLockFabStyle" format="reference" />
-        <attr name="searchFabStyle" format="reference" />
-        <attr name="zoomControlsMenuStyle" format="reference"/>
-    </declare-styleable>
-
-    <declare-styleable name="PositionLockFab">
-        <attr name="android:tint" />
-        <attr name="android:backgroundTint" />
-    </declare-styleable>
-
-    <declare-styleable name="SearchFab">
-        <attr name="android:tint" />
-        <attr name="android:backgroundTint" />
-    </declare-styleable>
-
-</resources>
+<manifest package="com.sygic.maps.module.search" />

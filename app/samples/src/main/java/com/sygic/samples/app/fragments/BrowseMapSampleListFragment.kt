@@ -22,27 +22,14 @@
  * SOFTWARE.
  */
 
-apply from: 'buildSdk.gradle'
+package com.sygic.samples.app.fragments
 
-include ':app-samples',
-        ':module-common',
-        ':module-browsemap',
-        ':module-search',
-        ':tool-annotation-processor',
-        ':tool-viewmodel-factory',
-        ':uikit-views',
-        ':uikit-viewmodels'
+import com.sygic.samples.R
+import com.sygic.samples.Samples
+import com.sygic.samples.app.models.Sample
 
-project(':app-samples').projectDir = new File("app/samples")
-project(':module-common').projectDir = new File("modules/common")
-project(':module-browsemap').projectDir = new File("modules/browsemap")
-project(':module-search').projectDir = new File("modules/search")
-project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
-project(':tool-viewmodel-factory').projectDir = new File("tools/viewmodel-factory")
-project(':uikit-views').projectDir = new File("uikit/views")
-project(':uikit-viewmodels').projectDir = new File("uikit/viewmodels")
+class BrowseMapSampleListFragment : BaseSamplesListFragment() {
 
-if (gradle.buildSdkFromSource()) {
-    include ':sdk'
-    project(':sdk').projectDir = gradle.getSdkDir()
+    override val title: Int = R.string.browse_map_samples
+    override val items: List<Sample> = Samples.browseMapSampleList
 }

@@ -26,6 +26,7 @@ package com.sygic.samples
 
 import com.sygic.samples.browsemap.*
 import com.sygic.samples.app.models.Sample
+import com.sygic.samples.search.SearchDefaultActivity
 
 object Samples {
 
@@ -57,6 +58,13 @@ object Samples {
         Sample(
             BrowseMapThemesActivity::class.java, R.drawable.preview_browsemap_themes,
             R.string.browse_map_themes, R.string.browse_map_themes_summary
+        )
+    )
+
+    val searchSampleList: List<Sample> = listOf(
+        Sample(
+            SearchDefaultActivity::class.java, R.drawable.preview_search_default,
+            R.string.search_default, R.string.search_default_summary
         )
     )
 }

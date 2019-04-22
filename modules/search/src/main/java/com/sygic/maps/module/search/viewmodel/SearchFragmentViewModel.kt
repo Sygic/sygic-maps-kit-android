@@ -22,27 +22,33 @@
  * SOFTWARE.
  */
 
-apply from: 'buildSdk.gradle'
+package com.sygic.maps.module.search.viewmodel
 
-include ':app-samples',
-        ':module-common',
-        ':module-browsemap',
-        ':module-search',
-        ':tool-annotation-processor',
-        ':tool-viewmodel-factory',
-        ':uikit-views',
-        ':uikit-viewmodels'
+import android.app.Application
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.MutableLiveData
+import com.sygic.maps.module.search.component.SearchFragmentInitComponent
+import com.sygic.maps.module.search.extensions.resolveAttributes
+import com.sygic.maps.tools.annotations.Assisted
+import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.sdk.position.GeoCoordinates
 
-project(':app-samples').projectDir = new File("app/samples")
-project(':module-common').projectDir = new File("modules/common")
-project(':module-browsemap').projectDir = new File("modules/browsemap")
-project(':module-search').projectDir = new File("modules/search")
-project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
-project(':tool-viewmodel-factory').projectDir = new File("tools/viewmodel-factory")
-project(':uikit-views').projectDir = new File("uikit/views")
-project(':uikit-viewmodels').projectDir = new File("uikit/viewmodels")
+@AutoFactory
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class SearchFragmentViewModel internal constructor(
+    app: Application,
+    @Assisted initComponent: SearchFragmentInitComponent
+) : AndroidViewModel(app), DefaultLifecycleObserver {
 
-if (gradle.buildSdkFromSource()) {
-    include ':sdk'
-    project(':sdk').projectDir = gradle.getSdkDir()
+    val initialSearchInput: MutableLiveData<String> = MutableLiveData()
+    val initialSearchPosition: MutableLiveData<GeoCoordinates> = MutableLiveData()
+
+    init {
+        initComponent.resolveAttributes(app)
+        initialSearchInput.value = initComponent.initialSearchInput
+        initialSearchPosition.value = initComponent.initialSearchPosition
+        initComponent.recycle()
+    }
 }

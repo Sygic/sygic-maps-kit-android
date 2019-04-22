@@ -22,14 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.fragments
+package com.sygic.maps.module.search.component
 
-import com.sygic.samples.R
-import com.sygic.samples.Samples
-import com.sygic.samples.app.models.Sample
+import android.util.AttributeSet
+import androidx.annotation.RestrictTo
+import com.sygic.sdk.position.GeoCoordinates
 
-class BrowseMapSamplesListFragment : BaseSamplesListFragment() {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class SearchFragmentInitComponent {
 
-    override val title: Int = R.string.browse_map_samples
-    override val items: List<Sample> = Samples.browseMapSampleList
+    var attributes: AttributeSet? = null
+    var initialSearchInput: String? = null
+    var initialSearchPosition: GeoCoordinates? = null
+
+    fun recycle() {
+        attributes = null
+        initialSearchInput = null
+        initialSearchPosition = null
+    }
 }

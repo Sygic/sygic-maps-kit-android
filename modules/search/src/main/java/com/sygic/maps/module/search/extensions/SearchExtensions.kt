@@ -22,27 +22,27 @@
  * SOFTWARE.
  */
 
-apply from: 'buildSdk.gradle'
+package com.sygic.maps.module.search.extensions
 
-include ':app-samples',
-        ':module-common',
-        ':module-browsemap',
-        ':module-search',
-        ':tool-annotation-processor',
-        ':tool-viewmodel-factory',
-        ':uikit-views',
-        ':uikit-viewmodels'
+import android.annotation.SuppressLint
+import android.app.Application
+import com.sygic.maps.module.search.R
+import com.sygic.maps.module.search.component.SearchFragmentInitComponent
+import com.sygic.sdk.position.GeoCoordinates
 
-project(':app-samples').projectDir = new File("app/samples")
-project(':module-common').projectDir = new File("modules/common")
-project(':module-browsemap').projectDir = new File("modules/browsemap")
-project(':module-search').projectDir = new File("modules/search")
-project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
-project(':tool-viewmodel-factory').projectDir = new File("tools/viewmodel-factory")
-project(':uikit-views').projectDir = new File("uikit/views")
-project(':uikit-viewmodels').projectDir = new File("uikit/viewmodels")
+@SuppressLint("Recycle")
+fun SearchFragmentInitComponent.resolveAttributes(app: Application) {
+    app.obtainStyledAttributes(attributes, R.styleable.SearchFragment)?.let { typedArray ->
+        if (typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_search_input)) {
+            initialSearchInput = typedArray.getString(R.styleable.SearchFragment_sygic_initial_search_input)
+        }
+        if (typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_latitude) && typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_longitude)) {
+            initialSearchPosition = GeoCoordinates(
+                typedArray.getFloat(R.styleable.SearchFragment_sygic_initial_latitude, Float.NaN).toDouble(),
+                typedArray.getFloat(R.styleable.SearchFragment_sygic_initial_longitude, Float.NaN).toDouble()
+            )
+        }
 
-if (gradle.buildSdkFromSource()) {
-    include ':sdk'
-    project(':sdk').projectDir = gradle.getSdkDir()
+        typedArray.recycle()
+    }
 }

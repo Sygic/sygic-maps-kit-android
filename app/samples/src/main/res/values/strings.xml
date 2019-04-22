@@ -27,6 +27,7 @@
     <string name="browse_map">Browse Map</string>
     <string name="browse_map_samples">Browse Map samples</string>
     <string name="search">Search</string>
+    <string name="search_samples">Search samples</string>
     <string name="navigation">Navigation</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -68,4 +69,6 @@
     <string name="full">Full</string>
     <string name="browse_map_themes">Browse Map - Themes</string>
     <string name="browse_map_themes_summary">Browse Map module with custom theme</string>
+    <string name="search_default">Search - Default</string>
+    <string name="search_default_summary">Search module with no configuration</string>
 </resources>

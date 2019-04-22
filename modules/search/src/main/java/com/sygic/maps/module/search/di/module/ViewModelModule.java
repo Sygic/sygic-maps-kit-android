@@ -22,27 +22,26 @@
  * SOFTWARE.
  */
 
-apply from: 'buildSdk.gradle'
+package com.sygic.maps.module.search.di.module;
 
-include ':app-samples',
-        ':module-common',
-        ':module-browsemap',
-        ':module-search',
-        ':tool-annotation-processor',
-        ':tool-viewmodel-factory',
-        ':uikit-views',
-        ':uikit-viewmodels'
+import com.sygic.maps.module.common.di.util.ViewModelKey;
+import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
+import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel;
+import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModelFactory;
+import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
+import dagger.Binds;
+import dagger.Module;
+import dagger.multibindings.IntoMap;
 
-project(':app-samples').projectDir = new File("app/samples")
-project(':module-common').projectDir = new File("modules/common")
-project(':module-browsemap').projectDir = new File("modules/browsemap")
-project(':module-search').projectDir = new File("modules/search")
-project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
-project(':tool-viewmodel-factory').projectDir = new File("tools/viewmodel-factory")
-project(':uikit-views').projectDir = new File("uikit/views")
-project(':uikit-viewmodels').projectDir = new File("uikit/viewmodels")
+@Module(
+    includes = {
+            ViewModelModuleBase.class
+    }
+)
+public abstract class ViewModelModule {
 
-if (gradle.buildSdkFromSource()) {
-    include ':sdk'
-    project(':sdk').projectDir = gradle.getSdkDir()
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchFragmentViewModel.class)
+    abstract ViewModelCreatorFactory putSearchFragmentViewModelFactory(SearchFragmentViewModelFactory factory);
 }

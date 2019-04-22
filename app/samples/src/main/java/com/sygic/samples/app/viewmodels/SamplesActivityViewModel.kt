@@ -35,9 +35,10 @@ import com.google.android.material.navigation.NavigationView
 import com.sygic.samples.BuildConfig
 import com.sygic.samples.R
 import com.sygic.samples.app.dialogs.AboutDialog
-import com.sygic.samples.app.fragments.BrowseMapSamplesListFragment
+import com.sygic.samples.app.fragments.BrowseMapSampleListFragment
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.samples.app.fragments.SearchSampleListFragment
 
 private const val GITHUB_WIKI_COMPASS = "${BuildConfig.GITHUB_WIKI}UiKit-Compass"
 private const val GITHUB_WIKI_POI_DETAIL = "${BuildConfig.GITHUB_WIKI}UiKit-PoiDetail"
@@ -52,14 +53,13 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
     val openDialogFragmentObservable: LiveData<Class<out AppCompatDialogFragment>> = SingleLiveEvent()
 
     override fun onCreate(owner: LifecycleOwner) {
-        samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSamplesListFragment()
+        samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSampleListFragment()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_browse_map_module -> {
-                samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSamplesListFragment()
-            }
+            R.id.nav_browse_map_module -> samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSampleListFragment()
+            R.id.nav_search_module -> samplesListFragmentsObservable.asSingleEvent().value = SearchSampleListFragment()
             R.id.nav_ui_kit_compass -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_COMPASS
             R.id.nav_ui_kit_poi_detail -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_POI_DETAIL
             R.id.nav_ui_kit_position_lock_fab -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_POSITION_LOCK_FAB

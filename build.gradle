@@ -38,6 +38,7 @@ buildscript {
         androidTargerSdkVersion = androidCompileSdkVersion
 
         moduleBrowsemapVersion = '1.0.0'
+        moduleSearchVersion = '1.0.0'
         moduleCommonVersion = '1.0.0'
         uikitViewsVersion = '1.0.0'
         uikitViewmodelsVersion = '1.0.1'

@@ -65,6 +65,9 @@ jobs:
   - stage: compile and test modules
     name: module-browsemap
     script: ./gradlew :module-browsemap:check
+  - stage: compile and test modules
+    name: module-search
+    script: ./gradlew :module-search:check
 
   - stage: compile and test sample app
     name: sample-app
@@ -72,7 +75,7 @@ jobs:
     - ./gradlew :app-samples:check
 
   - stage: ui tests
-    name: browsemap
+    name: sample-app
     before_script:
     - echo no | android create avd --force -n test -t android-${EMULATOR_LEVEL} --abi ${ABI}
     - emulator -avd test -no-audio -no-window &
@@ -97,6 +100,7 @@ jobs:
       - $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/*.apk
       - $TRAVIS_BUILD_DIR/modules/common/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/modules/browsemap/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/modules/search/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/uikit/views/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/uikit/viewmodels/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/tools/viewmodel-factory/build/outputs/aar/*.aar

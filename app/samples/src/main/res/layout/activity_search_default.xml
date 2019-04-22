@@ -23,25 +23,14 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <attr name="sygicMapSkin" format="string" />
+    <fragment
+        android:id="@+id/searchFragment"
+        class="com.sygic.maps.module.search.SearchFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <declare-styleable name="Theme">
-        <attr name="compassStyle" format="reference"/>
-        <attr name="positionLockFabStyle" format="reference" />
-        <attr name="searchFabStyle" format="reference" />
-        <attr name="zoomControlsMenuStyle" format="reference"/>
-    </declare-styleable>
-
-    <declare-styleable name="PositionLockFab">
-        <attr name="android:tint" />
-        <attr name="android:backgroundTint" />
-    </declare-styleable>
-
-    <declare-styleable name="SearchFab">
-        <attr name="android:tint" />
-        <attr name="android:backgroundTint" />
-    </declare-styleable>
-
-</resources>
+</FrameLayout>
