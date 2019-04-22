@@ -22,21 +22,11 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.mapinteraction.manager
+package com.sygic.maps.uikit.viewmodels.common.utils
 
-import androidx.annotation.RestrictTo
-import com.sygic.sdk.map.MapView
-import com.sygic.sdk.map.`object`.ViewObject
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface MapInteractionManager {
-
-    interface Listener {
-        fun onMapObjectsRequestStarted()
-        fun onMapObjectsReceived(viewObjects: List<ViewObject<*>>)
-    }
-
-    fun onMapReady(mapView: MapView)
-    fun addOnMapClickListener(listener: Listener)
-    fun removeOnMapClickListener(listener: Listener)
+fun StringBuilder.appendOnNewLine(stringToAppend: CharSequence): StringBuilder {
+    if (this.isNotEmpty())
+        append("\n")
+    return append(stringToAppend)
 }

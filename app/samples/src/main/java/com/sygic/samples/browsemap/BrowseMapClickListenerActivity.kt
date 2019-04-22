@@ -44,7 +44,7 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_browsemap_click_listener)
 
         val markerFromBuilder = MapMarker
-            .from(48.146514, 17.124175)
+            .at(48.146514, 17.124175)
             .withPayload(CustomDataPayload("This is my custom payload"))
             .build()
 
