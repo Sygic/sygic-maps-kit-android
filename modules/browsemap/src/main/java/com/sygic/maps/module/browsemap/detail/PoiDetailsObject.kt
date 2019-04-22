@@ -24,6 +24,8 @@
 
 package com.sygic.maps.module.browsemap.detail
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.UiObject
@@ -32,11 +34,15 @@ import com.sygic.sdk.map.`object`.data.ObjectCreator
 import com.sygic.sdk.map.`object`.data.UiObjectData
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 
-internal class PoiDetailsObject private constructor(
-    data: UiObjectData,
-    private val factory: DetailsViewFactory,
+internal class PoiDetailsObject : UiObject {
+
+    private val factory: DetailsViewFactory
     private val viewObject: ViewObject<*>
-) : UiObject(data) {
+
+    private constructor(data: UiObjectData, factory: DetailsViewFactory, viewObject: ViewObject<*>) : super(data) {
+        this.factory = factory
+        this.viewObject = viewObject
+    }
 
     companion object {
         internal fun create(
@@ -53,6 +59,17 @@ internal class PoiDetailsObject private constructor(
                     )
                 })
                 .build() as PoiDetailsObject
+        }
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<PoiDetailsObject> = object : Parcelable.Creator<PoiDetailsObject> {
+            override fun createFromParcel(parcel: Parcel): PoiDetailsObject {
+                return PoiDetailsObject(parcel)
+            }
+
+            override fun newArray(size: Int): Array<PoiDetailsObject?> {
+                return arrayOfNulls(size)
+            }
         }
     }
 
@@ -89,4 +106,15 @@ internal class PoiDetailsObject private constructor(
         return result
     }
 
+    private constructor(parcel: Parcel) : super(parcel) {
+        factory = parcel.readParcelable(DetailsViewFactory::class.java.classLoader)!!
+        viewObject = parcel.readParcelable(ViewObject::class.java.classLoader)!!
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        super.writeToParcel(dest, flags)
+
+        dest.writeParcelable(factory, flags)
+        dest.writeParcelable(viewObject, flags)
+    }
 }
