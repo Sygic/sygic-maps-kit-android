@@ -37,10 +37,7 @@ class AboutDialog : AppCompatDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = LayoutAboutDialogBinding.inflate(inflater, container, false)
-        binding.aboutDialogViewModel = ViewModelProviders.of(
-            this,
-            AboutDialogViewModel.ViewModelFactory(requireActivity().application)
-        )[AboutDialogViewModel::class.java]
+        binding.aboutDialogViewModel = ViewModelProviders.of(this).get(AboutDialogViewModel::class.java)
         binding.lifecycleOwner = this
         return binding.root
     }
