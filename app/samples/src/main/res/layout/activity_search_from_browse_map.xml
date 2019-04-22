@@ -23,21 +23,19 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <declare-styleable name="BrowseMapFragment">
-        <attr name="sygic_map_selectionMode" format="enum">
-            <enum name="none" value="0" />
-            <enum name="markersOnly" value="1" />
-            <enum name="full" value="2" />
-        </attr>
+    <fragment
+        android:id="@+id/browseMapFragment"
+        class="com.sygic.maps.module.browsemap.BrowseMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:sygic_map_latitude="48.145764"
+        app:sygic_map_longitude="17.126015"
+        app:sygic_map_zoom="11"
+        app:sygic_search_enabled="true" />
 
-        <attr name="sygic_compass_enabled" format="boolean" />
-        <attr name="sygic_compass_hideIfNorthUp" format="boolean" />
-        <attr name="sygic_positionOnMap_enabled" format="boolean" />
-        <attr name="sygic_positionLockFab_enabled" format="boolean" />
-        <attr name="sygic_search_enabled" format="boolean" />
-        <attr name="sygic_zoomControls_enabled" format="boolean" />
-    </declare-styleable>
-
-</resources>
+</FrameLayout>

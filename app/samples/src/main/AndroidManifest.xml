@@ -81,6 +81,10 @@
             android:name=".search.SearchDefaultActivity"
             android:label="@string/search_default"
             android:theme="@style/AppTheme.NoExitAnimation" />
+        <activity
+            android:name=".search.SearchFromBrowseMapActivity"
+            android:label="@string/search_from_browse_map"
+            android:theme="@style/AppTheme.NoExitAnimation" />
 
         <meta-data
             android:name="@string/com_sygic_api_key"

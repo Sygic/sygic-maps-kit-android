@@ -44,8 +44,10 @@ import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
+import com.sygic.maps.uikit.viewmodels.searchfab.SearchFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.searchfab.SearchFab
 
 /**
  * A *[BrowseMapFragment]* is the most basic component from our portfolio. It can be easily used to display view objects
@@ -59,6 +61,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
+    private lateinit var searchFabViewModel: SearchFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
     override fun executeInjector() =
@@ -153,6 +156,23 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         }
 
     /**
+     * A *[searchEnabled]* modifies the [SearchFab] visibility.
+     *
+     * @param [Boolean] true to enable the [SearchFab], false otherwise.
+     *
+     * @return whether the [SearchFab] is on or off.
+     */
+    var searchEnabled: Boolean
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.searchEnabled.value!!
+        } else mapFragmentInitComponent.searchEnabled
+        set(value) {
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.searchEnabled.value = value
+            } else mapFragmentInitComponent.searchEnabled = value
+        }
+
+    /**
      * A *[zoomControlsEnabled]* modifies the [ZoomControlsMenu] visibility.
      *
      * @param [Boolean] true to enable the [ZoomControlsMenu], false otherwise.
@@ -173,17 +193,20 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent)
-        fragmentViewModel.poiDetailDataObservable.observe(this, Observer<PoiDetailData> { showPoiDetail(it) })
-        savedInstanceState?.let { setPoiDetailListener() }
-
         compassViewModel = viewModelOf(CompassViewModel::class.java)
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
+        searchFabViewModel = viewModelOf(SearchFabViewModel::class.java)
         zoomControlsViewModel = viewModelOf(ZoomControlsViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(compassViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
+
+        fragmentViewModel.poiDetailDataObservable.observe(this, Observer<PoiDetailData> { showPoiDetail(it) })
+        searchFabViewModel.searchFragmentObservable.observe(this, Observer<Any> { openSearchFragment() })
+
+        savedInstanceState?.let { setPoiDetailListener() }
     }
 
     private fun setPoiDetailListener() {
@@ -192,12 +215,17 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         }
     }
 
+    private fun openSearchFragment() {
+        //fragmentManager?.beginTransaction()?.add(R.id.fragmentContainer, SearchFragment()).commit() //ToDo
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: LayoutBrowseMapBinding = LayoutBrowseMapBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.browseMapFragmentViewModel = fragmentViewModel
         binding.compassViewModel = compassViewModel
         binding.positionLockFabViewModel = positionLockFabViewModel
+        binding.searchFabViewModel = searchFabViewModel
         binding.zoomControlsViewModel = zoomControlsViewModel
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {

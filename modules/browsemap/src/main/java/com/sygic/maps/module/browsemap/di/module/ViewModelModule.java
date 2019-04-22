@@ -33,6 +33,8 @@ import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel;
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModelFactory;
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel;
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModelFactory;
+import com.sygic.maps.uikit.viewmodels.searchfab.SearchFabViewModel;
+import com.sygic.maps.uikit.viewmodels.searchfab.SearchFabViewModelFactory;
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel;
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModelFactory;
 import dagger.Binds;
@@ -60,6 +62,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PositionLockFabViewModel.class)
     abstract ViewModelCreatorFactory putPositionLockFabViewModelFactory(PositionLockFabViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchFabViewModel.class)
+    abstract ViewModelCreatorFactory putSearchFabViewModelFactory(SearchFabViewModelFactory factory);
 
     @Binds
     @IntoMap

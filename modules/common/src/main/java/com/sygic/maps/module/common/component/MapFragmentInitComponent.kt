@@ -36,6 +36,7 @@ const val POSITION_ON_MAP_ENABLED_DEFAULT_VALUE = false
 const val COMPASS_ENABLED_DEFAULT_VALUE = false
 const val COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE = false
 const val POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE = false
+const val SEARCH_ENABLED_DEFAULT_VALUE = false
 const val ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE = false
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -49,6 +50,7 @@ class MapFragmentInitComponent {
     var compassEnabled: Boolean = COMPASS_ENABLED_DEFAULT_VALUE
     var compassHideIfNorthUp: Boolean = COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE
     var positionLockFabEnabled: Boolean = POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE
+    var searchEnabled: Boolean = SEARCH_ENABLED_DEFAULT_VALUE
     var zoomControlsEnabled: Boolean = ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE
 
     val skins: MutableMap<ThemeManager.SkinLayer, String> = mutableMapOf()
@@ -64,6 +66,7 @@ class MapFragmentInitComponent {
         compassEnabled = COMPASS_ENABLED_DEFAULT_VALUE
         compassHideIfNorthUp = COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE
         positionLockFabEnabled = POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE
+        searchEnabled = SEARCH_ENABLED_DEFAULT_VALUE
         zoomControlsEnabled = ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE
 
         skins.clear()

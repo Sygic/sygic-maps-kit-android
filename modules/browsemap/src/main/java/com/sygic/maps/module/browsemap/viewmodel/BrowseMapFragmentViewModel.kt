@@ -84,6 +84,7 @@ class BrowseMapFragmentViewModel internal constructor(
     val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
     val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
+    val searchEnabled: MutableLiveData<Boolean> = MutableLiveData()
     val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
 
     var onMapClickListener: OnMapClickListener? = null
@@ -106,6 +107,7 @@ class BrowseMapFragmentViewModel internal constructor(
         compassEnabled.value = initComponent.compassEnabled
         compassHideIfNorthUp.value = initComponent.compassHideIfNorthUp
         positionLockFabEnabled.value = initComponent.positionLockFabEnabled
+        searchEnabled.value = initComponent.searchEnabled
         zoomControlsEnabled.value = initComponent.zoomControlsEnabled
         onMapClickListener = initComponent.onMapClickListener
         detailsViewFactory = initComponent.detailsViewFactory
