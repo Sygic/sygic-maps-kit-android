@@ -24,7 +24,6 @@
 
 package com.sygic.samples.app.viewmodels
 
-import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -36,7 +35,6 @@ import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 
 class SamplesListViewModel(samples: List<Sample>) : ViewModel(), SamplesRecyclerViewAdapter.ClickListener {
 
-    @Bindable
     val adapter: SamplesRecyclerViewAdapter = SamplesRecyclerViewAdapter()
     val startActivityObservable: LiveData<Class<out CommonSampleActivity>> = SingleLiveEvent()
 

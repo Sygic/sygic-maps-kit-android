@@ -29,10 +29,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.sygic.maps.module.common.detail.DetailsViewFactory
-import com.sygic.samples.R
-import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
+import com.sygic.samples.R
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -47,7 +47,7 @@ class CustomDetailsViewFactory : DetailsViewFactory() {
                 is BasicData -> {
                     payload.title.let {
                         root.findViewById<TextView>(R.id.title).text =
-                            if (!it.isEmpty()) it else data.position.getFormattedLocation()
+                            if (it.isNotEmpty()) it else data.position.getFormattedLocation()
                     }
                     payload.description.let { description ->
                         if (description.isEmpty()) {

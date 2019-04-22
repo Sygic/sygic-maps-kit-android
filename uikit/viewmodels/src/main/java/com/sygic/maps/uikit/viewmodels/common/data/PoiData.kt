@@ -25,6 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.common.data
 
 import android.text.TextUtils
+import com.sygic.maps.uikit.viewmodels.common.utils.appendOnNewLine
 import com.sygic.sdk.places.PoiInfo
 import kotlinx.android.parcel.Parcelize
 
@@ -46,15 +47,15 @@ data class PoiData(
     override fun toString(): String {
         val builder = StringBuilder()
 
-        name?.let { if (!it.isEmpty()) builder.append(it) }
-        city?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
-        street?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
-        houseNumber?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
-        postal?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
-        iso?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
-        phone?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
-        email?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
-        url?.let { if (!it.isEmpty()) builder.append("\n").append(it) }
+        name?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        city?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        street?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        houseNumber?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        postal?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        iso?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        phone?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        email?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        url?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
 
         return builder.toString()
     }
