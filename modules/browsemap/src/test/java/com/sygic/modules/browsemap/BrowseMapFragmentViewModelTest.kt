@@ -163,7 +163,7 @@ class BrowseMapFragmentViewModelTest {
 
     @Test
     fun onMapObjectsReceivedSelectionModeNoneTest() {
-        val testMapMarker = MapMarker.from(48.143489, 17.150560).build()
+        val testMapMarker = MapMarker.at(48.143489, 17.150560).build()
 
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.NONE
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker, mock()))
