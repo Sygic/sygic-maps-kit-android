@@ -26,9 +26,7 @@ package com.sygic.samples.app.viewmodels
 
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.material.navigation.NavigationView
@@ -38,6 +36,7 @@ import com.sygic.samples.app.dialogs.AboutDialog
 import com.sygic.samples.app.fragments.BrowseMapSampleListFragment
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.samples.app.fragments.BaseSamplesListFragment
 import com.sygic.samples.app.fragments.SearchSampleListFragment
 
 private const val GITHUB_WIKI_COMPASS = "${BuildConfig.GITHUB_WIKI}UiKit-Compass"
@@ -48,11 +47,13 @@ private const val GITHUB_WIKI_ZOOM_CONTROLS = "${BuildConfig.GITHUB_WIKI}UiKit-Z
 class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, NavigationView.OnNavigationItemSelectedListener {
 
     val closeDrawerLayoutObservable: LiveData<Any> = SingleLiveEvent()
-    val samplesListFragmentsObservable: LiveData<Fragment> = SingleLiveEvent()
+    val drawerItemCheckObservable: LiveData<Int> = SingleLiveEvent()
+    val samplesListFragmentsObservable: LiveData<BaseSamplesListFragment> = SingleLiveEvent()
     val openLinkInBrowserObservable: LiveData<String> = SingleLiveEvent()
     val openDialogFragmentObservable: LiveData<Class<out AppCompatDialogFragment>> = SingleLiveEvent()
 
-    override fun onCreate(owner: LifecycleOwner) {
+    init {
+        drawerItemCheckObservable.asSingleEvent().value = R.id.nav_browse_map_module
         samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSampleListFragment()
     }
 
@@ -73,7 +74,7 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
         return true
     }
 
-    fun onOptionsItemSelected(menuItemId: Int) : Boolean {
+    fun onOptionsItemSelected(menuItemId: Int): Boolean {
         if (menuItemId == R.id.about) {
             openDialogFragmentObservable.asSingleEvent().value = AboutDialog::class.java
             return true
