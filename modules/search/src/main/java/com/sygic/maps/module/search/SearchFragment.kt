@@ -35,18 +35,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.common.initialization.manager.SdkInitializationManager
+import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.component.SearchFragmentInitComponent
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.search.SearchResult
 import javax.inject.Inject
 
 /**
  * A *[SearchFragment]* is the core component for any search operation. It can be easily used to display search input
  * and search result list on the same screen. It can be modified with initial search input or coordinates. It comes with
- * several pre build-in elements such as [SearchInputEditText] or [SearchResultList]. TODO imports
+ * several pre build-in elements such as [SearchToolbar] or [SearchResultList]. TODO imports
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback {
@@ -70,6 +72,20 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
                 .inject(this)
             injected = true
         }
+    }
+
+    /**
+     * @see SearchFragment
+     */
+    companion object {
+
+        const val TAG = "search_fragment_tag"
+
+        /**
+         * Allows you to simply create new instance of [SearchFragment].
+         */
+        @JvmStatic
+        fun newInstance(): SearchFragment = SearchFragment() //todo: initialSearchInput and initialSearchPosition?
     }
 
     /**
@@ -106,6 +122,9 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
             } else initComponent.initialSearchPosition = value
         }
 
+    //todo
+    // var maxResultsCount?
+
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         inject()
         super.onInflate(context, attrs, savedInstanceState)
@@ -136,6 +155,26 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         binding.lifecycleOwner = this
         binding.searchFragmentViewModel = fragmentViewModel
         return binding.root
+    }
+
+    /**
+     * Register a custom callback to be invoked when a search process is done.
+     *
+     * @param callback [SearchResultCallback] callback to invoke when a search process is done.
+     */
+    fun setResultCallback(callback: SearchResultCallback?) { //ToDO
+
+    }
+
+    /**
+     * Register a custom callback to be invoked when a search process is done.
+     *
+     * @param callback [SearchResultCallback] callback to invoke when a search process is done.
+     */
+    fun setResultCallback(callback: (searchResultList: List<SearchResult>) -> Unit) {
+        setResultCallback(object : SearchResultCallback {
+            override fun onSearchResult(searchResultList: List<SearchResult>) = callback(searchResultList)
+        })
     }
 
     override fun onDestroy() {

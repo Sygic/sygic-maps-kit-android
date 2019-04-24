@@ -67,13 +67,6 @@ fun MapFragmentInitComponent.resolveAttributes(app: Application) {
                     POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE
                 )
         }
-        if (typedArray.hasValue(R.styleable.BrowseMapFragment_sygic_search_enabled)) {
-            searchEnabled =
-                typedArray.getBoolean(
-                    R.styleable.BrowseMapFragment_sygic_search_enabled,
-                    SEARCH_ENABLED_DEFAULT_VALUE
-                )
-        }
         if (typedArray.hasValue(R.styleable.BrowseMapFragment_sygic_zoomControls_enabled)) {
             zoomControlsEnabled =
                 typedArray.getBoolean(

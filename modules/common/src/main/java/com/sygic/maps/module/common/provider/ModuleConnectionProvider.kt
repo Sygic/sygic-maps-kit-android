@@ -22,27 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.search
+package com.sygic.maps.module.common.provider
 
-import android.os.Bundle
-import android.util.Log
-import com.sygic.maps.module.browsemap.BrowseMapFragment
-import com.sygic.maps.module.search.provider.SearchConnectionProvider
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
+import androidx.fragment.app.Fragment
 
-class SearchFromBrowseMapActivity : CommonSampleActivity() {
+/**
+ * Interface definition designed for a independent module connection.
+ */
+interface ModuleConnectionProvider {
 
-    override val wikiModulePath: String = "Module-Search#search---from-browse-map"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_search_from_browse_map)
-
-        val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        browseMapFragment.setSearchConnectionProvider(SearchConnectionProvider { searchResultList ->
-            searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo
-        })
-    }
+    /**
+     * A *[fragment]* to be used as a target for the transaction.
+     *
+     * @param [Fragment] target fragment.
+     *
+     */
+    val fragment: Fragment
 }

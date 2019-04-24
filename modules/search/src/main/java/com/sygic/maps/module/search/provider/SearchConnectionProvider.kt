@@ -22,27 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.search
+package com.sygic.maps.module.search.provider
 
-import android.os.Bundle
-import android.util.Log
-import com.sygic.maps.module.browsemap.BrowseMapFragment
-import com.sygic.maps.module.search.provider.SearchConnectionProvider
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
+import androidx.fragment.app.Fragment
+import com.sygic.maps.module.common.provider.ModuleConnectionProvider
+import com.sygic.maps.module.search.SearchFragment
+import com.sygic.sdk.search.SearchResult
 
-class SearchFromBrowseMapActivity : CommonSampleActivity() {
+/**
+ * A Search module connection implementation.
+ */
+class SearchConnectionProvider(private val callback: (searchResultList: List<SearchResult>) -> Unit) : ModuleConnectionProvider {
 
-    override val wikiModulePath: String = "Module-Search#search---from-browse-map"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_search_from_browse_map)
-
-        val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        browseMapFragment.setSearchConnectionProvider(SearchConnectionProvider { searchResultList ->
-            searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo
-        })
-    }
+    override val fragment: Fragment
+        get() {
+            val searchFragment = SearchFragment.newInstance()
+            searchFragment.setResultCallback(callback)
+            return searchFragment
+        }
 }

@@ -35,7 +35,6 @@
         android:layout_height="match_parent"
         app:sygic_map_latitude="48.145764"
         app:sygic_map_longitude="17.126015"
-        app:sygic_map_zoom="11"
-        app:sygic_search_enabled="true" />
+        app:sygic_map_zoom="11" />
 
 </FrameLayout>

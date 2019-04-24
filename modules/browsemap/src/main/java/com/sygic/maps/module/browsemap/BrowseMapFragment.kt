@@ -37,6 +37,7 @@ import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.views.compass.CompassView
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
@@ -44,7 +45,6 @@ import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
-import com.sygic.maps.uikit.viewmodels.searchfab.SearchFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchfab.SearchFab
@@ -61,7 +61,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
-    private lateinit var searchFabViewModel: SearchFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
     override fun executeInjector() =
@@ -156,23 +155,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         }
 
     /**
-     * A *[searchEnabled]* modifies the [SearchFab] visibility.
-     *
-     * @param [Boolean] true to enable the [SearchFab], false otherwise.
-     *
-     * @return whether the [SearchFab] is on or off.
-     */
-    var searchEnabled: Boolean
-        get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.searchEnabled.value!!
-        } else mapFragmentInitComponent.searchEnabled
-        set(value) {
-            if (::fragmentViewModel.isInitialized) {
-                fragmentViewModel.searchEnabled.value = value
-            } else mapFragmentInitComponent.searchEnabled = value
-        }
-
-    /**
      * A *[zoomControlsEnabled]* modifies the [ZoomControlsMenu] visibility.
      *
      * @param [Boolean] true to enable the [ZoomControlsMenu], false otherwise.
@@ -195,16 +177,15 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent)
         compassViewModel = viewModelOf(CompassViewModel::class.java)
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
-        searchFabViewModel = viewModelOf(SearchFabViewModel::class.java)
         zoomControlsViewModel = viewModelOf(ZoomControlsViewModel::class.java)
+
+        fragmentViewModel.poiDetailDataObservable.observe(this, Observer<PoiDetailData> { showPoiDetail(it) })
+        fragmentViewModel.replaceFragmentObservable.observe(this, Observer<ModuleConnectionProvider> { replaceFragment(it) })
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(compassViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
-
-        fragmentViewModel.poiDetailDataObservable.observe(this, Observer<PoiDetailData> { showPoiDetail(it) })
-        searchFabViewModel.searchFragmentObservable.observe(this, Observer<Any> { openSearchFragment() })
 
         savedInstanceState?.let { setPoiDetailListener() }
     }
@@ -215,8 +196,8 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         }
     }
 
-    private fun openSearchFragment() {
-        //fragmentManager?.beginTransaction()?.add(R.id.fragmentContainer, SearchFragment()).commit() //ToDo
+    private fun replaceFragment(provider: ModuleConnectionProvider) { //TODO
+        //if (id != View.NO_ID) view?.let { childFragmentManager.beginTransaction().replace(id, provider.fragment).commit() } //todo: add, replace, back press?
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -225,7 +206,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         binding.browseMapFragmentViewModel = fragmentViewModel
         binding.compassViewModel = compassViewModel
         binding.positionLockFabViewModel = positionLockFabViewModel
-        binding.searchFabViewModel = searchFabViewModel
         binding.zoomControlsViewModel = zoomControlsViewModel
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {
@@ -270,6 +250,20 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
             fragmentViewModel.detailsViewFactory = factory
         } else {
             mapFragmentInitComponent.detailsViewFactory = factory
+        }
+    }
+
+    /**
+     * Set a Search module connection provider to be used when a click to the [SearchFab] has been made. If not null,
+     * the [SearchFab] will be automatically displayed.
+     *
+     * @param searchConnectionProvider [ModuleConnectionProvider] a search module connection provider.
+     */
+    fun setSearchConnectionProvider(searchConnectionProvider: ModuleConnectionProvider?) {
+        if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.searchConnectionProvider = searchConnectionProvider
+        } else {
+            mapFragmentInitComponent.searchConnectionProvider = searchConnectionProvider
         }
     }
 

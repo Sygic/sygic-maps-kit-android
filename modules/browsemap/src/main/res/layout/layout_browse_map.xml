@@ -44,10 +44,6 @@
             type="com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel" />
 
         <variable
-            name="searchFabViewModel"
-            type="com.sygic.maps.uikit.viewmodels.searchfab.SearchFabViewModel" />
-
-        <variable
             name="zoomControlsViewModel"
             type="com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel" />
 
@@ -92,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:onClick="@{() -> searchFabViewModel.onClick()}"
+            android:onClick="@{() -> browseMapFragmentViewModel.onSearchFabClick()}"
             android:visibility="@{safeUnbox(browseMapFragmentViewModel.searchEnabled) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -43,6 +43,7 @@ import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
@@ -89,8 +90,14 @@ class BrowseMapFragmentViewModel internal constructor(
 
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
+    var searchConnectionProvider: ModuleConnectionProvider? = null
+        set(value) {
+            field = value
+            searchEnabled.value = value?.let { true } ?: false
+        }
 
     val poiDetailDataObservable: LiveData<PoiDetailData> = SingleLiveEvent()
+    val replaceFragmentObservable: LiveData<ModuleConnectionProvider> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
@@ -107,10 +114,10 @@ class BrowseMapFragmentViewModel internal constructor(
         compassEnabled.value = initComponent.compassEnabled
         compassHideIfNorthUp.value = initComponent.compassHideIfNorthUp
         positionLockFabEnabled.value = initComponent.positionLockFabEnabled
-        searchEnabled.value = initComponent.searchEnabled
         zoomControlsEnabled.value = initComponent.zoomControlsEnabled
         onMapClickListener = initComponent.onMapClickListener
         detailsViewFactory = initComponent.detailsViewFactory
+        searchConnectionProvider = initComponent.searchConnectionProvider
         initComponent.skins.forEach { entry -> themeManager.setSkinAtLayer(entry.key, entry.value) }
         initComponent.recycle()
 
@@ -199,9 +206,9 @@ class BrowseMapFragmentViewModel internal constructor(
         })
     }
 
-    override fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) {
-        themeManager.setSkinAtLayer(layer, skin)
-    }
+    override fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) = themeManager.setSkinAtLayer(layer, skin)
+
+    fun onSearchFabClick() = searchConnectionProvider?.let { replaceFragmentObservable.asSingleEvent().value = it }
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.setSdkPositionUpdatingEnabled(false)
@@ -210,6 +217,7 @@ class BrowseMapFragmentViewModel internal constructor(
     override fun onDestroy(owner: LifecycleOwner) {
         onMapClickListener = null
         detailsViewFactory = null
+        searchConnectionProvider = null
     }
 
     override fun onCleared() {

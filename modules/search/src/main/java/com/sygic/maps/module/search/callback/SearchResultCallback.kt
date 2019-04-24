@@ -22,27 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.search
+package com.sygic.maps.module.search.callback
 
-import android.os.Bundle
-import android.util.Log
-import com.sygic.maps.module.browsemap.BrowseMapFragment
-import com.sygic.maps.module.search.provider.SearchConnectionProvider
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.sdk.search.SearchResult
 
-class SearchFromBrowseMapActivity : CommonSampleActivity() {
+/**
+ * Interface definition for a callback to be invoked when a search process is done.
+ */
+@FunctionalInterface
+interface SearchResultCallback {
 
-    override val wikiModulePath: String = "Module-Search#search---from-browse-map"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_search_from_browse_map)
-
-        val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        browseMapFragment.setSearchConnectionProvider(SearchConnectionProvider { searchResultList ->
-            searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo
-        })
-    }
+    /**
+     * Called when a search process is done.
+     *
+     * @param searchResultList [List] containing a list of [SearchResult].
+     *
+     */
+    fun onSearchResult(searchResultList: List<SearchResult>)
 }
