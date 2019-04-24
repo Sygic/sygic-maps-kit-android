@@ -1,10 +1,47 @@
+/*
+ * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ *
+ * This project is licensed under the MIT License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
     ext {
+        organization = 'sygic'
+        groupIdentifier = 'com.sygic.maps'
+        projectIdentifier = 'sygic-maps-kit'
+        projectWebsite = 'https://github.com/Sygic/sygic-maps-kit-android'
+        projectDescription = 'Part of Sygic Maps Kit framework.'
+        projectLicences = ['MIT']
+
         androidMinSdkVersion = 21
         androidCompileSdkVersion = 28
         androidTargerSdkVersion = androidCompileSdkVersion
+
+        moduleBrowsemapVersion = '1.0.0'
+        moduleCommonVersion = '1.0.0'
+        uikitViewsVersion = '1.0.0'
+        uikitViewmodelsVersion = '1.0.1'
+        toolsViewmodelFactoryVersion = '1.0.0'
 
         kotlinVersion = '1.3.21'
         kotlinCoroutinesVersion = '1.0.1'
@@ -15,21 +52,17 @@ buildscript {
         constraintLayoutVersion = '1.1.3'
         annotationsVersion = '1.0.0'
         playServicesLocationVersion = '16.0.0'
-        sygicSdkVersion = '8.2.1'
+        sygicSdkVersion = '10.0.3'
         daggerVersion = '2.16'
         javaxInjectVersion = '1'
         javaPoetVersion = '1.11.1'
+
+        supportedAbis = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
     }
-    repositories {
-        maven { url "https://repository.sygic.com/repository/maven-public/" }
-        if (gradle.buildSdkFromSource()) {
-            maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" }
-        }
-        google()
-        jcenter()
-    }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath 'com.novoda:bintray-release:0.9'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         if (gradle.buildSdkFromSource()) {
@@ -40,11 +73,20 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+
+    repositories {
+        if (gradle.buildSdkFromSource()) {
+            maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" }
+        }
+        maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
+        google()
+        jcenter()
+    }
 }
 
 allprojects {
     repositories {
-        maven { url "https://repository.sygic.com/repository/maven-public/" }
+        maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
         google()
         jcenter()
     }

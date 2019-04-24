@@ -1,3 +1,27 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <resources>
     <string name="app_name">Sygic Samples</string>
     <string name="browse_map">Browse Map</string>
@@ -19,4 +43,29 @@
     <string name="source_code">Source code</string>
     <string name="wiki">Wiki</string>
     <string name="qa">Q&amp;A</string>
+    <string name="about">About</string>
+    <string name="sample_app_version_name">Sample App Version Name:</string>
+    <string name="sample_app_version_code">Sample App Version Code:</string>
+    <string name="sygic_sdk_version">Sygic SDK Version:</string>
+    <string name="abi">ABI:</string>
+    <string name="browse_map_click_listener">Browse Map - Click listener</string>
+    <string name="browse_map_click_listener_summary">Browse Map module with own click listener</string>
+    <string name="browse_map_default">Browse Map - Default</string>
+    <string name="browse_map_default_summary">Browse Map module with no configuration</string>
+    <string name="browse_map_details_window">Browse Map - Details View</string>
+    <string name="browse_map_details_window_summary">Custom details view for map points</string>
+    <string name="place_info_description">Place info image</string>
+    <string name="browse_map_full">Browse Map - Full</string>
+    <string name="browse_map_full_summary">Browse Map module with full configuration</string>
+    <string name="browse_map_markers">Browse Map - Markers</string>
+    <string name="browse_map_markers_summary">Browse Map module with own custom map markers</string>
+    <string name="browse_map_modes">Browse Map - Modes</string>
+    <string name="browse_map_modes_summary">Browse Map module with all available modes</string>
+    <string name="selection_mode">Selection mode</string>
+    <string name="selection_mode_is">Selection mode is</string>
+    <string name="none">None</string>
+    <string name="markers_only">MarkersOnly</string>
+    <string name="full">Full</string>
+    <string name="browse_map_themes">Browse Map - Themes</string>
+    <string name="browse_map_themes_summary">Browse Map module with custom theme</string>
 </resources>
