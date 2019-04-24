@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ *
+ * This project is licensed under the MIT License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+
+    // https://github.com/gradle/gradle/issues/3593
+    id 'com.gladed.androidgitversion' version '0.4.9'
+    id 'com.github.triplet.play' version '2.2.0'
+}
+
+androidGitVersion {
+    baseCode 1
+}
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+
+    defaultConfig {
+        applicationId "com.sygic.samples"
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargerSdkVersion
+        versionCode androidGitVersion.code()
+        versionName androidGitVersion.name()
+        archivesBaseName = "$project.name-$versionName"
+
+        gradle.resolveFlavors(it)
+
+        manifestPlaceholders = [sygicApiKey: gradle.getSdkKey()]
+        buildConfigField "String", "SDK_VERSION", "\"${sygicSdkVersion}\""
+    }
+
+    signingConfigs {
+        release {
+            keyAlias System.getenv('RELEASE_KEY_ALIAS')
+            keyPassword System.getenv('RELEASE_KEY_PASSWORD')
+            storeFile file(rootDir.getCanonicalPath() + '/' + System.getenv('RELEASE_KEYSTORE_FILE'))
+            storePassword System.getenv('RELEASE_KEYSTORE_PASSWORD')
+        }
+    }
+
+    buildTypes {
+        all {
+            buildConfigField "String", "GITHUB_REPO", "\"$projectWebsite\""
+            buildConfigField "String", "GITHUB_WIKI", "\"$projectWebsite/wiki/\""
+            buildConfigField "String", "STACK_OVERFLOW", '"https://stackoverflow.com/questions/tagged/android+sygic"'
+        }
+
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    androidGitVersion {
+        codeFormat 'AMMNNPP'
+        format '%tag%%-dirty%'
+        variants applicationVariants
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include (*supportedAbis)
+            universalApk false
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+
+play {
+    track = "production"
+    releaseStatus = "completed"
+    serviceAccountCredentials = file(System.getenv('CI') == 'true'
+            ? '../../' + System.getenv('GP_KEY_JSON_FILE') : 'areYouHappy.json')
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':module-browsemap')
+}

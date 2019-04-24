@@ -1,0 +1,395 @@
+# Note: This configuration is currently obsolete.
+version: 2.1
+
+references:
+
+  # Cache
+  cache_key: &cache_key
+    key: cache-{{ checksum "build.gradle" }}-{{ checksum "app/samples/build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "gradle.properties" }}
+  restore_cache: &restore_cache
+    restore_cache:
+      <<: *cache_key
+  save_cache: &save_cache
+    save_cache:
+      <<: *cache_key
+      paths:
+      - ~/.gradle
+
+  # Workspace
+  workspace: &workspace
+               ~/workspace/sygic-maps-kit-android
+  attach_debug_workspace: &attach_workspace
+    attach_workspace:
+      at: ~/workspace
+  persist_debug_workspace: &persist_workspace
+    persist_to_workspace:
+      root: ~/workspace
+      paths:
+      - sygic-maps-kit-android
+
+  # Docker
+  android_config: &default_config
+    working_directory: *workspace
+    docker:
+    - image: circleci/android:api-28
+    environment:
+      JVM_OPTS: -Xmx3200m
+
+jobs:
+
+  build:
+    <<: *default_config
+    steps:
+    - checkout
+    - *restore_cache
+
+    - run:
+        name: Download Dependencies
+        command: ./gradlew androidDependencies
+
+    - run:
+        name: Build UiKit Common
+        command: ./gradlew :uikit-common:assembleDebug
+
+    - run:
+        name: Build UiKit Common SDK
+        command: ./gradlew :uikit-common-sdk:assembleDebug
+
+    - run:
+        name: Build UiKit Compass
+        command: ./gradlew :uikit-compass:assembleDebug
+
+    - run:
+        name: Build UiKit Compass ViewModel
+        command: ./gradlew :uikit-compass-viewmodel:assembleDebug
+
+    - run:
+        name: Build UiKit Poidetail
+        command: ./gradlew :uikit-poidetail:assembleDebug
+
+    - run:
+        name: Build UiKit Positionlockfab
+        command: ./gradlew :uikit-positionlockfab:assembleDebug
+
+    - run:
+        name: Build UiKit Positionlockfab ViewModel
+        command: ./gradlew :uikit-positionlockfab-viewmodel:assembleDebug
+
+    - run:
+        name: Build UiKit Zoomcontrols
+        command: ./gradlew :uikit-zoomcontrols:assembleDebug
+
+    - run:
+        name: Build UiKit Zoomcontrols ViewModel
+        command: ./gradlew :uikit-zoomcontrols-viewmodel:assembleDebug
+
+    - run:
+        name: Build Module Common
+        command: ./gradlew :modules-common:assembleDebug
+
+    - run:
+        name: Build Module Browsemap
+        command: ./gradlew :modules-browsemap:assembleDebug
+
+    - run:
+        name: Build Sample App
+        command: ./gradlew :app-samples:assembleDebug
+
+    - store_artifacts:
+        path: app/samples/build/outputs/apk/
+        destination: /apk/
+
+    - *save_cache
+    - *persist_workspace
+
+  test:
+    <<: *default_config
+    steps:
+    - *attach_workspace
+
+    - run:
+        name: Run UiKit Common tests
+        command: ./gradlew :uikit-common:check
+
+    - store_artifacts:
+        path: uikit/common/build/reports
+        destination: uikit-common-lint
+
+    - store_artifacts:
+        path: uikit/common/build/test-results
+        destination: uikit-common-test-results
+
+    - run:
+        name: Run UiKit Common SDK tests
+        command: ./gradlew :uikit-common-sdk:check
+
+    - store_artifacts:
+        path: uikit/common/sdk/build/reports
+        destination: uikit-common-sdk-lint
+
+    - store_artifacts:
+        path: uikit/common/sdk/build/test-results
+        destination: uikit-common-sdk-test-results
+
+    - run:
+        name: Run UiKit Compass tests
+        command: ./gradlew :uikit-compass:check
+
+    - store_artifacts:
+        path: uikit/compass/build/reports
+        destination: uikit-compass-lint
+
+    - store_artifacts:
+        path: uikit/compass/build/test-results
+        destination: uikit-compass-test-results
+
+    - run:
+        name: Run UiKit Compass ViewModel tests
+        command: ./gradlew :uikit-compass-viewmodel:check
+
+    - store_artifacts:
+        path: uikit/compass/viewmodel/build/reports
+        destination: uikit-compass-viewmodel-lint
+
+    - store_artifacts:
+        path: uikit/compass/viewmodel/build/test-results
+        destination: uikit-compass-viewmodel-test-results
+
+    - run:
+        name: Run UiKit Poidetail tests
+        command: ./gradlew :uikit-poidetail:check
+
+    - store_artifacts:
+        path: uikit/poidetail/build/reports
+        destination: uikit-poidetail-lint
+
+    - store_artifacts:
+        path: uikit/poidetail/build/test-results
+        destination: uikit-poidetail-test-results
+
+    - run:
+        name: Run UiKit Positionlockfab tests
+        command: ./gradlew :uikit-positionlockfab:check
+
+    - store_artifacts:
+        path: uikit/positionlockfab/build/reports
+        destination: uikit-positionlockfab-lint
+
+    - store_artifacts:
+        path: uikit/positionlockfab/build/test-results
+        destination: uikit-positionlockfab-test-results
+
+    - run:
+        name: Run UiKit Positionlockfab ViewModel tests
+        command: ./gradlew :uikit-positionlockfab-viewmodel:check
+
+    - store_artifacts:
+        path: uikit/positionlockfab/viewmodel/build/reports
+        destination: uikit-positionlockfab-viewmodel-lint
+
+    - store_artifacts:
+        path: uikit/positionlockfab/viewmodel/build/test-results
+        destination: uikit-positionlockfab-viewmodel-test-results
+
+    - run:
+        name: Run UiKit Zoomcontrols tests
+        command: ./gradlew :uikit-zoomcontrols:check
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/build/reports
+        destination: uikit-zoomcontrols-lint
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/build/test-results
+        destination: uikit-zoomcontrols-test-results
+
+    - run:
+        name: Run UiKit Zoomcontrols ViewModel tests
+        command: ./gradlew :uikit-zoomcontrols-viewmodel:check
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/viewmodel/build/reports
+        destination: uikit-zoomcontrols-viewmodel-lint
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/viewmodel/build/test-results
+        destination: uikit-zoomcontrols-viewmodel-test-results
+
+    - run:
+        name: Run Module Common tests
+        command: ./gradlew :modules-common:check
+
+    - store_artifacts:
+        path: modules/common/build/reports
+        destination: modules-common-lint
+
+    - store_artifacts:
+        path: modules/common/build/test-results
+        destination: modules-common-test-results
+
+    - run:
+        name: Run Module Browsemap tests
+        command: ./gradlew :modules-browsemap:check
+
+    - store_artifacts:
+        path: modules/browsemap/build/reports
+        destination: modules-browsemap-lint
+
+    - store_artifacts:
+        path: modules/browsemap/build/test-results
+        destination: modules-browsemap-test-results
+
+  ui_test:
+    <<: *default_config
+    steps:
+    - *attach_workspace
+
+    - run:
+        name: Setup emulator
+        command: sdkmanager "system-images;android-22;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-22;default;armeabi-v7a"
+
+#    - run:
+#        name: Launch emulator
+#        command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+#        background: true
+
+    - run:
+        name: Run Browsemap Default Ui tests
+        command: ./gradlew :app-samples-browsemap-default:connectedAndroidTest
+
+    - store_artifacts:
+        path: app/samples/sample-browsemap-def/build/outputs/reports/androidTests/connected/
+        destination: browsemap-default-ui-tests
+
+    - run:
+        name: Run Browsemap Full Ui tests
+        command: ./gradlew :app-samples-browsemap-full:connectedAndroidTest
+
+    - store_artifacts:
+        path: app/samples/sample-browsemap-full/build/outputs/reports/androidTests/connected/
+        destination: browsemap-full-ui-tests
+
+    - run:
+        name: Run Browsemap Modes Ui tests
+        command: ./gradlew :app-samples-browsemap-modes:connectedAndroidTest
+
+    - store_artifacts:
+        path: app/samples/sample-browsemap-modes/build/outputs/reports/androidTests/connected/
+        destination: browsemap-modes-ui-tests
+
+    - run:
+        name: Run Browsemap Markers Ui tests
+        command: ./gradlew :app-samples-browsemap-markers:connectedAndroidTest
+
+    - store_artifacts:
+        path: app/samples/sample-browsemap-markers/build/outputs/reports/androidTests/connected/
+        destination: browsemap-markers-ui-tests
+
+    - run:
+        name: Run Browsemap Details Ui tests
+        command: ./gradlew :app-samples-browsemap-details-window:connectedAndroidTest
+
+    - store_artifacts:
+        path: app/samples/sample-browsemap-details-window/build/outputs/reports/androidTests/connected/
+        destination: browsemap-details-window-ui-tests
+
+    - run:
+        name: Run Browsemap Click listener Ui tests
+        command: ./gradlew :app-samples-browsemap-click-listener:connectedAndroidTest
+
+    - store_artifacts:
+        path: app/samples/sample-browsemap-click-listener/build/outputs/reports/androidTests/connected/
+        destination: browsemap-click-listener-ui-tests
+
+    - run:
+        name: Run Browsemap Themes Ui tests
+        command: ./gradlew :app-samples-browsemap-themes:connectedAndroidTest
+
+    - store_artifacts:
+        path: app/samples/sample-browsemap-themes/build/outputs/reports/androidTests/connected/
+        destination: browsemap-themes-ui-tests
+
+  deploy:
+    <<: *default_config
+    steps:
+    - checkout
+
+    - run:
+        name: Build release apk's and aar's
+        command: ./gradlew assembleRelease -P"sygic.sdk.key"=$SYGIC_API_KEY
+
+    - store_artifacts:
+        path: app/samples/build/outputs/apk/release
+        destination: /apk/
+
+    - store_artifacts:
+        path: modules/browsemap/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: modules/common/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/common/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/compass/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/compass/viewmodel/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/poidetail/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/positionlockfab/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/positionlockfab/viewmodel/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/build/outputs/aar/
+        destination: /aar/
+
+    - store_artifacts:
+        path: uikit/zoomcontrols/viewmodel/build/outputs/aar/
+        destination: /aar/
+
+    - deploy:
+        command: echo 'done'
+
+workflows:
+  build-test-deploy:
+    jobs:
+    - build:
+        filters:
+          tags:
+            only: /.*/
+    - test:
+        requires:
+        - build
+        filters:
+          tags:
+            only: /.*/
+    - ui_test:
+        requires:
+        - test
+        filters:
+          tags:
+            only: /.*/
+    - deploy:
+        requires:
+        - test
+        - ui_test
+        filters:
+          tags:
+            only: /^\d+\.\d+\.\d+$/
+          branches:
+            ignore: /.*/

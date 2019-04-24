@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ *
+ * This project is licensed under the MIT License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+gradle.ext.buildSdkFromSource = {
+    Properties properties = new Properties()
+    def localProperties = file('local.properties')
+    if (!localProperties.exists())
+        return false
+
+    properties.load(localProperties.newDataInputStream())
+    return properties.getProperty('sygic.sdk.build', "false").toBoolean()
+}
+
+gradle.ext.resolveFlavors = { config ->
+    if (gradle.buildSdkFromSource()) config.missingDimensionStrategy 'build', 'full'
+}
+
+gradle.ext.getSdkKey = {
+    def sdkKey = ""
+
+    if (gradle.rootProject.hasProperty('sygic.sdk.key')) {
+        sdkKey = gradle.rootProject.property('sygic.sdk.key')
+    } else {
+        Properties properties = new Properties()
+        def localProperties = file('local.properties')
+
+        if (localProperties.exists()) {
+            properties.load(localProperties.newDataInputStream())
+            sdkKey = properties.getProperty('sygic.sdk.key', "")
+        }
+    }
+
+    if (sdkKey.isEmpty()) {
+        logger.warn('No API key for Sygic Maps SDK defined!')
+    }
+
+    return sdkKey
+}
+
+gradle.ext.getSdkDir = {
+    Properties properties = new Properties()
+    def localProperties = file('local.properties')
+    if (!localProperties.exists())
+        throw new GradleException("can't resolve 'sygic.sdk.dir' because there is no local.properties file")
+
+    properties.load(localProperties.newDataInputStream())
+
+    def sdkPath = properties.getProperty('sygic.sdk.dir', null)
+    if (sdkPath == null)
+        throw new GradleException("'sygic.sdk.dir' not defined in local.properties")
+
+    def sdkDir = file(sdkPath)
+    if (!sdkDir.exists())
+        throw new GradleException("'sygic.sdk.dir' has path '${sdkDir.getAbsolutePath()}', but it does not exist")
+
+    def androidPath = new File(sdkDir, '/Interface/Source/Android/SdkProject/sdk')
+    if (!androidPath.exists())
+        throw new GradleException("path to android interface '${androidPath.getAbsolutePath()}' does not exist")
+
+    return androidPath
+}
+
+gradle.ext.getNdkUnstackCmd = {
+    Properties properties = new Properties()
+    def localProperties = file('local.properties')
+    if (!localProperties.exists())
+        return
+
+    properties.load(localProperties.newDataInputStream())
+    def sdkDir = file(properties.getProperty('sdk.dir', null))
+    def ndkDir = file(properties.getProperty('ndk.dir', null))
+
+    if (sdkDir == null)
+        throw new GradleException("'sdk.dir' not defined in local.properties")
+
+    if (ndkDir == null)
+        throw new GradleException("'ndk.dir' not defined in local.properties")
+
+    def adb = new File(sdkDir, 'platform-tools/adb')
+    def ndkStack = new File(ndkDir, 'ndk-stack')
+    def sygicSdkPath = gradle.getSdkDir()
+    def debugSymbolsPath = new File(sygicSdkPath, 'build/intermediates/cmake/production/debug/obj/<ABI>')
+
+    def command = "${adb.absolutePath} logcat | ${ndkStack.absolutePath} -sym ${debugSymbolsPath.absolutePath}"
+
+    return command
+}

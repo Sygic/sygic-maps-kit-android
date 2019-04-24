@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="44dp"
+        android:height="44dp"
+        android:viewportHeight="44"
+        android:viewportWidth="44">
+
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M7.34485,6.99068 L6.82631,7.50922 L7.86339,8.5463 L8.38196,8.02776 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M35.6056,35.2514 L35.087,35.7699 L36.1241,36.807 L36.6426,36.2885 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M6.82631,36.0292 L7.34485,36.5478 L8.38196,35.5106 L7.86339,34.9921 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M35.087,7.76849 L35.6056,8.28703 L36.6426,7.24995 L36.1241,6.73141 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M16.6793,1.71087 L15.971,1.9008 L16.3506,3.3176 L17.0589,3.12767 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M27.0235,40.3158 L26.3151,40.5056 L26.6947,41.9223 L27.4031,41.7325 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M22.0537,1.1 L21.3203,1.1 L21.3203,2.56667 L22.0537,2.56667 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M22.0537,41.0667 L21.3203,41.0667 L21.3203,42.5333 L22.0537,42.5333 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M1.71101,26.5998 L1.9008,27.3082 L3.31749,26.9286 L3.1277,26.2202 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M40.3157,16.2557 L40.5057,16.9641 L41.9225,16.5844 L41.7325,15.8761 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M1.1,21.2255 L1.1,21.9588 L2.56667,21.9588 L2.56667,21.2255 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M41.0667,21.2255 L41.0667,21.9588 L42.5333,21.9588 L42.5333,21.2255 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M11.6645,3.73633 L11.0295,4.103 L11.7628,5.37313 L12.3979,5.00647 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M31.6479,38.3485 L31.0128,38.7152 L31.7461,39.9854 L32.3812,39.6187 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M3.64797,31.6513 L4.01463,32.2863 L5.2848,31.553 L4.91814,30.9179 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M38.2602,11.6679 L38.6269,12.303 L39.897,11.5697 L39.5303,10.9346 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M4.01463,11.2521 L3.64797,11.8872 L4.91814,12.6205 L5.2848,11.9855 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M38.6269,31.2355 L38.2602,31.8705 L39.5303,32.6039 L39.897,31.9688 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M11.0295,39.4354 L11.6645,39.802 L12.3979,38.5319 L11.7628,38.1652 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M31.0128,4.82313 L31.6479,5.1898 L32.3812,3.91967 L31.7461,3.553 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M1.9008,16.2303 L1.71101,16.9386 L3.1277,17.3182 L3.31749,16.6099 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M40.5057,26.5744 L40.3157,27.2828 L41.7325,27.6624 L41.9225,26.954 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M15.971,41.6376 L16.6793,41.8274 L17.0589,40.4107 L16.3506,40.2209 Z"/>
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M26.3151,3.0327 L27.0235,3.22263 L27.4031,1.80583 L26.6947,1.61627 Z"/>
+</vector>
