@@ -70,7 +70,7 @@ open class SearchToolbarViewModel internal constructor(
     }
 
     init {
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
+        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
         text.value = "Test" //todo
     }
 
