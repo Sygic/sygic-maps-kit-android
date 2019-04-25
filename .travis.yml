@@ -2,7 +2,7 @@ language: android
 jdk: oraclejdk8
 sudo: false
 
-if: type == pull_request OR tag IS present
+if: type == pull_request OR tag IS present OR type == cron
 
 env:
   global:
