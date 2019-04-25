@@ -72,6 +72,7 @@ import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.MapSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isMapSkinValid
+import com.sygic.sdk.map.Camera
 import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
