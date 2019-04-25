@@ -24,6 +24,7 @@
   -->
 
 <resources>
+    <dimen name="toolbarHeight">56dp</dimen>
     <dimen name="compassSize">48dp</dimen>
     <dimen name="defaultPeekHeight">100dp</dimen>
     <dimen name="zoomControlsButtonSize">48dp</dimen>

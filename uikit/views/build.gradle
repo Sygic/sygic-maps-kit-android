@@ -63,5 +63,6 @@ dependencies {
     api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
     api "androidx.appcompat:appcompat:$appCompatVersion"
+    api "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     api "com.google.android.material:material:$materialVersion"
 }
