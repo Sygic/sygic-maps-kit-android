@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="aboutDialogViewModel"
+            type="com.sygic.samples.app.viewmodels.AboutDialogViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="180dp"
+            android:layout_height="72dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="56dp"
+            android:src="@drawable/sygic_logo_dark"
+            app:layout_constraintBottom_toTopOf="@id/versionsContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/versionsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logoImageView">
+
+            <TextView
+                android:id="@+id/versionNameTextView"
+                style="@style/AboutDialogItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_app_version_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/versionNameValueTextView"
+                style="@style/AboutDialogItemValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{aboutDialogViewModel.sampleAppVersionName}"
+                app:layout_constraintBottom_toBottomOf="@+id/versionNameTextView"
+                app:layout_constraintStart_toEndOf="@+id/versionNameTextView"
+                app:layout_constraintTop_toTopOf="@+id/versionNameTextView"
+                tools:text="1.0.0" />
+
+            <TextView
+                android:id="@+id/versionCodeTextView"
+                style="@style/AboutDialogItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_app_version_code"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/versionNameTextView" />
+
+            <TextView
+                android:id="@+id/versionCodeValueTextView"
+                style="@style/AboutDialogItemValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{aboutDialogViewModel.sampleAppVersionCode}"
+                app:layout_constraintBottom_toBottomOf="@+id/versionCodeTextView"
+                app:layout_constraintStart_toEndOf="@+id/versionCodeTextView"
+                app:layout_constraintTop_toTopOf="@+id/versionCodeTextView"
+                tools:text="8010000" />
+
+            <TextView
+                android:id="@+id/sdkVersionTextView"
+                style="@style/AboutDialogItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sygic_sdk_version"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/versionCodeTextView" />
+
+            <TextView
+                android:id="@+id/sdkVersionValueTextView"
+                style="@style/AboutDialogItemValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{aboutDialogViewModel.sygicSdkVersion}"
+                app:layout_constraintBottom_toBottomOf="@+id/sdkVersionTextView"
+                app:layout_constraintStart_toEndOf="@+id/sdkVersionTextView"
+                app:layout_constraintTop_toTopOf="@+id/sdkVersionTextView"
+                tools:text="9.4.0" />
+
+            <TextView
+                android:id="@+id/abiTextView"
+                style="@style/AboutDialogItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/abi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sdkVersionTextView" />
+
+            <TextView
+                android:id="@+id/abiValueTextView"
+                style="@style/AboutDialogItemValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{aboutDialogViewModel.abiType}"
+                app:layout_constraintBottom_toBottomOf="@+id/abiTextView"
+                app:layout_constraintStart_toEndOf="@+id/abiTextView"
+                app:layout_constraintTop_toTopOf="@+id/abiTextView"
+                tools:text="arm64-v8a" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

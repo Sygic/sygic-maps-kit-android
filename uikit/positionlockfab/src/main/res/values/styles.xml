@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="SygicPositionLockFabStyle">
-        <item name="android:tint">?android:attr/colorAccent</item>
-        <item name="android:backgroundTint">?android:attr/colorBackground</item>
-    </style>
-
-</resources>

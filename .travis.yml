@@ -1,29 +1,106 @@
 language: android
-
-jdk:
-  - oraclejdk8
-
+jdk: oraclejdk8
 sudo: false
+
+if: type == pull_request OR tag IS present OR type == cron
+
+env:
+  global:
+  - API_LEVEL=28
+  - EMULATOR_LEVEL=22
+  - BUILD_TOOLS_VERSION=28.0.3
+  - ABI=armeabi-v7a
+
+android:
+  components:
+  - tools
+  - platform-tools
+  - build-tools-${BUILD_TOOLS_VERSION}
+  - android-${API_LEVEL}
+  - android-${EMULATOR_LEVEL}
+  - sys-img-${ABI}-android-${EMULATOR_LEVEL}
+
+licenses:
+- android-sdk-preview-license-.+
+- android-sdk-license-.+
+- google-gdk-license-.+
 
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache
 
-script:
-  - ./gradlew clean build -P"sygic.sdk.key"=$SYGIC_API_KEY
+before_install:
+- yes | sdkmanager "platforms;android-28"
 
-android:
- components:
- - tools
- - platform-tools
- - android-28
- - build-tools-28.0.3
+stages:
+- name: compile tools
+- name: compile and test uikit
+- name: compile and test modules
+- name: compile and test sample app
+- name: ui tests
+- name: deploy
+  if: tag =~ ^\d+\.\d+\.\d+$
 
- licenses:
-   - android-sdk-preview-license-.+
-   - android-sdk-license-.+
-   - google-gdk-license-.+
+jobs:
+  include:
+  - stage: compile tools
+    name: tool-annotation-processor
+    script: ./gradlew :tool-annotation-processor:check
+  - stage: compile tools
+    name: tool-viewmodel-factory
+    script: ./gradlew :tool-viewmodel-factory:check
 
-#before_install:
-  #- yes | sdkmanager --licenses
+  - stage: compile and test uikit
+    name: uikit-views
+    script: ./gradlew :uikit-views:check
+  - stage: compile and test uikit
+    name: uikit-viewmodels
+    script: ./gradlew :uikit-viewmodels:check
+
+  - stage: compile and test modules
+    name: module-common
+    script: ./gradlew :module-common:check
+  - stage: compile and test modules
+    name: module-browsemap
+    script: ./gradlew :module-browsemap:check
+
+  - stage: compile and test sample app
+    name: sample-app
+    script:
+    - ./gradlew :app-samples:check
+
+  - stage: ui tests
+    name: browsemap
+    before_script:
+    - echo no | android create avd --force -n test -t android-${EMULATOR_LEVEL} --abi ${ABI}
+    - emulator -avd test -no-audio -no-window &
+    - android-wait-for-emulator
+    - adb shell input keyevent 82 &
+    script:
+    - ./gradlew :app-samples:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+
+  - stage: deploy
+    name: assembleRelease
+    before_script:
+    - echo $RELEASE_KEYSTORE_BASE64 | base64 -d > $RELEASE_KEYSTORE_FILE
+    - echo $GP_KEY_JSON_BASE64 | base64 -d > $GP_KEY_JSON_FILE
+    script:
+    - ./gradlew clean assembleRelease bintrayUpload publishReleaseApk -PbintrayUser=$BINTRAY_USERNAME -PbintrayKey=$BINTRAY_KEY -P"sygic.sdk.key"=$SYGIC_API_KEY
+    deploy:
+      provider: releases
+      api_key: $TRAVIS_RELEASE
+      name: SygicMapsKit Android $TRAVIS_TAG
+      file_glob: true
+      file:
+      - $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/*.apk
+      - $TRAVIS_BUILD_DIR/modules/common/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/modules/browsemap/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/uikit/views/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/uikit/viewmodels/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/tools/viewmodel-factory/build/outputs/aar/*.aar
+      skip_cleanup: true
+      on:
+        all_branches: true
+        tags: true
