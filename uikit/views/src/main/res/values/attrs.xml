@@ -35,6 +35,10 @@
         <attr name="zoomControlsMenuStyle" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="EmptyRecyclerView">
+        <attr name="emptyView" format="reference"/>
+    </declare-styleable>
+
     <declare-styleable name="PositionLockFab">
         <attr name="android:tint" />
         <attr name="android:backgroundTint" />
