@@ -32,6 +32,7 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -128,6 +129,16 @@ fun Context.shortToast(@StringRes text: Int) {
 
 fun Context.longToast(@StringRes text: Int) {
     Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+}
+
+fun Context.showKeyboard() {
+    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    inputMethodManager?.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 }
 
 inline val Context.locationManager: LocationManager?

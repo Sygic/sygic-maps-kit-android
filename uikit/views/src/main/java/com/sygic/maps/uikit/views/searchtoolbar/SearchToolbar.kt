@@ -56,7 +56,7 @@ open class SearchToolbar @JvmOverloads constructor(
         binding.inputEditText.addTextChangedListener(textWatcher)
     }
 
-    fun setIconStateSwitcherIndex(index: Int) { //todo: intDef
+    fun setIconStateSwitcherIndex(@SearchToolbarIconStateSwitcherIndex index: Int) {
         binding.searchToolbarIconStateSwitcher.displayedChild = index
     }
 

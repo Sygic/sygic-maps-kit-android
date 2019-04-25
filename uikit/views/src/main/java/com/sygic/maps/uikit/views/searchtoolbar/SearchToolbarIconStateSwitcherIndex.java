@@ -22,17 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.positionlockfab;
+package com.sygic.maps.uikit.views.searchtoolbar;
 
 import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@IntDef({LockState.UNLOCKED, LockState.LOCKED, LockState.LOCKED_AUTOROTATE})
+@IntDef({SearchToolbarIconStateSwitcherIndex.MAGNIFIER, SearchToolbarIconStateSwitcherIndex.PROGRESSBAR})
 @Retention(RetentionPolicy.SOURCE)
-public @interface LockState {
-    int UNLOCKED = 0;
-    int LOCKED = 1;
-    int LOCKED_AUTOROTATE = 2;
+public @interface SearchToolbarIconStateSwitcherIndex {
+    int MAGNIFIER = 0;
+    int PROGRESSBAR = 1;
 }

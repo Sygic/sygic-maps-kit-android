@@ -22,33 +22,13 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.search.di.module;
+package com.sygic.maps.uikit.viewmodels.common.utils
 
-import com.sygic.maps.module.common.di.util.ViewModelKey;
-import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
-import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel;
-import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModelFactory;
-import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
-import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel;
-import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModelFactory;
-import dagger.Binds;
-import dagger.Module;
-import dagger.multibindings.IntoMap;
+import android.text.Editable
+import android.text.TextWatcher
 
-@Module(
-    includes = {
-            ViewModelModuleBase.class
-    }
-)
-public abstract class ViewModelModule {
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SearchFragmentViewModel.class)
-    abstract ViewModelCreatorFactory putSearchFragmentViewModelFactory(SearchFragmentViewModelFactory factory);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SearchToolbarViewModel.class)
-    abstract ViewModelCreatorFactory putSearchToolbarViewModelFactory(SearchToolbarViewModelFactory factory);
+abstract class TextWatcherAdapter : TextWatcher {
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    override fun afterTextChanged(s: Editable) {}
 }

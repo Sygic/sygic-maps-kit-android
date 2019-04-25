@@ -41,6 +41,8 @@ import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
+import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.SearchResult
 import javax.inject.Inject
@@ -62,6 +64,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     internal lateinit var sdkInitializationManager: SdkInitializationManager
 
     private lateinit var fragmentViewModel: SearchFragmentViewModel
+    private lateinit var searchToolbarViewModel: SearchToolbarViewModel
 
     private var injected = false
     private fun inject() {
@@ -140,10 +143,11 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel =
-            ViewModelProviders.of(this, viewModelFactory.with(initComponent))[SearchFragmentViewModel::class.java]
+        fragmentViewModel = ViewModelProviders.of(this, viewModelFactory.with(initComponent))[SearchFragmentViewModel::class.java]
+        searchToolbarViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchToolbarViewModel::class.java]
 
         lifecycle.addObserver(fragmentViewModel)
+        lifecycle.addObserver(searchToolbarViewModel)
     }
 
     override fun onSdkInitialized() {
@@ -154,6 +158,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         val binding: LayoutSearchBinding = LayoutSearchBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.searchFragmentViewModel = fragmentViewModel
+        binding.searchToolbarViewModel = searchToolbarViewModel
         return binding.root
     }
 
@@ -181,5 +186,6 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         super.onDestroy()
 
         lifecycle.removeObserver(fragmentViewModel)
+        lifecycle.removeObserver(searchToolbarViewModel)
     }
 }
