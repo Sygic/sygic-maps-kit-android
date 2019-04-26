@@ -33,9 +33,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
-import com.sygic.maps.module.common.initialization.manager.SdkInitializationManager
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.component.SearchFragmentInitComponent
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
@@ -43,6 +44,8 @@ import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
+import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
+import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
@@ -146,7 +149,9 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = ViewModelProviders.of(this, viewModelFactory.with(initComponent))[SearchFragmentViewModel::class.java]
-        searchToolbarViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchToolbarViewModel::class.java]
+        searchToolbarViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchToolbarViewModel::class.java].apply {
+            this.keyboardVisibilityObservable.observe(this@SearchFragment, Observer<Boolean> { if (it) showKeyboard() else hideKeyboard() })
+        }
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(searchToolbarViewModel)

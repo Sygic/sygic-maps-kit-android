@@ -26,10 +26,5 @@ package com.sygic.maps.uikit.views.common.extensions
 
 import androidx.fragment.app.Fragment
 
-fun Fragment.showKeyboard() {
-    context?.showKeyboard()
-}
-
-fun Fragment.hideKeyboard() {
-    view?.let { context?.hideKeyboard(it) }
-}
+fun Fragment.showKeyboard() = context?.showKeyboard()
+fun Fragment.hideKeyboard() = view?.let { context?.hideKeyboard(it) }

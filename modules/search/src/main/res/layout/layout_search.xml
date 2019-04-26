@@ -60,7 +60,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:onClearButtonClickListener="@{() -> searchToolbarViewModel.onClearButtonClick()}"
             app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(actionId)}"
-            app:text="@{searchToolbarViewModel.text}" />
+            app:text="@{searchToolbarViewModel.inputText}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
