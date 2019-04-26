@@ -34,7 +34,7 @@ interface SearchManager {
     var maxResultsCount: Int
 
     fun searchText(text: String, position: GeoCoordinates? = null)
-    fun loadMapSearchResultDetails(result: MapSearchResult, listener: Search.SearchDetailListener): Boolean
+    fun loadMapSearchResultDetails(result: MapSearchResult, listener: Search.SearchDetailListener)
     fun addSearchResultsListener(listener: Search.SearchResultsListener)
     fun removeSearchResultsListener(listener: Search.SearchResultsListener)
 }

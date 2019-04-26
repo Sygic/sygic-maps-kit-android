@@ -174,13 +174,13 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent)
+        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent).apply {
+            this.poiDetailDataObservable.observe(this@BrowseMapFragment, Observer<PoiDetailData> { showPoiDetail(it) })
+            this.replaceFragmentObservable.observe(this@BrowseMapFragment, Observer<ModuleConnectionProvider> { replaceFragment(it) })
+        }
         compassViewModel = viewModelOf(CompassViewModel::class.java)
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
         zoomControlsViewModel = viewModelOf(ZoomControlsViewModel::class.java)
-
-        fragmentViewModel.poiDetailDataObservable.observe(this, Observer<PoiDetailData> { showPoiDetail(it) })
-        fragmentViewModel.replaceFragmentObservable.observe(this, Observer<ModuleConnectionProvider> { replaceFragment(it) })
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(compassViewModel)

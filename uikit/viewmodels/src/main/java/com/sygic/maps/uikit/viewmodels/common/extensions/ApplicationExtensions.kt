@@ -22,48 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.initialization.manager
+package com.sygic.maps.uikit.viewmodels.common.extensions
 
 import android.app.Application
+import android.content.pm.PackageManager
 import androidx.annotation.RestrictTo
-import com.sygic.maps.module.common.utils.getApiKey
-import com.sygic.sdk.SygicEngine
-import java.util.*
+import com.sygic.maps.uikit.viewmodels.R
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SdkInitializationManagerImpl : SdkInitializationManager, SygicEngine.OnInitListener {
-
-    private var initialized = false
-    private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
-
-    override fun initialize(application: Application, callback: SdkInitializationManager.Callback) {
-        synchronized(this) {
-            if (initialized) {
-                callback.onSdkInitialized()
-                return
-            }
-
-            callbacks.add(callback)
-        }
-
-        application.getApiKey()?.let { key ->
-            SygicEngine.Builder(application)
-                .setKeyAndSecret(application.packageName, key)
-                .setOnlineRoutingServiceKey("") //todo
-                .setInitListener(this)
-                .init()
-        }
-    }
-
-    override fun onSdkInitialized() {
-        synchronized(this) {
-            initialized = true
-        }
-        callbacks.forEach { it.onSdkInitialized() }
-        callbacks.clear()
-    }
-
-    override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
-        /* Currently do nothing */
+fun Application.getApiKey(): String? {
+    return try {
+        val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        applicationInfo.metaData.getString(getString(R.string.com_sygic_api_key))
+    } catch (e: PackageManager.NameNotFoundException) {
+        null
+    } catch (e: NullPointerException) {
+        null
     }
 }
