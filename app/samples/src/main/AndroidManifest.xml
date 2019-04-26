@@ -80,7 +80,8 @@
         <activity
             android:name=".search.SearchDefaultActivity"
             android:label="@string/search_default"
-            android:theme="@style/AppTheme.NoExitAnimation" />
+            android:theme="@style/AppTheme.NoExitAnimation"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".search.SearchFromBrowseMapActivity"
             android:label="@string/search_from_browse_map"

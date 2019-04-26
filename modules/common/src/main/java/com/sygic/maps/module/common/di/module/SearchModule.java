@@ -24,6 +24,9 @@
 
 package com.sygic.maps.module.common.di.module;
 
+import android.app.Application;
+import androidx.annotation.NonNull;
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerImpl;
 import dagger.Module;
@@ -36,7 +39,7 @@ public class SearchModule {
 
     @Singleton
     @Provides
-    SearchManager provideSearchManager() {
-        return new SearchManagerImpl();
+    SearchManager provideSearchManager(@NonNull final Application app, @NonNull final SdkInitializationManager sdkInitializationManager) {
+        return new SearchManagerImpl(app, sdkInitializationManager);
     }
 }

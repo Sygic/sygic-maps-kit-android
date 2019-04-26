@@ -49,7 +49,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.maps.module.common.component.MapFragmentInitComponent
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.common.di.util.ModuleBuilder
-import com.sygic.maps.module.common.initialization.manager.SdkInitializationManager
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager

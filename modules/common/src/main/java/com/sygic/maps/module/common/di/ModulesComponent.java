@@ -26,7 +26,7 @@ package com.sygic.maps.module.common.di;
 
 import android.app.Application;
 import com.sygic.maps.module.common.di.module.*;
-import com.sygic.maps.module.common.initialization.manager.SdkInitializationManager;
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager;
 import com.sygic.maps.module.common.poi.manager.PoiDataManager;
 import com.sygic.maps.module.common.theme.ThemeManager;

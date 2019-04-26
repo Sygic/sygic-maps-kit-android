@@ -22,21 +22,19 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.utils
+package com.sygic.maps.uikit.viewmodels.common.initialization;
 
-import android.app.Application
-import android.content.pm.PackageManager
-import androidx.annotation.RestrictTo
-import com.sygic.maps.module.common.R
+import androidx.annotation.IntDef;
+import androidx.annotation.RestrictTo;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@IntDef({InitializationState.INITIALIZATION_NOT_STARTED, InitializationState.INITIALIZING, InitializationState.INITIALIZED})
+@Retention(RetentionPolicy.SOURCE)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun Application.getApiKey(): String? {
-    return try {
-        val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
-        applicationInfo.metaData.getString(getString(R.string.com_sygic_api_key))
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
-    } catch (e: NullPointerException) {
-        null
-    }
+public @interface InitializationState {
+    int INITIALIZATION_NOT_STARTED = 0;
+    int INITIALIZING = 1;
+    int INITIALIZED = 2;
 }
