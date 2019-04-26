@@ -31,6 +31,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
@@ -41,6 +42,7 @@ import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
+import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.SearchResult
 import javax.inject.Inject
@@ -146,8 +148,9 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         lifecycle.addObserver(fragmentViewModel)
     }
 
+    @CallSuper
     override fun onSdkInitialized() {
-        // OnlineManager.getInstance().enableOnlineMapStreaming(true) //todo
+        OnlineManager.getInstance().enableOnlineMapStreaming(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
