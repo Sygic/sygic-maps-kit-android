@@ -31,8 +31,7 @@ import com.sygic.sdk.SygicEngine
 import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SdkInitializationManagerImpl : SdkInitializationManager,
-    SygicEngine.OnInitListener {
+class SdkInitializationManagerImpl : SdkInitializationManager, SygicEngine.OnInitListener {
 
     private var initialized = false
     private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
@@ -50,7 +49,9 @@ class SdkInitializationManagerImpl : SdkInitializationManager,
         application.getApiKey()?.let { key ->
             SygicEngine.Builder(application)
                 .setKeyAndSecret(application.packageName, key)
-                .setInitListener(this).init()
+                .setOnlineRoutingServiceKey("") //todo
+                .setInitListener(this)
+                .init()
         }
     }
 
