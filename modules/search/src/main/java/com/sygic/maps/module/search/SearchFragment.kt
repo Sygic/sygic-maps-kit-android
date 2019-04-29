@@ -142,7 +142,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         inject()
-        sdkInitializationManager.initialize((context as Activity).application, this)
+        sdkInitializationManager.initialize(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

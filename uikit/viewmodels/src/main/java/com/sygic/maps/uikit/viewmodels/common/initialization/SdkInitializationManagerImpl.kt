@@ -31,13 +31,15 @@ import com.sygic.sdk.SygicEngine
 import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SdkInitializationManagerImpl : SdkInitializationManager, SygicEngine.OnInitListener {
+class SdkInitializationManagerImpl(
+    private val app: Application
+) : SdkInitializationManager, SygicEngine.OnInitListener {
 
     @InitializationState
     override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
     private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
 
-    override fun initialize(application: Application, callback: SdkInitializationManager.Callback) {
+    override fun initialize(callback: SdkInitializationManager.Callback) {
         synchronized(this) {
             if (initializationState == InitializationState.INITIALIZED) {
                 callback.onSdkInitialized()
@@ -52,9 +54,9 @@ class SdkInitializationManagerImpl : SdkInitializationManager, SygicEngine.OnIni
         }
 
         initializationState = InitializationState.INITIALIZING
-        application.getApiKey()?.let { key ->
-            SygicEngine.Builder(application)
-                .setKeyAndSecret(application.packageName, key)
+        app.getApiKey()?.let { key ->
+            SygicEngine.Builder(app)
+                .setKeyAndSecret(app.packageName, key)
                 .setOnlineRoutingServiceKey("") //todo
                 .setInitListener(this)
                 .init()

@@ -24,7 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.common.initialization
 
-import android.app.Application
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -38,8 +37,11 @@ interface SdkInitializationManager {
         fun onSdkInitialized()
     }
 
-    fun initialize(application: Application, callback: Callback)
-    fun initialize(application: Application, callback: () -> Unit) { initialize(application, object : Callback { override fun onSdkInitialized() = callback() }) }
+    fun initialize(callback: Callback)
+    fun initialize(callback: () -> Unit) { initialize(object : Callback { override fun onSdkInitialized() = callback() }) }
 
     fun isInitialized() = initializationState == InitializationState.INITIALIZED
+
+    //todo: currently does not always work, need to be fixed in SDK
+    fun onReady(block: () -> Unit) = if (isInitialized()) block.invoke() else initialize { block.invoke() }
 }
