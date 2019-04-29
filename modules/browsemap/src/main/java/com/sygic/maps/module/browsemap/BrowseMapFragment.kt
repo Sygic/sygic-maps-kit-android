@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.maps.module.browsemap.di.BrowseMapComponent
@@ -46,6 +47,7 @@ import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
+import com.sygic.maps.uikit.views.common.extensions.getSygicFragmentContainerId
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchfab.SearchFab
 
@@ -176,7 +178,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
 
         fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent).apply {
             this.poiDetailDataObservable.observe(this@BrowseMapFragment, Observer<PoiDetailData> { showPoiDetail(it) })
-            this.replaceFragmentObservable.observe(this@BrowseMapFragment, Observer<ModuleConnectionProvider> { replaceFragment(it) })
+            this.addFragmentObservable.observe(this@BrowseMapFragment, Observer<Fragment> { addFragment(it) })
         }
         compassViewModel = viewModelOf(CompassViewModel::class.java)
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
@@ -196,8 +198,8 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         }
     }
 
-    private fun replaceFragment(provider: ModuleConnectionProvider) { //TODO
-        //if (id != View.NO_ID) view?.let { childFragmentManager.beginTransaction().replace(id, provider.fragment).commit() } //todo: add, replace, back press?
+    private fun addFragment(fragment: Fragment) {
+        fragmentManager?.beginTransaction()?.add(getSygicFragmentContainerId(), fragment)?.addToBackStack(null)?.commit()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

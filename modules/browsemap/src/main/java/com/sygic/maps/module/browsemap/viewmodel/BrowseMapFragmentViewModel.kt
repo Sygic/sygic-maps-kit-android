@@ -27,6 +27,7 @@ package com.sygic.maps.module.browsemap.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.annotation.RestrictTo
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.sygic.maps.module.browsemap.detail.PoiDataDetailsFactory
 import com.sygic.maps.module.browsemap.extensions.resolveAttributes
@@ -97,7 +98,7 @@ class BrowseMapFragmentViewModel internal constructor(
         }
 
     val poiDetailDataObservable: LiveData<PoiDetailData> = SingleLiveEvent()
-    val replaceFragmentObservable: LiveData<ModuleConnectionProvider> = SingleLiveEvent()
+    val addFragmentObservable: LiveData<Fragment> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
@@ -208,7 +209,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) = themeManager.setSkinAtLayer(layer, skin)
 
-    fun onSearchFabClick() = searchConnectionProvider?.let { replaceFragmentObservable.asSingleEvent().value = it }
+    fun onSearchFabClick() = searchConnectionProvider?.let { addFragmentObservable.asSingleEvent().value = it.fragment }
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.setSdkPositionUpdatingEnabled(false)
