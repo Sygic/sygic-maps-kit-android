@@ -24,7 +24,6 @@
 
 package com.sygic.maps.module.common
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent

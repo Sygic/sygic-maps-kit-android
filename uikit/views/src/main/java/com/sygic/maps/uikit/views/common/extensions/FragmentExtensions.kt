@@ -24,7 +24,46 @@
 
 package com.sygic.maps.uikit.views.common.extensions
 
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import com.sygic.maps.uikit.views.R
 
 fun Fragment.showKeyboard() = context?.showKeyboard()
 fun Fragment.hideKeyboard() = view?.let { context?.hideKeyboard(it) }
+
+@IdRes
+fun Fragment.getSygicFragmentContainerId(): Int {
+    view?.let { view ->
+        view.parent?.let { parent ->
+            if (parent is ViewGroup) {
+                @IdRes
+                val sygicFragmentContainerId = R.id.sygicFragmentContainer
+
+                if (parent.childCount == 1) {
+                    if (parent.id != View.NO_ID) {
+                        return parent.id
+                    }
+
+                    parent.id = sygicFragmentContainerId
+                    return parent.id
+                }
+
+                parent.findViewById<FrameLayout>(sygicFragmentContainerId)?.let {
+                    return it.id
+                } ?: run {
+                    val sygicFragmentContainer = FrameLayout(requireContext()).apply {
+                        id = sygicFragmentContainerId
+                        layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    }
+                    parent.addView(sygicFragmentContainer, parent.indexOfChild(view) + 1)
+                    return sygicFragmentContainer.id
+                }
+            }
+        }
+    }
+
+    return View.NO_ID
+}
