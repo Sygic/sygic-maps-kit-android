@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.viewmodels.common.initialization
 
 import android.app.Application
 import androidx.annotation.RestrictTo
+import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getApiKey
 import com.sygic.sdk.SygicEngine
 import java.util.*
@@ -57,7 +58,7 @@ class SdkInitializationManagerImpl(
         app.getApiKey()?.let { key ->
             SygicEngine.Builder(app)
                 .setKeyAndSecret(app.packageName, key)
-                .setOnlineRoutingServiceKey("") //todo
+                .setOnlineRoutingServiceKey(app.getString(R.string.online_routing_service_key))
                 .setInitListener(this)
                 .init()
         }

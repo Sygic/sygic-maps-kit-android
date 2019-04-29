@@ -24,4 +24,7 @@
 
 <resources>
     <string name="com_sygic_api_key">com-sygic-api-key</string>
+
+    <!--ToDo: Temporary (3 months validity only)-->
+    <string name="online_routing_service_key">lEyrJunuFAf3cu1c0uCwh16l4</string>
 </resources>
