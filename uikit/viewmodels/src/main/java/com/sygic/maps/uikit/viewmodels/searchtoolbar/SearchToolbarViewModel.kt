@@ -54,9 +54,9 @@ open class SearchToolbarViewModel internal constructor(
     val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
     val inputText: MutableLiveData<String> = MutableLiveData()
 
-    val onTextChangedListener = TextWatcherAdapter { input -> searchManager.searchText(input/*, GeoCoordinates(48.157648, 17.128288)*/) } // todo: single live event
-
     val keyboardVisibilityObservable: LiveData<Boolean> = SingleLiveEvent()
+
+    val onTextChangedListener = TextWatcherAdapter { input -> if (input.isNotEmpty()) searchManager.searchText(input/*, GeoCoordinates(48.157648, 17.128288)*/) } // todo: single live event
 
     // TODO: For testing purposes only
     val searchResultsListener = Search.SearchResultsListener { searchedString, state, results ->
