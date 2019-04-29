@@ -136,7 +136,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         executeInjector()
         super.onAttach(context)
 
-        sdkInitializationManager.initialize((context as Activity).application, this)
+        sdkInitializationManager.initialize(this)
         permissionManager.observe(this, Observer {
             permissionsRequesterCallback = it.callback
             requestPermissions(it.permissions, PERMISSIONS_REQUEST_CODE)

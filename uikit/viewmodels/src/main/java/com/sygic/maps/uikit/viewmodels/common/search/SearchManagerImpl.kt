@@ -24,7 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.common.search
 
-import android.app.Application
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.sdk.position.GeoCoordinates
@@ -34,28 +33,17 @@ import com.sygic.sdk.search.Search
 import com.sygic.sdk.search.SearchRequest
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SearchManagerImpl(private val app: Application,
-                        private val sdkInitializationManager: SdkInitializationManager) : SearchManager {
+class SearchManagerImpl(private val initManager: SdkInitializationManager) : SearchManager {
 
     private val sdkSearchEngine = Search()
 
     override var maxResultsCount: Int = 20
 
-    override fun searchText(text: String, position: GeoCoordinates?) {
-        if (sdkInitializationManager.isInitialized()) {
-            sdkSearchEngine.search(SearchRequest(text, position).apply { maxResults = maxResultsCount })
-        } else {
-            sdkInitializationManager.initialize(app) { searchText(text, position) }
-        }
-    }
+    override fun searchText(text: String, position: GeoCoordinates?) =
+        initManager.onReady { sdkSearchEngine.search(SearchRequest(text, position).apply { maxResults = maxResultsCount }) }
 
-    override fun loadMapSearchResultDetails(result: MapSearchResult, listener: Search.SearchDetailListener) {
-        if (sdkInitializationManager.isInitialized()) {
-            sdkSearchEngine.loadDetails(result, DetailRequest(), listener)
-        } else {
-            sdkInitializationManager.initialize(app) { loadMapSearchResultDetails(result, listener) }
-        }
-    }
+    override fun loadMapSearchResultDetails(result: MapSearchResult, listener: Search.SearchDetailListener) =
+        initManager.onReady { sdkSearchEngine.loadDetails(result, DetailRequest(), listener) }
 
     override fun addSearchResultsListener(listener: Search.SearchResultsListener) =
         sdkSearchEngine.addSearchResultsListener(listener)
