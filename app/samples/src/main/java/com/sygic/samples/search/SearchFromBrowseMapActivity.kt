@@ -30,6 +30,7 @@ import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.search.provider.SearchConnectionProvider
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.sdk.position.GeoCoordinates
 
 class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
@@ -40,9 +41,19 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_search_from_browse_map)
 
-        val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        browseMapFragment.setSearchConnectionProvider(SearchConnectionProvider { searchResultList ->
-            searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo
-        })
+        // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
+        // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
+        val browseMapFragment = BrowseMapFragment().apply {
+            cameraDataModel.zoomLevel = 11F
+            cameraDataModel.position = GeoCoordinates(48.145764, 17.126015)
+            setSearchConnectionProvider(SearchConnectionProvider { searchResultList ->
+                searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo: add it to the map?
+            })
+        }
+
+        supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(R.id.fragmentContainer, browseMapFragment)
+            ?.commit()
     }
 }

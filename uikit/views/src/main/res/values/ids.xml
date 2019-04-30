@@ -23,5 +23,5 @@
   -->
 
 <resources>
-    <item name="sygicFragmentContainer" type="id"/>
+    <item name="internalFragmentContainer" type="id"/>
 </resources>
