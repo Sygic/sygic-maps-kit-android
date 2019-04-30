@@ -47,7 +47,7 @@ import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
-import com.sygic.maps.uikit.views.common.extensions.getSygicFragmentContainerId
+import com.sygic.maps.uikit.views.common.extensions.openFragment
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchfab.SearchFab
 
@@ -178,7 +178,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
 
         fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent).apply {
             this.poiDetailDataObservable.observe(this@BrowseMapFragment, Observer<PoiDetailData> { showPoiDetail(it) })
-            this.addFragmentObservable.observe(this@BrowseMapFragment, Observer<Fragment> { addFragment(it) })
+            this.openFragmentObservable.observe(this@BrowseMapFragment, Observer<Fragment> { openFragment(it) })
         }
         compassViewModel = viewModelOf(CompassViewModel::class.java)
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
@@ -196,10 +196,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as PoiDetailBottomDialogFragment).setListener(fragmentViewModel.dialogFragmentListener)
         }
-    }
-
-    private fun addFragment(fragment: Fragment) {
-        fragmentManager?.beginTransaction()?.add(getSygicFragmentContainerId(), fragment)?.addToBackStack(null)?.commit()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

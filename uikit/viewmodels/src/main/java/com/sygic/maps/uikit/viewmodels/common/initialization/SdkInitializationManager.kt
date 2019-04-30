@@ -42,6 +42,5 @@ interface SdkInitializationManager {
 
     fun isInitialized() = initializationState == InitializationState.INITIALIZED
 
-    //todo: currently does not always work, need to be fixed in SDK
     fun onReady(block: () -> Unit) = if (isInitialized()) block.invoke() else initialize { block.invoke() }
 }

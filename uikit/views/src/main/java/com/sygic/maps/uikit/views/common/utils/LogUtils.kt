@@ -22,28 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.search.extensions
+package com.sygic.maps.uikit.views.common.utils
 
-import android.annotation.SuppressLint
-import android.app.Application
-import com.sygic.maps.module.search.R
-import com.sygic.maps.module.search.component.SearchFragmentInitComponent
-import com.sygic.sdk.position.GeoCoordinates
+import android.util.Log
 
-@SuppressLint("Recycle")
-fun SearchFragmentInitComponent.resolveAttributes(app: Application) {
-    app.obtainStyledAttributes(attributes, R.styleable.SearchFragment)?.let { typedArray ->
-        if (typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_search_input)) {
-            initialSearchInput = typedArray.getString(R.styleable.SearchFragment_sygic_initial_search_input)
-        }
-        if (typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_latitude)
-            && typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_longitude)) {
-            initialSearchPosition = GeoCoordinates(
-                typedArray.getFloat(R.styleable.SearchFragment_sygic_initial_latitude, Float.NaN).toDouble(),
-                typedArray.getFloat(R.styleable.SearchFragment_sygic_initial_longitude, Float.NaN).toDouble()
-            )
-        }
+private const val SYGIC_MAPS_KIT = "SygicMapsKit"
 
-        typedArray.recycle()
-    }
-}
+fun logInfo(message: String) = Log.i(SYGIC_MAPS_KIT, message)
+fun logWarning(message: String) = Log.w(SYGIC_MAPS_KIT, message)
+fun logError(message: String) = Log.e(SYGIC_MAPS_KIT, message)
