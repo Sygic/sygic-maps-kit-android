@@ -51,6 +51,8 @@ import com.sygic.maps.uikit.views.common.extensions.openFragment
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchfab.SearchFab
 
+const val BROWSE_MAP_FRAGMENT_TAG = "browse_map_fragment_tag"
+
 /**
  * A *[BrowseMapFragment]* is the most basic component from our portfolio. It can be easily used to display view objects
  * on the map and interact with them. It also offers traffic information or can be simply used to display the actual

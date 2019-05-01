@@ -29,6 +29,7 @@
         <attr name="sygic_initial_search_input" format="string" />
         <attr name="sygic_initial_latitude" format="float" />
         <attr name="sygic_initial_longitude" format="float" />
+        <attr name="sygic_max_results_count" format="integer" />
     </declare-styleable>
 
 </resources>

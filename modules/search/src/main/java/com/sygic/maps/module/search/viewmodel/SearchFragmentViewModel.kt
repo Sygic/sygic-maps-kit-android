@@ -28,27 +28,12 @@ import android.app.Application
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.module.search.component.SearchFragmentInitComponent
-import com.sygic.maps.module.search.extensions.resolveAttributes
-import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.sdk.position.GeoCoordinates
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SearchFragmentViewModel internal constructor(
-    app: Application,
-    @Assisted initComponent: SearchFragmentInitComponent
+    app: Application
 ) : AndroidViewModel(app), DefaultLifecycleObserver {
 
-    val initialSearchInput: MutableLiveData<String> = MutableLiveData()
-    val initialSearchPosition: MutableLiveData<GeoCoordinates> = MutableLiveData()
-
-    init {
-        initComponent.resolveAttributes(app)
-        initialSearchInput.value = initComponent.initialSearchInput
-        initialSearchPosition.value = initComponent.initialSearchPosition
-        initComponent.recycle()
-    }
 }

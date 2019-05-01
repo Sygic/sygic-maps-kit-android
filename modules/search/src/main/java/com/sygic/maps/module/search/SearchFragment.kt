@@ -52,6 +52,8 @@ import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.SearchResult
 import javax.inject.Inject
 
+const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
+
 /**
  * A *[SearchFragment]* is the core component for any search operation. It can be easily used to display search input
  * and search result list on the same screen. It can be modified with initial search input or coordinates. It comes with
@@ -60,8 +62,8 @@ import javax.inject.Inject
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
-    private val initComponent = SearchFragmentInitComponent()
     private val modulesComponent = ModulesComponentDelegate()
+    private val searchToolbarInitComponent = SearchToolbarInitComponent()
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -74,64 +76,61 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     private var injected = false
     private fun inject() {
         if (!injected) {
-            DaggerSearchComponent.builder()
-                .plus(modulesComponent.getInstance(this))
-                .build()
-                .inject(this)
+            DaggerSearchComponent.builder().plus(modulesComponent.getInstance(this)).build().inject(this)
             injected = true
         }
     }
 
     /**
-     * @see SearchFragment
-     */
-    companion object {
-
-        const val TAG = "search_fragment_tag"
-
-        /**
-         * Allows you to simply create new instance of [SearchFragment].
-         */
-        @JvmStatic
-        fun newInstance(): SearchFragment = SearchFragment() //todo: initialSearchInput and initialSearchPosition?
-    }
-
-    /**
-     * If *[initialSearchInput]* is defined, then it will be processed immediately after initialization.
+     * If *[searchInput]* is defined, then it will be used as input text.
      *
-     * @param [String] text input to be processed, null otherwise.
+     * @param [String] text input to be processed.
      *
-     * @return [String] the initial text input value.
+     * @return [String] the text input value.
      */
-    var initialSearchInput: String?
-        get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.initialSearchInput.value
-        } else initComponent.initialSearchInput
+    var searchInput: String
+        get() = if (::searchToolbarViewModel.isInitialized) {
+            searchToolbarViewModel.inputText.value!!
+        } else searchToolbarInitComponent.initialSearchInput
         set(value) {
-            if (::fragmentViewModel.isInitialized) {
-                fragmentViewModel.initialSearchInput.value = value
-            } else initComponent.initialSearchInput = value
+            if (::searchToolbarViewModel.isInitialized) {
+                searchToolbarViewModel.inputText.value = value
+            } else searchToolbarInitComponent.initialSearchInput = value
         }
 
     /**
-     * If *[initialSearchPosition]* is defined, then it will be used for search result accuracy.
+     * If *[searchLocation]* is defined, then it will be used for search result accuracy.
      *
      * @param [GeoCoordinates] search position to be used, null otherwise.
      *
-     * @return [GeoCoordinates] the initial search position value.
+     * @return [GeoCoordinates] the search position value.
      */
-    var initialSearchPosition: GeoCoordinates?
-        get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.initialSearchPosition.value
-        } else initComponent.initialSearchPosition
+    var searchLocation: GeoCoordinates?
+        get() = if (::searchToolbarViewModel.isInitialized) {
+            searchToolbarViewModel.searchLocation
+        } else searchToolbarInitComponent.initialSearchLocation
         set(value) {
-            if (::fragmentViewModel.isInitialized) {
-                fragmentViewModel.initialSearchPosition.value = value
-            } else initComponent.initialSearchPosition = value
+            if (::searchToolbarViewModel.isInitialized) {
+                searchToolbarViewModel.searchLocation = value
+            } else searchToolbarInitComponent.initialSearchLocation = value
         }
 
-    //todo
-    // var maxResultsCount?
+    /**
+     * A *[maxResultsCount]* define the maximum number of search results.
+     *
+     * @param [Int] the maximum number of search results.
+     *
+     * @return [Int] the maximum number of search results value.
+     */
+    var maxResultsCount: Int
+        get() = if (::searchToolbarViewModel.isInitialized) {
+            searchToolbarViewModel.maxResultsCount
+        } else searchToolbarInitComponent.maxResultsCount
+        set(value) {
+            if (::searchToolbarViewModel.isInitialized) {
+                searchToolbarViewModel.maxResultsCount = value
+            } else searchToolbarInitComponent.maxResultsCount = value
+        }
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         inject()
@@ -175,8 +174,8 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      *
      * @param callback [SearchResultCallback] callback to invoke when a search process is done.
      */
-    fun setResultCallback(callback: SearchResultCallback?) { //ToDO
-
+    fun setResultCallback(callback: SearchResultCallback?) {
+        //ToDO
     }
 
     /**
