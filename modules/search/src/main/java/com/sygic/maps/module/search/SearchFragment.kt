@@ -50,7 +50,7 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 /**
  * A *[SearchFragment]* is the core component for any search operation. It can be easily used to display search input
  * and search result list on the same screen. It can be modified with initial search input or coordinates. It comes with
- * several pre build-in elements such as [SearchToolbar] or [SearchResultList]. TODO imports
+ * several pre build-in elements such as [SearchToolbar] or [SearchResultList]. TODO imports (MS-5212, MS-5213)
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback {
@@ -136,7 +136,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      * @param callback [SearchResultCallback] callback to invoke when a search process is done.
      */
     fun setResultCallback(callback: SearchResultCallback?) {
-        //ToDO
+        //ToDO: MS-5213
     }
 
     /**
