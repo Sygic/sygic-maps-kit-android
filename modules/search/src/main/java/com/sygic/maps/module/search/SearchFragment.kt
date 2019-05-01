@@ -36,9 +36,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
-import com.sygic.maps.module.search.component.SearchFragmentInitComponent
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
+import com.sygic.maps.module.search.extensions.resolveAttributes
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
@@ -135,7 +136,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         inject()
         super.onInflate(context, attrs, savedInstanceState)
-        initComponent.attributes = attrs
+        resolveAttributes(attrs, searchToolbarInitComponent)
     }
 
     override fun onAttach(context: Context?) {
@@ -147,8 +148,8 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = ViewModelProviders.of(this, viewModelFactory.with(initComponent))[SearchFragmentViewModel::class.java]
-        searchToolbarViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchToolbarViewModel::class.java].apply {
+        fragmentViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchFragmentViewModel::class.java]
+        searchToolbarViewModel = ViewModelProviders.of(this, viewModelFactory.with(searchToolbarInitComponent))[SearchToolbarViewModel::class.java].apply {
             this.keyboardVisibilityObservable.observe(this@SearchFragment, Observer<Boolean> { if (it) showKeyboard() else hideKeyboard() })
         }
 

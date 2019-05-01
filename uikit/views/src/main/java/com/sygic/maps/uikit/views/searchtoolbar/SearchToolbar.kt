@@ -28,47 +28,111 @@ import android.content.Context
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnClickListener
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.databinding.LayoutSearchToolbarInternalBinding
 
 /**
- * A [SearchToolbar] TODO
+ * A [SearchToolbar] can be used as input component to the search screen. It contains [EditText] input field, state
+ * switcher (MAGNIFIER or PROGRESSBAR) and clear [Button].
+ *
+ * TODO MS-5681
+ *
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchToolbar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.searchToolbarStyle,
-    defStyleRes: Int = R.style.SygicSearchToolbarStyle //todo: defStyleRes
+    defStyleRes: Int = R.style.SygicSearchToolbarStyle // TODO: MS-5681
 ) : Toolbar(context, attrs, defStyleAttr) {
 
     private val binding: LayoutSearchToolbarInternalBinding =
         LayoutSearchToolbarInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     fun setText(text: String) {
-        binding.inputEditText.setText(text)
-        binding.inputEditText.setSelection(binding.inputEditText.text.length)
+        binding.inputEditText.text?.let {
+            if (text != it.toString()) {
+                binding.inputEditText.setText(text)
+                binding.inputEditText.setSelection(text.length)
+            }
+        }
     }
 
+    /**
+     * Adds a TextWatcher to the list of those whose methods are called
+     * whenever the InputEditText's text changes.
+     *
+     * @param textWatcher watcher to be used.
+     */
     fun addTextChangedListener(textWatcher: TextWatcher) {
         binding.inputEditText.addTextChangedListener(textWatcher)
     }
 
-    fun setIconStateSwitcherIndex(@SearchToolbarIconStateSwitcherIndex index: Int) {
-        binding.searchToolbarIconStateSwitcher.displayedChild = index
-    }
-
+    /**
+     * Set a special listener to be called when an action is performed
+     * on the InputEditText view. This will be called when the enter key is pressed,
+     * or when an action supplied to the IME is selected by the user. Setting
+     * this means that the normal hard key event will not insert a newline
+     * into the text view, even if it is multi-line; holding down the ALT
+     * modifier will, however, allow the user to insert a newline character.
+     */
     fun setOnEditorActionListener(listener: TextView.OnEditorActionListener) {
         binding.inputEditText.setOnEditorActionListener(listener)
     }
 
-    fun setOnClearButtonClickListener(listener: OnClickListener) {
-        binding.clearButton.setOnClickListener(listener)
-    }
-
+    /**
+     * Called when this view wants to give up focus. If focus is cleared
+     * [View.OnFocusChangeListener] is called.
+     *
+     * Note: When not in touch-mode, the framework will try to give focus
+     * to the first focusable View from the top after focus is cleared. Hence, if this
+     * View is the first from the top that can take focus, then all callbacks
+     * related to clearing focus will be invoked after which the framework will
+     * give focus to this view.
+     */
     fun clearInputEditTextFocus() {
         binding.inputEditText.clearFocus()
+    }
+
+    /**
+     * Set the visibility state of the IconStateSwitcher view.
+     *
+     * @param visibility One of VISIBLE, INVISIBLE, or GONE.
+     */
+    fun setIconStateSwitcherVisibility(visibility: Int) {
+        binding.searchToolbarIconStateSwitcher.visibility = visibility
+    }
+
+    /**
+     * Set an active view of the IconStateSwitcher.
+     *
+     * @param index [SearchToolbarIconStateSwitcherIndex] Magnifier or Progressbar.
+     */
+    fun setIconStateSwitcherIndex(@SearchToolbarIconStateSwitcherIndex index: Int) {
+        binding.searchToolbarIconStateSwitcher.displayedChild = index
+    }
+
+    /**
+     * Set the visibility state of the ClearButton view.
+     *
+     * @param visibility One of VISIBLE, INVISIBLE, or GONE.
+     */
+    fun setClearButtonVisibility(visibility: Int) {
+        binding.clearButton.visibility = visibility
+    }
+
+    /**
+     * Register a callback to be invoked when ClearButton view is clicked.
+     *
+     * @param listener [OnClickListener] callback to invoke on ClearButton view click.
+     */
+    fun setOnClearButtonClickListener(listener: OnClickListener) {
+        binding.clearButton.setOnClickListener(listener)
     }
 }
