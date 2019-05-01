@@ -22,23 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.viewmodels.common.extensions
 
-import android.app.Application;
-import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import android.app.Application
+import android.content.pm.PackageManager
+import androidx.annotation.RestrictTo
+import com.sygic.maps.uikit.viewmodels.R
 
-import javax.inject.Singleton;
-
-@Module
-public class SdkInitializationManagerModule {
-
-    @Singleton
-    @Provides
-    SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
-        return new SdkInitializationManagerImpl(application);
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun Application.getApiKey(): String? {
+    return try {
+        val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        applicationInfo.metaData.getString(getString(R.string.com_sygic_api_key))
+    } catch (e: PackageManager.NameNotFoundException) {
+        null
+    } catch (e: NullPointerException) {
+        null
     }
 }

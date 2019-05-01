@@ -34,6 +34,10 @@
             name="searchFragmentViewModel"
             type="com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel" />
 
+        <variable
+            name="searchToolbarViewModel"
+            type="com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,9 +53,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:addTextChangedListener="@{searchToolbarViewModel.onTextChangedListener}"
+            app:iconStateSwitcherIndex="@{safeUnbox(searchToolbarViewModel.iconStateSwitcherIndex)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:onClearButtonClickListener="@{() -> searchToolbarViewModel.onClearButtonClick()}"
+            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(actionId)}"
+            app:text="@{searchToolbarViewModel.inputText}" />
 
         <com.sygic.maps.uikit.views.searchresultlist.SearchResultList
             android:id="@+id/searchResultList"

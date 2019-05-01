@@ -22,22 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.search.component
+package com.sygic.maps.uikit.views.searchtoolbar;
 
-import android.util.AttributeSet
-import androidx.annotation.RestrictTo
-import com.sygic.sdk.position.GeoCoordinates
+import androidx.annotation.IntDef;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SearchFragmentInitComponent {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    var attributes: AttributeSet? = null
-    var initialSearchInput: String? = null
-    var initialSearchPosition: GeoCoordinates? = null
-
-    fun recycle() {
-        attributes = null
-        initialSearchInput = null
-        initialSearchPosition = null
-    }
+@IntDef({SearchToolbarIconStateSwitcherIndex.MAGNIFIER, SearchToolbarIconStateSwitcherIndex.PROGRESSBAR})
+@Retention(RetentionPolicy.SOURCE)
+public @interface SearchToolbarIconStateSwitcherIndex {
+    int MAGNIFIER = 0;
+    int PROGRESSBAR = 1;
 }

@@ -22,23 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.views.common.utils
 
-import android.app.Application;
-import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import android.util.Log
 
-import javax.inject.Singleton;
+private const val SYGIC_MAPS_KIT = "SygicMapsKit"
 
-@Module
-public class SdkInitializationManagerModule {
-
-    @Singleton
-    @Provides
-    SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
-        return new SdkInitializationManagerImpl(application);
-    }
-}
+fun logInfo(message: String) = Log.i(SYGIC_MAPS_KIT, message)
+fun logWarning(message: String) = Log.w(SYGIC_MAPS_KIT, message)
+fun logError(message: String) = Log.e(SYGIC_MAPS_KIT, message)

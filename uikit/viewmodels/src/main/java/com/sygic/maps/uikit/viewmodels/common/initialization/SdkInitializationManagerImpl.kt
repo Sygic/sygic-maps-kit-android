@@ -22,42 +22,50 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.initialization.manager
+package com.sygic.maps.uikit.viewmodels.common.initialization
 
 import android.app.Application
 import androidx.annotation.RestrictTo
-import com.sygic.maps.module.common.utils.getApiKey
+import com.sygic.maps.uikit.viewmodels.R
+import com.sygic.maps.uikit.viewmodels.common.extensions.getApiKey
 import com.sygic.sdk.SygicEngine
 import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SdkInitializationManagerImpl : SdkInitializationManager,
-    SygicEngine.OnInitListener {
+class SdkInitializationManagerImpl(
+    private val app: Application
+) : SdkInitializationManager, SygicEngine.OnInitListener {
 
-    private var initialized = false
+    @InitializationState
+    override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
     private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
 
-    override fun initialize(application: Application, callback: SdkInitializationManager.Callback) {
+    override fun initialize(callback: SdkInitializationManager.Callback) {
         synchronized(this) {
-            if (initialized) {
+            if (initializationState == InitializationState.INITIALIZED) {
                 callback.onSdkInitialized()
                 return
             }
 
             callbacks.add(callback)
+
+            if (initializationState == InitializationState.INITIALIZING) {
+                return
+            }
         }
 
-        application.getApiKey()?.let { key ->
-            SygicEngine.Builder(application)
-                .setKeyAndSecret(application.packageName, key)
-                .setInitListener(this).init()
+        initializationState = InitializationState.INITIALIZING
+        app.getApiKey()?.let { key ->
+            SygicEngine.Builder(app)
+                .setKeyAndSecret(app.packageName, key)
+                .setOnlineRoutingServiceKey(app.getString(R.string.online_routing_service_key))
+                .setInitListener(this)
+                .init()
         }
     }
 
     override fun onSdkInitialized() {
-        synchronized(this) {
-            initialized = true
-        }
+        synchronized(this) { initializationState = InitializationState.INITIALIZED }
         callbacks.forEach { it.onSdkInitialized() }
         callbacks.clear()
     }

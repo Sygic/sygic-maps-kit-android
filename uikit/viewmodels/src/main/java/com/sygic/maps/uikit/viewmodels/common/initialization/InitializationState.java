@@ -22,17 +22,19 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.initialization.manager
+package com.sygic.maps.uikit.viewmodels.common.initialization;
 
-import android.app.Application
-import androidx.annotation.RestrictTo
+import androidx.annotation.IntDef;
+import androidx.annotation.RestrictTo;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@IntDef({InitializationState.INITIALIZATION_NOT_STARTED, InitializationState.INITIALIZING, InitializationState.INITIALIZED})
+@Retention(RetentionPolicy.SOURCE)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface SdkInitializationManager {
-
-    interface Callback {
-        fun onSdkInitialized()
-    }
-
-    fun initialize(application: Application, callback: Callback)
+public @interface InitializationState {
+    int INITIALIZATION_NOT_STARTED = 0;
+    int INITIALIZING = 1;
+    int INITIALIZED = 2;
 }

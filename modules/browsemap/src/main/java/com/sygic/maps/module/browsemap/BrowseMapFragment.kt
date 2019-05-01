@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.maps.module.browsemap.di.BrowseMapComponent
@@ -46,8 +47,11 @@ import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
+import com.sygic.maps.uikit.views.common.extensions.openFragment
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchfab.SearchFab
+
+const val BROWSE_MAP_FRAGMENT_TAG = "browse_map_fragment_tag"
 
 /**
  * A *[BrowseMapFragment]* is the most basic component from our portfolio. It can be easily used to display view objects
@@ -174,13 +178,13 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent)
+        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent).apply {
+            this.poiDetailDataObservable.observe(this@BrowseMapFragment, Observer<PoiDetailData> { showPoiDetail(it) })
+            this.openFragmentObservable.observe(this@BrowseMapFragment, Observer<Fragment> { openFragment(it) })
+        }
         compassViewModel = viewModelOf(CompassViewModel::class.java)
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
         zoomControlsViewModel = viewModelOf(ZoomControlsViewModel::class.java)
-
-        fragmentViewModel.poiDetailDataObservable.observe(this, Observer<PoiDetailData> { showPoiDetail(it) })
-        fragmentViewModel.replaceFragmentObservable.observe(this, Observer<ModuleConnectionProvider> { replaceFragment(it) })
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(compassViewModel)
@@ -194,10 +198,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as PoiDetailBottomDialogFragment).setListener(fragmentViewModel.dialogFragmentListener)
         }
-    }
-
-    private fun replaceFragment(provider: ModuleConnectionProvider) { //TODO
-        //if (id != View.NO_ID) view?.let { childFragmentManager.beginTransaction().replace(id, provider.fragment).commit() } //todo: add, replace, back press?
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

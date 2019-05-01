@@ -61,7 +61,7 @@
         <item name="android:backgroundTint">?android:attr/colorBackground</item>
     </style>
 
-    <!--TODO-->
+    <!--TODO: MS-5681 -->
     <style name="SygicSearchToolbarStyle">
     </style>
 

@@ -22,23 +22,13 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.viewmodels.common.utils
 
-import android.app.Application;
-import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import android.text.Editable
+import android.text.TextWatcher
 
-import javax.inject.Singleton;
-
-@Module
-public class SdkInitializationManagerModule {
-
-    @Singleton
-    @Provides
-    SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
-        return new SdkInitializationManagerImpl(application);
-    }
+class TextWatcherAdapter(private val callback: (inputText: String) -> Unit) : TextWatcher {
+    override fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) { callback.invoke(text.toString()) }
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+    override fun afterTextChanged(s: Editable) {}
 }

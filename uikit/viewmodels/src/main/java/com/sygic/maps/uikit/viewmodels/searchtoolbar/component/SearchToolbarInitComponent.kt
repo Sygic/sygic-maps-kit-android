@@ -22,17 +22,23 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.positionlockfab;
+package com.sygic.maps.uikit.viewmodels.searchtoolbar.component
 
-import androidx.annotation.IntDef;
+import androidx.annotation.RestrictTo
+import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.sdk.position.GeoCoordinates
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class SearchToolbarInitComponent {
 
-@IntDef({LockState.UNLOCKED, LockState.LOCKED, LockState.LOCKED_AUTOROTATE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface LockState {
-    int UNLOCKED = 0;
-    int LOCKED = 1;
-    int LOCKED_AUTOROTATE = 2;
+    var initialSearchInput: String = EMPTY_STRING
+    var initialSearchLocation: GeoCoordinates? = null
+    var maxResultsCount: Int = MAX_RESULTS_COUNT_DEFAULT_VALUE
+
+    fun recycle() {
+        initialSearchInput = EMPTY_STRING
+        initialSearchLocation = null
+        maxResultsCount = MAX_RESULTS_COUNT_DEFAULT_VALUE
+    }
 }

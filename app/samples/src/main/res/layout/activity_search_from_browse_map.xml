@@ -24,17 +24,8 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <fragment
-        android:id="@+id/browseMapFragment"
-        class="com.sygic.maps.module.browsemap.BrowseMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:sygic_map_latitude="48.145764"
-        app:sygic_map_longitude="17.126015"
-        app:sygic_map_zoom="11" />
 
 </FrameLayout>

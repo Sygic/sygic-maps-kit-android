@@ -23,5 +23,5 @@
   -->
 
 <resources>
-    <string name="com_sygic_api_key">com-sygic-api-key</string>
+    <item name="sygicFragmentContainer" type="id"/>
 </resources>

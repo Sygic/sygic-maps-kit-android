@@ -25,24 +25,55 @@
 package com.sygic.samples.search
 
 import android.os.Bundle
-import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
-import com.sygic.maps.module.search.provider.SearchConnectionProvider
+import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
+import com.sygic.samples.search.viewmodels.SearchFromBrowseMapActivityViewModel
 
 class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Search#search---from-browse-map"
+
+    private lateinit var viewModel: SearchFromBrowseMapActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_search_from_browse_map)
 
-        val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        browseMapFragment.setSearchConnectionProvider(SearchConnectionProvider { searchResultList ->
-            searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo
-        })
+        viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapActivityViewModel::class.java).apply {
+            this.placeBrowseMapFragmentObservable.observe(
+                this@SearchFromBrowseMapActivity,
+                Observer<BrowseMapFragmentInitComponent> { placeBrowseMapFragment(it) })
+            this.moduleConnectionObservable.observe(
+                this@SearchFromBrowseMapActivity,
+                Observer<ModuleConnectionProvider> { setFragmentModuleConnection(it) })
+        }
+        lifecycle.addObserver(viewModel)
+    }
+
+    // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
+    // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
+    private fun placeBrowseMapFragment(component: BrowseMapFragmentInitComponent) = supportFragmentManager
+        ?.beginTransaction()
+        ?.replace(R.id.fragmentContainer, BrowseMapFragment().apply {
+            cameraDataModel.zoomLevel = component.zoomLevel
+            cameraDataModel.position = component.position
+        }, BROWSE_MAP_FRAGMENT_TAG)
+        ?.commitNow()
+
+    private fun setFragmentModuleConnection(moduleConnectionProvider: ModuleConnectionProvider) =
+        (supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment)
+            .setSearchConnectionProvider(moduleConnectionProvider)
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        lifecycle.removeObserver(viewModel)
     }
 }

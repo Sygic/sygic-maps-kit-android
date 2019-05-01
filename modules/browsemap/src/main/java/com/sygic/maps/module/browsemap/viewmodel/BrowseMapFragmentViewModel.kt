@@ -25,8 +25,8 @@
 package com.sygic.maps.module.browsemap.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.annotation.RestrictTo
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.sygic.maps.module.browsemap.detail.PoiDataDetailsFactory
 import com.sygic.maps.module.browsemap.extensions.resolveAttributes
@@ -53,6 +53,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 
 @AutoFactory
@@ -66,7 +67,7 @@ class BrowseMapFragmentViewModel internal constructor(
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
     private val themeManager: ThemeManager
-) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver, ThemeSupportedViewModel {
+) : AndroidViewModel(app), ThemeSupportedViewModel, DefaultLifecycleObserver, MapInteractionManager.Listener {
 
     @MapSelectionMode
     var mapSelectionMode: Int
@@ -97,7 +98,7 @@ class BrowseMapFragmentViewModel internal constructor(
         }
 
     val poiDetailDataObservable: LiveData<PoiDetailData> = SingleLiveEvent()
-    val replaceFragmentObservable: LiveData<ModuleConnectionProvider> = SingleLiveEvent()
+    val openFragmentObservable: LiveData<Fragment> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
@@ -150,7 +151,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
         when (mapSelectionMode) {
             MapSelectionMode.NONE -> {
-                logWarning("NONE")
+                onMapClickListener?.let { logWarning("The OnMapClickListener is set, but map selection mode is NONE.") }
             }
             MapSelectionMode.MARKERS_ONLY -> {
                 if (firstViewObject !is MapMarker) {
@@ -168,10 +169,6 @@ class BrowseMapFragmentViewModel internal constructor(
                 getPoiDataAndNotifyObservers(firstViewObject)
             }
         }
-    }
-
-    private fun logWarning(mode: String) {
-        onMapClickListener?.let { Log.w("OnMapClickListener", "The listener is set, but map selection mode is $mode.") }
     }
 
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject) {
@@ -208,7 +205,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) = themeManager.setSkinAtLayer(layer, skin)
 
-    fun onSearchFabClick() = searchConnectionProvider?.let { replaceFragmentObservable.asSingleEvent().value = it }
+    fun onSearchFabClick() = searchConnectionProvider?.let { openFragmentObservable.asSingleEvent().value = it.fragment }
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.setSdkPositionUpdatingEnabled(false)

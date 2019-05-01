@@ -22,21 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.utils
+package com.sygic.maps.uikit.viewmodels.common.initialization
 
-import android.app.Application
-import android.content.pm.PackageManager
 import androidx.annotation.RestrictTo
-import com.sygic.maps.module.common.R
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun Application.getApiKey(): String? {
-    return try {
-        val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
-        applicationInfo.metaData.getString(getString(R.string.com_sygic_api_key))
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
-    } catch (e: NullPointerException) {
-        null
+interface SdkInitializationManager {
+
+    @InitializationState
+    var initializationState: Int
+
+    @FunctionalInterface
+    interface Callback {
+        fun onSdkInitialized()
     }
+
+    fun initialize(callback: Callback)
+    fun initialize(callback: () -> Unit) { initialize(object : Callback { override fun onSdkInitialized() = callback() }) }
+
+    fun isInitialized() = initializationState == InitializationState.INITIALIZED
+
+    fun onReady(block: () -> Unit) = if (isInitialized()) block.invoke() else initialize { block.invoke() }
 }

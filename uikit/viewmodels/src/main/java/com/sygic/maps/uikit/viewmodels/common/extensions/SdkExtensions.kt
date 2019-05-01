@@ -24,9 +24,9 @@
 
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import java.util.*
 
 fun LocationInfo.getFirst(@LocationInfo.LocationType locationType: Int): String? {

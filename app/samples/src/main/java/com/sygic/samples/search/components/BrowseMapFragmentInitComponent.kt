@@ -22,23 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.samples.search.components
 
-import android.app.Application;
-import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import com.sygic.sdk.position.GeoCoordinates
 
-import javax.inject.Singleton;
-
-@Module
-public class SdkInitializationManagerModule {
-
-    @Singleton
-    @Provides
-    SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
-        return new SdkInitializationManagerImpl(application);
-    }
-}
+data class BrowseMapFragmentInitComponent(val zoomLevel: Float, val position: GeoCoordinates)

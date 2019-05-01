@@ -24,21 +24,21 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import android.app.Application;
 import androidx.annotation.NonNull;
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerImpl;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
 @Module
-public class SdkInitializationManagerModule {
+public class SearchModule {
 
     @Singleton
     @Provides
-    SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
-        return new SdkInitializationManagerImpl(application);
+    SearchManager provideSearchManager(@NonNull final SdkInitializationManager sdkInitializationManager) {
+        return new SearchManagerImpl(sdkInitializationManager);
     }
 }

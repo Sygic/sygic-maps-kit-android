@@ -24,7 +24,6 @@
 
 package com.sygic.maps.module.common
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -49,7 +48,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.maps.module.common.component.MapFragmentInitComponent
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.common.di.util.ModuleBuilder
-import com.sygic.maps.module.common.initialization.manager.SdkInitializationManager
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
@@ -136,7 +135,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         executeInjector()
         super.onAttach(context)
 
-        sdkInitializationManager.initialize((context as Activity).application, this)
+        sdkInitializationManager.initialize(this)
         permissionManager.observe(this, Observer {
             permissionsRequesterCallback = it.callback
             requestPermissions(it.permissions, PERMISSIONS_REQUEST_CODE)

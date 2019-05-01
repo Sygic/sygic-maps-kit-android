@@ -22,23 +22,19 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.viewmodels.common.search
 
-import android.app.Application;
-import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import androidx.annotation.RestrictTo
+import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.search.MapSearchResult
+import com.sygic.sdk.search.Search
 
-import javax.inject.Singleton;
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface SearchManager {
+    var maxResultsCount: Int
 
-@Module
-public class SdkInitializationManagerModule {
-
-    @Singleton
-    @Provides
-    SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
-        return new SdkInitializationManagerImpl(application);
-    }
+    fun searchText(text: String, position: GeoCoordinates? = null)
+    fun loadMapSearchResultDetails(result: MapSearchResult, listener: Search.SearchDetailListener)
+    fun addSearchResultsListener(listener: Search.SearchResultsListener)
+    fun removeSearchResultsListener(listener: Search.SearchResultsListener)
 }

@@ -29,6 +29,8 @@ import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel;
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModelFactory;
 import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel;
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModelFactory;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
@@ -44,4 +46,9 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SearchFragmentViewModel.class)
     abstract ViewModelCreatorFactory putSearchFragmentViewModelFactory(SearchFragmentViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchToolbarViewModel.class)
+    abstract ViewModelCreatorFactory putSearchToolbarViewModelFactory(SearchToolbarViewModelFactory factory);
 }
