@@ -35,7 +35,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
-import com.sygic.maps.module.search.component.SearchFragmentInitComponent
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
@@ -46,6 +45,8 @@ import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.SearchResult
 import javax.inject.Inject
 
+const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
+
 /**
  * A *[SearchFragment]* is the core component for any search operation. It can be easily used to display search input
  * and search result list on the same screen. It can be modified with initial search input or coordinates. It comes with
@@ -54,7 +55,6 @@ import javax.inject.Inject
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
-    private val initComponent = SearchFragmentInitComponent()
     private val modulesComponent = ModulesComponentDelegate()
 
     @Inject
@@ -67,69 +67,41 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     private var injected = false
     private fun inject() {
         if (!injected) {
-            DaggerSearchComponent.builder()
-                .plus(modulesComponent.getInstance(this))
-                .build()
-                .inject(this)
+            DaggerSearchComponent.builder().plus(modulesComponent.getInstance(this)).build().inject(this)
             injected = true
         }
     }
 
     /**
-     * @see SearchFragment
+     * If *[searchInput]* is defined, then it will be used as input text.
+     *
+     * @param [String] text input to be processed.
+     *
+     * @return [String] the text input value.
      */
-    companion object {
-
-        const val TAG = "search_fragment_tag"
-
-        /**
-         * Allows you to simply create new instance of [SearchFragment].
-         */
-        @JvmStatic
-        fun newInstance(): SearchFragment = SearchFragment() //todo: initialSearchInput and initialSearchPosition?
-    }
+    var searchInput: String = "" // TODO: MS-5212
 
     /**
-     * If *[initialSearchInput]* is defined, then it will be processed immediately after initialization.
-     *
-     * @param [String] text input to be processed, null otherwise.
-     *
-     * @return [String] the initial text input value.
-     */
-    var initialSearchInput: String?
-        get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.initialSearchInput.value
-        } else initComponent.initialSearchInput
-        set(value) {
-            if (::fragmentViewModel.isInitialized) {
-                fragmentViewModel.initialSearchInput.value = value
-            } else initComponent.initialSearchInput = value
-        }
-
-    /**
-     * If *[initialSearchPosition]* is defined, then it will be used for search result accuracy.
+     * If *[searchLocation]* is defined, then it will be used for search result accuracy.
      *
      * @param [GeoCoordinates] search position to be used, null otherwise.
      *
-     * @return [GeoCoordinates] the initial search position value.
+     * @return [GeoCoordinates] the search position value.
      */
-    var initialSearchPosition: GeoCoordinates?
-        get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.initialSearchPosition.value
-        } else initComponent.initialSearchPosition
-        set(value) {
-            if (::fragmentViewModel.isInitialized) {
-                fragmentViewModel.initialSearchPosition.value = value
-            } else initComponent.initialSearchPosition = value
-        }
+    var searchLocation: GeoCoordinates? = null // TODO: MS-5212
 
-    //todo
-    // var maxResultsCount?
+    /**
+     * A *[maxResultsCount]* define the maximum number of search results.
+     *
+     * @param [Int] the maximum number of search results.
+     *
+     * @return [Int] the maximum number of search results value.
+     */
+    var maxResultsCount: Int = 0 // TODO: MS-5212
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         inject()
         super.onInflate(context, attrs, savedInstanceState)
-        initComponent.attributes = attrs
     }
 
     override fun onAttach(context: Context?) {
@@ -141,8 +113,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel =
-            ViewModelProviders.of(this, viewModelFactory.with(initComponent))[SearchFragmentViewModel::class.java]
+        fragmentViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchFragmentViewModel::class.java]
 
         lifecycle.addObserver(fragmentViewModel)
     }
@@ -164,8 +135,8 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      *
      * @param callback [SearchResultCallback] callback to invoke when a search process is done.
      */
-    fun setResultCallback(callback: SearchResultCallback?) { //ToDO
-
+    fun setResultCallback(callback: SearchResultCallback?) {
+        //ToDO
     }
 
     /**

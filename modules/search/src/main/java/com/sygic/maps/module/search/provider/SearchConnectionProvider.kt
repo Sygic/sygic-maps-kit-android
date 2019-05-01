@@ -36,7 +36,7 @@ class SearchConnectionProvider(private val callback: (searchResultList: List<Sea
 
     override val fragment: Fragment
         get() {
-            val searchFragment = SearchFragment.newInstance()
+            val searchFragment = SearchFragment()
             searchFragment.setResultCallback(callback)
             return searchFragment
         }

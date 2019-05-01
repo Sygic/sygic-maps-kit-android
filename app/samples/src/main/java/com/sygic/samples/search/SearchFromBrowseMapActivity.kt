@@ -26,6 +26,7 @@ package com.sygic.samples.search
 
 import android.os.Bundle
 import android.util.Log
+import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.search.provider.SearchConnectionProvider
 import com.sygic.samples.R
@@ -41,19 +42,22 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_search_from_browse_map)
 
-        // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
-        // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
-        val browseMapFragment = BrowseMapFragment().apply {
-            cameraDataModel.zoomLevel = 11F
-            cameraDataModel.position = GeoCoordinates(48.145764, 17.126015)
-            setSearchConnectionProvider(SearchConnectionProvider { searchResultList ->
-                searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo: add it to the map?
-            })
+        if (savedInstanceState == null) { //ToDo: WM
+            // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
+            // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
+            val browseMapFragment = BrowseMapFragment().apply {
+                cameraDataModel.zoomLevel = 11F
+                cameraDataModel.position = GeoCoordinates(48.145764, 17.126015)
+            }
+
+            supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(R.id.fragmentContainer, browseMapFragment, BROWSE_MAP_FRAGMENT_TAG)
+                ?.commitNow()
         }
 
-        supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(R.id.fragmentContainer, browseMapFragment)
-            ?.commit()
+        (supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment).setSearchConnectionProvider(SearchConnectionProvider { searchResultList ->
+            searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo: add it to the map?
+        })
     }
 }

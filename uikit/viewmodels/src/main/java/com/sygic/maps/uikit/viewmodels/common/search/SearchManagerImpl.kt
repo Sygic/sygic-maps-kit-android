@@ -32,12 +32,14 @@ import com.sygic.sdk.search.MapSearchResult
 import com.sygic.sdk.search.Search
 import com.sygic.sdk.search.SearchRequest
 
+const val MAX_RESULTS_COUNT_DEFAULT_VALUE = 20
+
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SearchManagerImpl(private val initManager: SdkInitializationManager) : SearchManager {
 
     private val sdkSearchEngine = Search()
 
-    override var maxResultsCount: Int = 20
+    override var maxResultsCount: Int = MAX_RESULTS_COUNT_DEFAULT_VALUE
 
     override fun searchText(text: String, position: GeoCoordinates?) =
         initManager.onReady { sdkSearchEngine.search(SearchRequest(text, position).apply { maxResults = maxResultsCount }) }
