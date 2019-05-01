@@ -67,7 +67,7 @@ class BrowseMapFragmentViewModel internal constructor(
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
     private val themeManager: ThemeManager
-) : AndroidViewModel(app), MapInteractionManager.Listener, DefaultLifecycleObserver, ThemeSupportedViewModel {
+) : AndroidViewModel(app), ThemeSupportedViewModel, DefaultLifecycleObserver, MapInteractionManager.Listener {
 
     @MapSelectionMode
     var mapSelectionMode: Int
