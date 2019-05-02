@@ -65,8 +65,9 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
             cameraDataModel.zoomLevel = component.zoomLevel
             cameraDataModel.position = component.position
         }, BROWSE_MAP_FRAGMENT_TAG)
-        ?.commitNow()
+        ?.commitNow() //ToDo: MS-5686
 
+    //ToDo: MS-5686
     private fun setFragmentModuleConnection(moduleConnectionProvider: ModuleConnectionProvider) =
         (supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment)
             .setSearchConnectionProvider(moduleConnectionProvider)
