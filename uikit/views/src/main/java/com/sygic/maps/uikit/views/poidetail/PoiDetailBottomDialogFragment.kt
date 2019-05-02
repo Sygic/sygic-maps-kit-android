@@ -58,7 +58,7 @@ private const val POI_DETAIL_DATA = "poi_detail_data"
  *
  * Content colors can be changed with the standard _colorBackground_, _textColorPrimary_, _textColorSecondary_ or
  * _colorAccent_ attribute.
-*/
+ */
 open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     private var listener: DialogFragmentListener? = null
@@ -66,6 +66,15 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
     private lateinit var preferencesManager: PreferencesManager
     private lateinit var binding: LayoutPoiDetailInternalBinding
+
+    /**
+     * A *[currentState]* reflects the current [PoiDetailBottomDialogFragment] state.
+     *
+     * @return current [BottomSheetBehavior.State].
+     */
+    @get:BottomSheetBehavior.State
+    val currentState
+        get() = dialog.behavior?.state
 
     /**
      * @see PoiDetailBottomDialogFragment
@@ -120,6 +129,10 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         )
     }
 
+    override fun getDialog(): BottomSheetDialog {
+        return super.getDialog() as BottomSheetDialog
+    }
+
     // Using LayoutInflater from AppCompatActivity instead of provided inflater from onCreateView fix DialogFragment
     // styling problem (https://stackoverflow.com/q/32784009/3796931 or https://issuetracker.google.com/issues/37042151)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -137,15 +150,15 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     override fun onResume() {
         super.onResume()
 
-        viewModel?.let { (dialog as BottomSheetDialog).behavior?.addStateListener(it) }
+        viewModel?.let { dialog.behavior?.addStateListener(it) }
     }
 
     private fun expandBottomSheet() {
-        (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+        dialog.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun collapseBottomSheet() {
-        (dialog as BottomSheetDialog).behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        dialog.behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     /**

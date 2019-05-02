@@ -22,37 +22,40 @@
  * SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
+package com.sygic.samples.utils
 
-ext.bintrayPublishVersion = toolsViewmodelFactoryVersion
-apply from: '../../bintrayConfig.gradle'
+import com.sygic.maps.uikit.viewmodels.common.data.BasicData
+import com.sygic.sdk.map.`object`.MapMarker
 
-android {
-    compileSdkVersion androidCompileSdkVersion
+object MapMarkers {
 
-    defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargerSdkVersion
-        versionName toolsViewmodelFactoryVersion
-        archivesBaseName = "$project.name-$versionName"
-    }
+    val sampleMarkerOne: MapMarker = MapMarker
+        .at(48.182684, 17.094457)
+        .withPayload(BasicData("Test Marker 1"))
+        .build()
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
-        }
-    }
-}
+    val sampleMarkerTwo: MapMarker = MapMarker
+        .at(48.162805, 17.101621)
+        .withPayload(BasicData("Test Marker 2"))
+        .build()
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    val sampleMarkerThree: MapMarker = MapMarker
+        .at(48.165561, 17.139550)
+        .withPayload(BasicData("Test Marker 3"))
+        .build()
 
-    // modules
-    compileOnly project(':tool-annotation-processor')
-    annotationProcessor project(':tool-annotation-processor')
+    val sampleMarkerFour: MapMarker = MapMarker
+        .at(48.128453, 17.118402)
+        .withPayload(BasicData("Test Marker 4"))
+        .build()
 
-    // libraries
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "javax.inject:javax.inject:$javaxInjectVersion"
+    val sampleMarkerFive: MapMarker = MapMarker
+        .at(48.141797, 17.097001)
+        .withPayload(BasicData("Test Marker 5"))
+        .build()
+
+    val sampleMarkerSix: MapMarker = MapMarker
+        .at(48.134756, 17.127729)
+        .withPayload(BasicData("Test Marker 6"))
+        .build()
 }

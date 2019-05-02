@@ -29,6 +29,7 @@ import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.utils.MapMarkers
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.factory.DrawableFactory
 
@@ -53,16 +54,15 @@ class BrowseMapMarkersActivity : CommonSampleActivity() {
         browseMapFragment.addMapMarkers(
             listOf(
                 MapMarker.at(48.143489, 17.150560).build(),
-                MapMarker.at(48.162805, 17.101621).build(),
-                MapMarker.at(48.165561, 17.139550).build(),
-                MapMarker.at(48.155028, 17.155674).build(),
-                MapMarker.at(48.141797, 17.097001).build(),
-                MapMarker.at(48.134756, 17.127729).build(),
+                MapMarker.at(48.144921, 17.114853).withIcon(DrawableFactory(R.drawable.ic_favorite)).build(),
                 markerFromBuilder,
                 markerFromBuilderWithCustomIcon,
-                MapMarker.at(48.144921, 17.114853)
-                    .withIcon(DrawableFactory(R.drawable.ic_favorite))
-                    .build()
+                MapMarkers.sampleMarkerOne,
+                MapMarkers.sampleMarkerTwo,
+                MapMarkers.sampleMarkerThree,
+                MapMarkers.sampleMarkerFour,
+                MapMarkers.sampleMarkerFive,
+                MapMarkers.sampleMarkerSix
             )
         )
     }

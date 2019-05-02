@@ -22,37 +22,27 @@
  * SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
+package com.sygic.samples.base.idling
 
-ext.bintrayPublishVersion = toolsViewmodelFactoryVersion
-apply from: '../../bintrayConfig.gradle'
+import androidx.test.espresso.IdlingResource
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-android {
-    compileSdkVersion androidCompileSdkVersion
+abstract class BaseIdlingResource(protected val activity: CommonSampleActivity) : IdlingResource {
 
-    defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargerSdkVersion
-        versionName toolsViewmodelFactoryVersion
-        archivesBaseName = "$project.name-$versionName"
+    private var callback: IdlingResource.ResourceCallback? = null
+
+    abstract fun isIdle(): Boolean
+
+    override fun registerIdleTransitionCallback(callback: IdlingResource.ResourceCallback?) {
+        this.callback = callback
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
+    final override fun isIdleNow(): Boolean {
+        if (isIdle()) {
+            callback?.onTransitionToIdle()
+            return true
         }
+
+        return false
     }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // modules
-    compileOnly project(':tool-annotation-processor')
-    annotationProcessor project(':tool-annotation-processor')
-
-    // libraries
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "javax.inject:javax.inject:$javaxInjectVersion"
 }
