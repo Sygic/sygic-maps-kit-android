@@ -49,8 +49,9 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
     @Test
     fun browseMapDisplayed() {
         browseMap(activity) {
-            isPositionLockFabDisplayed()
-            isZoomControlsMenuDisplayed()
+            isViewNotDisplayed(R.id.compassView)
+            isViewDisplayed(R.id.positionLockFab)
+            isViewDisplayed(R.id.zoomControlsMenu)
         }
     }
 
@@ -65,7 +66,7 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
             clickOnMapMarker(MapMarkers.sampleMarkerOne)
             isPoiDetailHidden()
 
-            onView(withId(R.id.selectionModeButton)).perform(click())
+            clickOnView(R.id.selectionModeButton)
             onData(CoreMatchers.anything())
                 .inRoot(RootMatchers.isPlatformPopup())
                 .inAdapterView(CoreMatchers.instanceOf<View>(MenuPopupWindow.MenuDropDownListView::class.java))
@@ -79,7 +80,7 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
             pressBack()
             isPoiDetailHidden()
 
-            onView(withId(R.id.selectionModeButton)).perform(click())
+            clickOnView(R.id.selectionModeButton)
             onData(CoreMatchers.anything())
                 .inRoot(RootMatchers.isPlatformPopup())
                 .inAdapterView(CoreMatchers.instanceOf<View>(MenuPopupWindow.MenuDropDownListView::class.java))

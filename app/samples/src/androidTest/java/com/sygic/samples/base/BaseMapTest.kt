@@ -48,10 +48,10 @@ open class BaseMapTest(activityClass: Class<out CommonSampleActivity>) {
     val grantLocationPermissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private var mapReadyIdlingResource: IdlingResource? = null
-
     protected val activity: CommonSampleActivity
         get() = activityRule.activity
+
+    private lateinit var mapReadyIdlingResource: IdlingResource
 
     @Before
     fun registerIdlingResource() {
@@ -62,6 +62,6 @@ open class BaseMapTest(activityClass: Class<out CommonSampleActivity>) {
 
     @After
     fun unregisterIdlingResource() {
-        mapReadyIdlingResource?.let { IdlingRegistry.getInstance().unregister(it) }
+        IdlingRegistry.getInstance().unregister(mapReadyIdlingResource)
     }
 }

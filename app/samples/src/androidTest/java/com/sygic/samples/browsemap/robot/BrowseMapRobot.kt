@@ -27,14 +27,10 @@ package com.sygic.samples.browsemap.robot
 import android.graphics.Point
 import android.view.InputDevice
 import android.view.MotionEvent
-import android.view.View
+import androidx.annotation.IdRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.CoordinatesProvider
-import androidx.test.espresso.action.GeneralClickAction
-import androidx.test.espresso.action.GeneralLocation
-import androidx.test.espresso.action.Press
-import androidx.test.espresso.action.Tap
+import androidx.test.espresso.action.*
 import androidx.test.espresso.action.ViewActions.actionWithAssertions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -60,16 +56,16 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) {
         onView(withId(R.id.browseMapFragment)).check(matches(isDisplayed()))
     }
 
-    fun isCompassDisplayed() {
-        onView(withId(R.id.compassView)).check(matches(isDisplayed()))
+    fun isViewDisplayed(@IdRes viewId: Int) {
+        onView(allOf(withId(viewId), withParent(withId(R.id.browseMapFragment)))).check(matches(isDisplayed()))
     }
 
-    fun isPositionLockFabDisplayed() {
-        onView(withId(R.id.positionLockFab)).check(matches(isDisplayed()))
+    fun isViewNotDisplayed(@IdRes viewId: Int) {
+        onView(allOf(withId(viewId), withParent(withId(R.id.browseMapFragment)))).check(matches(not(isDisplayed())))
     }
 
-    fun isZoomControlsMenuDisplayed() {
-        onView(allOf(withId(R.id.zoomControlsMenu), withParent(withId(R.id.browseMapFragment)))).check(matches(isDisplayed()))
+    fun clickOnView(@IdRes viewId: Int) {
+        onView(withId(viewId)).perform(ViewActions.click())
     }
 
     fun clickOnMapToLocation(generalLocation: GeneralLocation) {
@@ -88,24 +84,22 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) {
 
     fun clickOnMapMarker(mapMarker: MapMarker) {
         // Small offset in Y axis need to be applied, because the SDK does not have any click tolerance
-        getScreenPointFromMapMarker(mapMarker)?.let { clickOnMapToPoint(it.x, it.y - 1) }
+        getScreenPointFromMapMarker(mapMarker)?.let { clickOnMapAtPoint(it.x, it.y - 1) }
     }
 
-    fun clickOnMapToPoint(x: Int, y: Int) {
+    fun clickOnMapAtPoint(x: Int, y: Int) {
         onView(withId(R.id.browseMapFragment)).perform(
             actionWithAssertions(
                 GeneralClickAction(
                     Tap.SINGLE,
-                    object : CoordinatesProvider {
-                        override fun calculateCoordinates(view: View): FloatArray {
-                            val screenPos = IntArray(2)
-                            view.getLocationOnScreen(screenPos)
+                    CoordinatesProvider { view ->
+                        val screenPos = IntArray(2)
+                        view.getLocationOnScreen(screenPos)
 
-                            val screenX = (screenPos[0] + x).toFloat()
-                            val screenY = (screenPos[1] + y).toFloat()
+                        val screenX = (screenPos[0] + x).toFloat()
+                        val screenY = (screenPos[1] + y).toFloat()
 
-                            return floatArrayOf(screenX, screenY)
-                        }
+                        floatArrayOf(screenX, screenY)
                     },
                     Press.FINGER,
                     InputDevice.SOURCE_TOUCHSCREEN,

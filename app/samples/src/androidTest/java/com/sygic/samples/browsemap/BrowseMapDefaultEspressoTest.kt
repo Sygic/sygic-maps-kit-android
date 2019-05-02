@@ -25,6 +25,7 @@
 package com.sygic.samples.browsemap
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sygic.samples.R
 import com.sygic.samples.base.BaseMapTest
 import com.sygic.samples.browsemap.robot.browseMap
 import org.junit.Test
@@ -35,6 +36,10 @@ class BrowseMapDefaultEspressoTest : BaseMapTest(BrowseMapDefaultActivity::class
 
     @Test
     fun browseMapDisplayed() {
-        browseMap(activity) {}
+        browseMap(activity) {
+            isViewNotDisplayed(R.id.compassView)
+            isViewNotDisplayed(R.id.positionLockFab)
+            isViewNotDisplayed(R.id.zoomControlsMenu)
+        }
     }
 }
