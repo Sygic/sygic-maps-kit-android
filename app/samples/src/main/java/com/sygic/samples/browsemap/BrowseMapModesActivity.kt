@@ -26,7 +26,6 @@ package com.sygic.samples.browsemap
 
 import android.os.Bundle
 import android.view.Gravity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.PopupMenu
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
@@ -35,10 +34,9 @@ import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.samples.utils.MapMarkers
+import kotlinx.android.synthetic.main.activity_browsemap_modes.*
 
 class BrowseMapModesActivity : CommonSampleActivity() {
-
-    private val selectionModeButton: AppCompatButton? by lazy { findViewById<AppCompatButton>(R.id.selectionModeButton) }
 
     override val wikiModulePath: String = "Module-Browse-Map#browse-map---modes"
 
@@ -48,7 +46,7 @@ class BrowseMapModesActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_browsemap_modes)
 
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        selectionModeButton?.let {
+        selectionModeButton.let {
             val selectionModeMenu = PopupMenu(this, it, Gravity.END).apply {
                 menuInflater.inflate(R.menu.selection_modes_menu, menu)
                 menu.findItem(getItemId(browseMapFragment.mapSelectionMode)).let { menuItem ->
@@ -99,6 +97,6 @@ class BrowseMapModesActivity : CommonSampleActivity() {
     }
 
     private fun setSelectionModeText(mode: CharSequence) {
-        selectionModeButton?.text = "${getString(R.string.selection_mode_is)}: $mode"
+        selectionModeButton.text = "${getString(R.string.selection_mode_is)}: $mode"
     }
 }
