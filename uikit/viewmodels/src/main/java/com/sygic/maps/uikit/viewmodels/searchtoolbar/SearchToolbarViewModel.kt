@@ -66,7 +66,7 @@ open class SearchToolbarViewModel internal constructor(
             searchManager.maxResultsCount = value
         }
 
-    val searchResultsListener = Search.SearchResultsListener { _, _, _ ->
+    private val searchResultsListener = Search.SearchResultsListener { _, _, _ ->
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
     }
 
