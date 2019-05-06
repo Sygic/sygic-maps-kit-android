@@ -38,6 +38,7 @@ import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
+import com.sygic.maps.module.common.utils.onMapClick
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
@@ -124,12 +125,6 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun onMapObjectsRequestStarted() {
         mapDataModel.removeOnClickMapMarker()
-        onMapClickListener?.let {
-            when (mapSelectionMode) {
-                MapSelectionMode.NONE -> logWarning("NONE")
-                MapSelectionMode.MARKERS_ONLY, MapSelectionMode.FULL -> it.onMapClick()
-            }
-        }
     }
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject<*>>) {
@@ -137,36 +132,78 @@ class BrowseMapFragmentViewModel internal constructor(
             return
         }
 
+        // Currently, we take care only of the first ViewObject
         var firstViewObject = viewObjects.first()
+        val dataLoadAllowed = onMapClickListener?.onMapClick(firstViewObject) ?: true
+
+        // First, check if the PoiDetailsView is visible
         poiDetailsView?.let {
+
+            // Always remove the previous one
             mapDataModel.removeMapObject(it)
             poiDetailsView = null
-            if (firstViewObject !is MapMarker) {
-                return
+
+            // Check if we should ask or use our own logic
+            if (onMapClickListener != null) {
+                // This is useful for switching between the same types without hiding the previous one
+                if (!dataLoadAllowed) {
+                    return
+                }
+            } else {
+                // Currently, we internally support only MapMarker's
+                if (firstViewObject !is MapMarker) {
+                    return
+                }
             }
         }
 
         when (mapSelectionMode) {
+
             MapSelectionMode.NONE -> {
                 logWarning("NONE")
             }
+
             MapSelectionMode.MARKERS_ONLY -> {
+                // Markers only mode check
                 if (firstViewObject !is MapMarker) {
+                    return
+                }
+
+                // Continue only if the ViewObject data load is allowed
+                if (!dataLoadAllowed) {
                     return
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
             }
+
             MapSelectionMode.FULL -> {
-                if (firstViewObject !is MapMarker && onMapClickListener == null) {
-                    mapDataModel.addOnClickMapMarker(when (firstViewObject) {
-                        is ProxyPoi -> MapMarker.from(firstViewObject).build()
-                        else -> MapMarker.at(firstViewObject.position).build()
-                    }.also { firstViewObject = it })
+                // Add the OnClickMapMarker only if the click is not at MapMarker
+                if (firstViewObject !is MapMarker) {
+                    getOnClickMapMarker(firstViewObject)?.let { clickMapMarker ->
+                        mapDataModel.addOnClickMapMarker(
+                            when (firstViewObject) {
+                                is ProxyPoi -> MapMarker.at(clickMapMarker.position).withPayload(firstViewObject).build()
+                                else -> clickMapMarker
+                            }.also { firstViewObject = it })
+                    }
+                }
+
+                // Continue only if the ViewObject data load is allowed
+                if (!dataLoadAllowed) {
+                    return
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
             }
+        }
+    }
+
+    private fun getOnClickMapMarker(viewObject: ViewObject<*>): MapMarker? {
+        return if (onMapClickListener != null) {
+            onMapClickListener?.getClickMapMarker(viewObject.position.latitude, viewObject.position.longitude)
+        } else {
+            MapMarker.at(viewObject.position).build()
         }
     }
 
@@ -177,19 +214,17 @@ class BrowseMapFragmentViewModel internal constructor(
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject<*>) {
         poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(data: ViewObjectData) {
-                onMapClickListener?.let {
-                    if (it.onMapDataReceived(data)) {
-                        return
-                    }
-                }
-
-                detailsViewFactory?.let { factory ->
-                    poiDetailsView = PoiDetailsObject.create(data, factory, viewObject)
-                        .also {
-                            mapDataModel.addMapObject(it)
+                onMapClickListener.let {
+                    it?.onMapDataReceived(data)
+                    if (it == null || it.showDetailsView()) {
+                        detailsViewFactory?.let { factory ->
+                            poiDetailsView = PoiDetailsObject.create(data, factory, viewObject).also { view ->
+                                mapDataModel.addMapObject(view)
+                            }
+                        } ?: run {
+                            poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
                         }
-                } ?: run {
-                    poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
+                    }
                 }
             }
         })

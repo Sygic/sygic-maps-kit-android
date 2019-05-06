@@ -51,12 +51,8 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         browseMapFragment.addMapMarker(markerFromBuilder)
         browseMapFragment.setOnMapClickListener(object : OnMapClickListener {
-            override fun onMapClick() {
-                // Remove MapMarker from the map and/or start the progress bar here
-            }
-
-            override fun onMapDataReceived(data: ViewObjectData): Boolean {
-                // Add MapMarker to the map and/or stop the progress bar here
+            override fun showDetailsView(): Boolean = false
+            override fun onMapDataReceived(data: ViewObjectData) {
                 data.payload.let { payload ->
                     when (payload) {
                         is CustomDataPayload -> {
@@ -66,7 +62,6 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
                         else -> Toast.makeText(this@BrowseMapClickListenerActivity, payload.toString(), Toast.LENGTH_LONG).show()
                     }
                 }
-                return true
             }
         })
     }

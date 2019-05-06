@@ -24,6 +24,10 @@
 
 package com.sygic.maps.module.common.listener
 
+import com.sygic.maps.module.common.detail.DetailsViewFactory
+import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
+import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 
 /**
@@ -32,16 +36,36 @@ import com.sygic.sdk.map.`object`.data.ViewObjectData
 interface OnMapClickListener {
 
     /**
-     * Called when click to the map has been made.
+     * Modifies the map click [MapMarker] default behavior. You can override this method to use your own map
+     * click [MapMarker] or return null.
+     *
+     * @return the map click [MapMarker]. Null if the map click [MapMarker] should not be displayed.
      */
-    fun onMapClick()
+    fun getClickMapMarker(latitude: Double, longitude: Double): MapMarker? = MapMarker.at(latitude, longitude).build()
 
     /**
-     * Called when the map click data is received.
+     * Modifies the details view ([PoiDetailBottomDialogFragment] or [DetailsViewFactory] if set) default behavior. If true,
+     * the details view will be shown when the [onMapDataReceived] is called.
+     *
+     * @return true to use the default behaviour, false otherwise. The default value is true.
+     */
+    fun showDetailsView(): Boolean = true
+
+    /**
+     * Called when a click to the map has been made.
+     *
+     * @param selectionType [SelectionType] belonging to the click on the map.
+     * @param latitude [Double] belonging to the click on the map.
+     * @param longitude [Double] belonging to the click on the map.
+     *
+     * @return true to continue to proceed the map click data, false otherwise.
+     */
+    fun onMapClick(@SelectionType selectionType: Int, latitude: Double, longitude: Double): Boolean = true
+
+    /**
+     * Called when the map click data is received (it may take a while). It will not be called, if the [onMapClick] method returns false.
      *
      * @param data [ViewObjectData] belonging to the click on the map.
-     *
-     * @return true if the callback consumed the click, false otherwise (click will be processed by the default behaviour).
      */
-    fun onMapDataReceived(data: ViewObjectData): Boolean
+    fun onMapDataReceived(data: ViewObjectData)
 }
