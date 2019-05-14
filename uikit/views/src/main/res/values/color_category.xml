@@ -24,7 +24,19 @@
   -->
 
 <resources>
-    <color name="textColorPrimary">@color/zircon</color>
-    <color name="textColorSecondary">@color/botticelli</color>
-    <color name="iconBackground">@color/gray_chateau</color>
+    <color name="all_places">@color/iconBackground</color>
+    <color name="food_and_drink">#ffff8833</color>
+    <color name="accommodation">#ff8fbf00</color>
+    <color name="shopping">#fff2ce18</color>
+    <color name="transportation">#ff45bde6</color>
+    <color name="tourism">#ffe62e7a</color>
+    <color name="social_life">#ffbf0040</color>
+    <color name="services_and_education">#fff2ce18</color>
+    <color name="sport">#ff47991f</color>
+    <color name="vehicle_services">#ff404040</color>
+    <color name="emergency">#fff23041</color>
+    <color name="guides">#ffb3b3b3</color>
+    <color name="parking">#ff1677d9</color>
+    <color name="petrol_station">#ff404040</color>
+    <color name="bank_atm">#ff005580</color>
 </resources>

@@ -24,9 +24,15 @@
 
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
+import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
+import com.sygic.maps.uikit.viewmodels.common.sdk.search.SearchResultItem
+import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.search.CoordinateSearchResult
+import com.sygic.sdk.search.MapSearchResult
+import com.sygic.sdk.search.SearchResult
 import java.util.*
 
 fun LocationInfo.getFirst(@LocationInfo.LocationType locationType: Int): String? {
@@ -40,4 +46,25 @@ fun GeoCoordinates.getFormattedLocation(): String {
     }
 
     return String.format(Locale.US, "%.6f, %.6f", latitude, longitude)
+}
+
+fun SearchResult.getSearchResultItem(): SearchResultItem<out SearchResult>? {
+    return when (this) {
+        is MapSearchResult -> {
+            when (dataType) {
+                MapSearchResult.DataType.Country -> CountryResultItem(this)
+                MapSearchResult.DataType.Postal -> PostalResultItem(this)
+                MapSearchResult.DataType.City -> CityResultItem(this)
+                MapSearchResult.DataType.Street -> StreetResultItem(this)
+                MapSearchResult.DataType.AddressPoint -> AddressPointResultItem(this)
+                MapSearchResult.DataType.PostalAddress -> PostalAddressResultItem(this)
+                MapSearchResult.DataType.PoiCategoryGroup -> PoiCategoryGroupResultItem(this)
+                MapSearchResult.DataType.PoiCategory -> PoiCategoryResultItem(this)
+                MapSearchResult.DataType.Poi -> PoiResultItem(this)
+                else -> null
+            }
+        }
+        is CoordinateSearchResult -> CoordinateSearchResultItem(this)
+        else -> null
+    }
 }
