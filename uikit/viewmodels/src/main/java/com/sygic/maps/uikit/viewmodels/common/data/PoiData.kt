@@ -24,16 +24,16 @@
 
 package com.sygic.maps.uikit.viewmodels.common.data
 
-import android.os.Parcel
-import android.os.Parcelable
-import android.text.TextUtils
+import com.sygic.maps.uikit.viewmodels.common.utils.appendOnNewLine
 import com.sygic.sdk.places.PoiInfo
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
+import com.sygic.maps.uikit.viewmodels.common.utils.getCityWithPostal
+import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumber
+import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumberAndCityWithPostal
+import kotlinx.android.parcel.Parcelize
 
-// Todo: Builder for Java
-data class PoiData(
+@Parcelize
+data class PoiData( //ToDo: be careful with "SDK MapMarker refactor" merge
     var coordinates: GeoCoordinates = GeoCoordinates.Invalid,
     var name: String? = null,
     var iso: String? = null,
@@ -46,114 +46,57 @@ data class PoiData(
     var phone: String? = null,
     var email: String? = null,
     var url: String? = null
-) : Parcelable {
+) : BasicData(createBasicDescription(name, street, houseNumber, city, postal)) {
 
-    class AddressComponent(private val title: String? = null, private val subtitle: String? = null) {
-        val formattedTitle: String
-            get() = title?.let { it } ?: EMPTY_STRING
-        val formattedSubtitle: String
-            get() = subtitle?.let { it } ?: EMPTY_STRING
-    }
-
-    fun isEmpty() = coordinates == GeoCoordinates.Invalid
-
-    fun getAddressComponent(): AddressComponent {
-        name?.let {
-            if (it.isNotEmpty()) {
-                return AddressComponent(it, getStreetWithHouseNumberAndCityWithPostal())
-            }
-        }
-        street?.let { street ->
-            if (street.isNotEmpty()) {
-                return AddressComponent(
-                    getStreetWithHouseNumber(),
-                    city?.let { if (it.isNotEmpty()) getCityWithPostal() else null })
-            }
-        }
-        city?.let {
-            if (it.isNotEmpty()) {
-                return AddressComponent(getCityWithPostal())
-            }
-        }
-
-        return AddressComponent(coordinates.getFormattedLocation())
-    }
-
-    /**
-     * Formatted example: Mlynské nivy 16, 821 09 Bratislava
-     */
-    private fun getStreetWithHouseNumberAndCityWithPostal(): String {
+    override fun toString(): String {
         val builder = StringBuilder()
-        val street = street?.let { getStreetWithHouseNumber() }
 
-        street?.let { builder.append(it) }
-        getCityWithPostal()?.let {
-            if (!TextUtils.isEmpty(street)) builder.append(", ")
-            builder.append(it)
-        }
+        name?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        city?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        street?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        houseNumber?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        postal?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        iso?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        phone?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        email?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+        url?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
+
         return builder.toString()
     }
 
-    /**
-     * Formatted example: Mlynské nivy 16
-     */
-    private fun getStreetWithHouseNumber(): String? =
-        houseNumber?.let { if (it.isNotEmpty()) String.format("%s %s", street, it) else street } ?: street
-
-    /**
-     * Formatted example: 821 09 Bratislava
-     */
-    private fun getCityWithPostal(): String? =
-        postal?.let { if (it.isNotEmpty()) return String.format("%s %s", it, city) else city } ?: city
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeParcelable(coordinates, flags)
-        dest.writeString(name)
-        dest.writeString(iso)
-        dest.writeInt(poiGroup)
-        dest.writeInt(poiCategory)
-        dest.writeString(city)
-        dest.writeString(street)
-        dest.writeString(houseNumber)
-        dest.writeString(postal)
-        dest.writeString(phone)
-        dest.writeString(email)
-        dest.writeString(url)
-    }
-
-    constructor(parcel: Parcel) : this(
-        parcel.readParcelable(GeoCoordinates::class.java.classLoader)!!,
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString()
-    )
-
+    //ToDo: Remove me, when "SDK MapMarker refactor" merge is done
     companion object {
-
-        @JvmField
         val EMPTY = PoiData()
+    }
+}
 
-        @JvmField
-        val CREATOR = object : Parcelable.Creator<PoiData> {
-            override fun createFromParcel(parcel: Parcel): PoiData {
-                return PoiData(parcel)
-            }
-
-            override fun newArray(size: Int): Array<PoiData?> {
-                return arrayOfNulls(size)
-            }
+private fun createBasicDescription(
+    name: String?,
+    street: String?,
+    houseNumber: String?,
+    city: String?,
+    postal: String?
+): BasicData.BasicDescription {
+    name?.let {
+        if (it.isNotEmpty()) {
+            return BasicData.BasicDescription(
+                it,
+                getStreetWithHouseNumberAndCityWithPostal(street, houseNumber, city, postal)
+            )
         }
     }
+    street?.let {
+        if (it.isNotEmpty()) {
+            return BasicData.BasicDescription(
+                getStreetWithHouseNumber(it, houseNumber),
+                city?.let { city -> if (city.isNotEmpty()) getCityWithPostal(city, postal) else null })
+        }
+    }
+    city?.let {
+        if (it.isNotEmpty()) {
+            return BasicData.BasicDescription(getCityWithPostal(city, postal))
+        }
+    }
+
+    return BasicData.BasicDescription()
 }

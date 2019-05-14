@@ -225,6 +225,5 @@ class BrowseMapFragmentViewModel internal constructor(
 
 // ToDo: Update me when PR Feature - SDK MapMarker refactor 2/2 is done
 private fun PoiData.toPoiDetailData(): PoiDetailData {
-    val addressComponent = getAddressComponent()
-    return PoiDetailData(addressComponent.formattedTitle, addressComponent.formattedSubtitle, url, email, phone, coordinates.getFormattedLocation())
+    return PoiDetailData(title, description, url, email, phone, coordinates.getFormattedLocation())
 }

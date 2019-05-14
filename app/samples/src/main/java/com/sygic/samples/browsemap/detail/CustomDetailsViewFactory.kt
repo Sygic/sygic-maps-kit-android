@@ -40,15 +40,14 @@ class CustomDetailsViewFactory() : DetailsViewFactory() {
         val root = inflater.inflate(R.layout.layout_info_window, container, false)
 
         //fill layout with data from marker's PoiData
-        val addressComponent = poiData.getAddressComponent()
-        addressComponent.formattedTitle.let {
+        poiData.title.let {
             if (it.isEmpty()) {
                 root.findViewById<TextView>(R.id.title).visibility = View.GONE
             } else {
                 root.findViewById<TextView>(R.id.title).text = it
             }
         }
-        addressComponent.formattedSubtitle.let {
+        poiData.description.let {
             if (it.isEmpty()) {
                 root.findViewById<TextView>(R.id.snippet).visibility = View.GONE
             } else {
