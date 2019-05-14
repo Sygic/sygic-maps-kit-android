@@ -26,18 +26,38 @@ package com.sygic.maps.uikit.views.searchresultlist
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.widget.FrameLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.emptyrecyclerview.EmptyRecyclerView
+import com.sygic.maps.uikit.views.common.AdvanceInfoView
+import com.sygic.maps.uikit.views.common.EmptyRecyclerView
+import com.sygic.maps.uikit.views.databinding.LayoutSearchResultListInternalBinding
 
 /**
+ * A [SearchResultList] can be used as an visual presentation component for the search result items. It contains
+ * [EmptyRecyclerView] and pre-customized [AdvanceInfoView] component.
+ *
  * TODO
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultList @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.searchFabStyle, //todo
-    defStyleRes: Int = R.style.SygicSearchFabStyle //todo
-) : EmptyRecyclerView(context, attrs, defStyleAttr, defStyleRes) {
-    //todo: predefine search empty view
+    defStyleAttr: Int = R.attr.searchResultListStyle,
+    defStyleRes: Int = R.style.SygicSearchResultListStyle // TODO: MS-5681
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
+
+    private val binding: LayoutSearchResultListInternalBinding =
+        LayoutSearchResultListInternalBinding.inflate(LayoutInflater.from(context), this, true)
+
+    init {
+        binding.searchResultList.setHasFixedSize(true)
+        binding.searchResultList.layoutManager = LinearLayoutManager(context)
+    }
+
+    fun setAdapter(adapter: RecyclerView.Adapter<*>) {
+        binding.searchResultList.adapter = adapter
+    }
 }
