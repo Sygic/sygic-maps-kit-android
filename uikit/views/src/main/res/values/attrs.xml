@@ -32,6 +32,7 @@
         <attr name="positionLockFabStyle" format="reference" />
         <attr name="searchFabStyle" format="reference" />
         <attr name="searchToolbarStyle" format="reference" />
+        <attr name="searchResultListStyle" format="reference" />
         <attr name="zoomControlsMenuStyle" format="reference"/>
     </declare-styleable>
 

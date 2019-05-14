@@ -48,7 +48,7 @@ fun GeoCoordinates.getFormattedLocation(): String {
     return String.format(Locale.US, "%.6f, %.6f", latitude, longitude)
 }
 
-fun SearchResult.getSearchResultItem(): SearchResultItem<out SearchResult>? {
+fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
     return when (this) {
         is MapSearchResult -> {
             when (dataType) {

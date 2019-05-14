@@ -28,12 +28,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.SearchResultItem
+import com.sygic.maps.uikit.viewmodels.searchresultlist.adapter.vh.ItemViewHolder
 import com.sygic.maps.uikit.views.common.extensions.backgroundTint
 import com.sygic.maps.uikit.views.common.extensions.tint
 import com.sygic.maps.uikit.views.common.extensions.visible
 import com.sygic.maps.uikit.views.databinding.LayoutSearchItemResultInternalBinding
 
-class SearchResultListAdapter : RecyclerView.Adapter<SearchResultListAdapter.SearchResultItemViewHolder>() {
+open class SearchResultListAdapter : RecyclerView.Adapter<ItemViewHolder>() {
 
     var clickListener: ClickListener? = null
     var items: List<SearchResultItem<*>> = mutableListOf()
@@ -48,24 +49,20 @@ class SearchResultListAdapter : RecyclerView.Adapter<SearchResultListAdapter.Sea
 
     override fun getItemCount(): Int = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultItemViewHolder {
-        return SearchResultItemViewHolder(
-            LayoutSearchItemResultInternalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        )
-    }
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.update(items[position])
 
-    override fun onBindViewHolder(holder: SearchResultItemViewHolder, position: Int) {
-        holder.update(items[position])
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder = SearchResultListItemViewHolder(
+        LayoutSearchItemResultInternalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    )
 
-    inner class SearchResultItemViewHolder(val binding: LayoutSearchItemResultInternalBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class SearchResultListItemViewHolder(val binding: LayoutSearchItemResultInternalBinding) :
+        ItemViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener { clickListener?.onSearchResultItemClick(items[adapterPosition]) }
         }
 
-        fun update(searchResultItem: SearchResultItem<*>) {
+        override fun update(searchResultItem: SearchResultItem<*>) {
             binding.searchItemIcon.setImageResource(searchResultItem.icon)
             binding.searchItemIcon.tint(searchResultItem.iconColor)
             binding.searchItemIcon.backgroundTint(searchResultItem.iconBackgroundColor)

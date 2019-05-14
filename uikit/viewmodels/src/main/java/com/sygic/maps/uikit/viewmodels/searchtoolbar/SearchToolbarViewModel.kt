@@ -75,7 +75,7 @@ open class SearchToolbarViewModel internal constructor(
     val onTextChangedListener = TextWatcherAdapter { input ->
         inputText.value = input
 
-        if (input.isNotEmpty() && input != lastSearchedString) {
+        if (input != lastSearchedString) {
             lastSearchedString = input
             searchCoroutineJob?.cancel()
             searchCoroutineJob = GlobalScope.launch(Dispatchers.Main) {

@@ -43,9 +43,11 @@ import com.sygic.maps.module.search.extensions.resolveAttributes
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
+import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.extensions.showKeyboard
+import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
@@ -57,7 +59,7 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 /**
  * A *[SearchFragment]* is the core component for any search operation. It can be easily used to display search input
  * and search result list on the same screen. It can be modified with initial search input or coordinates. It comes with
- * several pre build-in elements such as [SearchToolbar] or [SearchResultList]. TODO imports (MS-5212, MS-5213)
+ * several pre build-in elements such as [SearchToolbar] or [SearchResultList].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback {
@@ -72,6 +74,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
     private lateinit var fragmentViewModel: SearchFragmentViewModel
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
+    private lateinit var searchResultListViewModel: SearchResultListViewModel
 
     private var injected = false
     private fun inject() {
@@ -151,9 +154,13 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         searchToolbarViewModel = ViewModelProviders.of(this, viewModelFactory.with(searchToolbarInitComponent))[SearchToolbarViewModel::class.java].apply {
             this.keyboardVisibilityObservable.observe(this@SearchFragment, Observer<Boolean> { if (it) showKeyboard() else hideKeyboard() })
         }
+        searchResultListViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchResultListViewModel::class.java].apply {
+            //this. todo
+        }
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(searchToolbarViewModel)
+        lifecycle.addObserver(searchResultListViewModel)
     }
 
     @CallSuper
@@ -166,6 +173,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         binding.lifecycleOwner = this
         binding.searchFragmentViewModel = fragmentViewModel
         binding.searchToolbarViewModel = searchToolbarViewModel
+        binding.searchResultListViewModel = searchResultListViewModel
         return binding.root
     }
 
@@ -194,5 +202,6 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
         lifecycle.removeObserver(fragmentViewModel)
         lifecycle.removeObserver(searchToolbarViewModel)
+        lifecycle.removeObserver(searchResultListViewModel)
     }
 }

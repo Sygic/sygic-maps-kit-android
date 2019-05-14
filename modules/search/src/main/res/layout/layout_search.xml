@@ -28,8 +28,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="searchFragmentViewModel"
             type="com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel" />
@@ -37,6 +35,10 @@
         <variable
             name="searchToolbarViewModel"
             type="com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel" />
+
+        <variable
+            name="searchResultListViewModel"
+            type="com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel" />
 
     </data>
 
@@ -66,6 +68,8 @@
             android:id="@+id/searchResultList"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:adapter="@{searchResultListViewModel.activeAdapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
