@@ -52,29 +52,31 @@ open class SearchFab @JvmOverloads constructor(
         isClickable = true
 
         attrs?.let { attributeSet ->
-            val typedArray = context.obtainStyledAttributes(attributeSet,
+            context.obtainStyledAttributes(
+                attributeSet,
                 R.styleable.SearchFab,
                 defStyleAttr,
                 defStyleRes
-            )
+            ).apply {
 
-            setImageResource(R.drawable.ic_search)
+                setImageResource(R.drawable.ic_search)
 
-            imageTintList = ColorStateList.valueOf(
-                typedArray.getColor(
-                    R.styleable.SearchFab_android_tint,
-                    context.getColorFromAttr(android.R.attr.colorAccent)
+                imageTintList = ColorStateList.valueOf(
+                    getColor(
+                        R.styleable.SearchFab_android_tint,
+                        context.getColorFromAttr(android.R.attr.colorAccent)
+                    )
                 )
-            )
 
-            backgroundTintList = ColorStateList.valueOf(
-                typedArray.getColor(
-                    R.styleable.SearchFab_android_backgroundTint,
-                    context.getColorFromAttr(android.R.attr.colorBackground)
+                backgroundTintList = ColorStateList.valueOf(
+                    getColor(
+                        R.styleable.SearchFab_android_backgroundTint,
+                        context.getColorFromAttr(android.R.attr.colorBackground)
+                    )
                 )
-            )
 
-            typedArray.recycle()
+                recycle()
+            }
         }
     }
 }

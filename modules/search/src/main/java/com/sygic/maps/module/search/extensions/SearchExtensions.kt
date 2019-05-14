@@ -24,7 +24,6 @@
 
 package com.sygic.maps.module.search.extensions
 
-import android.annotation.SuppressLint
 import android.util.AttributeSet
 import com.sygic.maps.module.search.R
 import com.sygic.maps.module.search.SearchFragment
@@ -33,29 +32,28 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInit
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.sdk.position.GeoCoordinates
 
-@SuppressLint("Recycle")
 fun SearchFragment.resolveAttributes(
     attributes: AttributeSet?,
     searchToolbarInitComponent: SearchToolbarInitComponent
 ) {
-    activity?.application?.obtainStyledAttributes(attributes, R.styleable.SearchFragment)?.let { typedArray ->
-        if (typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_search_input)) {
+    activity?.application?.obtainStyledAttributes(attributes, R.styleable.SearchFragment)?.apply {
+        if (hasValue(R.styleable.SearchFragment_sygic_initial_search_input)) {
             searchToolbarInitComponent.initialSearchInput =
-                typedArray.getString(R.styleable.SearchFragment_sygic_initial_search_input).let { it } ?: EMPTY_STRING
+                getString(R.styleable.SearchFragment_sygic_initial_search_input).let { it } ?: EMPTY_STRING
         }
-        if (typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_latitude)
-            && typedArray.hasValue(R.styleable.SearchFragment_sygic_initial_longitude)
+        if (hasValue(R.styleable.SearchFragment_sygic_initial_latitude)
+            && hasValue(R.styleable.SearchFragment_sygic_initial_longitude)
         ) {
             searchToolbarInitComponent.initialSearchLocation = GeoCoordinates(
-                typedArray.getFloat(R.styleable.SearchFragment_sygic_initial_latitude, Float.NaN).toDouble(),
-                typedArray.getFloat(R.styleable.SearchFragment_sygic_initial_longitude, Float.NaN).toDouble()
+                getFloat(R.styleable.SearchFragment_sygic_initial_latitude, Float.NaN).toDouble(),
+                getFloat(R.styleable.SearchFragment_sygic_initial_longitude, Float.NaN).toDouble()
             )
         }
-        if (typedArray.hasValue(R.styleable.SearchFragment_sygic_max_results_count)) {
+        if (hasValue(R.styleable.SearchFragment_sygic_max_results_count)) {
             searchToolbarInitComponent.maxResultsCount =
-                typedArray.getInt(R.styleable.SearchFragment_sygic_max_results_count, MAX_RESULTS_COUNT_DEFAULT_VALUE)
+                getInt(R.styleable.SearchFragment_sygic_max_results_count, MAX_RESULTS_COUNT_DEFAULT_VALUE)
         }
 
-        typedArray.recycle()
+        recycle()
     }
 }
