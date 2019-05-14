@@ -53,11 +53,11 @@ open class SearchResultList @JvmOverloads constructor(
         LayoutSearchResultListInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
-        binding.searchResultList.setHasFixedSize(true)
-        binding.searchResultList.layoutManager = LinearLayoutManager(context)
+        binding.searchResultListRecyclerView.setHasFixedSize(true)
+        binding.searchResultListRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     fun setAdapter(adapter: RecyclerView.Adapter<*>) {
-        binding.searchResultList.adapter = adapter
+        binding.searchResultListRecyclerView.adapter = adapter
     }
 }

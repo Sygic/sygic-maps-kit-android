@@ -32,7 +32,7 @@
         android:layout_height="match_parent">
 
         <com.sygic.maps.uikit.views.common.EmptyRecyclerView
-            android:id="@+id/searchResultList"
+            android:id="@+id/searchResultListRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
