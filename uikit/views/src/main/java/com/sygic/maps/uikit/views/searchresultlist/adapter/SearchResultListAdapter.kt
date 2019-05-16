@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.views.searchresultlist.adapter
 
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.sygic.maps.uikit.views.common.extensions.backgroundTint
@@ -32,9 +33,9 @@ import com.sygic.maps.uikit.views.common.extensions.visible
 import com.sygic.maps.uikit.views.databinding.LayoutSearchItemResultInternalBinding
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 
-open class SearchResultListAdapter : ResultListAdapter<ResultListAdapter.ItemViewHolder>() {
+open class SearchResultListAdapter<P : Parcelable> : ResultListAdapter<P, ResultListAdapter.ItemViewHolder<P>>() {
 
-    var items: List<SearchResultItem<*>> = mutableListOf()
+    var items: List<SearchResultItem<out P>> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -42,19 +43,19 @@ open class SearchResultListAdapter : ResultListAdapter<ResultListAdapter.ItemVie
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.update(items[position])
+    override fun onBindViewHolder(holder: ItemViewHolder<P>, position: Int) = holder.update(items[position])
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder = ListItemViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<P> = ListItemViewHolder(
         LayoutSearchItemResultInternalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    inner class ListItemViewHolder(val binding: LayoutSearchItemResultInternalBinding) : ItemViewHolder(binding.root) {
+    inner class ListItemViewHolder(val binding: LayoutSearchItemResultInternalBinding) : ItemViewHolder<P>(binding.root) {
 
         init {
             binding.root.setOnClickListener { clickListener?.onSearchResultItemClick(items[adapterPosition]) }
         }
 
-        override fun update(searchResultItem: SearchResultItem<*>) {
+        override fun update(searchResultItem: SearchResultItem<out P>) {
             binding.searchItemIcon.setImageResource(searchResultItem.icon)
             binding.searchItemIcon.tint(searchResultItem.iconColor)
             binding.searchItemIcon.backgroundTint(searchResultItem.iconBackgroundColor)

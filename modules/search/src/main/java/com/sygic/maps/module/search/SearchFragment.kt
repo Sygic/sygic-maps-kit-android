@@ -36,6 +36,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
+import com.sygic.maps.module.search.component.SearchFragmentInitComponent
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
@@ -48,6 +49,7 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
@@ -65,6 +67,7 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
     private val modulesComponent = ModulesComponentDelegate()
+    private val searchFragmentInitComponent = SearchFragmentInitComponent()
     private val searchToolbarInitComponent = SearchToolbarInitComponent()
 
     @Inject
@@ -150,12 +153,35 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchFragmentViewModel::class.java]
-        searchToolbarViewModel = ViewModelProviders.of(this, viewModelFactory.with(searchToolbarInitComponent))[SearchToolbarViewModel::class.java].apply {
-            this.keyboardVisibilityObservable.observe(this@SearchFragment, Observer<Boolean> { if (it) showKeyboard() else hideKeyboard() })
+        fragmentViewModel = ViewModelProviders.of(
+            this,
+            viewModelFactory.with(searchFragmentInitComponent)
+        )[SearchFragmentViewModel::class.java].apply {
+            this.keyboardVisibilityObservable.observe(
+                this@SearchFragment,
+                Observer<Boolean> { if (it) showKeyboard() else hideKeyboard() })
+            this.popBackStackObservable.observe(
+                this@SearchFragment,
+                Observer<Any> { fragmentManager?.popBackStack() })
         }
-        searchResultListViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchResultListViewModel::class.java].apply {
-            //this. todo
+        searchToolbarViewModel = ViewModelProviders.of(
+            this,
+            viewModelFactory.with(searchToolbarInitComponent)
+        )[SearchToolbarViewModel::class.java].apply {
+            this.onActionSearchClickObservable.observe(
+                this@SearchFragment,
+                Observer<Any> { fragmentViewModel.onActionSearchClick() })
+        }
+        searchResultListViewModel = ViewModelProviders.of(
+            this,
+            viewModelFactory
+        )[SearchResultListViewModel::class.java].apply {
+            this.onSearchResultItemClickObservable.observe(
+                this@SearchFragment,
+                Observer<SearchResultItem<out SearchResult>> { fragmentViewModel.onSearchResultItemClick(it) })
+            this.searchResultListDataChangedObservable.observe(
+                this@SearchFragment,
+                Observer<List<SearchResultItem<out SearchResult>>> { fragmentViewModel.searchResultListDataChanged(it) })
         }
 
         lifecycle.addObserver(fragmentViewModel)
@@ -183,7 +209,11 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      * @param callback [SearchResultCallback] callback to invoke when a search process is done.
      */
     fun setResultCallback(callback: SearchResultCallback?) {
-        //ToDO: MS-5213
+        if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.searchResultCallback = callback
+        } else {
+            searchFragmentInitComponent.searchResultCallback = callback
+        }
     }
 
     /**

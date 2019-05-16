@@ -22,16 +22,15 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.searchresultlist.adapter
+package com.sygic.maps.uikit.viewmodels.searchresultlist.databinding
 
-import android.os.Parcelable
-import android.view.View
-import android.view.ViewGroup
+import androidx.databinding.BindingAdapter
+import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
+import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
+import com.sygic.sdk.search.SearchResult
 
-//ToDo: Use the Recents adapter instead when ready
-class DefaultStateAdapter<P : Parcelable> : ResultListAdapter<P, ResultListAdapter.ItemViewHolder<P>>() {
-    override fun getItemCount(): Int = 1
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<P> = EmptyItemViewHolder(View(parent.context))
-    override fun onBindViewHolder(holder: ItemViewHolder<P>, position: Int) {}
-    inner class EmptyItemViewHolder(emptyView: View) : ItemViewHolder<P>(emptyView)
-}
+@BindingAdapter(value = ["adapter"])
+fun setAdapter(
+    searchResultList: SearchResultList,
+    adapter: ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>
+) = searchResultList.setAdapter(adapter)

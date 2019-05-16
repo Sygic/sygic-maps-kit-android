@@ -25,10 +25,12 @@
 package com.sygic.maps.uikit.views.searchresultlist
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.AdvanceInfoView
 import com.sygic.maps.uikit.views.common.EmptyRecyclerView
@@ -52,31 +54,20 @@ open class SearchResultList @JvmOverloads constructor(
     private val binding: LayoutSearchResultListInternalBinding =
         LayoutSearchResultListInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private var onItemClickListener: ResultListAdapter.ClickListener? = null
-
     init {
         binding.searchResultListRecyclerView.setHasFixedSize(true)
         binding.searchResultListRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     /**
-     * ToDo
+     * Set a new adapter to provide [RecyclerView] child views on demand.
+     *
+     * When adapter is changed, all existing views are recycled back to the pool. If the pool has
+     * only one adapter, it will be cleared.
+     *
+     * @param adapter The new adapter to set, or null to set no adapter.
      */
-    fun setAdapter(adapter: ResultListAdapter<ResultListAdapter.ItemViewHolder>) {
-        binding.searchResultListRecyclerView.adapter = adapter.apply { clickListener = onItemClickListener }
-    }
-
-    /**
-     * ToDo
-     */
-    fun setOnItemClickListener(listener: ResultListAdapter.ClickListener) {
-        onItemClickListener = listener
-        binding.searchResultListRecyclerView.adapter?.let { (it as ResultListAdapter).clickListener = listener }
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-
-        onItemClickListener = null
+    fun <T : Parcelable> setAdapter(adapter: ResultListAdapter<T, ResultListAdapter.ItemViewHolder<T>>) {
+        binding.searchResultListRecyclerView.adapter = adapter
     }
 }

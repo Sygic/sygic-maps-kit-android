@@ -28,12 +28,56 @@ import android.app.Application
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LiveData
+import com.sygic.maps.module.search.callback.SearchResultCallback
+import com.sygic.maps.module.search.component.SearchFragmentInitComponent
+import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.toSdkSearchResultList
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
+import com.sygic.sdk.search.SearchResult
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SearchFragmentViewModel internal constructor(
+    @Assisted initComponent: SearchFragmentInitComponent,
     app: Application
 ) : AndroidViewModel(app), DefaultLifecycleObserver {
 
+    var searchResultCallback: SearchResultCallback? = null
+
+    val keyboardVisibilityObservable: LiveData<Boolean> = SingleLiveEvent()
+    val popBackStackObservable: LiveData<Any> = SingleLiveEvent()
+
+    private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
+
+    init {
+        searchResultCallback = initComponent.searchResultCallback
+        initComponent.recycle()
+
+        keyboardVisibilityObservable.asSingleEvent().value = true
+    }
+
+    fun searchResultListDataChanged(searchResultListItems: List<SearchResultItem<out SearchResult>>) {
+        currentSearchResults = searchResultListItems
+    }
+
+    fun onSearchResultItemClick(searchResultItem: SearchResultItem<out SearchResult>) =
+        invokeCallbackAndFinish(listOf(searchResultItem))
+
+    fun onActionSearchClick() = invokeCallbackAndFinish(currentSearchResults)
+
+    private fun invokeCallbackAndFinish(searchResultList: List<SearchResultItem<out SearchResult>>) {
+        searchResultCallback?.onSearchResult(searchResultList.toSdkSearchResultList())
+        keyboardVisibilityObservable.asSingleEvent().value = false
+        popBackStackObservable.asSingleEvent().call()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        searchResultCallback = null
+    }
 }

@@ -39,6 +39,7 @@ import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.search.Search
+import com.sygic.sdk.search.SearchResult
 
 /**
  * A [SearchResultListViewModel] is a basic ViewModel implementation for the [SearchResultList] class. It listens to
@@ -48,15 +49,15 @@ import com.sygic.sdk.search.Search
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultListViewModel internal constructor(
     private val searchManager: SearchManager
-) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener {
+) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener<SearchResult> {
 
-    private val defaultStateAdapter = DefaultStateAdapter()
-    private val resultListAdapter = SearchResultListAdapter()
+    private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
+    private val resultListAdapter = SearchResultListAdapter<SearchResult>()
 
-    val onSearchResultItemClickObservable: LiveData<SearchResultItem<*>> = SingleLiveEvent()
-    val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<*>>> = SingleLiveEvent()
+    val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
+    val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<out SearchResult>>> = SingleLiveEvent()
 
-    val activeAdapter: MutableLiveData<ResultListAdapter<ResultListAdapter.ItemViewHolder>> = MutableLiveData()
+    val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> = MutableLiveData()
 
     private val searchResultsListener = Search.SearchResultsListener { input, _, results ->
         results.toSearchResultList().let {
@@ -68,11 +69,13 @@ open class SearchResultListViewModel internal constructor(
     }
 
     init {
+        resultListAdapter.clickListener = this
         activeAdapter.value = defaultStateAdapter
+
         searchManager.addSearchResultsListener(searchResultsListener)
     }
 
-    override fun onSearchResultItemClick(searchResultItem: SearchResultItem<*>) {
+    override fun onSearchResultItemClick(searchResultItem: SearchResultItem<out SearchResult>) {
         onSearchResultItemClickObservable.asSingleEvent().value = searchResultItem
     }
 

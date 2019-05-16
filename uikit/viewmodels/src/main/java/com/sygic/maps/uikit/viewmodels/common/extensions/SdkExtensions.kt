@@ -25,9 +25,9 @@
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
-import com.sygic.maps.uikit.viewmodels.common.sdk.search.SearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.CoordinateSearchResult
@@ -68,3 +68,7 @@ fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
         else -> null
     }
 }
+
+fun List<SearchResult>.toSearchResultList() : List<SearchResultItem<out SearchResult>> = mapNotNull { it.toSearchResultItem() }
+
+fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList() : List<SearchResult> = mapNotNull { it.dataPayload }

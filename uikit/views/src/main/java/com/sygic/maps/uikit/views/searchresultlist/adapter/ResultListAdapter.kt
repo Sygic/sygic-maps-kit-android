@@ -24,19 +24,20 @@
 
 package com.sygic.maps.uikit.views.searchresultlist.adapter
 
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 
-abstract class ResultListAdapter<T: ResultListAdapter.ItemViewHolder> : RecyclerView.Adapter<T>() {
+abstract class ResultListAdapter<P : Parcelable, T : ResultListAdapter.ItemViewHolder<P>> : RecyclerView.Adapter<T>() {
 
-    var clickListener: ClickListener? = null
+    var clickListener: ClickListener<P>? = null
 
-    interface ClickListener {
-        fun onSearchResultItemClick(searchResultItem: SearchResultItem<*>)
+    interface ClickListener<P : Parcelable> {
+        fun onSearchResultItemClick(searchResultItem: SearchResultItem<out P>)
     }
 
-    abstract class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        open fun update(searchResultItem: SearchResultItem<*>) {}
+    abstract class ItemViewHolder<P : Parcelable>(view: View) : RecyclerView.ViewHolder(view) {
+        open fun update(searchResultItem: SearchResultItem<out P>) {}
     }
 }

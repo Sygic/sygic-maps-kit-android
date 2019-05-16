@@ -22,16 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.searchresultlist.adapter
+package com.sygic.maps.module.search.component
 
-import android.os.Parcelable
-import android.view.View
-import android.view.ViewGroup
+import androidx.annotation.RestrictTo
+import com.sygic.maps.module.search.callback.SearchResultCallback
 
-//ToDo: Use the Recents adapter instead when ready
-class DefaultStateAdapter<P : Parcelable> : ResultListAdapter<P, ResultListAdapter.ItemViewHolder<P>>() {
-    override fun getItemCount(): Int = 1
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<P> = EmptyItemViewHolder(View(parent.context))
-    override fun onBindViewHolder(holder: ItemViewHolder<P>, position: Int) {}
-    inner class EmptyItemViewHolder(emptyView: View) : ItemViewHolder<P>(emptyView)
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class SearchFragmentInitComponent {
+
+    var searchResultCallback: SearchResultCallback? = null
+
+    fun recycle() {
+        searchResultCallback = null
+    }
 }
