@@ -85,7 +85,7 @@ open class SearchToolbarViewModel internal constructor(
         }
     }
 
-    val keyboardVisibilityObservable: LiveData<Boolean> = SingleLiveEvent()
+    val onActionSearchClickObservable: LiveData<Any> = SingleLiveEvent()
 
     init {
         inputText.value = initComponent.initialSearchInput
@@ -93,7 +93,6 @@ open class SearchToolbarViewModel internal constructor(
         maxResultsCount = initComponent.maxResultsCount
         initComponent.recycle()
 
-        keyboardVisibilityObservable.asSingleEvent().value = true
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
 
         searchManager.addSearchResultsListener(searchResultsListener)
@@ -117,7 +116,7 @@ open class SearchToolbarViewModel internal constructor(
     fun onEditorActionEvent(actionId: Int): Boolean {
         return when (actionId) {
             EditorInfo.IME_ACTION_SEARCH -> {
-                keyboardVisibilityObservable.asSingleEvent().value = false
+                onActionSearchClickObservable.asSingleEvent().call()
                 true
             }
             else -> false

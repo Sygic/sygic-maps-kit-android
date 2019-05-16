@@ -24,19 +24,20 @@
 
 package com.sygic.maps.uikit.viewmodels.searchresultlist
 
-import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultItem
-import com.sygic.maps.uikit.viewmodels.common.sdk.search.SearchResultItem
+import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
-import com.sygic.maps.uikit.viewmodels.searchresultlist.adapter.vh.ItemViewHolder
-import com.sygic.maps.uikit.viewmodels.searchresultlist.adapter.DefaultStateAdapter
-import com.sygic.maps.uikit.viewmodels.searchresultlist.adapter.SearchResultListAdapter
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
+import com.sygic.maps.uikit.views.searchresultlist.adapter.DefaultStateAdapter
+import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
+import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.search.Search
 
 /**
@@ -47,27 +48,32 @@ import com.sygic.sdk.search.Search
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultListViewModel internal constructor(
     private val searchManager: SearchManager
-) : ViewModel(), DefaultLifecycleObserver, SearchResultListAdapter.ClickListener {
+) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener {
 
     private val defaultStateAdapter = DefaultStateAdapter()
     private val resultListAdapter = SearchResultListAdapter()
 
-    val activeAdapter: MutableLiveData<RecyclerView.Adapter<ItemViewHolder>> = MutableLiveData()
+    val onSearchResultItemClickObservable: LiveData<SearchResultItem<*>> = SingleLiveEvent()
+    val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<*>>> = SingleLiveEvent()
 
-    private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
-        resultListAdapter.items = results.mapNotNull { it.toSearchResultItem() }
+    val activeAdapter: MutableLiveData<ResultListAdapter<ResultListAdapter.ItemViewHolder>> = MutableLiveData()
+
+    private val searchResultsListener = Search.SearchResultsListener { input, _, results ->
+        results.toSearchResultList().let {
+            resultListAdapter.items = it
+            searchResultListDataChangedObservable.asSingleEvent().value = it
+        }
+
         activeAdapter.value = if (input.isNotEmpty()) resultListAdapter else defaultStateAdapter
     }
 
     init {
-        resultListAdapter.clickListener = this
-        searchManager.addSearchResultsListener(searchResultsListener)
-
         activeAdapter.value = defaultStateAdapter
+        searchManager.addSearchResultsListener(searchResultsListener)
     }
 
     override fun onSearchResultItemClick(searchResultItem: SearchResultItem<*>) {
-        Log.d("Tomas", "onSearchResultItemClick() called with: searchResultItem = [$searchResultItem]") //todo
+        onSearchResultItemClickObservable.asSingleEvent().value = searchResultItem
     }
 
     override fun onCleared() {

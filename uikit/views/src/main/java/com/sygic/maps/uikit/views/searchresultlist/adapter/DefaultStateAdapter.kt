@@ -22,12 +22,15 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.searchresultlist.adapter.vh
+package com.sygic.maps.uikit.views.searchresultlist.adapter
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
-import com.sygic.maps.uikit.viewmodels.common.sdk.search.SearchResultItem
+import android.view.ViewGroup
 
-abstract class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    open fun update(searchResultItem: SearchResultItem<*>) {}
+//ToDo: Use the Recents adapter instead when ready
+class DefaultStateAdapter : ResultListAdapter<ResultListAdapter.ItemViewHolder>() {
+    override fun getItemCount(): Int = 1
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder = EmptyItemViewHolder(View(parent.context))
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {}
+    inner class EmptyItemViewHolder(emptyView: View) : ItemViewHolder(emptyView)
 }

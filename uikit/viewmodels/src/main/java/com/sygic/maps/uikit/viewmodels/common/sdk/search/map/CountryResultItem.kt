@@ -28,14 +28,14 @@ import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class CountryResultItem(override val searchResult: MapSearchResult) : MapSearchResultItem() {
+class CountryResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
 
     @get:MapSearchResult.DataType
     override val type: Int
         get() = MapSearchResult.DataType.Country
 
     override val title: String
-        get() = searchResult.country.text
+        get() = dataPayload.country.text
 
     override val subTitle: String
         get() = "Europe" //TODO: MS-628 - unsolved yet

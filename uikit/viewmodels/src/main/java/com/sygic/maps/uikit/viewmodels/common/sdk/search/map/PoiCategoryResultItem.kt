@@ -32,26 +32,26 @@ import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-open class PoiCategoryResultItem(override val searchResult: MapSearchResult) : MapSearchResultItem() {
+open class PoiCategoryResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
 
     @get:MapSearchResult.DataType
     override val type: Int
         get() = MapSearchResult.DataType.PoiCategory
 
     override val title: String
-        get() = searchResult.poiCategoryName.text
+        get() = dataPayload.poiCategoryName.text
 
     override val subTitle: String
         get() = "Category" //todo: R.string.category?
 
     @get:DrawableRes
     override val icon: Int
-        get() = searchResult.poiCategoryId.toCategoryIconDrawableRes()
+        get() = dataPayload.poiCategoryId.toCategoryIconDrawableRes()
 
     @get:ColorRes
     override val iconBackgroundColor: Int
-        get() = searchResult.poiGroupId.toColorRes()
+        get() = dataPayload.poiGroupId.toColorRes()
 
-    override val isCategory: Boolean
+    override val iconRingVisible: Boolean
         get() = true
 }

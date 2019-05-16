@@ -29,7 +29,7 @@ import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class PostalResultItem(override val searchResult: MapSearchResult) : MapSearchResultItem() {
+class PostalResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
 
     @get:MapSearchResult.DataType
     override val type: Int
@@ -37,10 +37,10 @@ class PostalResultItem(override val searchResult: MapSearchResult) : MapSearchRe
 
     override val title: String
         get() = getStreetWithHouseNumberAndCityWithPostal(
-            city = searchResult.city.text,
-            postal = searchResult.postal.text
+            city = dataPayload.city.text,
+            postal = dataPayload.postal.text
         )
 
     override val subTitle: String
-        get() = searchResult.country.text
+        get() = dataPayload.country.text
 }

@@ -24,8 +24,8 @@
 
 package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
-import com.sygic.maps.uikit.viewmodels.common.sdk.search.SearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumberAndCityWithPostal
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.search.MapSearchResult
 
 abstract class MapSearchResultItem : SearchResultItem<MapSearchResult> {
@@ -35,9 +35,9 @@ abstract class MapSearchResultItem : SearchResultItem<MapSearchResult> {
 
     override val subTitle: String
         get() = getStreetWithHouseNumberAndCityWithPostal(
-            searchResult.street.text,
-            searchResult.addressPoint.text,
-            searchResult.city.text,
-            searchResult.postal.text
+            dataPayload.street.text,
+            dataPayload.addressPoint.text,
+            dataPayload.city.text,
+            dataPayload.postal.text
         )
 }

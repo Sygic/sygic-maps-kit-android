@@ -52,7 +52,7 @@ private const val POI_DETAIL_DATA = "poi_detail_data"
 
 /**
  * A [PoiDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
- * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiData] object.
+ * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiDetailData] object.
  *
  * You can register an [DialogFragmentListener] using [setListener] method. Then you will be notified when dialog is dismissed.
  *
@@ -61,7 +61,7 @@ private const val POI_DETAIL_DATA = "poi_detail_data"
 */
 open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
-    private var listener: DialogFragmentListener? = null
+    private var dialogFragmentListener: DialogFragmentListener? = null
     private var viewModel: PoiDetailInternalViewModel? = null
 
     private lateinit var preferencesManager: PreferencesManager
@@ -99,8 +99,8 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
                 preferencesManager
             )
         )[PoiDetailInternalViewModel::class.java].apply {
-            this.setListener(listener)
-            listener = null
+            this.listener = dialogFragmentListener
+            dialogFragmentListener = null
 
             this.expandObservable.observe(this@PoiDetailBottomDialogFragment, Observer<Any> { expandBottomSheet() })
             this.collapseObservable.observe(this@PoiDetailBottomDialogFragment, Observer<Any> { collapseBottomSheet() })
@@ -154,12 +154,12 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
      * @param listener [DialogFragmentListener] callback to invoke [PoiDetailBottomDialogFragment] dismiss.
      */
     fun setListener(listener: DialogFragmentListener) {
-        viewModel?.setListener(listener) ?: run { this.listener = listener }
+        viewModel?.let { it.listener = listener } ?: run { dialogFragmentListener = listener }
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        listener = null
+        dialogFragmentListener = null
     }
 }

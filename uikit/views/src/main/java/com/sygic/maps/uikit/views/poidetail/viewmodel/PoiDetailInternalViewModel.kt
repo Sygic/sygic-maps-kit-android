@@ -57,7 +57,8 @@ internal class PoiDetailInternalViewModel(poiDetailData: PoiDetailData,
     val phoneNumberClickObservable: LiveData<String> = SingleLiveEvent()
     val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
 
-    private var listener: DialogFragmentListener? = null
+    var listener: DialogFragmentListener? = null
+
     private var showcaseLaunch: Job? = null
 
     fun onHeaderClick() {
@@ -78,10 +79,6 @@ internal class PoiDetailInternalViewModel(poiDetailData: PoiDetailData,
 
     fun onCoordinatesClick() {
         coordinatesClickObservable.asSingleEvent().value = coordinatesText
-    }
-
-    fun setListener(listener: DialogFragmentListener?) {
-        this.listener = listener
     }
 
     override fun onStateChanged(@BottomSheetBehavior.State newState: Int) {

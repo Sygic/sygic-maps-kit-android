@@ -28,15 +28,15 @@ import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class CityResultItem(override val searchResult: MapSearchResult) : MapSearchResultItem() {
+class CityResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
 
     @get:MapSearchResult.DataType
     override val type: Int
         get() = MapSearchResult.DataType.City
 
     override val title: String
-        get() = searchResult.city.text
+        get() = dataPayload.city.text
 
     override val subTitle: String
-        get() = searchResult.country.text
+        get() = dataPayload.country.text
 }

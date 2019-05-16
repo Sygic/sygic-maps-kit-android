@@ -22,17 +22,34 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.searchresultlist.adapter
+package com.sygic.maps.uikit.views.searchresultlist.data
 
-import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.sygic.maps.uikit.viewmodels.searchresultlist.adapter.vh.ItemViewHolder
+import android.os.Parcelable
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 
-//ToDo: Use the Recents adapter instead when ready
-class DefaultStateAdapter : RecyclerView.Adapter<ItemViewHolder>() {
-    override fun getItemCount(): Int = 1
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder = EmptyItemViewHolder(View(parent.context))
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {}
-    inner class EmptyItemViewHolder(emptyView: View) : ItemViewHolder(emptyView)
+interface SearchResultItem<T : Parcelable> : Parcelable {
+
+    val dataPayload: T
+
+    val title: String
+    val subTitle: String
+        get() = EMPTY_STRING
+
+    @get:DrawableRes
+    val icon: Int
+        get() = R.drawable.ic_location
+
+    @get:ColorRes
+    val iconColor: Int
+        get() = R.color.white
+
+    @get:ColorRes
+    val iconBackgroundColor: Int
+        get() = R.color.iconBackground
+
+    val iconRingVisible: Boolean
+        get() = false
 }

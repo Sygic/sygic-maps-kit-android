@@ -22,41 +22,33 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.searchresultlist.adapter
+package com.sygic.maps.uikit.views.searchresultlist.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.sygic.maps.uikit.viewmodels.common.sdk.search.SearchResultItem
-import com.sygic.maps.uikit.viewmodels.searchresultlist.adapter.vh.ItemViewHolder
 import com.sygic.maps.uikit.views.common.extensions.backgroundTint
 import com.sygic.maps.uikit.views.common.extensions.tint
 import com.sygic.maps.uikit.views.common.extensions.visible
 import com.sygic.maps.uikit.views.databinding.LayoutSearchItemResultInternalBinding
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 
-open class SearchResultListAdapter : RecyclerView.Adapter<ItemViewHolder>() {
+open class SearchResultListAdapter : ResultListAdapter<ResultListAdapter.ItemViewHolder>() {
 
-    var clickListener: ClickListener? = null
     var items: List<SearchResultItem<*>> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    interface ClickListener {
-        fun onSearchResultItemClick(searchResultItem: SearchResultItem<*>)
-    }
-
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.update(items[position])
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder = SearchResultListItemViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder = ListItemViewHolder(
         LayoutSearchItemResultInternalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    inner class SearchResultListItemViewHolder(val binding: LayoutSearchItemResultInternalBinding) :
-        ItemViewHolder(binding.root) {
+    inner class ListItemViewHolder(val binding: LayoutSearchItemResultInternalBinding) : ItemViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener { clickListener?.onSearchResultItemClick(items[adapterPosition]) }
@@ -67,7 +59,7 @@ open class SearchResultListAdapter : RecyclerView.Adapter<ItemViewHolder>() {
             binding.searchItemIcon.tint(searchResultItem.iconColor)
             binding.searchItemIcon.backgroundTint(searchResultItem.iconBackgroundColor)
             binding.searchItemIconRing.tint(searchResultItem.iconBackgroundColor)
-            binding.searchItemIconRing.visible(searchResultItem.isCategory)
+            binding.searchItemIconRing.visible(searchResultItem.iconRingVisible)
             binding.searchItemTitle.text = searchResultItem.title
             binding.searchItemSubtitle.text = searchResultItem.subTitle
             binding.searchItemSubtitle.visible(searchResultItem.subTitle.isNotEmpty())

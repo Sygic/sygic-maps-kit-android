@@ -22,35 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.search
+package com.sygic.maps.uikit.views.searchresultlist.adapter
 
-import android.os.Parcelable
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import com.sygic.maps.uikit.viewmodels.R
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.sdk.search.SearchResult
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 
-interface SearchResultItem<T : SearchResult> : Parcelable {
+abstract class ResultListAdapter<T: ResultListAdapter.ItemViewHolder> : RecyclerView.Adapter<T>() {
 
-    val searchResult: T
+    var clickListener: ClickListener? = null
 
-    val title: String
-    val subTitle: String
-        get() = EMPTY_STRING
+    interface ClickListener {
+        fun onSearchResultItemClick(searchResultItem: SearchResultItem<*>)
+    }
 
-    @get:DrawableRes
-    val icon: Int
-        get() = R.drawable.ic_location
-
-    @get:ColorRes
-    val iconColor: Int
-        get() = R.color.white
-
-    @get:ColorRes
-    val iconBackgroundColor: Int
-        get() = R.color.iconBackground
-
-    val isCategory: Boolean
-        get() = false
+    abstract class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        open fun update(searchResultItem: SearchResultItem<*>) {}
+    }
 }

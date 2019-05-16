@@ -29,11 +29,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.AdvanceInfoView
 import com.sygic.maps.uikit.views.common.EmptyRecyclerView
 import com.sygic.maps.uikit.views.databinding.LayoutSearchResultListInternalBinding
+import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
 
 /**
  * A [SearchResultList] can be used as an visual presentation component for the search result items. It contains
@@ -52,12 +52,31 @@ open class SearchResultList @JvmOverloads constructor(
     private val binding: LayoutSearchResultListInternalBinding =
         LayoutSearchResultListInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
+    private var onItemClickListener: ResultListAdapter.ClickListener? = null
+
     init {
         binding.searchResultListRecyclerView.setHasFixedSize(true)
         binding.searchResultListRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    fun setAdapter(adapter: RecyclerView.Adapter<*>) {
-        binding.searchResultListRecyclerView.adapter = adapter
+    /**
+     * ToDo
+     */
+    fun setAdapter(adapter: ResultListAdapter<ResultListAdapter.ItemViewHolder>) {
+        binding.searchResultListRecyclerView.adapter = adapter.apply { clickListener = onItemClickListener }
+    }
+
+    /**
+     * ToDo
+     */
+    fun setOnItemClickListener(listener: ResultListAdapter.ClickListener) {
+        onItemClickListener = listener
+        binding.searchResultListRecyclerView.adapter?.let { (it as ResultListAdapter).clickListener = listener }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+
+        onItemClickListener = null
     }
 }
