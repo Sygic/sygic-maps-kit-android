@@ -37,9 +37,9 @@ interface OnMapClickListener {
 
     /**
      * Modifies the map click [MapMarker] default behavior. You can override this method to use your own map
-     * click [MapMarker] or return null.
+     * click [MapMarker] or return null for no marker. Calling super will create default [MapMarker].
      *
-     * @return the map click [MapMarker]. Null if the map click [MapMarker] should not be displayed.
+     * @return your [MapMarker] to display or null if no [MapMarker] should be displayed.
      */
     fun getClickMapMarker(latitude: Double, longitude: Double): MapMarker? = MapMarker.at(latitude, longitude).build()
 
@@ -54,16 +54,16 @@ interface OnMapClickListener {
     /**
      * Called when a click to the map has been made.
      *
-     * @param selectionType [SelectionType] belonging to the click on the map.
-     * @param latitude [Double] belonging to the click on the map.
-     * @param longitude [Double] belonging to the click on the map.
+     * @param selectionType [SelectionType] describing the place clicked.
+     * @param latitude [Double] coordinate of the place clicked.
+     * @param longitude [Double] coordinate of the place clicked.
      *
-     * @return true to continue to proceed the map click data, false otherwise.
+     * @return true to continue to process clicked point's data, false otherwise.
      */
     fun onMapClick(@SelectionType selectionType: Int, latitude: Double, longitude: Double): Boolean = true
 
     /**
-     * Called when the map click data is received (it may take a while). It will not be called, if the [onMapClick] method returns false.
+     * Called when the clicked point's data are received (it may take a while depending on user's connection). It will not be called, if the [onMapClick] method returns false.
      *
      * @param data [ViewObjectData] belonging to the click on the map.
      */
