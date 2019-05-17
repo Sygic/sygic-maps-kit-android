@@ -41,7 +41,7 @@ import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
  * A [SearchResultList] can be used as an visual presentation component for the search result items. It contains
  * [EmptyRecyclerView] and pre-customized [AdvanceInfoView] component.
  *
- * TODO
+ * TODO: MS-5681
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultList @JvmOverloads constructor(

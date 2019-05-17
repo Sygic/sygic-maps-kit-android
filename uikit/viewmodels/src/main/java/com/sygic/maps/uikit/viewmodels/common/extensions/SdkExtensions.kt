@@ -30,9 +30,7 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.CoordinateSearchResult
-import com.sygic.sdk.search.MapSearchResult
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.*
 import java.util.*
 
 fun LocationInfo.getFirst(@LocationInfo.LocationType locationType: Int): String? {
@@ -72,3 +70,5 @@ fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
 fun List<SearchResult>.toSearchResultList() : List<SearchResultItem<out SearchResult>> = mapNotNull { it.toSearchResultItem() }
 
 fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList() : List<SearchResult> = mapNotNull { it.dataPayload }
+
+fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) = Search().loadDetails(this, DetailRequest(), callback)

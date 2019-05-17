@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
+import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
@@ -53,6 +54,9 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
             this.moduleConnectionObservable.observe(
                 this@SearchFromBrowseMapActivity,
                 Observer<ModuleConnectionProvider> { setFragmentModuleConnection(it) })
+            this.showToastObservable.observe(
+                this@SearchFromBrowseMapActivity,
+                Observer<String> { longToast(it) })
         }
         lifecycle.addObserver(viewModel)
     }

@@ -25,8 +25,8 @@
 package com.sygic.samples.browsemap
 
 import android.os.Bundle
-import android.widget.Toast
 import com.sygic.maps.module.browsemap.BrowseMapFragment
+import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 
@@ -41,7 +41,7 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         browseMapFragment.setOnMapClickListener {
-            Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+            longToast(it.toString())
             true
         }
     }
