@@ -28,15 +28,15 @@ import android.os.Parcelable
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 
 interface SearchResultItem<T : Parcelable> : Parcelable {
 
     val dataPayload: T
 
-    val title: String
-    val subTitle: String
-        get() = EMPTY_STRING
+    val title: TextHolder
+    val subTitle: TextHolder
+        get() = TextHolder.empty()
 
     @get:DrawableRes
     val icon: Int

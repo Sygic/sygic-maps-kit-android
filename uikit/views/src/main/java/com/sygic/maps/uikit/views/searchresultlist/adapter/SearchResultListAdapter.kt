@@ -28,6 +28,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.sygic.maps.uikit.views.common.extensions.backgroundTint
+import com.sygic.maps.uikit.views.common.extensions.text
 import com.sygic.maps.uikit.views.common.extensions.tint
 import com.sygic.maps.uikit.views.common.extensions.visible
 import com.sygic.maps.uikit.views.databinding.LayoutSearchItemResultInternalBinding
@@ -61,8 +62,8 @@ open class SearchResultListAdapter<P : Parcelable> : ResultListAdapter<P, Result
             binding.searchItemIcon.backgroundTint(searchResultItem.iconBackgroundColor)
             binding.searchItemIconRing.tint(searchResultItem.iconBackgroundColor)
             binding.searchItemIconRing.visible(searchResultItem.iconRingVisible)
-            binding.searchItemTitle.text = searchResultItem.title
-            binding.searchItemSubtitle.text = searchResultItem.subTitle
+            binding.searchItemTitle.text(searchResultItem.title)
+            binding.searchItemSubtitle.text(searchResultItem.subTitle)
             binding.searchItemSubtitle.visible(searchResultItem.subTitle.isNotEmpty())
         }
     }

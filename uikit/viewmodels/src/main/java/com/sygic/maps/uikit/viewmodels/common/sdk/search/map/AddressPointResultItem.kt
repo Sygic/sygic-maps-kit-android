@@ -25,6 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
 import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumberAndCityWithPostal
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
@@ -35,14 +36,16 @@ class AddressPointResultItem(override val dataPayload: MapSearchResult) : MapSea
     override val type: Int
         get() = MapSearchResult.DataType.AddressPoint
 
-    override val title: String
-        get() = getStreetWithHouseNumberAndCityWithPostal(
-            street = dataPayload.street.text,
-            houseNumber = dataPayload.addressPoint.text,
-            city = if (dataPayload.street.text.isEmpty()) dataPayload.city.text else null
+    override val title: TextHolder
+        get() = TextHolder.from(
+            getStreetWithHouseNumberAndCityWithPostal(
+                street = dataPayload.street.text,
+                houseNumber = dataPayload.addressPoint.text,
+                city = if (dataPayload.street.text.isEmpty()) dataPayload.city.text else null
+            )
         )
 
-    override val subTitle: String
-        get() = if (dataPayload.street.text.isEmpty()) dataPayload.country.text else dataPayload.city.text
+    override val subTitle: TextHolder
+        get() = TextHolder.from(if (dataPayload.street.text.isEmpty()) dataPayload.country.text else dataPayload.city.text)
 
 }

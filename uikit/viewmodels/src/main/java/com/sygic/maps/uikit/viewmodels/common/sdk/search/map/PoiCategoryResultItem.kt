@@ -26,8 +26,10 @@ package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.toCategoryIconDrawableRes
 import com.sygic.maps.uikit.viewmodels.common.extensions.toColorRes
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
@@ -38,11 +40,11 @@ open class PoiCategoryResultItem(override val dataPayload: MapSearchResult) : Ma
     override val type: Int
         get() = MapSearchResult.DataType.PoiCategory
 
-    override val title: String
-        get() = dataPayload.poiCategoryName.text
+    override val title: TextHolder
+        get() = TextHolder.from(dataPayload.poiCategoryName.text)
 
-    override val subTitle: String
-        get() = "Category" //todo: R.string.category?
+    override val subTitle: TextHolder
+        get() = TextHolder.from(R.string.category)
 
     @get:DrawableRes
     override val icon: Int

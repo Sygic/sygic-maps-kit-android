@@ -22,23 +22,44 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
+package com.sygic.maps.uikit.views.common.utils
 
-import com.sygic.maps.uikit.viewmodels.R
-import com.sygic.maps.uikit.views.common.utils.TextHolder
-import com.sygic.sdk.search.MapSearchResult
-import kotlinx.android.parcel.Parcelize
+import android.content.Context
+import androidx.annotation.StringRes
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.NO_ID
 
-@Parcelize
-class CountryResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
+open class TextHolder private constructor(
+    @StringRes private var textResource: Int = NO_ID,
+    private var textString: String = EMPTY_STRING
+) {
 
-    @get:MapSearchResult.DataType
-    override val type: Int
-        get() = MapSearchResult.DataType.Country
+    companion object {
 
-    override val title: TextHolder
-        get() = TextHolder.from(dataPayload.country.text)
+        @JvmStatic
+        fun empty(): TextHolder {
+            return TextHolder()
+        }
 
-    override val subTitle: TextHolder
-        get() = TextHolder.from(R.string.country)
+        @JvmStatic
+        fun from(@StringRes resId: Int): TextHolder {
+            return TextHolder(textResource = resId)
+        }
+
+        @JvmStatic
+        fun from(text: String): TextHolder {
+            return TextHolder(textString = text)
+        }
+    }
+
+    open fun getText(context: Context): String {
+        if (textResource != NO_ID) {
+            return context.getString(textResource)
+        }
+
+        return textString
+    }
+
+    fun isEmpty() = textResource == NO_ID && textString == EMPTY_STRING
+    fun isNotEmpty() = !isEmpty()
 }

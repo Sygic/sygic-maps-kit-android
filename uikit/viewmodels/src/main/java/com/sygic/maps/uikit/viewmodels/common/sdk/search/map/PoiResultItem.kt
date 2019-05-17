@@ -28,6 +28,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.common.extensions.toCategoryIconDrawableRes
 import com.sygic.maps.uikit.viewmodels.common.extensions.toColorRes
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
@@ -38,8 +39,8 @@ class PoiResultItem(override val dataPayload: MapSearchResult) : MapSearchResult
     override val type: Int
         get() = MapSearchResult.DataType.Poi
 
-    override val title: String
-        get() = dataPayload.poiName.text
+    override val title: TextHolder
+        get() = TextHolder.from(dataPayload.poiName.text)
 
     @get:DrawableRes
     override val icon: Int

@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
@@ -34,9 +35,9 @@ class StreetResultItem(override val dataPayload: MapSearchResult) : MapSearchRes
     override val type: Int
         get() = MapSearchResult.DataType.Street
 
-    override val title: String
-        get() = dataPayload.street.text
+    override val title: TextHolder
+        get() = TextHolder.from(dataPayload.street.text)
 
-    override val subTitle: String
-        get() = dataPayload.city.text
+    override val subTitle: TextHolder
+        get() = TextHolder.from(dataPayload.city.text)
 }

@@ -22,23 +22,11 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
+package com.sygic.maps.uikit.views.common.extensions
 
-import com.sygic.maps.uikit.viewmodels.R
+import android.widget.TextView
 import com.sygic.maps.uikit.views.common.utils.TextHolder
-import com.sygic.sdk.search.MapSearchResult
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
-class CountryResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
-
-    @get:MapSearchResult.DataType
-    override val type: Int
-        get() = MapSearchResult.DataType.Country
-
-    override val title: TextHolder
-        get() = TextHolder.from(dataPayload.country.text)
-
-    override val subTitle: TextHolder
-        get() = TextHolder.from(R.string.country)
+fun TextView.text(textHolder: TextHolder) {
+    text = textHolder.getText(context)
 }

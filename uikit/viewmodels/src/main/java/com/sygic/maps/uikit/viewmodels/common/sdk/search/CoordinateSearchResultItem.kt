@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.common.sdk.search
 
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.search.CoordinateSearchResult
 import kotlinx.android.parcel.Parcelize
@@ -32,6 +33,6 @@ import kotlinx.android.parcel.Parcelize
 class CoordinateSearchResultItem(override val dataPayload: CoordinateSearchResult) :
     SearchResultItem<CoordinateSearchResult> {
 
-    override val title: String
-        get() = dataPayload.title
+    override val title: TextHolder
+        get() = TextHolder.from(dataPayload.title)
 }

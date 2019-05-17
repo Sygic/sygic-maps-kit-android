@@ -25,6 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
 import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumberAndCityWithPostal
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
@@ -35,12 +36,14 @@ class PostalResultItem(override val dataPayload: MapSearchResult) : MapSearchRes
     override val type: Int
         get() = MapSearchResult.DataType.Postal
 
-    override val title: String
-        get() = getStreetWithHouseNumberAndCityWithPostal(
-            city = dataPayload.city.text,
-            postal = dataPayload.postal.text
+    override val title: TextHolder
+        get() = TextHolder.from(
+            getStreetWithHouseNumberAndCityWithPostal(
+                city = dataPayload.city.text,
+                postal = dataPayload.postal.text
+            )
         )
 
-    override val subTitle: String
-        get() = dataPayload.country.text
+    override val subTitle: TextHolder
+        get() = TextHolder.from(dataPayload.country.text)
 }

@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
 import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.common.extensions.toGroupIconDrawableRes
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
@@ -36,8 +37,8 @@ class PoiCategoryGroupResultItem(override val dataPayload: MapSearchResult) : Po
     override val type: Int
         get() = MapSearchResult.DataType.PoiCategoryGroup
 
-    override val title: String
-        get() = dataPayload.poiCategoryGroupName.text
+    override val title: TextHolder
+        get() = TextHolder.from(dataPayload.poiCategoryGroupName.text)
 
     @get:DrawableRes
     override val icon: Int
