@@ -46,39 +46,40 @@ class SearchFromBrowseMapActivityViewModel : ViewModel(), DefaultLifecycleObserv
     val moduleConnectionObservable: LiveData<ModuleConnectionProvider> = SingleLiveEvent()
     val showToastObservable: LiveData<String> = SingleLiveEvent()
 
+    private val searchConnectionProvider = SearchConnectionProvider { searchResultList ->
+        searchResultList.forEach { searchResult ->
+            when (searchResult) {
+                is MapSearchResult -> {
+                    searchResult.loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
+                        if (state == SearchResult.ResultState.Success) {
+                            when (mapSearchDetail) {
+                                is DetailStreet -> showToast("[DetailStreet] $mapSearchDetail")
+                                is DetailCountry -> showToast("[DetailCountry] $mapSearchDetail")
+                                is DetailAddressPoint -> showToast("[DetailAddressPoint] $mapSearchDetail")
+                                is DetailPostalAddress -> showToast("[DetailPostalAddress] $mapSearchDetail")
+                                is DetailPostal -> showToast("[DetailPostal] CityNames: ${mapSearchDetail.cityNames}")
+                                is DetailCity -> showToast("[DetailCity] Is capital: ${mapSearchDetail.isCapital}, Population: ${mapSearchDetail.population}")
+                                is DetailPoiCategoryGroup -> showToast("[DetailPoiCategoryGroup] PoiList: ${mapSearchDetail.poiList}")
+                                is DetailPoiCategory -> showToast("[DetailPoiCategory] PoiList: ${mapSearchDetail.poiList}")
+                                is DetailPoi -> showToast("[DetailPoi] Name: ${mapSearchDetail.name}, Category: ${mapSearchDetail.categoryId}, Group: ${mapSearchDetail.groupId}")
+                                else -> showToast(mapSearchDetail.toString())
+                            }
+                        } else {
+                            showToast("Something went wrong :( (error: $state)")
+                        }
+                    })
+                }
+                else -> showToast("[SearchResult] $searchResult")
+            }
+        }
+    }
+
     init {
         placeBrowseMapFragmentObservable.asSingleEvent().value =
             BrowseMapFragmentInitComponent(11F, GeoCoordinates(48.145764, 17.126015))
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        val searchConnectionProvider = SearchConnectionProvider { searchResultList ->
-            searchResultList.forEach { searchResult ->
-                when (searchResult) {
-                    is MapSearchResult -> {
-                        searchResult.loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
-                            if (state == SearchResult.ResultState.Success) {
-                                when (mapSearchDetail) {
-                                    is DetailStreet -> showToast("[DetailStreet] $mapSearchDetail")
-                                    is DetailCountry -> showToast("[DetailCountry] $mapSearchDetail")
-                                    is DetailAddressPoint -> showToast("[DetailAddressPoint] $mapSearchDetail")
-                                    is DetailPostalAddress -> showToast("[DetailPostalAddress] $mapSearchDetail")
-                                    is DetailPostal -> showToast("[DetailPostal] CityNames: ${mapSearchDetail.cityNames}")
-                                    is DetailCity -> showToast("[DetailCity] Is capital: ${mapSearchDetail.isCapital}, Population: ${mapSearchDetail.population}")
-                                    is DetailPoiCategoryGroup -> showToast("[DetailPoiCategoryGroup] PoiList: ${mapSearchDetail.poiList}")
-                                    is DetailPoiCategory -> showToast("[DetailPoiCategory] PoiList: ${mapSearchDetail.poiList}")
-                                    is DetailPoi -> showToast("[DetailPoi] Name: ${mapSearchDetail.name}, Category: ${mapSearchDetail.categoryId}, Group: ${mapSearchDetail.groupId}")
-                                    else -> showToast(mapSearchDetail.toString())
-                                }
-                            } else {
-                                showToast("Something went wrong :( (error: $state)")
-                            }
-                        })
-                    }
-                    else -> showToast("[SearchResult] $searchResult")
-                }
-            }
-        }
         moduleConnectionObservable.asSingleEvent().value = searchConnectionProvider
     }
 
