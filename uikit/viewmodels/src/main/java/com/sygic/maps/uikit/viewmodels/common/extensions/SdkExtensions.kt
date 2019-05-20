@@ -48,7 +48,7 @@ fun ViewObject<*>.getSelectionType(): Int {
             }
         }
         is ProxyObject<*> -> {
-            return when (this.data.proxyObjectType) {
+            return when (this.proxyObjectType) {
                 ProxyObject.ProxyObjectType.Poi -> SelectionType.POI
                 else -> SelectionType.OTHER
             }
