@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
+import android.os.Parcelable
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
@@ -31,10 +32,12 @@ import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.MapObject
 import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
+import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
 import java.util.*
 
 @SelectionType
@@ -78,4 +81,26 @@ fun ViewObjectData.toPoiDetailData(): PoiDetailData {
     val emailText: String? = if (payload is PoiData) (payload as PoiData).email else null
     val phoneText: String? = if (payload is PoiData) (payload as PoiData).phone else null
     return PoiDetailData(titleText, subtitleText, urlText, emailText, phoneText, coordinatesText)
+}
+
+fun MapMarker.getCopyWithPayload(payload: Parcelable): MapMarker {
+    if (data.payload !is EmptyPayload) {
+        return this
+    }
+
+    return MapMarker
+        .at(position)
+        .withLabel(data.label)
+        .withIcon(data.bitmapFactory)
+        .setAnchorPosition(data.anchorPosition)
+        .setClickableArea(
+            data.clickableArea.left,
+            data.clickableArea.top,
+            data.clickableArea.right,
+            data.clickableArea.bottom
+        )
+        .setMinZoomLevel(data.minZoomLevel)
+        .setMaxZoomLevel(data.maxZoomLevel)
+        .withPayload(payload)
+        .build()
 }

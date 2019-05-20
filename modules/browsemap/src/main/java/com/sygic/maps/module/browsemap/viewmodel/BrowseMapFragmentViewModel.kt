@@ -41,6 +41,7 @@ import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
 import com.sygic.maps.module.common.utils.onMapClick
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload
 import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
@@ -183,7 +184,9 @@ class BrowseMapFragmentViewModel internal constructor(
                     getOnClickMapMarker(firstViewObject)?.let { clickMapMarker ->
                         mapDataModel.addOnClickMapMarker(
                             when (firstViewObject) {
-                                is ProxyPoi -> MapMarker.at(clickMapMarker.position).withPayload(firstViewObject).build()
+                                // To persist ProxyPoi data payload we need to create a copy of the provided MapMarker
+                                // and give it the same payload
+                                is ProxyPoi -> clickMapMarker.getCopyWithPayload(firstViewObject)
                                 else -> clickMapMarker
                             }.also { firstViewObject = it })
                     }
