@@ -74,15 +74,7 @@ open class SearchToolbarViewModel internal constructor(
     private var lastSearchedString: String = EMPTY_STRING
     val onTextChangedListener = TextWatcherAdapter { input ->
         inputText.value = input
-
-        if (input != lastSearchedString) {
-            lastSearchedString = input
-            searchCoroutineJob?.cancel()
-            searchCoroutineJob = GlobalScope.launch(Dispatchers.Main) {
-                delay(searchDelay)
-                searchTextInput(input)
-            }
-        }
+        if (input != lastSearchedString) search(input)
     }
 
     val onActionSearchClickObservable: LiveData<Any> = SingleLiveEvent()
@@ -121,6 +113,19 @@ open class SearchToolbarViewModel internal constructor(
             }
             else -> false
         }
+    }
+
+    fun search(input: String) {
+        lastSearchedString = input
+        searchCoroutineJob?.cancel()
+        searchCoroutineJob = GlobalScope.launch(Dispatchers.Main) {
+            delay(searchDelay)
+            searchTextInput(input)
+        }
+    }
+
+    fun retrySearch() {
+        search(lastSearchedString)
     }
 
     override fun onCleared() {
