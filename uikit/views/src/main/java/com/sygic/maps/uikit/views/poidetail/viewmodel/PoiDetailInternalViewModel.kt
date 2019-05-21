@@ -39,16 +39,15 @@ private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
 const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
 const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED
 
-internal class PoiDetailInternalViewModel(poiDetailData: PoiDetailData,
-                                          private val preferencesManager: PreferencesManager
-) : ViewModel(), BottomSheetBehaviorWrapper.StateListener {
+internal class PoiDetailInternalViewModel(private val preferencesManager: PreferencesManager) : ViewModel(),
+    BottomSheetBehaviorWrapper.StateListener {
 
-    val titleText: String = poiDetailData.titleString
-    val subtitleText: String = poiDetailData.subtitleString
-    val urlText: String? = poiDetailData.urlString
-    val emailText: String? = poiDetailData.emailString
-    val phoneText: String? = poiDetailData.phoneString
-    val coordinatesText: String? = poiDetailData.coordinatesString
+    val titleText: MutableLiveData<String> = MutableLiveData()
+    val subtitleText: MutableLiveData<String> = MutableLiveData()
+    val urlText: MutableLiveData<String> = MutableLiveData()
+    val emailText: MutableLiveData<String> = MutableLiveData()
+    val phoneText: MutableLiveData<String> = MutableLiveData()
+    val coordinatesText: MutableLiveData<String> = MutableLiveData()
 
     val expandObservable: LiveData<Any> = SingleLiveEvent()
     val collapseObservable: LiveData<Any> = SingleLiveEvent()
@@ -56,6 +55,8 @@ internal class PoiDetailInternalViewModel(poiDetailData: PoiDetailData,
     val emailClickObservable: LiveData<String> = SingleLiveEvent()
     val phoneNumberClickObservable: LiveData<String> = SingleLiveEvent()
     val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
+
+    val contentViewSwitcherIndexObservable: LiveData<Int> = SingleLiveEvent()
 
     private var listener: DialogFragmentListener? = null
     private var showcaseLaunch: Job? = null
@@ -65,23 +66,37 @@ internal class PoiDetailInternalViewModel(poiDetailData: PoiDetailData,
     }
 
     fun onWebUrlClick() {
-        webUrlClickObservable.asSingleEvent().value = urlText
+        webUrlClickObservable.asSingleEvent().value = urlText.value
     }
 
     fun onEmailClick() {
-        emailClickObservable.asSingleEvent().value = emailText
+        emailClickObservable.asSingleEvent().value = emailText.value
     }
 
     fun onPhoneNumberClick() {
-        phoneNumberClickObservable.asSingleEvent().value = phoneText
+        phoneNumberClickObservable.asSingleEvent().value = phoneText.value
     }
 
     fun onCoordinatesClick() {
-        coordinatesClickObservable.asSingleEvent().value = coordinatesText
+        coordinatesClickObservable.asSingleEvent().value = coordinatesText.value
     }
 
     fun setListener(listener: DialogFragmentListener?) {
         this.listener = listener
+    }
+
+    fun setData(data: PoiDetailData?) {
+        data?.let {
+            titleText.value = it.titleString
+            subtitleText.value = it.subtitleString
+            urlText.value = it.urlString
+            emailText.value = it.emailString
+            phoneText.value = it.phoneString
+            coordinatesText.value = it.coordinatesString
+            contentViewSwitcherIndexObservable.asSingleEvent().value = PoiDetailContentViewSwitcherIndex.CONTENT
+        } ?: run {
+            contentViewSwitcherIndexObservable.asSingleEvent().value = PoiDetailContentViewSwitcherIndex.PROGRESSBAR
+        }
     }
 
     override fun onStateChanged(@BottomSheetBehavior.State newState: Int) {
@@ -112,13 +127,12 @@ internal class PoiDetailInternalViewModel(poiDetailData: PoiDetailData,
         listener = null
     }
 
-    class ViewModelFactory(private val poiDetailData: PoiDetailData,
-                           private val preferencesManager: PreferencesManager
-    ) : ViewModelProvider.NewInstanceFactory() {
+    class ViewModelFactory(private val preferencesManager: PreferencesManager) :
+        ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return PoiDetailInternalViewModel(poiDetailData, preferencesManager) as T
+            return PoiDetailInternalViewModel(preferencesManager) as T
         }
     }
 }
