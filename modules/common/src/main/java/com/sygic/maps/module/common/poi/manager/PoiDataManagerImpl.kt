@@ -50,7 +50,7 @@ class PoiDataManagerImpl : PoiDataManager {
             }
 
             ViewObject.ObjectType.Proxy -> {
-                when ((viewObject as ProxyObject<*>).data.proxyObjectType) {
+                when ((viewObject as ProxyObject<*>).proxyObjectType) {
                     ProxyObject.ProxyObjectType.Poi -> places.loadPoiObject(viewObject as ProxyPoi, callback)
                     else -> handleDefaultState(viewObject, callback)
                 }

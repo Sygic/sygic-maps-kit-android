@@ -25,6 +25,7 @@
 apply from: 'buildSdk.gradle'
 
 include ':app-samples',
+        ':app-benchmark',
         ':module-common',
         ':module-browsemap',
         ':tool-annotation-processor',
@@ -33,6 +34,7 @@ include ':app-samples',
         ':uikit-viewmodels'
 
 project(':app-samples').projectDir = new File("app/samples")
+project(':app-benchmark').projectDir = new File("app/benchmark")
 project(':module-common').projectDir = new File("modules/common")
 project(':module-browsemap').projectDir = new File("modules/browsemap")
 project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
