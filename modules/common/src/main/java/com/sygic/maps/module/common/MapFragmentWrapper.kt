@@ -257,7 +257,17 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to be added.
      */
     fun addMapMarker(marker: MapMarker) {
-        mapDataModel.addMapObject(marker)
+        mapDataModel.addMapMarker(marker)
+    }
+
+    /**
+     * Remove a single [MapMarker] from the map. This is useful if you want remove only one specific object from the map,
+     * otherwise you can use [removeAllMapMarkers] method.
+     *
+     * @param marker [MapMarker] object to remove.
+     */
+    fun removeMapMarker(marker: MapMarker) {
+        mapDataModel.removeMapMarker(marker)
     }
 
     /**
@@ -268,6 +278,13 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      */
     fun addMapMarkers(markers: List<MapMarker>) {
         markers.forEach { addMapMarker(it) }
+    }
+
+    /**
+     * Remove all [MapMarker]-s from the map at once. This is useful if you want to remove all objects from the map.
+     */
+    fun removeAllMapMarkers() {
+        mapDataModel.removeAllMapMarkers()
     }
 
     /**

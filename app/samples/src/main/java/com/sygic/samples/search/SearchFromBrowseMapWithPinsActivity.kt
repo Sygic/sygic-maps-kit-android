@@ -30,33 +30,36 @@ import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.uikit.views.common.extensions.longToast
+import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
-import com.sygic.samples.search.viewmodels.SearchFromBrowseMapActivityViewModel
+import com.sygic.samples.search.viewmodels.SearchFromBrowseMapWitchPinsActivityViewModel
 
-class SearchFromBrowseMapActivity : CommonSampleActivity() {
+class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Search#search---from-browse-map"
+    override val wikiModulePath: String = "Module-Search#search---from-browse-map-with-pins"
 
-    private lateinit var viewModel: SearchFromBrowseMapActivityViewModel
+    private lateinit var viewModel: SearchFromBrowseMapWitchPinsActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_search_from_browse_map)
+        setContentView(R.layout.activity_search_from_browse_map_pins)
 
-        viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapActivityViewModel::class.java).apply {
+        viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapWitchPinsActivityViewModel::class.java).apply {
             this.placeBrowseMapFragmentObservable.observe(
-                this@SearchFromBrowseMapActivity,
+                this@SearchFromBrowseMapWithPinsActivity,
                 Observer<BrowseMapFragmentInitComponent> { placeBrowseMapFragment(it) })
             this.moduleConnectionObservable.observe(
-                this@SearchFromBrowseMapActivity,
+                this@SearchFromBrowseMapWithPinsActivity,
                 Observer<ModuleConnectionProvider> { setFragmentModuleConnection(it) })
-            this.showToastObservable.observe(
-                this@SearchFromBrowseMapActivity,
-                Observer<String> { longToast(it) })
+            this.addMapMarkerObservable.observe(
+                this@SearchFromBrowseMapWithPinsActivity,
+                Observer<MapMarker> { addMapMarker(it) })
+            this.removeAllMapMarkersObservable.observe(
+                this@SearchFromBrowseMapWithPinsActivity,
+                Observer<Any> { removeAllMapMarkers() })
         }
         lifecycle.addObserver(viewModel)
     }
@@ -67,12 +70,15 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
         ?.beginTransaction()
         ?.replace(R.id.fragmentContainer, BrowseMapFragment().apply {
             cameraDataModel.zoomLevel = component.zoomLevel
-            cameraDataModel.position = component.position
         }, BROWSE_MAP_FRAGMENT_TAG)
         ?.commitNow() //ToDo: MS-5686
 
     private fun setFragmentModuleConnection(moduleConnectionProvider: ModuleConnectionProvider) =
         findBrowseMapFragment()?.setSearchConnectionProvider(moduleConnectionProvider)
+
+    private fun addMapMarker(mapMarker: MapMarker) = findBrowseMapFragment()?.addMapMarker(mapMarker)
+
+    private fun removeAllMapMarkers() = findBrowseMapFragment()?.removeAllMapMarkers()
 
     private fun findBrowseMapFragment(): BrowseMapFragment? =
         supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG)?.let { it as BrowseMapFragment }
