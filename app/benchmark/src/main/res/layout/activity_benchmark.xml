@@ -26,7 +26,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
-             android:layout_height="match_parent">
+             android:layout_height="match_parent"
+             android:keepScreenOn="true">
 
     <fragment
             android:id="@+id/browseMapFragment"
@@ -37,6 +38,6 @@
             app:sygic_map_latitude="48.145764"
             app:sygic_map_longitude="17.126015"
             app:sygic_map_selectionMode="full"
-            app:sygic_map_zoom="12" />
+            app:sygic_map_zoom="12"/>
 
 </FrameLayout>
