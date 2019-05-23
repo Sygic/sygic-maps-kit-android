@@ -27,6 +27,7 @@ package com.sygic.maps.module.browsemap.detail
 import android.os.Parcel
 import android.os.Parcelable
 import com.sygic.maps.module.common.detail.DetailsViewFactory
+import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
@@ -36,6 +37,8 @@ import com.sygic.sdk.map.`object`.data.ViewObjectData
 
 internal class PoiDetailsObject : UiObject {
 
+    private var xOffset: Int? = null
+    private var yOffset: Int? = null
     private val factory: DetailsViewFactory
     private val viewObject: ViewObject<*>
 
@@ -58,6 +61,7 @@ internal class PoiDetailsObject : UiObject {
                         viewObject
                     )
                 })
+                .setAnchor(0.5f, 1f)
                 .build() as PoiDetailsObject
         }
 
@@ -73,34 +77,40 @@ internal class PoiDetailsObject : UiObject {
         }
     }
 
-    override fun onMeasured(width: Int, height: Int) {
-        super.onMeasured(width, height)
+    override fun onScreenPointsReady(mapView: MapView, x: Int, y: Int) {
+        val localXOffset = xOffset
+        val localYOffset = yOffset
 
-        val markerHeight: Int = if (viewObject is MapMarker)
-            viewObject.data.getBitmap(view?.context!!)?.height ?: 0 else 0
+        if (localXOffset == null || localYOffset == null) {
+            val markerHeight = if (viewObject is MapMarker) {
+                mapView.view?.let {
+                    viewObject.data.getBitmap(it.context)?.height
+                } ?: 0
+            } else 0
 
-        //FIXME: modifying anchor after addition we break hashCode equality!!!
-        data.anchor.x = 0.5f - (factory.getXOffset() / width)
-        data.anchor.y = 1f + ((markerHeight + factory.getYOffset()) / height)
+            super.onScreenPointsReady(mapView,
+                x + factory.getXOffset().toInt().also { xOffset = it },
+                y - (markerHeight + factory.getYOffset()).toInt().also { yOffset = it })
+        } else {
+            super.onScreenPointsReady(mapView, x + localXOffset, y - localYOffset)
+        }
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
+        if (!super.equals(other)) return false
 
         other as PoiDetailsObject
 
         if (factory != other.factory) return false
         if (viewObject != other.viewObject) return false
 
-        if (super.equals(other)) return true
         return true
     }
 
     override fun hashCode(): Int {
-        //FIXME: see comment in onMeasured
         var result = super.hashCode()
-        result = 0
         result = 31 * result + factory.hashCode()
         result = 31 * result + viewObject.hashCode()
         return result

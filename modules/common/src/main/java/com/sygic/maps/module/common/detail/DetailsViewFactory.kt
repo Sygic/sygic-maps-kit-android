@@ -52,7 +52,7 @@ abstract class DetailsViewFactory : Parcelable {
      *
      * @return the view which will be used as an details view for selected points.
      */
-    abstract fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: ViewObjectData): View
+    abstract fun getDetailsView(inflater: LayoutInflater, container: ViewGroup?, data: ViewObjectData): View
 
     /**
      * Define the X offset for the details window.

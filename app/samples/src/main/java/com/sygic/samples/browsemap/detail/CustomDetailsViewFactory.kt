@@ -38,7 +38,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class CustomDetailsViewFactory : DetailsViewFactory() {
 
-    override fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: ViewObjectData): View {
+    override fun getDetailsView(inflater: LayoutInflater, container: ViewGroup?, data: ViewObjectData): View {
         val root = inflater.inflate(R.layout.layout_info_window, container, false)
 
         // fill layout with data from marker's Data

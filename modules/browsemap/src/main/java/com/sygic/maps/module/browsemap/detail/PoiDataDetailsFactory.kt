@@ -38,7 +38,7 @@ internal class PoiDataDetailsFactory(
     private val data: ViewObjectData
 ) : UiObject.ViewFactory {
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup): View {
+    override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
         return factory.getDetailsView(inflater, container, data)
     }
 }
