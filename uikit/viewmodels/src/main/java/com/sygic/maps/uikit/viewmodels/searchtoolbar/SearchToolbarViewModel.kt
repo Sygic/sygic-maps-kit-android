@@ -26,7 +26,6 @@ package com.sygic.maps.uikit.viewmodels.searchtoolbar
 
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import androidx.databinding.ObservableField
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -60,13 +59,13 @@ open class SearchToolbarViewModel internal constructor(
 ) : ViewModel(), DefaultLifecycleObserver {
 
     val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
-    val inputText: ObservableField<CharSequence> = object: ObservableField<CharSequence>() {
-        override fun set(value: CharSequence) {
-            if (value == get()) {
+    val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>() {
+        override fun setValue(value: CharSequence) {
+            if (value == this.value) {
                 return
             }
 
-            super.set(value)
+            super.setValue(value)
             search(value.toString())
         }
     }
@@ -88,7 +87,7 @@ open class SearchToolbarViewModel internal constructor(
     val keyboardVisibilityObservable: LiveData<Boolean> = SingleLiveEvent()
 
     init {
-        inputText.set(initComponent.initialSearchInput)
+        inputText.value = initComponent.initialSearchInput
         searchLocation = initComponent.initialSearchLocation
         maxResultsCount = initComponent.maxResultsCount
         initComponent.recycle()
@@ -111,7 +110,7 @@ open class SearchToolbarViewModel internal constructor(
 
     fun onClearButtonClick() {
         cancelSearch()
-        inputText.set(EMPTY_STRING)
+        inputText.value = EMPTY_STRING
     }
 
     fun onEditorActionEvent(actionId: Int): Boolean {

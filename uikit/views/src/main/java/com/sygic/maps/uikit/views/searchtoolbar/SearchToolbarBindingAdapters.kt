@@ -27,7 +27,6 @@ import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import androidx.databinding.adapters.ListenerUtil
 import androidx.databinding.adapters.TextViewBindingAdapter
-import androidx.lifecycle.LiveData
 import kotlinx.android.synthetic.main.layout_search_toolbar_internal.view.*
 
 
@@ -79,21 +78,6 @@ fun setSearchText(toolbar: SearchToolbar, text: CharSequence?) {
         }
 
         setText(text)
-    }
-}
-
-@BindingAdapter("android:text")
-fun setSearchText(toolbar: SearchToolbar, text: LiveData<CharSequence>) {
-    text.value.let { value ->
-        with(toolbar.inputEditText) {
-            getText().let {
-                if (it == value || (value == null && it.isEmpty())) {
-                    return
-                }
-            }
-
-            setText(value)
-        }
     }
 }
 

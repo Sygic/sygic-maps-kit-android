@@ -90,11 +90,11 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      */
     var searchInput: String
         get() = if (::searchToolbarViewModel.isInitialized) {
-            searchToolbarViewModel.inputText.get().toString()
+            searchToolbarViewModel.inputText.value.toString()
         } else searchToolbarInitComponent.initialSearchInput
         set(value) {
             if (::searchToolbarViewModel.isInitialized) {
-                searchToolbarViewModel.inputText.set(value)
+                searchToolbarViewModel.inputText.value = value
             } else searchToolbarInitComponent.initialSearchInput = value
         }
 
