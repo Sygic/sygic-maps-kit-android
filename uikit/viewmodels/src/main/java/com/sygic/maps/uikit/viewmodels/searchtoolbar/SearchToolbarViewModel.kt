@@ -124,7 +124,7 @@ open class SearchToolbarViewModel internal constructor(
         }
     }
 
-    fun search(input: String) {
+    private fun search(input: String) {
         lastSearchedString = input
         searchCoroutineJob?.cancel()
         searchCoroutineJob = GlobalScope.launch(Dispatchers.Main) {
