@@ -25,7 +25,6 @@
 package com.sygic.maps.uikit.views.searchtoolbar
 
 import android.content.Context
-import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -54,23 +53,17 @@ open class SearchToolbar @JvmOverloads constructor(
     private val binding: LayoutSearchToolbarInternalBinding =
         LayoutSearchToolbarInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    fun setText(text: String) {
-        binding.inputEditText.text?.let {
+    fun getText(): CharSequence =
+        binding.inputEditText.text.toString()
+
+
+    fun setText(text: CharSequence) {
+        binding.inputEditText.text.let {
             if (text != it.toString()) {
                 binding.inputEditText.setText(text)
                 binding.inputEditText.setSelection(text.length)
             }
         }
-    }
-
-    /**
-     * Adds a TextWatcher to the list of those whose methods are called
-     * whenever the InputEditText's text changes.
-     *
-     * @param textWatcher watcher to be used.
-     */
-    fun addTextChangedListener(textWatcher: TextWatcher) {
-        binding.inputEditText.addTextChangedListener(textWatcher)
     }
 
     /**

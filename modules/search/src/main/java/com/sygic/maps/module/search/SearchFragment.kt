@@ -36,7 +36,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
-import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.extensions.resolveAttributes
@@ -44,6 +43,7 @@ import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
@@ -90,11 +90,11 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      */
     var searchInput: String
         get() = if (::searchToolbarViewModel.isInitialized) {
-            searchToolbarViewModel.inputText.value!!
+            searchToolbarViewModel.inputText.get().toString()
         } else searchToolbarInitComponent.initialSearchInput
         set(value) {
             if (::searchToolbarViewModel.isInitialized) {
-                searchToolbarViewModel.inputText.value = value
+                searchToolbarViewModel.inputText.set(value)
             } else searchToolbarInitComponent.initialSearchInput = value
         }
 
