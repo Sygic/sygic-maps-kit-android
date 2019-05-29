@@ -33,8 +33,6 @@ import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
 import com.sygic.maps.uikit.viewmodels.common.utils.TextWatcherAdapter
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
@@ -77,7 +75,7 @@ open class SearchToolbarViewModel internal constructor(
         if (input != lastSearchedString) search(input)
     }
 
-    val keyboardVisibilityObservable: LiveData<Boolean> = SingleLiveEvent()
+    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         inputText.value = initComponent.initialSearchInput
@@ -85,35 +83,10 @@ open class SearchToolbarViewModel internal constructor(
         maxResultsCount = initComponent.maxResultsCount
         initComponent.recycle()
 
-        keyboardVisibilityObservable.asSingleEvent().value = true
+        searchToolbarFocused.value = true
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
 
         searchManager.addSearchResultsListener(searchResultsListener)
-    }
-
-    private fun searchTextInput(input: String) {
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
-        searchManager.searchText(input, searchLocation)
-    }
-
-    private fun cancelSearch() {
-        searchCoroutineJob?.cancel()
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
-    }
-
-    fun onClearButtonClick() {
-        cancelSearch()
-        inputText.value = EMPTY_STRING
-    }
-
-    fun onEditorActionEvent(actionId: Int): Boolean {
-        return when (actionId) {
-            EditorInfo.IME_ACTION_SEARCH -> {
-                keyboardVisibilityObservable.asSingleEvent().value = false
-                true
-            }
-            else -> false
-        }
     }
 
     fun search(input: String) {
@@ -125,8 +98,33 @@ open class SearchToolbarViewModel internal constructor(
         }
     }
 
+    private fun searchTextInput(input: String) {
+        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
+        searchManager.searchText(input, searchLocation)
+    }
+
     fun retrySearch() {
         search(lastSearchedString)
+    }
+
+    fun onClearButtonClick() {
+        cancelSearch()
+        inputText.value = EMPTY_STRING
+    }
+
+    private fun cancelSearch() {
+        searchCoroutineJob?.cancel()
+        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
+    }
+
+    fun onEditorActionEvent(actionId: Int): Boolean {
+        return when (actionId) {
+            EditorInfo.IME_ACTION_SEARCH -> {
+                searchToolbarFocused.value = false
+                true
+            }
+            else -> false
+        }
     }
 
     override fun onCleared() {

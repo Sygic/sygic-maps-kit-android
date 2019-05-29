@@ -85,10 +85,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/clearButton"
             app:layout_constraintStart_toEndOf="@+id/searchToolbarIconStateSwitcher"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <requestFocus />
-        </EditText>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageButton
             android:id="@+id/clearButton"
