@@ -136,5 +136,6 @@ fun Context.shortToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_S
 fun Context.longToast(@StringRes text: Int) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 fun Context.longToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 
-fun Context.showKeyboard() = inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+fun Context.showKeyboard(view: View) = inputMethodManager?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+fun Context.toggleKeyboard() = inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
 fun Context.hideKeyboard(view: View) = inputMethodManager?.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
