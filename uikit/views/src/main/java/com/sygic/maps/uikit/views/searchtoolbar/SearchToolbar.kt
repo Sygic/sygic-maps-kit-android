@@ -26,7 +26,6 @@ package com.sygic.maps.uikit.views.searchtoolbar
 
 import android.content.Context
 import android.graphics.Rect
-import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +34,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.databinding.LayoutSearchToolbarInternalBinding
 
@@ -60,31 +60,35 @@ open class SearchToolbar @JvmOverloads constructor(
         if (hasFocus) (view as EditText).showKeyboard()
     }
 
+    /**
+     * Set the text to be displayed in the input [EditText].
+     *
+     * @param [CharSequence] text to be displayed.
+     *
+     * @return current text from the input [EditText].
+     */
+    var text: CharSequence
+        get() = binding.inputEditText.text?.toString() ?: EMPTY_STRING
+        set(value) {
+            binding.inputEditText.text?.let { editable ->
+                if (editable.toString() != value) setTextInternal(value)
+            } ?: run {
+                setTextInternal(value)
+            }
+        }
+
     init {
         descendantFocusability = FOCUS_AFTER_DESCENDANTS
         binding.inputEditText.onFocusChangeListener = inputEditTextOnFocusChangedListener
     }
 
-    override fun onRequestFocusInDescendants(direction: Int, previouslyFocusedRect: Rect?): Boolean =
-        binding.inputEditText.requestFocus()
-
-    /**
-     * Set the text to be displayed in the input [EditText].
-     *
-     * @param text text to be displayed.
-     */
-    fun setText(text: String) {
-        binding.inputEditText.text?.let { editable ->
-            if (editable.toString() != text) setTextInternal(text)
-        } ?: run {
-            setTextInternal(text)
-        }
-    }
-
-    private fun setTextInternal(text: String) {
+    private fun setTextInternal(text: CharSequence) {
         binding.inputEditText.setText(text)
         binding.inputEditText.setSelection(text.length)
     }
+
+    override fun onRequestFocusInDescendants(direction: Int, previouslyFocusedRect: Rect?): Boolean =
+        binding.inputEditText.requestFocus()
 
     /**
      * Set the focused state of the [SearchToolbar] view. Internally is called [requestFocus]
@@ -98,16 +102,6 @@ open class SearchToolbar @JvmOverloads constructor(
         } else {
             clearFocus()
         }
-    }
-
-    /**
-     * Adds a TextWatcher to the list of those whose methods are called
-     * whenever the InputEditText's text changes.
-     *
-     * @param textWatcher watcher to be used.
-     */
-    fun addTextChangedListener(textWatcher: TextWatcher) {
-        binding.inputEditText.addTextChangedListener(textWatcher)
     }
 
     /**
