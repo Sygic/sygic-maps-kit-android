@@ -48,16 +48,16 @@ class SearchFragmentViewModel internal constructor(
 
     var searchResultCallback: SearchResultCallback? = null
 
-    val keyboardVisibilityObservable: LiveData<Boolean> = SingleLiveEvent()
+    val hideKeyboardObservable: LiveData<Any> = SingleLiveEvent()
     val popBackStackObservable: LiveData<Any> = SingleLiveEvent()
 
     private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
 
     init {
-        searchResultCallback = initComponent.searchResultCallback
-        initComponent.recycle()
-
-        keyboardVisibilityObservable.asSingleEvent().value = true
+        with(initComponent) {
+            this@SearchFragmentViewModel.searchResultCallback = searchResultCallback
+            recycle()
+        }
     }
 
     fun searchResultListDataChanged(searchResultListItems: List<SearchResultItem<out SearchResult>>) {
@@ -71,7 +71,7 @@ class SearchFragmentViewModel internal constructor(
 
     private fun invokeCallbackAndFinish(searchResultList: List<SearchResultItem<out SearchResult>>) {
         searchResultCallback?.onSearchResult(searchResultList.toSdkSearchResultList())
-        keyboardVisibilityObservable.asSingleEvent().value = false
+        hideKeyboardObservable.asSingleEvent().call()
         popBackStackObservable.asSingleEvent().call()
     }
 
@@ -79,5 +79,6 @@ class SearchFragmentViewModel internal constructor(
         super.onCleared()
 
         searchResultCallback = null
+        hideKeyboardObservable.asSingleEvent().call()
     }
 }

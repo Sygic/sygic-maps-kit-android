@@ -25,7 +25,7 @@
 package com.sygic.maps.uikit.views.searchtoolbar
 
 import android.content.Context
-import android.text.TextWatcher
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +34,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.databinding.LayoutSearchToolbarInternalBinding
 
 /**
@@ -54,23 +56,52 @@ open class SearchToolbar @JvmOverloads constructor(
     private val binding: LayoutSearchToolbarInternalBinding =
         LayoutSearchToolbarInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    fun setText(text: String) {
-        binding.inputEditText.text?.let {
-            if (text != it.toString()) {
-                binding.inputEditText.setText(text)
-                binding.inputEditText.setSelection(text.length)
-            }
-        }
+    private val inputEditTextOnFocusChangedListener = OnFocusChangeListener { view, hasFocus ->
+        if (hasFocus) (view as EditText).showKeyboard()
     }
 
     /**
-     * Adds a TextWatcher to the list of those whose methods are called
-     * whenever the InputEditText's text changes.
+     * Set the text to be displayed in the input [EditText].
      *
-     * @param textWatcher watcher to be used.
+     * @param [CharSequence] text to be displayed.
+     *
+     * @return current text from the input [EditText].
      */
-    fun addTextChangedListener(textWatcher: TextWatcher) {
-        binding.inputEditText.addTextChangedListener(textWatcher)
+    var text: CharSequence
+        get() = binding.inputEditText.text?.toString() ?: EMPTY_STRING
+        set(value) {
+            binding.inputEditText.text?.let { editable ->
+                if (editable.toString() != value) setTextInternal(value)
+            } ?: run {
+                setTextInternal(value)
+            }
+        }
+
+    init {
+        descendantFocusability = FOCUS_AFTER_DESCENDANTS
+        binding.inputEditText.onFocusChangeListener = inputEditTextOnFocusChangedListener
+    }
+
+    private fun setTextInternal(text: CharSequence) {
+        binding.inputEditText.setText(text)
+        binding.inputEditText.setSelection(text.length)
+    }
+
+    override fun onRequestFocusInDescendants(direction: Int, previouslyFocusedRect: Rect?): Boolean =
+        binding.inputEditText.requestFocus()
+
+    /**
+     * Set the focused state of the [SearchToolbar] view. Internally is called [requestFocus]
+     * or [clearFocus] method and delegated to the input [EditText] view.
+     *
+     * @param focused [Boolean] true to make this view focused, false otherwise.
+     */
+    fun setFocused(focused: Boolean) {
+        if (focused) {
+            requestFocus()
+        } else {
+            clearFocus()
+        }
     }
 
     /**
@@ -129,7 +160,7 @@ open class SearchToolbar @JvmOverloads constructor(
     /**
      * Register a callback to be invoked when ClearButton view is clicked.
      *
-     * @param listener [OnClickListener] callback to invoke on ClearButton view click.
+     * @param listener [View.OnClickListener] callback to invoke on ClearButton view click.
      */
     fun setOnClearButtonClickListener(listener: OnClickListener) {
         binding.clearButton.setOnClickListener(listener)

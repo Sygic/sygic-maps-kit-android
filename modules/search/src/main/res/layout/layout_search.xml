@@ -55,14 +55,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            app:addTextChangedListener="@{searchToolbarViewModel.onTextChangedListener}"
+            android:text="@={searchToolbarViewModel.inputText}"
+            app:focused="@{searchToolbarViewModel.searchToolbarFocused}"
             app:iconStateSwitcherIndex="@{safeUnbox(searchToolbarViewModel.iconStateSwitcherIndex)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:onClearButtonClickListener="@{() -> searchToolbarViewModel.onClearButtonClick()}"
-            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(actionId)}"
-            app:text="@{searchToolbarViewModel.inputText}" />
+            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(actionId)}" />
 
         <com.sygic.maps.uikit.views.searchresultlist.SearchResultList
             android:id="@+id/searchResultList"
@@ -75,7 +75,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchToolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/searchToolbar"
+            app:onScrollListener="@{searchResultListViewModel.onScrollListener}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

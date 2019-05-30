@@ -22,16 +22,10 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.common.extensions
+package com.sygic.maps.uikit.viewmodels.common.utils
 
-import android.widget.ImageView
-import androidx.annotation.ColorRes
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.recyclerview.widget.RecyclerView
 
-fun ImageView.tint(@ColorRes color: Int) {
-    imageTintList = AppCompatResources.getColorStateList(context, color)
-}
-
-fun ImageView.backgroundTint(@ColorRes color: Int) {
-    backgroundTintList = AppCompatResources.getColorStateList(context, color)
+class OnScrollListenerAdapter(private val callback: (newState: Int) -> Unit) : RecyclerView.OnScrollListener() {
+    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) { callback.invoke(newState) }
 }

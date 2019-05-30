@@ -109,18 +109,20 @@ class BrowseMapFragmentViewModel internal constructor(
     private var poiDetailsView: UiObject? = null
 
     init {
-        initComponent.resolveAttributes(app)
-        mapSelectionMode = initComponent.mapSelectionMode
-        positionOnMapEnabled = initComponent.positionOnMapEnabled
-        compassEnabled.value = initComponent.compassEnabled
-        compassHideIfNorthUp.value = initComponent.compassHideIfNorthUp
-        positionLockFabEnabled.value = initComponent.positionLockFabEnabled
-        zoomControlsEnabled.value = initComponent.zoomControlsEnabled
-        onMapClickListener = initComponent.onMapClickListener
-        detailsViewFactory = initComponent.detailsViewFactory
-        searchConnectionProvider = initComponent.searchConnectionProvider
-        initComponent.skins.forEach { entry -> themeManager.setSkinAtLayer(entry.key, entry.value) }
-        initComponent.recycle()
+        with(initComponent) {
+            resolveAttributes(app)
+            this@BrowseMapFragmentViewModel.mapSelectionMode = mapSelectionMode
+            this@BrowseMapFragmentViewModel.positionOnMapEnabled = positionOnMapEnabled
+            this@BrowseMapFragmentViewModel.compassEnabled.value = compassEnabled
+            this@BrowseMapFragmentViewModel.compassHideIfNorthUp.value = compassHideIfNorthUp
+            this@BrowseMapFragmentViewModel.positionLockFabEnabled.value = positionLockFabEnabled
+            this@BrowseMapFragmentViewModel.zoomControlsEnabled.value = zoomControlsEnabled
+            this@BrowseMapFragmentViewModel.onMapClickListener = onMapClickListener
+            this@BrowseMapFragmentViewModel.detailsViewFactory = detailsViewFactory
+            this@BrowseMapFragmentViewModel.searchConnectionProvider = searchConnectionProvider
+            skins.forEach { entry -> themeManager.setSkinAtLayer(entry.key, entry.value) }
+            recycle()
+        }
 
         mapInteractionManager.addOnMapClickListener(this)
     }

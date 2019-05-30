@@ -33,7 +33,7 @@ import androidx.fragment.app.Fragment
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.utils.logWarning
 
-fun Fragment.showKeyboard() = context?.showKeyboard()
+fun Fragment.toggleKeyboard() = context?.toggleKeyboard()
 fun Fragment.hideKeyboard() = view?.let { context?.hideKeyboard(it) }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
