@@ -28,9 +28,11 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
+import com.sygic.maps.uikit.viewmodels.common.utils.OnScrollListenerAdapter
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
@@ -54,6 +56,7 @@ open class SearchResultListViewModel internal constructor(
     private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
     private val resultListAdapter = SearchResultListAdapter<SearchResult>()
 
+    val removeFocusAndHideKeyboardObservable: LiveData<Any> = SingleLiveEvent()
     val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
     val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<out SearchResult>>> = SingleLiveEvent()
 
@@ -66,6 +69,14 @@ open class SearchResultListViewModel internal constructor(
         }
 
         activeAdapter.value = if (input.isNotEmpty()) resultListAdapter else defaultStateAdapter
+    }
+
+    private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
+    val onScrollListener = OnScrollListenerAdapter { newState ->
+        if (lastScrollState != newState && newState != RecyclerView.SCROLL_STATE_IDLE) {
+            removeFocusAndHideKeyboardObservable.asSingleEvent().call()
+        }
+        lastScrollState = newState
     }
 
     init {

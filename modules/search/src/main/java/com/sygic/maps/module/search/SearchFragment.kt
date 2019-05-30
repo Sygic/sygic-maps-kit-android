@@ -47,6 +47,7 @@ import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationMa
 import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
+import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
@@ -155,9 +156,9 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
             this,
             viewModelFactory.with(searchFragmentInitComponent)
         )[SearchFragmentViewModel::class.java].apply {
-            this.keyboardVisibilityObservable.observe(
+            this.hideKeyboardObservable.observe(
                 this@SearchFragment,
-                Observer<Boolean> { if (it) showKeyboard() else hideKeyboard() })
+                Observer<Any> { hideKeyboard() })
             this.popBackStackObservable.observe(
                 this@SearchFragment,
                 Observer<Any> { fragmentManager?.popBackStack() })
@@ -174,6 +175,12 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
             this,
             viewModelFactory
         )[SearchResultListViewModel::class.java].apply {
+            this.removeFocusAndHideKeyboardObservable.observe(
+                this@SearchFragment,
+                Observer<Any> {
+                    searchToolbarViewModel.searchToolbarFocused.value = false
+                    hideKeyboard()
+                })
             this.onSearchResultItemClickObservable.observe(
                 this@SearchFragment,
                 Observer<SearchResultItem<out SearchResult>> { fragmentViewModel.onSearchResultItemClick(it) })

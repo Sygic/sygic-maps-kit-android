@@ -29,6 +29,8 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.databinding.BindingMethod
+import androidx.databinding.BindingMethods
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
@@ -43,6 +45,9 @@ import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
  *
  * TODO: MS-5681
  */
+@BindingMethods(
+    BindingMethod(type = SearchResultList::class, attribute = "onScrollListener", method = "addOnScrollListener")
+)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultList @JvmOverloads constructor(
     context: Context,
@@ -69,5 +74,25 @@ open class SearchResultList @JvmOverloads constructor(
      */
     fun <T : Parcelable> setAdapter(adapter: ResultListAdapter<T, ResultListAdapter.ItemViewHolder<T>>) {
         binding.searchResultListRecyclerView.adapter = adapter
+    }
+
+    /**
+     * Add a listener that will be notified of any changes in scroll state or position.
+     *
+     * Components that add a listener should take care to remove it when finished.
+     * Other components that take ownership of a view may call [clearOnScrollListeners]
+     * to remove all attached listeners.
+     *
+     * @param listener listener to set
+     */
+    fun addOnScrollListener(listener: RecyclerView.OnScrollListener) {
+        binding.searchResultListRecyclerView.addOnScrollListener(listener)
+    }
+
+    /**
+     * Remove all secondary listener that were notified of any changes in scroll state or position.
+     */
+    fun clearOnScrollListeners() {
+        binding.searchResultListRecyclerView.clearOnScrollListeners()
     }
 }

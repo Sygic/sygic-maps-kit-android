@@ -87,10 +87,12 @@ open class SearchToolbarViewModel internal constructor(
     val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        inputText.value = initComponent.initialSearchInput
-        searchLocation = initComponent.initialSearchLocation
-        maxResultsCount = initComponent.maxResultsCount
-        initComponent.recycle()
+        with(initComponent) {
+            this@SearchToolbarViewModel.inputText.value = initialSearchInput
+            this@SearchToolbarViewModel.searchLocation = initialSearchLocation
+            this@SearchToolbarViewModel.maxResultsCount = maxResultsCount
+            recycle()
+        }
 
         searchToolbarFocused.value = true
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
