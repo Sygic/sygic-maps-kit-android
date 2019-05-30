@@ -47,8 +47,6 @@ import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationMa
 import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
-import com.sygic.maps.uikit.views.common.extensions.showKeyboard
-import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
@@ -96,7 +94,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      */
     var searchInput: String
         get() = if (::searchToolbarViewModel.isInitialized) {
-            searchToolbarViewModel.inputText.value!!
+            searchToolbarViewModel.inputText.value.toString()
         } else searchToolbarInitComponent.initialSearchInput
         set(value) {
             if (::searchToolbarViewModel.isInitialized) {
@@ -105,7 +103,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         }
 
     /**
-     * If *[searchLocation]* is defined, then it will be used for search result accuracy.
+     * If *[searchLocation]* is defined, then it will be used to improve search accuracy.
      *
      * @param [GeoCoordinates] search position to be used, null otherwise.
      *
@@ -126,7 +124,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      *
      * @param [Int] the maximum number of search results.
      *
-     * @return [Int] the maximum number of search results value.
+     * @return [Int] the maximum number of search results.
      */
     var maxResultsCount: Int
         get() = if (::searchToolbarViewModel.isInitialized) {

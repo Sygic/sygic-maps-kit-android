@@ -24,8 +24,7 @@
 
 package com.sygic.maps.uikit.views.common.extensions
 
-import android.view.View
+import android.widget.EditText
 
-fun View.visible(visible: Boolean) {
-    visibility = if (visible) View.VISIBLE else View.GONE
-}
+fun EditText.showKeyboard() = context?.showKeyboard(this)
+fun EditText.hideKeyboard() = context?.hideKeyboard(this)

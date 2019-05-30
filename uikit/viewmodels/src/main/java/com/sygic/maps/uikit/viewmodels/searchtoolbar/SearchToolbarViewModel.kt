@@ -26,11 +26,13 @@ package com.sygic.maps.uikit.viewmodels.searchtoolbar
 
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
-import com.sygic.maps.uikit.viewmodels.common.utils.TextWatcherAdapter
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
@@ -57,7 +59,15 @@ open class SearchToolbarViewModel internal constructor(
 ) : ViewModel(), DefaultLifecycleObserver {
 
     val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
-    val inputText: MutableLiveData<String> = MutableLiveData()
+    val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>() {
+        override fun setValue(value: CharSequence) {
+            if (value != this.value) {
+                super.setValue(value)
+                search(value.toString())
+            }
+        }
+    }
+
     var searchLocation: GeoCoordinates? = null
     var searchDelay: Long = DEFAULT_SEARCH_DELAY
     var maxResultsCount: Int
@@ -72,12 +82,9 @@ open class SearchToolbarViewModel internal constructor(
 
     private var searchCoroutineJob: Job? = null
     private var lastSearchedString: String = EMPTY_STRING
-    val onTextChangedListener = TextWatcherAdapter { input ->
-        inputText.value = input
-        if (input != lastSearchedString) search(input)
-    }
 
     val onActionSearchClickObservable: LiveData<Any> = SingleLiveEvent()
+    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         inputText.value = initComponent.initialSearchInput
@@ -85,9 +92,19 @@ open class SearchToolbarViewModel internal constructor(
         maxResultsCount = initComponent.maxResultsCount
         initComponent.recycle()
 
+        searchToolbarFocused.value = true
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
 
         searchManager.addSearchResultsListener(searchResultsListener)
+    }
+
+    private fun search(input: String) {
+        lastSearchedString = input
+        searchCoroutineJob?.cancel()
+        searchCoroutineJob = GlobalScope.launch(Dispatchers.Main) {
+            delay(searchDelay)
+            searchTextInput(input)
+        }
     }
 
     private fun searchTextInput(input: String) {
@@ -98,6 +115,10 @@ open class SearchToolbarViewModel internal constructor(
     private fun cancelSearch() {
         searchCoroutineJob?.cancel()
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
+    }
+
+    fun retrySearch() {
+        search(lastSearchedString)
     }
 
     fun onClearButtonClick() {
@@ -115,23 +136,11 @@ open class SearchToolbarViewModel internal constructor(
         }
     }
 
-    fun search(input: String) {
-        lastSearchedString = input
-        searchCoroutineJob?.cancel()
-        searchCoroutineJob = GlobalScope.launch(Dispatchers.Main) {
-            delay(searchDelay)
-            searchTextInput(input)
-        }
-    }
-
-    fun retrySearch() {
-        search(lastSearchedString)
-    }
-
     override fun onCleared() {
         super.onCleared()
 
         cancelSearch()
+        searchToolbarFocused.value = false
         searchManager.removeSearchResultsListener(searchResultsListener)
     }
 }
