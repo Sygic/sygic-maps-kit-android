@@ -48,21 +48,19 @@ internal class PoiDetailInternalViewModel(private val preferencesManager: Prefer
     val emailText: MutableLiveData<String> = MutableLiveData()
     val phoneText: MutableLiveData<String> = MutableLiveData()
     val coordinatesText: MutableLiveData<String> = MutableLiveData()
+    val contentViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
 
-    val expandObservable: LiveData<Any> = SingleLiveEvent()
-    val collapseObservable: LiveData<Any> = SingleLiveEvent()
+    val dialogStateObservable: LiveData<Int> = SingleLiveEvent()
     val webUrlClickObservable: LiveData<String> = SingleLiveEvent()
     val emailClickObservable: LiveData<String> = SingleLiveEvent()
     val phoneNumberClickObservable: LiveData<String> = SingleLiveEvent()
     val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
 
-    val contentViewSwitcherIndexObservable: LiveData<Int> = SingleLiveEvent()
-
     private var listener: DialogFragmentListener? = null
     private var showcaseLaunch: Job? = null
 
     fun onHeaderClick() {
-        expandObservable.asSingleEvent().call()
+        dialogStateObservable.asSingleEvent().value = BottomSheetBehavior.STATE_EXPANDED
     }
 
     fun onWebUrlClick() {
@@ -93,9 +91,9 @@ internal class PoiDetailInternalViewModel(private val preferencesManager: Prefer
             emailText.value = it.emailString
             phoneText.value = it.phoneString
             coordinatesText.value = it.coordinatesString
-            contentViewSwitcherIndexObservable.asSingleEvent().value = PoiDetailContentViewSwitcherIndex.CONTENT
+            contentViewSwitcherIndex.value = PoiDetailContentViewSwitcherIndex.CONTENT
         } ?: run {
-            contentViewSwitcherIndexObservable.asSingleEvent().value = PoiDetailContentViewSwitcherIndex.PROGRESSBAR
+            contentViewSwitcherIndex.value = PoiDetailContentViewSwitcherIndex.PROGRESSBAR
         }
     }
 
@@ -109,7 +107,7 @@ internal class PoiDetailInternalViewModel(private val preferencesManager: Prefer
         }
 
         preferencesManager.showcaseAllowed = false
-        launchShowcaseBlock { collapseObservable.asSingleEvent().call() }
+        launchShowcaseBlock { dialogStateObservable.asSingleEvent().value = BottomSheetBehavior.STATE_COLLAPSED }
     }
 
     private fun launchShowcaseBlock(showcaseBlock: () -> Unit) {

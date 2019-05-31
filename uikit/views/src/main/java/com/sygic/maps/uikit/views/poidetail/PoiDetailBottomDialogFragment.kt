@@ -46,7 +46,6 @@ import com.sygic.maps.uikit.views.poidetail.dialog.BottomSheetDialog
 import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.poidetail.manager.PreferencesManager
 import com.sygic.maps.uikit.views.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
-import com.sygic.maps.uikit.views.poidetail.viewmodel.PoiDetailContentViewSwitcherIndex
 import com.sygic.maps.uikit.views.poidetail.viewmodel.PoiDetailInternalViewModel
 import com.sygic.maps.uikit.views.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
@@ -107,12 +106,9 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         viewModel = ViewModelProviders.of(
             this, PoiDetailInternalViewModel.ViewModelFactory(preferencesManager)
         )[PoiDetailInternalViewModel::class.java].apply {
-            this.expandObservable.observe(
+            this.dialogStateObservable.observe(
                 this@PoiDetailBottomDialogFragment,
-                Observer<Any> { expandBottomSheet() })
-            this.collapseObservable.observe(
-                this@PoiDetailBottomDialogFragment,
-                Observer<Any> { collapseBottomSheet() })
+                Observer<Int> { setState(it) })
             this.webUrlClickObservable.observe(
                 this@PoiDetailBottomDialogFragment,
                 Observer<String> { context?.openUrl(it) })
@@ -125,9 +121,6 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
             this.coordinatesClickObservable.observe(
                 this@PoiDetailBottomDialogFragment,
                 Observer<String> { context?.copyToClipboard(it) })
-            this.contentViewSwitcherIndexObservable.observe(
-                this@PoiDetailBottomDialogFragment,
-                Observer<Int> { setContentViewSwitcherIndex(it) })
 
             this.setData(arguments?.getParcelable(POI_DETAIL_DATA))
             this.setListener(listener)
@@ -168,16 +161,8 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         viewModel?.let { dialog.behavior?.addStateListener(it) }
     }
 
-    private fun expandBottomSheet() {
-        dialog.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
-    private fun collapseBottomSheet() {
-        dialog.behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
-
-    private fun setContentViewSwitcherIndex(@PoiDetailContentViewSwitcherIndex index: Int) {
-        binding.poiDetailContainer.displayedChild = index
+    private fun setState(@BottomSheetBehavior.State state: Int) {
+        dialog.behavior?.state = state
     }
 
     /**
