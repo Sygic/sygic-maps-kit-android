@@ -76,7 +76,7 @@ fun Context.isRtl(): Boolean {
     return this.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
 }
 
-fun Context.openUrl(url: String) {
+fun Context.openUrl(url: String, vararg flags: Int = intArrayOf()) {
     if (!TextUtils.isEmpty(url)) {
         var parsedUrl = url
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
@@ -84,18 +84,14 @@ fun Context.openUrl(url: String) {
         }
 
         try {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(parsedUrl)
-                ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(parsedUrl)).apply { flags.forEach { addFlags(it) } })
         } catch (e: ActivityNotFoundException) {
             longToast(R.string.no_browser_client)
         }
     }
 }
 
-fun Context.openEmail(mailto: String) {
+fun Context.openEmail(mailto: String, vararg flags: Int = intArrayOf()) {
     if (!TextUtils.isEmpty(mailto)) {
         val emailIntent = Intent(Intent.ACTION_SENDTO)
 
@@ -104,29 +100,21 @@ fun Context.openEmail(mailto: String) {
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         try {
-            startActivity(
-                Intent.createChooser(
-                    emailIntent,
-                    getString(R.string.send_email)
-                ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)).apply { flags.forEach { addFlags(it) } })
         } catch (e: ActivityNotFoundException) {
             longToast(R.string.no_email_client)
         }
     }
 }
 
-fun Context.openPhone(phoneNumber: String) {
+fun Context.openPhone(phoneNumber: String, vararg flags: Int = intArrayOf()) {
     if (!TextUtils.isEmpty(phoneNumber)) {
         val phoneIntent = Intent(Intent.ACTION_DIAL)
 
         phoneIntent.data = Uri.parse("tel:$phoneNumber")
 
         try {
-            startActivity(
-                Intent.createChooser(
-                    phoneIntent,
-                    null
-                ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            startActivity(Intent.createChooser(phoneIntent, null).apply { flags.forEach { addFlags(it) } })
         } catch (e: ActivityNotFoundException) {
             longToast(R.string.no_phone_client)
         }

@@ -25,6 +25,7 @@
 package com.sygic.maps.uikit.views.poidetail.viewmodel
 
 import android.app.Application
+import android.content.Intent
 import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.common.extensions.*
@@ -62,11 +63,11 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
         dialogStateObservable.asSingleEvent().value = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    fun onWebUrlClick() = urlText.value?.let { application.openUrl(it) }
+    fun onWebUrlClick() = urlText.value?.let { application.openUrl(it, Intent.FLAG_ACTIVITY_NEW_TASK) }
 
-    fun onEmailClick() = emailText.value?.let { application.openEmail(it) }
+    fun onEmailClick() = emailText.value?.let { application.openEmail(it, Intent.FLAG_ACTIVITY_NEW_TASK) }
 
-    fun onPhoneNumberClick() = phoneText.value?.let { application.openPhone(it) }
+    fun onPhoneNumberClick() = phoneText.value?.let { application.openPhone(it, Intent.FLAG_ACTIVITY_NEW_TASK) }
 
     fun onCoordinatesClick() = coordinatesText.value?.let { application.copyToClipboard(it) }
 
