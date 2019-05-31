@@ -30,6 +30,8 @@
 
         <import type="android.view.View" />
 
+        <import type="android.text.TextUtils" />
+
         <variable
             name="poiDetailInternalViewModel"
             type="com.sygic.maps.uikit.views.poidetail.viewmodel.PoiDetailInternalViewModel" />
@@ -40,9 +42,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/colorBackground"
-        android:orientation="vertical"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/headerContainer"
@@ -93,7 +95,7 @@
             android:drawableStart="@drawable/ic_phone"
             android:onClick="@{() -> poiDetailInternalViewModel.onPhoneNumberClick()}"
             android:text="@{poiDetailInternalViewModel.phoneText}"
-            android:visibility="@{poiDetailInternalViewModel.phoneText != null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.phoneText) ? View.GONE : View.VISIBLE}"
             tools:text="+421 0944 123456" />
 
         <TextView
@@ -103,7 +105,7 @@
             android:drawableStart="@drawable/ic_email"
             android:onClick="@{() -> poiDetailInternalViewModel.onEmailClick()}"
             android:text="@{poiDetailInternalViewModel.emailText}"
-            android:visibility="@{poiDetailInternalViewModel.emailText != null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.emailText) ? View.GONE : View.VISIBLE}"
             tools:text="sygic@sygic.com" />
 
         <TextView
@@ -113,7 +115,7 @@
             android:drawableStart="@drawable/ic_web"
             android:onClick="@{() -> poiDetailInternalViewModel.onWebUrlClick()}"
             android:text="@{poiDetailInternalViewModel.urlText}"
-            android:visibility="@{poiDetailInternalViewModel.urlText != null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.urlText) ? View.GONE : View.VISIBLE}"
             tools:text="http://www.sygic.com" />
 
         <TextView
@@ -123,7 +125,7 @@
             android:drawableStart="@drawable/ic_location"
             android:onClick="@{() -> poiDetailInternalViewModel.onCoordinatesClick()}"
             android:text="@{poiDetailInternalViewModel.coordinatesText}"
-            android:visibility="@{poiDetailInternalViewModel.coordinatesText != null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.coordinatesText) ? View.GONE : View.VISIBLE}"
             tools:text="48.126895, 12.214578" />
 
     </LinearLayout>

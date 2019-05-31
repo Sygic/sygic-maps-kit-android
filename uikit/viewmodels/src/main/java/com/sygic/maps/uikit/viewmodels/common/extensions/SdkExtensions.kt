@@ -24,9 +24,13 @@
 
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
+import com.sygic.maps.uikit.viewmodels.common.data.BasicData
+import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 import java.util.*
 
 fun LocationInfo.getFirst(@LocationInfo.LocationType locationType: Int): String? {
@@ -40,4 +44,14 @@ fun GeoCoordinates.getFormattedLocation(): String {
     }
 
     return String.format(Locale.US, "%.6f, %.6f", latitude, longitude)
+}
+
+fun ViewObjectData.toPoiDetailData(): PoiDetailData {
+    val coordinatesText: String = position.getFormattedLocation()
+    val titleText: String = if (payload is BasicData) (payload as BasicData).title else coordinatesText
+    val subtitleText: String = if (payload is BasicData) (payload as BasicData).description else EMPTY_STRING
+    val urlText: String? = if (payload is PoiData) (payload as PoiData).url else null
+    val emailText: String? = if (payload is PoiData) (payload as PoiData).email else null
+    val phoneText: String? = if (payload is PoiData) (payload as PoiData).phone else null
+    return PoiDetailData(titleText, subtitleText, urlText, emailText, phoneText, coordinatesText)
 }

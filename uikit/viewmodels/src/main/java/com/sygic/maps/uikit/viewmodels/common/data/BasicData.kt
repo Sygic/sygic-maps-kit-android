@@ -22,22 +22,30 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.listener
+package com.sygic.maps.uikit.viewmodels.common.data
 
-import com.sygic.sdk.map.`object`.data.ViewObjectData
+import android.os.Parcelable
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import kotlinx.android.parcel.Parcelize
 
-/**
- * Interface definition for a callback to be invoked when a click to the map has been made.
- */
-@FunctionalInterface
-interface OnMapClickListener {
+@Parcelize
+open class BasicData(private val basicDescription: BasicDescription) : Parcelable {
 
-    /**
-     * Called when click to the map has been made.
-     *
-     * @param data [ViewObjectData] belonging to the click on the map.
-     *
-     * @return true if the callback consumed the click, false otherwise (click will be processed by the default behaviour).
-     */
-    fun onMapClick(data: ViewObjectData) : Boolean
+    val title: String
+        get() = basicDescription.formattedTitle
+
+    val description: String
+        get() = basicDescription.formattedSubtitle
+
+    constructor(title: String, description: String = "") : this(
+        BasicDescription(title, description)
+    )
+
+    @Parcelize
+    class BasicDescription(private val title: String? = null, private val subtitle: String? = null) : Parcelable {
+        val formattedTitle: String
+            get() = title?.let { it } ?: EMPTY_STRING
+        val formattedSubtitle: String
+            get() = subtitle?.let { it } ?: EMPTY_STRING
+    }
 }

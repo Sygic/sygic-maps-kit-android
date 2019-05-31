@@ -37,7 +37,6 @@ import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.listener.OnMapClickListener
-import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.views.compass.CompassView
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
@@ -46,6 +45,8 @@ import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.sdk.map.`object`.data.ViewObjectData
+import com.sygic.sdk.map.`object`.MapMarker
 
 /**
  * A *[BrowseMapFragment]* is the most basic component from our portfolio. It can be easily used to display view objects
@@ -211,9 +212,9 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
      *
      * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */
-    fun setOnMapClickListener(onMapClickListener: (poiData: PoiData) -> Boolean) {
+    fun setOnMapClickListener(onMapClickListener: (data: ViewObjectData) -> Boolean) {
         setOnMapClickListener(object : OnMapClickListener {
-            override fun onMapClick(poiData: PoiData) = onMapClickListener(poiData)
+            override fun onMapClick(data: ViewObjectData) = onMapClickListener(data)
         })
     }
 
@@ -245,8 +246,8 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         }
     }
 
-    private fun showPoiDetail(poiDetailData: PoiDetailData) {
-        val dialog = PoiDetailBottomDialogFragment.newInstance(poiDetailData)
+    private fun showPoiDetail(data: PoiDetailData) {
+        val dialog = PoiDetailBottomDialogFragment.newInstance(data)
         dialog.setListener(fragmentViewModel.dialogFragmentListener)
         dialog.show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }

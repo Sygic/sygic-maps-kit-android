@@ -40,9 +40,9 @@ import com.sygic.maps.uikit.views.common.extensions.openEmail
 import com.sygic.maps.uikit.views.common.extensions.openPhone
 import com.sygic.maps.uikit.views.common.extensions.openUrl
 import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
-import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
-import com.sygic.maps.uikit.views.poidetail.dialog.BottomSheetDialog
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.poidetail.dialog.BottomSheetDialog
+import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.poidetail.manager.PreferencesManager
 import com.sygic.maps.uikit.views.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
 import com.sygic.maps.uikit.views.poidetail.viewmodel.PoiDetailInternalViewModel
@@ -52,7 +52,7 @@ private const val POI_DETAIL_DATA = "poi_detail_data"
 
 /**
  * A [PoiDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
- * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiData] object.
+ * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiDetailData] object.
  *
  * You can register an [DialogFragmentListener] using [setListener] method. Then you will be notified when dialog is dismissed.
  *
