@@ -77,7 +77,7 @@ internal class PoiDetailsObject : UiObject {
         super.onMeasured(width, height)
 
         val markerHeight: Int = if (viewObject is MapMarker)
-            viewObject.data.getBitmap(view?.context!!)?.height ?: 0 else 0
+            viewObject.data.bitmapFactory.getBitmap(view?.context!!)?.height ?: 0 else 0
 
         //FIXME: modifying anchor after addition we break hashCode equality!!!
         data.anchor.x = 0.5f - (factory.getXOffset() / width)
