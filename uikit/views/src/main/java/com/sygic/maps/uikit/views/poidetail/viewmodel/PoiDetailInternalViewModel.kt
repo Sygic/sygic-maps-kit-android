@@ -24,10 +24,11 @@
 
 package com.sygic.maps.uikit.views.poidetail.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.poidetail.behavior.BottomSheetBehaviorWrapper
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
@@ -39,61 +40,47 @@ private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
 const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
 const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED
 
-internal class PoiDetailInternalViewModel(private val preferencesManager: PreferencesManager) : ViewModel(),
+internal class PoiDetailInternalViewModel(app: Application, private val preferencesManager: PreferencesManager) :
+    AndroidViewModel(app),
     BottomSheetBehaviorWrapper.StateListener {
 
-    val titleText: MutableLiveData<String> = MutableLiveData()
-    val subtitleText: MutableLiveData<String> = MutableLiveData()
-    val urlText: MutableLiveData<String> = MutableLiveData()
-    val emailText: MutableLiveData<String> = MutableLiveData()
-    val phoneText: MutableLiveData<String> = MutableLiveData()
-    val coordinatesText: MutableLiveData<String> = MutableLiveData()
-    val contentViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
+    val titleText: LiveData<String> = MutableLiveData()
+    val subtitleText: LiveData<String> = MutableLiveData()
+    val urlText: LiveData<String> = MutableLiveData()
+    val emailText: LiveData<String> = MutableLiveData()
+    val phoneText: LiveData<String> = MutableLiveData()
+    val coordinatesText: LiveData<String> = MutableLiveData()
+    val contentViewSwitcherIndex: LiveData<Int> = MutableLiveData()
 
     val dialogStateObservable: LiveData<Int> = SingleLiveEvent()
-    val webUrlClickObservable: LiveData<String> = SingleLiveEvent()
-    val emailClickObservable: LiveData<String> = SingleLiveEvent()
-    val phoneNumberClickObservable: LiveData<String> = SingleLiveEvent()
-    val coordinatesClickObservable: LiveData<String> = SingleLiveEvent()
 
-    private var listener: DialogFragmentListener? = null
+    var listener: DialogFragmentListener? = null
+
     private var showcaseLaunch: Job? = null
 
     fun onHeaderClick() {
         dialogStateObservable.asSingleEvent().value = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    fun onWebUrlClick() {
-        webUrlClickObservable.asSingleEvent().value = urlText.value
-    }
+    fun onWebUrlClick() = urlText.value?.let { application.openUrl(it) }
 
-    fun onEmailClick() {
-        emailClickObservable.asSingleEvent().value = emailText.value
-    }
+    fun onEmailClick() = emailText.value?.let { application.openEmail(it) }
 
-    fun onPhoneNumberClick() {
-        phoneNumberClickObservable.asSingleEvent().value = phoneText.value
-    }
+    fun onPhoneNumberClick() = phoneText.value?.let { application.openPhone(it) }
 
-    fun onCoordinatesClick() {
-        coordinatesClickObservable.asSingleEvent().value = coordinatesText.value
-    }
+    fun onCoordinatesClick() = coordinatesText.value?.let { application.copyToClipboard(it) }
 
-    fun setListener(listener: DialogFragmentListener?) {
-        this.listener = listener
-    }
-
-    fun setData(data: PoiDetailData?) {
+    fun onDataChanged(data: PoiDetailData?) {
         data?.let {
-            titleText.value = it.titleString
-            subtitleText.value = it.subtitleString
-            urlText.value = it.urlString
-            emailText.value = it.emailString
-            phoneText.value = it.phoneString
-            coordinatesText.value = it.coordinatesString
-            contentViewSwitcherIndex.value = PoiDetailContentViewSwitcherIndex.CONTENT
+            titleText.asMutable().value = it.titleString
+            subtitleText.asMutable().value = it.subtitleString
+            urlText.asMutable().value = it.urlString
+            emailText.asMutable().value = it.emailString
+            phoneText.asMutable().value = it.phoneString
+            coordinatesText.asMutable().value = it.coordinatesString
+            contentViewSwitcherIndex.asMutable().value = PoiDetailContentViewSwitcherIndex.CONTENT
         } ?: run {
-            contentViewSwitcherIndex.value = PoiDetailContentViewSwitcherIndex.PROGRESSBAR
+            contentViewSwitcherIndex.asMutable().value = PoiDetailContentViewSwitcherIndex.PROGRESSBAR
         }
     }
 
@@ -125,12 +112,12 @@ internal class PoiDetailInternalViewModel(private val preferencesManager: Prefer
         listener = null
     }
 
-    class ViewModelFactory(private val preferencesManager: PreferencesManager) :
+    class ViewModelFactory(private val app: Application, private val preferencesManager: PreferencesManager) :
         ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return PoiDetailInternalViewModel(preferencesManager) as T
+            return PoiDetailInternalViewModel(app, preferencesManager) as T
         }
     }
 }

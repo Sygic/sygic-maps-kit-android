@@ -45,14 +45,20 @@ fun Context.applyStyle(@StyleRes resId: Int, force: Boolean = false) {
 }
 
 @ColorInt
-fun Context.getColorFromAttr(@AttrRes resId: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true): Int {
+fun Context.getColorFromAttr(
+    @AttrRes resId: Int, typedValue: TypedValue = TypedValue(),
+    resolveRefs: Boolean = true
+): Int {
     typedValue.let {
         theme.resolveAttribute(resId, it, resolveRefs)
         return it.data
     }
 }
 
-fun Context.getStringFromAttr(@AttrRes resId: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true): String {
+fun Context.getStringFromAttr(
+    @AttrRes resId: Int, typedValue: TypedValue = TypedValue(),
+    resolveRefs: Boolean = true
+): String {
     typedValue.let {
         theme.resolveAttribute(resId, it, resolveRefs)
         if (it.type == TypedValue.TYPE_STRING && it.string != null) {
@@ -78,7 +84,11 @@ fun Context.openUrl(url: String) {
         }
 
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(parsedUrl)))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(parsedUrl)
+                ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
         } catch (e: ActivityNotFoundException) {
             longToast(R.string.no_browser_client)
         }
@@ -94,7 +104,11 @@ fun Context.openEmail(mailto: String) {
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         try {
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)))
+            startActivity(
+                Intent.createChooser(
+                    emailIntent,
+                    getString(R.string.send_email)
+                ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
         } catch (e: ActivityNotFoundException) {
             longToast(R.string.no_email_client)
         }
@@ -108,7 +122,11 @@ fun Context.openPhone(phoneNumber: String) {
         phoneIntent.data = Uri.parse("tel:$phoneNumber")
 
         try {
-            startActivity(Intent.createChooser(phoneIntent, null))
+            startActivity(
+                Intent.createChooser(
+                    phoneIntent,
+                    null
+                ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
         } catch (e: ActivityNotFoundException) {
             longToast(R.string.no_phone_client)
         }

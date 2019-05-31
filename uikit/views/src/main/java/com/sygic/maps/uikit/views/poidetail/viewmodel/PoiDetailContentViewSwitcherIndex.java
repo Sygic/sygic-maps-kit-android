@@ -32,7 +32,7 @@ import java.lang.annotation.RetentionPolicy;
 @IntDef({PoiDetailContentViewSwitcherIndex.CONTENT,
         PoiDetailContentViewSwitcherIndex.PROGRESSBAR})
 @Retention(RetentionPolicy.SOURCE)
-public @interface PoiDetailContentViewSwitcherIndex {
+@interface PoiDetailContentViewSwitcherIndex {
     int CONTENT = 0;
     int PROGRESSBAR = 1;
 }

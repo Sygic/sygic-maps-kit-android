@@ -24,17 +24,8 @@
 
 package com.sygic.maps.uikit.views.common.extensions
 
-import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <T : Any> LiveData<T>.asSingleEvent(): SingleLiveEvent<T> {
-    return if (this is SingleLiveEvent<T>) this else throw IllegalArgumentException("$this is not an instance of SingleLiveEvent!")
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <T : Any> LiveData<T>.asMutable(): MutableLiveData<T> {
-    return if (this is MutableLiveData<T>) this else throw IllegalArgumentException("$this is not an instance of MutableLiveData!")
-}
+val AndroidViewModel.application: Application
+    get() = getApplication()

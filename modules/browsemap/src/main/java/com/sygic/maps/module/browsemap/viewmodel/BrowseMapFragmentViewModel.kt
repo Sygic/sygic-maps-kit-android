@@ -221,22 +221,22 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject<*>) {
-        if (detailsViewFactory == null) {
+        val showDetailsView = onMapClickListener?.showDetailsView() ?: true
+        if (showDetailsView && detailsViewFactory == null) {
             poiDetailObservable.asSingleEvent().call()
         }
 
         poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(data: ViewObjectData) {
-                onMapClickListener.let {
-                    it?.onMapDataReceived(data)
-                    if (it == null || it.showDetailsView()) {
-                        detailsViewFactory?.let { factory ->
-                            poiDetailsView = PoiDetailsObject.create(data, factory, viewObject).also { view ->
-                                mapDataModel.addMapObject(view)
-                            }
-                        } ?: run {
-                            poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
+                onMapClickListener?.onMapDataReceived(data)
+
+                if (showDetailsView) {
+                    detailsViewFactory?.let { factory ->
+                        poiDetailsView = PoiDetailsObject.create(data, factory, viewObject).also { view ->
+                            mapDataModel.addMapObject(view)
                         }
+                    } ?: run {
+                        poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
                     }
                 }
             }
