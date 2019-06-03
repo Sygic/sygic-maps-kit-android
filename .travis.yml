@@ -80,6 +80,8 @@ jobs:
     - adb shell input keyevent 82 &
     script:
     - ./gradlew :app-samples:connectedAndroidTest -P"sygic.sdk.key"=$SYGIC_API_KEY
+    after_failure:
+    - adb -e logcat -d '*:E';
 
   - stage: deploy
     name: assembleRelease
