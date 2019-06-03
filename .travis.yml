@@ -7,9 +7,9 @@ if: type == pull_request OR tag IS present OR type == cron
 env:
   global:
   - API_LEVEL=28
-  - EMULATOR_LEVEL=22
+  - EMULATOR_LEVEL=28
   - BUILD_TOOLS_VERSION=28.0.3
-  - ABI=armeabi-v7a
+  - ABI=x86_64
 
 android:
   components:
@@ -75,7 +75,7 @@ jobs:
     name: browsemap
     before_script:
     - echo no | android create avd --force -n test -t android-${EMULATOR_LEVEL} --abi ${ABI} -c 1024M
-    - emulator -avd test -no-audio -no-window &
+    - emulator -avd test -no-accel -no-audio -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script:
