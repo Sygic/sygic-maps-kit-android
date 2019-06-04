@@ -78,7 +78,7 @@ jobs:
     name: browsemap
     before_script:
     - echo no | android create avd --force -n test -t android-${EMULATOR_LEVEL} --abi ${ABI} -c 1024M
-    - emulator -avd test -memory 1500 -no-accel -gpu guest -skin 720x1280 -camera-back none -camera-front none -no-boot-anim -no-window &
+    - emulator -avd test -memory 1500 -no-accel -gpu swiftshader_indirect -skin 720x1280 -camera-back none -camera-front none -no-boot-anim -no-window &
     - android-wait-for-emulator
     - adb shell input keyevent 82 &
     script:
