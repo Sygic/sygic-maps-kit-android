@@ -1,6 +1,9 @@
+# sudo: false --> run dist image in docker container on shared host for faster startup (runs slower)
+# sudo: required --> run dist image in VM on Google Compute Engine for slower startup (runs faster)
 language: android
 jdk: oraclejdk8
-sudo: false
+dist: trusty
+sudo: required
 
 if: type == pull_request OR tag IS present OR type == cron
 
