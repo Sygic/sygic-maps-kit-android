@@ -7,7 +7,7 @@ if: type == pull_request OR tag IS present OR type == cron
 env:
   global:
   - API_LEVEL=28
-  - EMULATOR_LEVEL=21
+  - EMULATOR_LEVEL=24
   - BUILD_TOOLS_VERSION=28.0.3
   - ABI=x86
 
