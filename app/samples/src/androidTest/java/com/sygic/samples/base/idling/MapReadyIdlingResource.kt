@@ -22,47 +22,20 @@
  * SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+package com.sygic.samples.base.idling
 
-ext.bintrayPublishVersion = uikitViewsVersion
-apply from: '../../bintrayConfig.gradle'
+import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.sdk.map.MapFragment
 
-android {
-    compileSdkVersion androidCompileSdkVersion
+class MapReadyIdlingResource(activity: CommonSampleActivity) : BaseIdlingResource(activity) {
 
-    defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargerSdkVersion
-        versionName uikitViewsVersion
-        archivesBaseName = "$project.name-$versionName"
-    }
+    override fun getName(): String = "MapReadyIdlingResource"
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
+    override fun isIdle(): Boolean {
+        activity.supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment is MapFragment) return fragment.mapView != null
         }
+
+        return false
     }
-
-    dataBinding {
-        enabled = true
-    }
-
-    androidExtensions {
-        experimental = true
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // libraries
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    api "androidx.appcompat:appcompat:$appCompatVersion"
-    api "com.google.android.material:material:$materialVersion"
 }

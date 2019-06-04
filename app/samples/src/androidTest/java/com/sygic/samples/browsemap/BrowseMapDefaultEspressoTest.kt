@@ -22,47 +22,24 @@
  * SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+package com.sygic.samples.browsemap
 
-ext.bintrayPublishVersion = uikitViewsVersion
-apply from: '../../bintrayConfig.gradle'
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sygic.samples.R
+import com.sygic.samples.base.BaseMapTest
+import com.sygic.samples.browsemap.robot.browseMap
+import org.junit.Test
+import org.junit.runner.RunWith
 
-android {
-    compileSdkVersion androidCompileSdkVersion
+@RunWith(AndroidJUnit4::class)
+class BrowseMapDefaultEspressoTest : BaseMapTest(BrowseMapDefaultActivity::class.java) {
 
-    defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargerSdkVersion
-        versionName uikitViewsVersion
-        archivesBaseName = "$project.name-$versionName"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
+    @Test
+    fun browseMapDisplayed() {
+        browseMap(activity) {
+            isViewNotDisplayed(R.id.compassView)
+            isViewNotDisplayed(R.id.positionLockFab)
+            isViewNotDisplayed(R.id.zoomControlsMenu)
         }
     }
-
-    dataBinding {
-        enabled = true
-    }
-
-    androidExtensions {
-        experimental = true
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // libraries
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    api "androidx.appcompat:appcompat:$appCompatVersion"
-    api "com.google.android.material:material:$materialVersion"
 }

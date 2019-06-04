@@ -22,37 +22,6 @@
  * SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
+package android.graphics;
 
-ext.bintrayPublishVersion = toolsViewmodelFactoryVersion
-apply from: '../../bintrayConfig.gradle'
-
-android {
-    compileSdkVersion androidCompileSdkVersion
-
-    defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargerSdkVersion
-        versionName toolsViewmodelFactoryVersion
-        archivesBaseName = "$project.name-$versionName"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // modules
-    compileOnly project(':tool-annotation-processor')
-    annotationProcessor project(':tool-annotation-processor')
-
-    // libraries
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "javax.inject:javax.inject:$javaxInjectVersion"
-}
+public class Rect {}

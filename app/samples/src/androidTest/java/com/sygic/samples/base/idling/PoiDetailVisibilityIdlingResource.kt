@@ -22,47 +22,30 @@
  * SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+package com.sygic.samples.base.idling
 
-ext.bintrayPublishVersion = uikitViewsVersion
-apply from: '../../bintrayConfig.gradle'
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-android {
-    compileSdkVersion androidCompileSdkVersion
+class PoiDetailVisibilityIdlingResource(
+    activity: CommonSampleActivity,
+    @BottomSheetBehavior.State private val expectedBottomSheetState: Int
+) : BaseIdlingResource(activity) {
 
-    defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargerSdkVersion
-        versionName uikitViewsVersion
-        archivesBaseName = "$project.name-$versionName"
-    }
+    private val poiDetailBottomDialogFragment
+        get() = activity.supportFragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
+    override fun getName(): String = "PoiDetailVisibilityIdlingResource"
+
+    override fun isIdle(): Boolean {
+        when (expectedBottomSheetState) {
+            BottomSheetBehavior.STATE_HIDDEN -> return poiDetailBottomDialogFragment == null
+            else -> poiDetailBottomDialogFragment?.let { fragment ->
+                return ((fragment as PoiDetailBottomDialogFragment).currentState == expectedBottomSheetState)
+            }
         }
+
+        return false
     }
-
-    dataBinding {
-        enabled = true
-    }
-
-    androidExtensions {
-        experimental = true
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // libraries
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    api "androidx.appcompat:appcompat:$appCompatVersion"
-    api "com.google.android.material:material:$materialVersion"
 }
