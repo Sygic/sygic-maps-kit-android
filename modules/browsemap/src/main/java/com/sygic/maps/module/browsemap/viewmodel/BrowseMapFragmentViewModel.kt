@@ -28,31 +28,34 @@ import android.app.Application
 import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
-import com.sygic.maps.module.browsemap.detail.PoiDataDetailsFactory
+import com.sygic.maps.module.browsemap.detail.PoiDetailsObject
 import com.sygic.maps.module.browsemap.extensions.resolveAttributes
 import com.sygic.maps.module.common.component.MapFragmentInitComponent
 import com.sygic.maps.module.common.detail.DetailsViewFactory
+import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
-import com.sygic.sdk.map.`object`.UiObject
-import com.sygic.sdk.map.`object`.ViewObject
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.utils.onMapClick
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.data.PoiData
-import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
+import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload
+import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
-import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
-import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
+import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.map.`object`.ProxyPoi
+import com.sygic.sdk.map.`object`.UiObject
+import com.sygic.sdk.map.`object`.ViewObject
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -89,7 +92,9 @@ class BrowseMapFragmentViewModel internal constructor(
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
 
+    val poiDetailObservable: LiveData<Any> = SingleLiveEvent()
     val poiDetailDataObservable: LiveData<PoiDetailData> = SingleLiveEvent()
+    val poiDetailListenerObservable: LiveData<DialogFragmentListener> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
@@ -115,6 +120,10 @@ class BrowseMapFragmentViewModel internal constructor(
         mapInteractionManager.addOnMapClickListener(this)
     }
 
+    override fun onCreate(owner: LifecycleOwner) {
+        poiDetailListenerObservable.asSingleEvent().value = dialogFragmentListener
+    }
+
     override fun onStart(owner: LifecycleOwner) {
         if (positionOnMapEnabled) {
             locationManager.setSdkPositionUpdatingEnabled(true)
@@ -125,39 +134,85 @@ class BrowseMapFragmentViewModel internal constructor(
         mapDataModel.removeOnClickMapMarker()
     }
 
-    override fun onMapObjectsReceived(viewObjects: List<ViewObject>) {
+    override fun onMapObjectsReceived(viewObjects: List<ViewObject<*>>) {
         if (viewObjects.isEmpty()) {
             return
         }
 
+        // Currently, we take care only of the first ViewObject
         var firstViewObject = viewObjects.first()
+        val dataLoadAllowed = onMapClickListener?.onMapClick(firstViewObject) ?: true
+
+        // First, check if the PoiDetailsView is visible
         poiDetailsView?.let {
+
+            // Always remove the previous one
             mapDataModel.removeMapObject(it)
             poiDetailsView = null
-            if (firstViewObject !is MapMarker) {
-                return
+
+            // Check if we should ask or use our own logic
+            if (onMapClickListener != null) {
+                // This is useful for switching between the same types without hiding the previous one
+                if (!dataLoadAllowed) {
+                    return
+                }
+            } else {
+                // Currently, we internally support only MapMarker's
+                if (firstViewObject !is MapMarker) {
+                    return
+                }
             }
         }
 
         when (mapSelectionMode) {
+
             MapSelectionMode.NONE -> {
                 logWarning("NONE")
             }
+
             MapSelectionMode.MARKERS_ONLY -> {
+                // Markers only mode check
                 if (firstViewObject !is MapMarker) {
+                    return
+                }
+
+                // Continue only if the ViewObject data load is allowed
+                if (!dataLoadAllowed) {
                     return
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
             }
+
             MapSelectionMode.FULL -> {
-                if (firstViewObject !is MapMarker && onMapClickListener == null) {
-                    firstViewObject = MapMarker(firstViewObject)
-                    mapDataModel.addOnClickMapMarker(firstViewObject)
+                // Add the OnClickMapMarker only if the click is not at MapMarker
+                if (firstViewObject !is MapMarker) {
+                    getOnClickMapMarker(firstViewObject)?.let { clickMapMarker ->
+                        mapDataModel.addOnClickMapMarker(
+                            when (firstViewObject) {
+                                // To persist ProxyPoi data payload we need to create a copy of the provided MapMarker
+                                // and give it the same payload
+                                is ProxyPoi -> clickMapMarker.getCopyWithPayload(firstViewObject)
+                                else -> clickMapMarker
+                            }.also { firstViewObject = it })
+                    }
+                }
+
+                // Continue only if the ViewObject data load is allowed
+                if (!dataLoadAllowed) {
+                    return
                 }
 
                 getPoiDataAndNotifyObservers(firstViewObject)
             }
+        }
+    }
+
+    private fun getOnClickMapMarker(viewObject: ViewObject<*>): MapMarker? {
+        return if (onMapClickListener != null) {
+            onMapClickListener?.getClickMapMarker(viewObject.position.latitude, viewObject.position.longitude)
+        } else {
+            MapMarker.at(viewObject.position).build()
         }
     }
 
@@ -165,33 +220,24 @@ class BrowseMapFragmentViewModel internal constructor(
         onMapClickListener?.let { Log.w("OnMapClickListener", "The listener is set, but map selection mode is $mode.") }
     }
 
-    private fun getPoiDataAndNotifyObservers(viewObject: ViewObject) {
-        poiDataManager.getPoiData(viewObject, object : PoiDataManager.Callback() {
-            override fun onDataLoaded(poiData: PoiData) {
-                onMapClickListener?.let {
-                    if (it.onMapClick(poiData)) {
-                        return
-                    }
-                }
+    private fun getPoiDataAndNotifyObservers(viewObject: ViewObject<*>) {
+        val showDetailsView = onMapClickListener?.showDetailsView() ?: true
+        if (showDetailsView && detailsViewFactory == null) {
+            poiDetailObservable.asSingleEvent().call()
+        }
 
-                detailsViewFactory?.let { factory ->
-                    poiDetailsView = object : UiObject(poiData.coordinates, PoiDataDetailsFactory(factory, poiData)) {
-                        override fun onMeasured(width: Int, height: Int) {
-                            super.onMeasured(width, height)
+        poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
+            override fun onDataLoaded(data: ViewObjectData) {
+                onMapClickListener?.onMapDataReceived(data)
 
-                            val markerHeight: Int = if (viewObject is MapMarker)
-                                viewObject.getBitmap(getApplication())?.height ?: 0 else 0
-
-                            setAnchor(
-                                0.5f - (factory.getXOffset() / width),
-                                1f + ((markerHeight + factory.getYOffset()) / height)
-                            )
+                if (showDetailsView) {
+                    detailsViewFactory?.let { factory ->
+                        poiDetailsView = PoiDetailsObject.create(data, factory, viewObject).also { view ->
+                            mapDataModel.addMapObject(view)
                         }
-                    }.also {
-                        mapDataModel.addMapObject(it)
+                    } ?: run {
+                        poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
                     }
-                } ?: run {
-                    poiDetailDataObservable.asSingleEvent().value = poiData.toPoiDetailData()
                 }
             }
         })
@@ -214,10 +260,4 @@ class BrowseMapFragmentViewModel internal constructor(
         super.onCleared()
         mapInteractionManager.removeOnMapClickListener(this)
     }
-}
-
-// ToDo: Update me when PR Feature - SDK MapMarker refactor 2/2 is done
-private fun PoiData.toPoiDetailData(): PoiDetailData {
-    val addressComponent = getAddressComponent()
-    return PoiDetailData(addressComponent.formattedTitle, addressComponent.formattedSubtitle, url, email, phone, coordinates.getFormattedLocation())
 }

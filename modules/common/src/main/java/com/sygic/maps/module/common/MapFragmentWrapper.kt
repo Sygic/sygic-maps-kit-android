@@ -55,22 +55,22 @@ import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
-import com.sygic.sdk.map.MapFragment
-import com.sygic.sdk.map.MapView
-import com.sygic.sdk.map.listeners.OnMapInitListener
-import com.sygic.sdk.online.OnlineManager
-import com.sygic.maps.uikit.views.common.extensions.getStringFromAttr
 import com.sygic.maps.uikit.viewmodels.common.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.location.SETTING_ACTIVITY_REQUEST_CODE
-import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
-import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
-import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.permission.PERMISSIONS_REQUEST_CODE
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.MapSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isMapSkinValid
+import com.sygic.maps.uikit.views.common.extensions.getStringFromAttr
+import com.sygic.sdk.map.MapFragment
+import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.map.listeners.OnMapInitListener
+import com.sygic.sdk.online.OnlineManager
 import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -123,8 +123,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         getMapAsync(this)
     }
 
-    override fun getMapDataModel() = ExtendedMapDataModel
-    override fun getCameraDataModel() = ExtendedCameraModel
+    final override fun getMapDataModel() = ExtendedMapDataModel
+    final override fun getCameraDataModel() = ExtendedCameraModel
 
     override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         executeInjector()

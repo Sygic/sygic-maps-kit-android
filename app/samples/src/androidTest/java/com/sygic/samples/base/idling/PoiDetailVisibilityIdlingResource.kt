@@ -22,21 +22,30 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.utils
+package com.sygic.samples.base.idling
 
-import android.app.Application
-import android.content.pm.PackageManager
-import androidx.annotation.RestrictTo
-import com.sygic.maps.module.common.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun Application.getApiKey(): String? {
-    return try {
-        val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
-        applicationInfo.metaData.getString(getString(R.string.com_sygic_api_key))
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
-    } catch (e: NullPointerException) {
-        null
+class PoiDetailVisibilityIdlingResource(
+    activity: CommonSampleActivity,
+    @BottomSheetBehavior.State private val expectedBottomSheetState: Int
+) : BaseIdlingResource(activity) {
+
+    private val poiDetailBottomDialogFragment
+        get() = activity.supportFragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)
+
+    override fun getName(): String = "PoiDetailVisibilityIdlingResource"
+
+    override fun isIdle(): Boolean {
+        when (expectedBottomSheetState) {
+            BottomSheetBehavior.STATE_HIDDEN -> return poiDetailBottomDialogFragment == null
+            else -> poiDetailBottomDialogFragment?.let { fragment ->
+                return ((fragment as PoiDetailBottomDialogFragment).currentState == expectedBottomSheetState)
+            }
+        }
+
+        return false
     }
 }
