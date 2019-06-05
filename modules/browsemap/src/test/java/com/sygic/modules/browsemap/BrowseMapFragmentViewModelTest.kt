@@ -235,13 +235,14 @@ class BrowseMapFragmentViewModelTest {
 
     @Test
     fun customOnMapClickListenerOnMapClickTrueTest() {
-        val testPosition = GeoCoordinates(48.143489, 17.150560)
-        val testViewObject = ProxyPoi.create(testPosition.latitude, testPosition.latitude, byteArrayOf()).withPayload(BasicData("Test")).build()
+        val testViewObject = ProxyPoi.create(48.143489, 17.150560, byteArrayOf()).withPayload(BasicData("Test")).build()
+        val testMapMarker = mock<MapMarker>()
         val onMapClickListener = mock<OnMapClickListener>()
 
+        whenever(testMapMarker.data).thenReturn(mock())
         whenever(onMapClickListener.onMapClick(any(), any(), any())).thenReturn(true)
         whenever(onMapClickListener.showDetailsView()).thenReturn(true)
-        whenever(onMapClickListener.getClickMapMarker(any(), any())).thenReturn(MapMarker.at(testPosition.latitude, testPosition.longitude).build())
+        whenever(onMapClickListener.getClickMapMarker(any(), any())).thenReturn(testMapMarker)
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
                 callback.firstValue.onDataLoaded(testViewObject.data)
@@ -278,13 +279,14 @@ class BrowseMapFragmentViewModelTest {
 
     @Test
     fun customOnMapClickListenerShowDetailsViewFalseTest() {
-        val testPosition = GeoCoordinates(48.143489, 17.150560)
-        val testViewObject = ProxyPoi.create(testPosition.latitude, testPosition.latitude, byteArrayOf()).withPayload(BasicData("Test")).build()
+        val testViewObject = ProxyPoi.create(48.143489, 17.150560, byteArrayOf()).withPayload(BasicData("Test")).build()
+        val testMapMarker = mock<MapMarker>()
         val onMapClickListener = mock<OnMapClickListener>()
 
+        whenever(testMapMarker.data).thenReturn(mock())
         whenever(onMapClickListener.onMapClick(any(), any(), any())).thenReturn(true)
         whenever(onMapClickListener.showDetailsView()).thenReturn(false)
-        whenever(onMapClickListener.getClickMapMarker(any(), any())).thenReturn(MapMarker.at(testPosition.latitude, testPosition.longitude).build())
+        whenever(onMapClickListener.getClickMapMarker(any(), any())).thenReturn(testMapMarker)
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
                 callback.firstValue.onDataLoaded(testViewObject.data)
