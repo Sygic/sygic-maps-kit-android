@@ -37,8 +37,8 @@ buildscript {
         androidCompileSdkVersion = 28
         androidTargerSdkVersion = androidCompileSdkVersion
 
-        moduleBrowsemapVersion = '1.0.2'
-        moduleCommonVersion = '1.0.2'
+        moduleBrowsemapVersion = '1.0.3'
+        moduleCommonVersion = '1.0.3'
         uikitViewsVersion = '1.0.2'
         uikitViewmodelsVersion = '1.0.3'
         toolsViewmodelFactoryVersion = '1.0.1'

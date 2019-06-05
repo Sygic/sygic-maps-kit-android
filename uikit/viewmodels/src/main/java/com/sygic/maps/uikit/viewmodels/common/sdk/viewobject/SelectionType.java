@@ -22,21 +22,18 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.utils
+package com.sygic.maps.uikit.viewmodels.common.sdk.viewobject;
 
-import android.app.Application
-import android.content.pm.PackageManager
-import androidx.annotation.RestrictTo
-import com.sygic.maps.module.common.R
+import androidx.annotation.IntDef;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun Application.getApiKey(): String? {
-    return try {
-        val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
-        applicationInfo.metaData.getString(getString(R.string.com_sygic_api_key))
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
-    } catch (e: NullPointerException) {
-        null
-    }
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@IntDef({SelectionType.OTHER, SelectionType.MARKER, SelectionType.POI, SelectionType.ROUTE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface SelectionType {
+    int OTHER = 0;
+    int MARKER = 1;
+    int POI = 2;
+    int ROUTE = 3;
 }
