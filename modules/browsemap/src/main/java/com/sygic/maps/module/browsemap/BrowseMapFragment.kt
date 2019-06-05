@@ -45,6 +45,7 @@ import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.sdk.map.`object`.MapMarker
 
 /**
@@ -172,9 +173,17 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent)
-        fragmentViewModel.poiDetailDataObservable.observe(this, Observer<PoiDetailData> { showPoiDetail(it) })
-        savedInstanceState?.let { setPoiDetailListener() }
+        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent).apply {
+            this.poiDetailObservable.observe(
+                this@BrowseMapFragment,
+                Observer<Any> { showPoiDetail() })
+            this.poiDetailDataObservable.observe(
+                this@BrowseMapFragment,
+                Observer<PoiDetailData> { setPoiDetailData(it) })
+            this.poiDetailListenerObservable.observe(
+                this@BrowseMapFragment,
+                Observer<DialogFragmentListener> { setPoiDetailListener(it) })
+        }
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
         positionLockFabViewModel = viewModelOf(PositionLockFabViewModel::class.java)
@@ -184,12 +193,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         lifecycle.addObserver(compassViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
         lifecycle.addObserver(zoomControlsViewModel)
-    }
-
-    private fun setPoiDetailListener() {
-        fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setListener(fragmentViewModel.dialogFragmentListener)
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -234,10 +237,23 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         }
     }
 
-    private fun showPoiDetail(data: PoiDetailData) {
-        val dialog = PoiDetailBottomDialogFragment.newInstance(data)
-        dialog.setListener(fragmentViewModel.dialogFragmentListener)
-        dialog.show(fragmentManager, PoiDetailBottomDialogFragment.TAG)
+    private fun showPoiDetail() {
+        PoiDetailBottomDialogFragment.newInstance().apply {
+            setListener(fragmentViewModel.dialogFragmentListener)
+            showNow(this@BrowseMapFragment.fragmentManager, PoiDetailBottomDialogFragment.TAG)
+        }
+    }
+
+    private fun setPoiDetailListener(listener: DialogFragmentListener) {
+        fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as PoiDetailBottomDialogFragment).setListener(listener)
+        }
+    }
+
+    private fun setPoiDetailData(data: PoiDetailData) {
+        fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as PoiDetailBottomDialogFragment).setData(data)
+        }
     }
 
     override fun onDestroy() {

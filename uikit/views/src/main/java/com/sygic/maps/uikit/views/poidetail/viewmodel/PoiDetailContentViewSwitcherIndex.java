@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.common.extensions
+package com.sygic.maps.uikit.views.poidetail.viewmodel;
 
-import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import androidx.annotation.IntDef;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <T : Any> LiveData<T>.asSingleEvent(): SingleLiveEvent<T> {
-    return if (this is SingleLiveEvent<T>) this else throw IllegalArgumentException("$this is not an instance of SingleLiveEvent!")
-}
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <T : Any> LiveData<T>.asMutable(): MutableLiveData<T> {
-    return if (this is MutableLiveData<T>) this else throw IllegalArgumentException("$this is not an instance of MutableLiveData!")
+@IntDef({PoiDetailContentViewSwitcherIndex.CONTENT,
+        PoiDetailContentViewSwitcherIndex.PROGRESSBAR})
+@Retention(RetentionPolicy.SOURCE)
+@interface PoiDetailContentViewSwitcherIndex {
+    int CONTENT = 0;
+    int PROGRESSBAR = 1;
 }

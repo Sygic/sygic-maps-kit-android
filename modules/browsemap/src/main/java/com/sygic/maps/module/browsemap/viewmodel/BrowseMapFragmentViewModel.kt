@@ -92,7 +92,9 @@ class BrowseMapFragmentViewModel internal constructor(
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
 
+    val poiDetailObservable: LiveData<Any> = SingleLiveEvent()
     val poiDetailDataObservable: LiveData<PoiDetailData> = SingleLiveEvent()
+    val poiDetailListenerObservable: LiveData<DialogFragmentListener> = SingleLiveEvent()
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
@@ -116,6 +118,10 @@ class BrowseMapFragmentViewModel internal constructor(
         initComponent.recycle()
 
         mapInteractionManager.addOnMapClickListener(this)
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        poiDetailListenerObservable.asSingleEvent().value = dialogFragmentListener
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -215,18 +221,22 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject<*>) {
+        val showDetailsView = onMapClickListener?.showDetailsView() ?: true
+        if (showDetailsView && detailsViewFactory == null) {
+            poiDetailObservable.asSingleEvent().call()
+        }
+
         poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
             override fun onDataLoaded(data: ViewObjectData) {
-                onMapClickListener.let {
-                    it?.onMapDataReceived(data)
-                    if (it == null || it.showDetailsView()) {
-                        detailsViewFactory?.let { factory ->
-                            poiDetailsView = PoiDetailsObject.create(data, factory, viewObject).also { view ->
-                                mapDataModel.addMapObject(view)
-                            }
-                        } ?: run {
-                            poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
+                onMapClickListener?.onMapDataReceived(data)
+
+                if (showDetailsView) {
+                    detailsViewFactory?.let { factory ->
+                        poiDetailsView = PoiDetailsObject.create(data, factory, viewObject).also { view ->
+                            mapDataModel.addMapObject(view)
                         }
+                    } ?: run {
+                        poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
                     }
                 }
             }

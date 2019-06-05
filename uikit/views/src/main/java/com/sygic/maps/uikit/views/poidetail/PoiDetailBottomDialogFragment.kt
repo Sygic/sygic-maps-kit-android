@@ -29,16 +29,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.common.extensions.copyToClipboard
-import com.sygic.maps.uikit.views.common.extensions.openEmail
-import com.sygic.maps.uikit.views.common.extensions.openPhone
-import com.sygic.maps.uikit.views.common.extensions.openUrl
 import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.poidetail.dialog.BottomSheetDialog
@@ -61,7 +58,7 @@ private const val POI_DETAIL_DATA = "poi_detail_data"
  */
 open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
-    private var listener: DialogFragmentListener? = null
+    private var dialogFragmentListener: DialogFragmentListener? = null
     private var viewModel: PoiDetailInternalViewModel? = null
 
     private lateinit var preferencesManager: PreferencesManager
@@ -84,16 +81,17 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         const val TAG = "poi_detail_bottom_dialog_fragment"
 
         /**
-         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You need to provide a valid [PoiDetailData] object.
+         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You can provide a [PoiDetailData] object.
          *
          * @param poiDetailData [PoiDetailData] to be applied to the dialog content.
          */
         @JvmStatic
-        fun newInstance(poiDetailData: PoiDetailData): PoiDetailBottomDialogFragment = PoiDetailBottomDialogFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(POI_DETAIL_DATA, poiDetailData)
+        fun newInstance(poiDetailData: PoiDetailData? = null): PoiDetailBottomDialogFragment =
+            PoiDetailBottomDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(POI_DETAIL_DATA, poiDetailData)
+                }
             }
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,21 +100,15 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         preferencesManager = PreferencesManager(requireContext())
 
         viewModel = ViewModelProviders.of(
-            this,
-            PoiDetailInternalViewModel.ViewModelFactory(
-                arguments?.getParcelable(POI_DETAIL_DATA)!!,
-                preferencesManager
-            )
+            this, PoiDetailInternalViewModel.ViewModelFactory(requireActivity().application, preferencesManager)
         )[PoiDetailInternalViewModel::class.java].apply {
-            this.setListener(listener)
-            listener = null
+            this.dialogStateObservable.observe(
+                this@PoiDetailBottomDialogFragment,
+                Observer<Int> { setState(it) })
 
-            this.expandObservable.observe(this@PoiDetailBottomDialogFragment, Observer<Any> { expandBottomSheet() })
-            this.collapseObservable.observe(this@PoiDetailBottomDialogFragment, Observer<Any> { collapseBottomSheet() })
-            this.webUrlClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openUrl(it) })
-            this.emailClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openEmail(it) })
-            this.phoneNumberClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.openPhone(it) })
-            this.coordinatesClickObservable.observe(this@PoiDetailBottomDialogFragment, Observer<String> { context?.copyToClipboard(it) })
+            this.onDataChanged(arguments?.getParcelable(POI_DETAIL_DATA))
+            this.listener = dialogFragmentListener
+            dialogFragmentListener = null
         }
     }
 
@@ -153,12 +145,8 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         viewModel?.let { dialog.behavior?.addStateListener(it) }
     }
 
-    private fun expandBottomSheet() {
-        dialog.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
-    private fun collapseBottomSheet() {
-        dialog.behavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+    private fun setState(@BottomSheetBehavior.State state: Int) {
+        dialog.behavior?.state = state
     }
 
     /**
@@ -167,12 +155,23 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
      * @param listener [DialogFragmentListener] callback to invoke [PoiDetailBottomDialogFragment] dismiss.
      */
     fun setListener(listener: DialogFragmentListener) {
-        viewModel?.setListener(listener) ?: run { this.listener = listener }
+        viewModel?.let { it.listener = listener } ?: run { dialogFragmentListener = listener }
+    }
+
+    /**
+     * Set a [PoiDetailData] for [PoiDetailBottomDialogFragment] content generation. If null, the loading [ProgressBar] view
+     * will be displayed.
+     *
+     * @param data [PoiDetailData] which will be used for fulfillment the [PoiDetailBottomDialogFragment] content.
+     */
+    fun setData(data: PoiDetailData?) {
+        arguments?.putParcelable(POI_DETAIL_DATA, data)
+        viewModel?.onDataChanged(data)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        listener = null
+        dialogFragmentListener = null
     }
 }
