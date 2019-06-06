@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.views.compass
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.CallSuper
@@ -88,19 +89,13 @@ open class CompassView @JvmOverloads constructor(
         needleRotation = rotation
 
         addView(createImageView(context, attrs, defStyleAttr, R.drawable.ic_compass_nicks))
-        addView(createImageView(context, R.drawable.ic_compass_arrow).also { arrowImageView = it })
+        addView(createImageView(context, resourceId = R.drawable.ic_compass_arrow).also { arrowImageView = it })
     }
 
-    private fun createImageView(context: Context, @DrawableRes resourceId: Int): ImageView {
-        val imageView = ImageView(context)
-        imageView.setImageResource(resourceId)
-        imageView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        return imageView
-    }
-
-    private fun createImageView(context: Context, attrs: AttributeSet?,
-                                defStyleAttr: Int, @DrawableRes resourceId: Int): ImageView {
+    private fun createImageView(context: Context, attrs: AttributeSet? = null,
+                                defStyleAttr: Int = 0, @DrawableRes resourceId: Int): ImageView {
         val imageView = ImageView(context, attrs, defStyleAttr)
+        imageView.id = View.NO_ID
         imageView.setImageResource(resourceId)
         imageView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         return imageView

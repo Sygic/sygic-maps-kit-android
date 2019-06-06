@@ -25,27 +25,25 @@
 package com.sygic.maps.uikit.viewmodels.common.data
 
 import com.sygic.maps.uikit.viewmodels.common.utils.appendOnNewLine
-import com.sygic.sdk.places.PoiInfo
-import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.maps.uikit.viewmodels.common.utils.getCityWithPostal
 import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumber
 import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumberAndCityWithPostal
+import com.sygic.sdk.places.PoiInfo
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PoiData( //ToDo: be careful with "SDK MapMarker refactor" merge
-    var coordinates: GeoCoordinates = GeoCoordinates.Invalid,
+data class PoiData(
     var name: String? = null,
-    var iso: String? = null,
-    @PoiInfo.PoiGroup var poiGroup: Int = PoiInfo.PoiGroup.Unknown,
-    @PoiInfo.PoiCategory var poiCategory: Int = PoiInfo.PoiCategory.Unknown,
-    var city: String? = null,
     var street: String? = null,
     var houseNumber: String? = null,
+    var city: String? = null,
     var postal: String? = null,
+    var iso: String? = null,
     var phone: String? = null,
     var email: String? = null,
-    var url: String? = null
+    var url: String? = null,
+    @PoiInfo.PoiGroup var poiGroup: Int = PoiInfo.PoiGroup.Unknown,
+    @PoiInfo.PoiCategory var poiCategory: Int = PoiInfo.PoiCategory.Unknown
 ) : BasicData(createBasicDescription(name, street, houseNumber, city, postal)) {
 
     override fun toString(): String {
@@ -62,11 +60,6 @@ data class PoiData( //ToDo: be careful with "SDK MapMarker refactor" merge
         url?.let { if (it.isNotEmpty()) builder.appendOnNewLine(it) }
 
         return builder.toString()
-    }
-
-    //ToDo: Remove me, when "SDK MapMarker refactor" merge is done
-    companion object {
-        val EMPTY = PoiData()
     }
 }
 
