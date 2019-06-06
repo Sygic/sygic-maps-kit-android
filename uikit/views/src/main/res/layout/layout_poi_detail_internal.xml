@@ -24,11 +24,14 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
 
         <variable
             name="poiDetailInternalViewModel"
@@ -36,96 +39,110 @@
 
     </data>
 
-    <LinearLayout
+    <ViewAnimator
+        android:id="@+id/poiDetailContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/colorBackground"
-        android:orientation="vertical"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        app:displayedChild="@{safeUnbox(poiDetailInternalViewModel.contentViewSwitcherIndex)}">
 
         <LinearLayout
-            android:id="@+id/headerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
-            android:orientation="vertical"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:paddingBottom="24dp">
+            android:orientation="vertical">
 
-            <View
-                android:layout_width="48dp"
-                android:layout_height="8dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="6dp"
-                android:background="@drawable/ic_drag_hint_shape" />
+            <LinearLayout
+                android:id="@+id/headerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="24dp">
+
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/ic_drag_hint_shape" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:singleLine="true"
+                    android:text="@{poiDetailInternalViewModel.titleText}"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="20sp"
+                    tools:text="Sygic" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="@{poiDetailInternalViewModel.subtitleText}"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="16sp"
+                    tools:text="Mlynské nivy 16, 821 09 Bratislava" />
+
+            </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                style="@style/PoiDetailItem"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-medium"
-                android:singleLine="true"
-                android:text="@{poiDetailInternalViewModel.titleText}"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="20sp"
-                tools:text="Sygic" />
+                android:drawableStart="@drawable/ic_phone"
+                android:onClick="@{() -> poiDetailInternalViewModel.onPhoneNumberClick()}"
+                android:text="@{poiDetailInternalViewModel.phoneText}"
+                android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.phoneText) ? View.GONE : View.VISIBLE}"
+                tools:text="+421 0944 123456" />
 
             <TextView
-                android:layout_width="wrap_content"
+                style="@style/PoiDetailItem"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="@{poiDetailInternalViewModel.subtitleText}"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="16sp"
-                tools:text="Mlynské nivy 16, 821 09 Bratislava" />
+                android:drawableStart="@drawable/ic_email"
+                android:onClick="@{() -> poiDetailInternalViewModel.onEmailClick()}"
+                android:text="@{poiDetailInternalViewModel.emailText}"
+                android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.emailText) ? View.GONE : View.VISIBLE}"
+                tools:text="sygic@sygic.com" />
+
+            <TextView
+                style="@style/PoiDetailItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_web"
+                android:onClick="@{() -> poiDetailInternalViewModel.onWebUrlClick()}"
+                android:text="@{poiDetailInternalViewModel.urlText}"
+                android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.urlText) ? View.GONE : View.VISIBLE}"
+                tools:text="http://www.sygic.com" />
+
+            <TextView
+                style="@style/PoiDetailItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_location"
+                android:onClick="@{() -> poiDetailInternalViewModel.onCoordinatesClick()}"
+                android:text="@{poiDetailInternalViewModel.coordinatesText}"
+                android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.coordinatesText) ? View.GONE : View.VISIBLE}"
+                tools:text="48.126895, 12.214578" />
 
         </LinearLayout>
 
-        <TextView
-            style="@style/PoiDetailItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_phone"
-            android:onClick="@{() -> poiDetailInternalViewModel.onPhoneNumberClick()}"
-            android:text="@{poiDetailInternalViewModel.phoneText}"
-            android:visibility="@{poiDetailInternalViewModel.phoneText != null ? View.VISIBLE : View.GONE}"
-            tools:text="+421 0944 123456" />
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="26dp" />
 
-        <TextView
-            style="@style/PoiDetailItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_email"
-            android:onClick="@{() -> poiDetailInternalViewModel.onEmailClick()}"
-            android:text="@{poiDetailInternalViewModel.emailText}"
-            android:visibility="@{poiDetailInternalViewModel.emailText != null ? View.VISIBLE : View.GONE}"
-            tools:text="sygic@sygic.com" />
-
-        <TextView
-            style="@style/PoiDetailItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_web"
-            android:onClick="@{() -> poiDetailInternalViewModel.onWebUrlClick()}"
-            android:text="@{poiDetailInternalViewModel.urlText}"
-            android:visibility="@{poiDetailInternalViewModel.urlText != null ? View.VISIBLE : View.GONE}"
-            tools:text="http://www.sygic.com" />
-
-        <TextView
-            style="@style/PoiDetailItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_location"
-            android:onClick="@{() -> poiDetailInternalViewModel.onCoordinatesClick()}"
-            android:text="@{poiDetailInternalViewModel.coordinatesText}"
-            android:visibility="@{poiDetailInternalViewModel.coordinatesText != null ? View.VISIBLE : View.GONE}"
-            tools:text="48.126895, 12.214578" />
-
-    </LinearLayout>
+    </ViewAnimator>
 
 </layout>

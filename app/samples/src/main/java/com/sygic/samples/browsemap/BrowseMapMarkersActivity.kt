@@ -26,10 +26,12 @@ package com.sygic.samples.browsemap
 
 import android.os.Bundle
 import com.sygic.maps.module.browsemap.BrowseMapFragment
-import com.sygic.sdk.map.factory.DrawableFactory
-import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
+import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.utils.MapMarkers
+import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.map.factory.DrawableFactory
 
 class BrowseMapMarkersActivity : CommonSampleActivity() {
 
@@ -40,29 +42,27 @@ class BrowseMapMarkersActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_browsemap_markers)
 
-        val markerFromBuilder = MapMarker.Builder()
-            .coordinates(48.130550, 17.173795)
-            .title("Marker created by Builder")
+        val markerFromBuilder = MapMarker.at(48.130550, 17.173795)
+            .withPayload(BasicData("Marker created by Builder (default icon)"))
             .build()
 
-        val markerFromBuilderWithCustomIcon = MapMarker.Builder()
-            .coordinates(48.127531, 17.076463)
-            .title("Marker created by Builder (custom icon)")
-            .iconDrawable(R.drawable.ic_android)
-            .build()
+        val markerFromBuilderWithCustomIcon = MapMarker.at(48.127531, 17.076463)
+            .withPayload(BasicData("Marker created by Builder (custom icon)", "And with stunning description :-D"))
+            .withIcon(R.drawable.ic_android).build()
 
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
         browseMapFragment.addMapMarkers(
             listOf(
-                MapMarker(48.143489, 17.150560),
-                MapMarker(48.162805, 17.101621),
-                MapMarker(48.165561, 17.139550),
-                MapMarker(48.155028, 17.155674),
-                MapMarker(48.141797, 17.097001),
-                MapMarker(48.134756, 17.127729),
+                MapMarker.at(48.143489, 17.150560).build(),
+                MapMarker.at(48.144921, 17.114853).withIcon(DrawableFactory(R.drawable.ic_favorite)).build(),
                 markerFromBuilder,
                 markerFromBuilderWithCustomIcon,
-                MapMarker(48.144921, 17.114853, DrawableFactory(R.drawable.ic_favorite))
+                MapMarkers.sampleMarkerOne,
+                MapMarkers.sampleMarkerTwo,
+                MapMarkers.sampleMarkerThree,
+                MapMarkers.sampleMarkerFour,
+                MapMarkers.sampleMarkerFive,
+                MapMarkers.sampleMarkerSix
             )
         )
     }
