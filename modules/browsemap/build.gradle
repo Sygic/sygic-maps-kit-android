@@ -42,26 +42,40 @@ android {
         gradle.resolveFlavors(it)
     }
 
-    dataBinding {
-        enabled = true
-    }
-
     buildTypes {
         release {
             minifyEnabled false
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':module-common')
 
+    // modules
+    api project(':module-common')
     compileOnly project(':tool-annotation-processor')
     implementation project(':tool-viewmodel-factory')
     annotationProcessor project(':tool-annotation-processor')
 
+    // libraries
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // test libraries
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test:core:$robolectricVersion"
+    testImplementation "androidx.arch.core:core-testing:$lifecycleVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation "com.jraska.livedata:testing-ktx:$livedataTestingVersion"
 }

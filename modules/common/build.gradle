@@ -42,22 +42,29 @@ android {
         gradle.resolveFlavors(it)
     }
 
-    dataBinding {
-        enabled = true
-    }
-
     buildTypes {
         release {
             minifyEnabled false
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // modules
     api project(':uikit-viewmodels')
 
+    // libraries
     compileOnly project(':tool-annotation-processor')
     implementation project(':tool-viewmodel-factory')
     annotationProcessor project(':tool-annotation-processor')

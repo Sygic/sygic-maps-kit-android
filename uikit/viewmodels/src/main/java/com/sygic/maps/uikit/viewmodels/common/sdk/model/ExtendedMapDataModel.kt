@@ -27,8 +27,8 @@ package com.sygic.maps.uikit.viewmodels.common.sdk.model
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.data.SimpleMapDataModel
-import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
 
 object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 

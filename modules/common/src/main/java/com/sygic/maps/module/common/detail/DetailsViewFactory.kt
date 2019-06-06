@@ -28,7 +28,8 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sygic.maps.uikit.viewmodels.common.data.PoiData
+import android.view.ViewGroup.LayoutParams
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 
 /**
  * Factory class that can be used to change the default behavior of showing
@@ -46,12 +47,12 @@ abstract class DetailsViewFactory : Parcelable {
      * @param container This is the parent [ViewGroup] that the details view
      * will be attached to. You should not add the view itself,
      * this can only be used to generate the [LayoutParams] of the view.
-     * @param poiData [PoiData] associated with selected point / marker.
+     * @param data [ViewObjectData] associated with selected point / marker.
      * which can be used to enrich the layout with information.
      *
      * @return the view which will be used as an details view for selected points.
      */
-    abstract fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, poiData: PoiData): View
+    abstract fun getDetailsView(inflater: LayoutInflater, container: ViewGroup, data: ViewObjectData): View
 
     /**
      * Define the X offset for the details window.

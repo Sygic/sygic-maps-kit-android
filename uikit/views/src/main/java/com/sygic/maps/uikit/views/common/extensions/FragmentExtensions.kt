@@ -33,6 +33,7 @@ import androidx.fragment.app.Fragment
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.utils.logWarning
 
+fun Fragment.showKeyboard(view: View) = context?.showKeyboard(view)
 fun Fragment.toggleKeyboard() = context?.toggleKeyboard()
 fun Fragment.hideKeyboard() = view?.let { context?.hideKeyboard(it) }
 
@@ -57,7 +58,6 @@ private inline val Fragment.internalContainerId: Int?
     get() = view?.let { view ->
         view.parent?.let { parent ->
             if (parent is ViewGroup) {
-                @IdRes
                 val internalFragmentContainerId = R.id.internalFragmentContainer
                 if (parent.childCount == 1) {
                     return if (parent.id != View.NO_ID) {
