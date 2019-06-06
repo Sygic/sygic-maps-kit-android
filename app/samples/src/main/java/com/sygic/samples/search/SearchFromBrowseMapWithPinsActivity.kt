@@ -34,6 +34,7 @@ import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
 import com.sygic.samples.search.viewmodels.SearchFromBrowseMapWitchPinsActivityViewModel
+import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.map.`object`.MapMarker
 
 class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
@@ -60,6 +61,9 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
             this.removeAllMapMarkersObservable.observe(
                 this@SearchFromBrowseMapWithPinsActivity,
                 Observer<Any> { removeAllMapMarkers() })
+            this.setCameraPositionObservable.observe(
+                this@SearchFromBrowseMapWithPinsActivity,
+                Observer<GeoCoordinates> { setCameraPosition(it) })
         }
         lifecycle.addObserver(viewModel)
     }
@@ -79,6 +83,10 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
     private fun addMapMarker(mapMarker: MapMarker) = findBrowseMapFragment()?.addMapMarker(mapMarker)
 
     private fun removeAllMapMarkers() = findBrowseMapFragment()?.removeAllMapMarkers()
+
+    private fun setCameraPosition(position: GeoCoordinates) {
+        findBrowseMapFragment()?.cameraDataModel?.position = position
+    }
 
     private fun findBrowseMapFragment(): BrowseMapFragment? =
         supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG)?.let { it as BrowseMapFragment }
