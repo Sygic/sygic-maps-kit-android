@@ -58,7 +58,6 @@ private inline val Fragment.internalContainerId: Int?
     get() = view?.let { view ->
         view.parent?.let { parent ->
             if (parent is ViewGroup) {
-                @IdRes
                 val internalFragmentContainerId = R.id.internalFragmentContainer
                 if (parent.childCount == 1) {
                     return if (parent.id != View.NO_ID) {

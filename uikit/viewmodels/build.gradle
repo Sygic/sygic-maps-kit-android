@@ -60,15 +60,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':uikit-views')
-
-    compileOnly project(':tool-annotation-processor')
-    implementation project(':tool-viewmodel-factory')
-    annotationProcessor project(':tool-annotation-processor')
-
-    api "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     // Sygic Maps SDK
     if (!gradle.buildSdkFromSource()) {
@@ -78,4 +69,16 @@ dependencies {
         // compile sdk yourself (with correctly included sdk module of course)
         api project(':sdk')
     }
+
+    // modules
+    api project(':uikit-views')
+
+    // libraries
+    compileOnly project(':tool-annotation-processor')
+    implementation project(':tool-viewmodel-factory')
+    annotationProcessor project(':tool-annotation-processor')
+
+    api "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 }
