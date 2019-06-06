@@ -31,10 +31,10 @@ import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.search.provider.SearchConnectionProvider
 import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
-import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
+import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.*
 
@@ -54,17 +54,16 @@ class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), DefaultLifecy
                     searchResult.loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
                         if (state == SearchResult.ResultState.Success) {
                             addMapMarkerObservable.asSingleEvent().value =
-                                MapMarker(mapSearchDetail.position.latitude, mapSearchDetail.position.longitude) //todo
+                                MapMarker.at(mapSearchDetail.position).build() //todo
                         }
                     })
                 }
                 is CoordinateSearchResult -> {
-                    addMapMarkerObservable.asSingleEvent().value =
-                        MapMarker(searchResult.position.latitude, searchResult.position.longitude)
+                    addMapMarkerObservable.asSingleEvent().value = MapMarker.at(searchResult.position).build()
                 }
                 is CustomSearchResult -> {
                     searchResult.position?.let {
-                        addMapMarkerObservable.asSingleEvent().value = MapMarker(it.latitude, it.longitude) //todo
+                        addMapMarkerObservable.asSingleEvent().value = MapMarker.at(it).build() //todo
                     }
                 }
                 else -> {

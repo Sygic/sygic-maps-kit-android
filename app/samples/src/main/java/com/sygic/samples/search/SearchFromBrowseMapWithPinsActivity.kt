@@ -30,11 +30,11 @@ import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.uikit.viewmodels.common.sdk.mapobject.MapMarker
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
 import com.sygic.samples.search.viewmodels.SearchFromBrowseMapWitchPinsActivityViewModel
+import com.sygic.sdk.map.`object`.MapMarker
 
 class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
 
