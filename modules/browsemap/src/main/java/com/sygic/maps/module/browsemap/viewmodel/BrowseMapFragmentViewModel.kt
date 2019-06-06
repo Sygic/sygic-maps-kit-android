@@ -39,7 +39,7 @@ import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
-import com.sygic.maps.module.common.utils.onMapClick
+import com.sygic.maps.module.common.extensions.onMapClick
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload

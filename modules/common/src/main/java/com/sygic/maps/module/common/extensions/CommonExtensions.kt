@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.utils
+package com.sygic.maps.module.common.extensions
 
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.uikit.viewmodels.common.extensions.getSelectionType
