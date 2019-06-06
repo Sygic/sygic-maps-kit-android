@@ -33,7 +33,7 @@ interface MapInteractionManager {
 
     interface Listener {
         fun onMapObjectsRequestStarted()
-        fun onMapObjectsReceived(viewObjects: List<ViewObject>)
+        fun onMapObjectsReceived(viewObjects: List<ViewObject<*>>)
     }
 
     fun onMapReady(mapView: MapView)
