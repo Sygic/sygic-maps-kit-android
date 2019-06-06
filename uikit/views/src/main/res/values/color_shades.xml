@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<resources>
+
+    <!-- SHADES OF BASE COLORS (transparency and stuff)-->
+
+    <!-- FF means 0 transparency, rendering a color as solid. 00 means full transparency making the color invisible
+    EXAMPLE: A color named "black_a20" is more see through than the color "black_a80"-->
+
+    <color name="black_a10">#19000000</color>
+
+    <color name="white_a80">#CCFFFFFF</color>
+    <color name="white_a40">#66FFFFFF</color>
+    <color name="white_a10">#19ffffff</color>
+    <color name="black_a20">#33000000</color>
+    <color name="slate_gray_a80">#cc7a859a</color>
+    <color name="charade_a80">#cc2d3140</color>
+    <color name="shocking_a80">#cc6c778c</color>
+
+    <color name="mystic_a0">#00E0E6EF</color> <!-- Pouziva sa pre to, aby android vedel krajsie urobit gradientovy prechod -->
+
+    <color name="azure_radiance_a13">#210080ff</color>
+</resources>

@@ -1,7 +1,34 @@
+/*
+ * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ *
+ * This project is licensed under the MIT License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+
+ext.bintrayPublishVersion = moduleBrowsemapVersion
+apply from: '../../bintrayConfig.gradle'
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -9,14 +36,10 @@ android {
     defaultConfig {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargerSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionName moduleBrowsemapVersion
+        archivesBaseName = "$project.name-$versionName"
 
         gradle.resolveFlavors(it)
-    }
-
-    dataBinding {
-        enabled = true
     }
 
     buildTypes {
@@ -25,23 +48,35 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':modules-common')
-    api project(':uikit-poidetail')
 
-    implementation project(':uikit-compass-viewmodel')
-    implementation project(':uikit-positionlockfab-viewmodel')
-    implementation project(':uikit-zoomcontrols-viewmodel')
-    implementation project(':tools-injector-viewmodel')
-    annotationProcessor project(':tools-injector')
+    // modules
+    api project(':module-common')
+    compileOnly project(':tool-annotation-processor')
+    implementation project(':tool-viewmodel-factory')
+    annotationProcessor project(':tool-annotation-processor')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-
+    // libraries
+    api "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // test libraries
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test:core:$robolectricVersion"
+    testImplementation "androidx.arch.core:core-testing:$lifecycleVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation "com.jraska.livedata:testing-ktx:$livedataTestingVersion"
 }

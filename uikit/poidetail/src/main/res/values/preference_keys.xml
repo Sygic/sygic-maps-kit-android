@@ -1,6 +1,0 @@
-<resources xmlns:tools="http://schemas.android.com/tools"
-           tools:ignore="MissingTranslation">
-
-    <string name="preferenceKey_poi_detail_showcase">preferenceKey_poi_detail_showcase</string>
-
-</resources>
