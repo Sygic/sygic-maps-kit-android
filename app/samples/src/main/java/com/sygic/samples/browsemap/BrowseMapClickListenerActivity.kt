@@ -27,8 +27,12 @@ package com.sygic.samples.browsemap
 import android.os.Bundle
 import android.widget.Toast
 import com.sygic.maps.module.browsemap.BrowseMapFragment
+import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.browsemap.payload.CustomDataPayload
+import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 
 class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
@@ -39,10 +43,26 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_browsemap_click_listener)
 
+        val markerFromBuilder = MapMarker
+            .at(48.146514, 17.124175)
+            .withPayload(CustomDataPayload("This is my custom payload"))
+            .build()
+
         val browseMapFragment = supportFragmentManager.findFragmentById(R.id.browseMapFragment) as BrowseMapFragment
-        browseMapFragment.setOnMapClickListener {
-            Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
-            true
-        }
+        browseMapFragment.addMapMarker(markerFromBuilder)
+        browseMapFragment.setOnMapClickListener(object : OnMapClickListener {
+            override fun showDetailsView(): Boolean = false
+            override fun onMapDataReceived(data: ViewObjectData) {
+                data.payload.let { payload ->
+                    when (payload) {
+                        is CustomDataPayload -> {
+                            // Note: This is my custom payload
+                            Toast.makeText(this@BrowseMapClickListenerActivity, payload.customString, Toast.LENGTH_LONG).show()
+                        }
+                        else -> Toast.makeText(this@BrowseMapClickListenerActivity, payload.toString(), Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        })
     }
 }

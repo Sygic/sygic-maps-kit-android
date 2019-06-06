@@ -26,56 +26,63 @@ package com.sygic.maps.module.common.poi.manager
 
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
+import com.sygic.maps.uikit.viewmodels.common.extensions.getFirst
+import com.sygic.sdk.map.`object`.ScreenObject
 import com.sygic.sdk.map.`object`.ViewObject
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.places.Place
 import com.sygic.sdk.places.Places
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.ReverseGeocoder
 import com.sygic.sdk.search.ReverseSearchResult
-import com.sygic.maps.uikit.viewmodels.common.extensions.getFirst
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PoiDataManager {
 
+    fun getViewObjectData(viewObject: ViewObject<*>, callback: Callback)
+
     abstract class Callback : Places.PlaceListener, ReverseGeocoder.ReverseSearchResultsListener {
-        abstract fun onDataLoaded(poiData: PoiData)
+        abstract fun onDataLoaded(data: ViewObjectData)
 
         final override fun onPlaceLoaded(place: Place) {
-            onDataLoaded(
-                PoiData(
-                    place.coordinates,
-                    place.name,
-                    place.iso,
-                    place.category,
-                    place.group,
-                    place.locationInfo.getFirst(LocationInfo.LocationType.City),
-                    place.locationInfo.getFirst(LocationInfo.LocationType.Street),
-                    place.locationInfo.getFirst(LocationInfo.LocationType.HouseNum),
-                    place.locationInfo.getFirst(LocationInfo.LocationType.Postal),
-                    place.locationInfo.getFirst(LocationInfo.LocationType.Phone),
-                    place.locationInfo.getFirst(LocationInfo.LocationType.Mail),
-                    place.locationInfo.getFirst(LocationInfo.LocationType.Url)
-                )
-            )
+            val placeObject = ScreenObject.at(place.coordinates)
+                .withPayload(
+                    PoiData(
+                        name = place.name,
+                        iso = place.iso,
+                        poiCategory = place.category,
+                        poiGroup = place.group,
+                        city = place.locationInfo.getFirst(LocationInfo.LocationType.City),
+                        street = place.locationInfo.getFirst(LocationInfo.LocationType.Street),
+                        houseNumber = place.locationInfo.getFirst(LocationInfo.LocationType.HouseNum),
+                        postal = place.locationInfo.getFirst(LocationInfo.LocationType.Postal),
+                        phone = place.locationInfo.getFirst(LocationInfo.LocationType.Phone),
+                        email = place.locationInfo.getFirst(LocationInfo.LocationType.Mail),
+                        url = place.locationInfo.getFirst(LocationInfo.LocationType.Url)
+                    )
+                ).build()
+
+            onDataLoaded(placeObject.data)
         }
 
         final override fun onSearchResults(results: List<ReverseSearchResult>, position: GeoCoordinates) {
-            if (results.isEmpty()) {
-                onDataLoaded(PoiData(position))
-                return
-            }
+            val builder =
+                if (results.isEmpty()) {
+                    ScreenObject.at(position)
+                } else {
+                    val reverseSearchResult = results.first()
+                    ScreenObject.at(position).withPayload(
+                        PoiData(
+                            iso = reverseSearchResult.names.countryIso,
+                            city = reverseSearchResult.names.city,
+                            street = reverseSearchResult.names.street,
+                            houseNumber = reverseSearchResult.names.houseNumber
+                        )
+                    )
+                }
 
-            val reverseSearchResult = results.first()
-            onDataLoaded(
-                PoiData(reverseSearchResult.position,
-                    iso = reverseSearchResult.names.countryIso,
-                    city = reverseSearchResult.names.city,
-                    street = reverseSearchResult.names.street,
-                    houseNumber = reverseSearchResult.names.houseNumber)
-            )
+            onDataLoaded(builder.build().data)
         }
     }
-
-    fun getPoiData(viewObject: ViewObject, callback: Callback)
 }

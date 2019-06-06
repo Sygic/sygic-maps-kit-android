@@ -48,9 +48,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // modules
     compileOnly project(':tool-annotation-processor')
     annotationProcessor project(':tool-annotation-processor')
 
+    // libraries
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     api "javax.inject:javax.inject:$javaxInjectVersion"
 }
