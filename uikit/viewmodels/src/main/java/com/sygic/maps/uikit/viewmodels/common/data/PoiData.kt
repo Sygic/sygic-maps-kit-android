@@ -24,7 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.common.data
 
-import android.text.TextUtils
 import com.sygic.maps.uikit.viewmodels.common.utils.appendOnNewLine
 import com.sygic.maps.uikit.viewmodels.common.utils.getCityWithPostal
 import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumber
