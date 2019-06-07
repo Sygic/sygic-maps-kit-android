@@ -34,6 +34,7 @@ import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
 import com.sygic.samples.search.viewmodels.SearchFromBrowseMapWitchPinsActivityViewModel
+import com.sygic.sdk.map.MapRectangle
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.map.`object`.MapMarker
 
@@ -64,6 +65,12 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
             this.setCameraPositionObservable.observe(
                 this@SearchFromBrowseMapWithPinsActivity,
                 Observer<GeoCoordinates> { setCameraPosition(it) })
+            this.setCameraRectangleObservable.observe(
+                this@SearchFromBrowseMapWithPinsActivity,
+                Observer<MapRectangle> { setCameraRectangle(it) })
+            this.setCameraZoomLevelObservable.observe(
+                this@SearchFromBrowseMapWithPinsActivity,
+                Observer<Float> { setCameraZoomLevel(it) })
         }
         lifecycle.addObserver(viewModel)
     }
@@ -86,6 +93,14 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
 
     private fun setCameraPosition(position: GeoCoordinates) {
         findBrowseMapFragment()?.cameraDataModel?.position = position
+    }
+
+    private fun setCameraRectangle(mapRectangle: MapRectangle) {
+        findBrowseMapFragment()?.cameraDataModel?.mapRectangle = mapRectangle
+    }
+
+    private fun setCameraZoomLevel(zoomLevel: Float) {
+        findBrowseMapFragment()?.cameraDataModel?.zoomLevel = zoomLevel
     }
 
     private fun findBrowseMapFragment(): BrowseMapFragment? =

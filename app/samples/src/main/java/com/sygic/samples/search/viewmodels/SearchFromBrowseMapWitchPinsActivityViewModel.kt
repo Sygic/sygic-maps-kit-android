@@ -35,50 +35,59 @@ import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logInfo
 import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
+import com.sygic.sdk.map.MapRectangle
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import com.sygic.sdk.search.detail.DetailPoiCategory
+import com.sygic.sdk.search.detail.DetailPoiCategoryGroup
 
 class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), DefaultLifecycleObserver {
 
     val placeBrowseMapFragmentObservable: LiveData<BrowseMapFragmentInitComponent> = SingleLiveEvent()
     val moduleConnectionObservable: LiveData<ModuleConnectionProvider> = SingleLiveEvent()
-    val addMapMarkerObservable: LiveData<MapMarker> = SingleLiveEvent() //todo
-    val removeAllMapMarkersObservable: LiveData<Any> = SingleLiveEvent() //todo
+    val addMapMarkerObservable: LiveData<MapMarker> = SingleLiveEvent()
+    val removeAllMapMarkersObservable: LiveData<Any> = SingleLiveEvent()
     val setCameraPositionObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
-
-    private var loadDetailsCoroutineJob: Job? = null
+    val setCameraRectangleObservable: LiveData<MapRectangle> = SingleLiveEvent()
+    val setCameraZoomLevelObservable: LiveData<Float> = SingleLiveEvent()
 
     private val searchConnectionProvider = SearchConnectionProvider { searchResultList ->
-        loadDetailsCoroutineJob?.cancel()
         removeAllMapMarkersObservable.asSingleEvent().call()
 
         if (searchResultList.isEmpty()) {
             return@SearchConnectionProvider
         }
 
-        //todo: groups
-        searchResultList.toGeoCoordinatesList { geoCoordinatesList ->
+        if (searchResultList.isOnlyCategory()) {
+            (searchResultList.first() as MapSearchResult).loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
+                if (state == SearchResult.ResultState.Success) {
+                    when (mapSearchDetail) {
+                        is DetailPoiCategory -> mapSearchDetail.poiList.forEach { addMapMarker(it.position) }
+                        is DetailPoiCategoryGroup -> mapSearchDetail.poiList.forEach { addMapMarker(it.position) }
+                    }
 
+                    setCameraRectangle(mapSearchDetail.boundingBox)
+                }
+            })
+            return@SearchConnectionProvider
+        }
+
+        searchResultList.toGeoCoordinatesList().let { geoCoordinatesList ->
             if (geoCoordinatesList.isNotEmpty()) {
 
                 if (geoCoordinatesList.size == 1) {
-                    addMapMarkerObservable.asSingleEvent().value = MapMarker.at(geoCoordinatesList.first()).build()
-                    setCameraPositionObservable.asSingleEvent().value = geoCoordinatesList.first() //todo: zoom level
+                    addMapMarker(geoCoordinatesList.first())
+                    setCameraPositionObservable.asSingleEvent().value = geoCoordinatesList.first()
+                    setCameraZoomLevelObservable.asSingleEvent().value = 10F
                 } else {
-                    val geoBoundingBox: GeoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
-
+                    val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
                     geoCoordinatesList.forEach { geoCoordinates ->
-                        addMapMarkerObservable.asSingleEvent().value = MapMarker.at(geoCoordinates).build()
+                        addMapMarker(geoCoordinates)
                         geoBoundingBox.union(geoCoordinates)
                     }
-
-                    //todo: set MapRectangle here from geoBoundingBox and margins
+                    setCameraRectangle(geoBoundingBox)
                 }
             }
         }
@@ -93,27 +102,30 @@ class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), DefaultLifecy
         moduleConnectionObservable.asSingleEvent().value = searchConnectionProvider
     }
 
-    private fun List<SearchResult>.toGeoCoordinatesList(callback: (geoCoordinatesList: List<GeoCoordinates>) -> Unit) {
-        val geoCoordinatesList = mutableListOf<GeoCoordinates>()
-        forEach { searchResult ->
-            when (searchResult) {
-                is CoordinateSearchResult -> geoCoordinatesList.add(searchResult.position)
-                is MapSearchResult -> {
-                    loadDetailsCoroutineJob = GlobalScope.launch(Dispatchers.Main) {
-                        searchResult.loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
-                            if (state == SearchResult.ResultState.Success) geoCoordinatesList.add((mapSearchDetail.position))
-                        })
-                    }
-                }
-                else -> logInfo("${searchResult.javaClass.simpleName} class conversion is not implemented yet.")
-            }
+    private fun addMapMarker(position: GeoCoordinates) {
+        addMapMarkerObservable.asSingleEvent().value = MapMarker.at(position).build()
+    }
+
+    private fun setCameraRectangle(geoBoundingBox: GeoBoundingBox) {
+        setCameraRectangleObservable.asSingleEvent().value = MapRectangle(geoBoundingBox, 20, 20, 20, 20)
+    }
+}
+
+private fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
+    val geoCoordinatesList = mutableListOf<GeoCoordinates>()
+    forEach { searchResult ->
+        when (searchResult) {
+            is CoordinateSearchResult -> geoCoordinatesList.add(searchResult.position)
+            // is MapSearchResult -> geoCoordinatesList.add(searchResult.position) ToDo: Uncomment when the new SDK version is out
+            else -> logInfo("${searchResult.javaClass.simpleName} class conversion is not implemented yet.")
         }
-        callback.invoke(geoCoordinatesList)
     }
+    return geoCoordinatesList
+}
 
-    override fun onCleared() {
-        super.onCleared()
-
-        loadDetailsCoroutineJob?.cancel()
-    }
+private fun List<SearchResult>.isOnlyCategory(): Boolean {
+    val firstSearchResult = first()
+    return size == 1 && firstSearchResult is MapSearchResult
+            && (firstSearchResult.dataType == MapSearchResult.DataType.PoiCategoryGroup
+            || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory)
 }
