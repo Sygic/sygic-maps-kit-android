@@ -116,7 +116,7 @@ private fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
     forEach { searchResult ->
         when (searchResult) {
             is CoordinateSearchResult -> geoCoordinatesList.add(searchResult.position)
-            // is MapSearchResult -> geoCoordinatesList.add(searchResult.position) ToDo: Uncomment when the new SDK version is out
+            is MapSearchResult -> geoCoordinatesList.add(searchResult.position)
             else -> logInfo("${searchResult.javaClass.simpleName} class conversion is not implemented yet.")
         }
     }
