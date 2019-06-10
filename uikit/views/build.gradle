@@ -61,8 +61,9 @@ dependencies {
     // libraries
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
+    api "androidx.appcompat:appcompat:$appCompatVersion"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    api "androidx.appcompat:appcompat:$appCompatVersion"
+    api "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     api "com.google.android.material:material:$materialVersion"
 }

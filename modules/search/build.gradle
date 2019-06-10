@@ -42,28 +42,35 @@ android {
         gradle.resolveFlavors(it)
     }
 
-    dataBinding {
-        enabled = true
-    }
-
     buildTypes {
         release {
             minifyEnabled false
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(':module-common')
 
-    compileOnly project(':tool-annotation-processor')
+    // modules
+    api project(':module-common')
     implementation project(':tool-viewmodel-factory')
+    compileOnly project(':tool-annotation-processor')
     annotationProcessor project(':tool-annotation-processor')
 
-    api "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-
+    // libraries
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // test libraries
+
 }

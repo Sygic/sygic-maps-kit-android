@@ -65,13 +65,13 @@ dependencies {
     api project(':uikit-viewmodels')
 
     // libraries
-    compileOnly project(':tool-annotation-processor')
     implementation project(':tool-viewmodel-factory')
+    compileOnly project(':tool-annotation-processor')
     annotationProcessor project(':tool-annotation-processor')
-
-    implementation "com.google.android.gms:play-services-location:$playServicesLocationVersion"
 
     api "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    implementation "com.google.android.gms:play-services-location:$playServicesLocationVersion"
 }
