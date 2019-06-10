@@ -42,15 +42,16 @@ import com.sygic.maps.uikit.views.databinding.LayoutSearchToolbarInternalBinding
  * A [SearchToolbar] can be used as input component to the search screen. It contains [EditText] input field, state
  * switcher (MAGNIFIER or PROGRESSBAR) and clear [Button].
  *
- * TODO MS-5681
- *
+ * The [SearchToolbar] search icon and the clear button icon can be changed with the custom _searchToolbarStyle_ style
+ * or you can use the standard android attributes as _colorBackground_, _textColorPrimary_ or _textColorSecondary_ definition.
+ * The [SearchToolbar] hint can be overridden by the _search_hint_ string.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchToolbar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.searchToolbarStyle,
-    defStyleRes: Int = R.style.SygicSearchToolbarStyle // TODO: MS-5681
+    defStyleRes: Int = R.style.SygicSearchToolbarStyle
 ) : Toolbar(context, attrs, defStyleAttr) {
 
     private val binding: LayoutSearchToolbarInternalBinding =
@@ -68,9 +69,9 @@ open class SearchToolbar @JvmOverloads constructor(
      * @return current text from the input [EditText].
      */
     var text: CharSequence
-        get() = binding.inputEditText.text?.toString() ?: EMPTY_STRING
+        get() = binding.searchToolbarInputEditText.text?.toString() ?: EMPTY_STRING
         set(value) {
-            binding.inputEditText.text?.let { editable ->
+            binding.searchToolbarInputEditText.text?.let { editable ->
                 if (editable.toString() != value) setTextInternal(value)
             } ?: run {
                 setTextInternal(value)
@@ -79,16 +80,35 @@ open class SearchToolbar @JvmOverloads constructor(
 
     init {
         descendantFocusability = FOCUS_AFTER_DESCENDANTS
-        binding.inputEditText.onFocusChangeListener = inputEditTextOnFocusChangedListener
+        binding.searchToolbarInputEditText.onFocusChangeListener = inputEditTextOnFocusChangedListener
+
+        attrs?.let { attributeSet ->
+            context.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.SearchToolbar,
+                defStyleAttr,
+                defStyleRes
+            ).apply {
+                binding.searchToolbarSearchIcon.setImageResource(
+                    getResourceId(R.styleable.SearchToolbar_searchIcon, R.drawable.ic_search_robust)
+                )
+
+                binding.searchToolbarClearButton.setImageResource(
+                    getResourceId(R.styleable.SearchToolbar_clearButtonIcon, R.drawable.ic_close)
+                )
+
+                recycle()
+            }
+        }
     }
 
     private fun setTextInternal(text: CharSequence) {
-        binding.inputEditText.setText(text)
-        binding.inputEditText.setSelection(text.length)
+        binding.searchToolbarInputEditText.setText(text)
+        binding.searchToolbarInputEditText.setSelection(text.length)
     }
 
     override fun onRequestFocusInDescendants(direction: Int, previouslyFocusedRect: Rect?): Boolean =
-        binding.inputEditText.requestFocus()
+        binding.searchToolbarInputEditText.requestFocus()
 
     /**
      * Set the focused state of the [SearchToolbar] view. Internally is called [requestFocus]
@@ -113,7 +133,7 @@ open class SearchToolbar @JvmOverloads constructor(
      * modifier will, however, allow the user to insert a newline character.
      */
     fun setOnEditorActionListener(listener: TextView.OnEditorActionListener) {
-        binding.inputEditText.setOnEditorActionListener(listener)
+        binding.searchToolbarInputEditText.setOnEditorActionListener(listener)
     }
 
     /**
@@ -127,7 +147,7 @@ open class SearchToolbar @JvmOverloads constructor(
      * give focus to this view.
      */
     fun clearInputEditTextFocus() {
-        binding.inputEditText.clearFocus()
+        binding.searchToolbarInputEditText.clearFocus()
     }
 
     /**
@@ -154,7 +174,7 @@ open class SearchToolbar @JvmOverloads constructor(
      * @param visibility One of VISIBLE, INVISIBLE, or GONE.
      */
     fun setClearButtonVisibility(visibility: Int) {
-        binding.clearButton.visibility = visibility
+        binding.searchToolbarClearButton.visibility = visibility
     }
 
     /**
@@ -163,6 +183,6 @@ open class SearchToolbar @JvmOverloads constructor(
      * @param listener [View.OnClickListener] callback to invoke on ClearButton view click.
      */
     fun setOnClearButtonClickListener(listener: OnClickListener) {
-        binding.clearButton.setOnClickListener(listener)
+        binding.searchToolbarClearButton.setOnClickListener(listener)
     }
 }
