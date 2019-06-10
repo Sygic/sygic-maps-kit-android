@@ -52,9 +52,10 @@ class SdkInitializationManagerImpl(
             if (initializationState == InitializationState.INITIALIZING) {
                 return
             }
+
+            initializationState = InitializationState.INITIALIZING
         }
 
-        initializationState = InitializationState.INITIALIZING
         app.getApiKey()?.let { key ->
             SygicEngine.Builder(app)
                 .setKeyAndSecret(app.packageName, key)

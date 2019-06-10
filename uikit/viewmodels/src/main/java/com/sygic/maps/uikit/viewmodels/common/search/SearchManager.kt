@@ -26,7 +26,6 @@ package com.sygic.maps.uikit.viewmodels.common.search
 
 import androidx.annotation.RestrictTo
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.MapSearchResult
 import com.sygic.sdk.search.Search
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -34,7 +33,6 @@ interface SearchManager {
     var maxResultsCount: Int
 
     fun searchText(text: String, position: GeoCoordinates? = null)
-    fun loadMapSearchResultDetails(result: MapSearchResult, listener: Search.SearchDetailListener)
     fun addSearchResultsListener(listener: Search.SearchResultsListener)
     fun removeSearchResultsListener(listener: Search.SearchResultsListener)
 }
