@@ -27,8 +27,6 @@ package com.sygic.maps.uikit.viewmodels.common.search
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.DetailRequest
-import com.sygic.sdk.search.MapSearchResult
 import com.sygic.sdk.search.Search
 import com.sygic.sdk.search.SearchRequest
 
@@ -43,9 +41,6 @@ class SearchManagerImpl(private val initManager: SdkInitializationManager) : Sea
 
     override fun searchText(text: String, position: GeoCoordinates?) =
         initManager.onReady { sdkSearchEngine.search(SearchRequest(text, position).apply { maxResults = maxResultsCount }) }
-
-    override fun loadMapSearchResultDetails(result: MapSearchResult, listener: Search.SearchDetailListener) =
-        initManager.onReady { sdkSearchEngine.loadDetails(result, DetailRequest(), listener) }
 
     override fun addSearchResultsListener(listener: Search.SearchResultsListener) =
         sdkSearchEngine.addSearchResultsListener(listener)
