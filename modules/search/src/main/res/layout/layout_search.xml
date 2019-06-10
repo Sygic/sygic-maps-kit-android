@@ -27,8 +27,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="searchFragmentViewModel"
             type="com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel" />
