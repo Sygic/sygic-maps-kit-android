@@ -25,10 +25,16 @@
 package com.sygic.maps.uikit.views.common.extensions
 
 import android.app.Application
+import android.os.Build
 import com.sygic.maps.uikit.views.R
 
 fun Application.versionName(): String = packageManager.getPackageInfo(packageName, 0).versionName
-fun Application.versionCode(): String = packageManager.getPackageInfo(packageName, 0).versionCode.toString()
+fun Application.versionCode(): String = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+    @Suppress("DEPRECATION")
+    packageManager.getPackageInfo(packageName, 0).versionCode.toString()
+} else {
+    packageManager.getPackageInfo(packageName, 0).longVersionCode.toString()
+}
 
 fun Application.abiType(): String {
     return resources.getIntArray(R.array.all_abis_ids).toTypedArray()
