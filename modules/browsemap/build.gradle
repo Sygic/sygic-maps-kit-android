@@ -63,8 +63,8 @@ dependencies {
 
     // modules
     api project(':module-common')
-    compileOnly project(':tool-annotation-processor')
     implementation project(':tool-viewmodel-factory')
+    compileOnly project(':tool-annotation-processor')
     annotationProcessor project(':tool-annotation-processor')
 
     // libraries
