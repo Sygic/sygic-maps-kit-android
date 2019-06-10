@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="@={searchToolbarViewModel.inputText}"
-            app:focused="@{searchToolbarViewModel.searchToolbarFocused}"
+            app:focused="@{safeUnbox(searchToolbarViewModel.searchToolbarFocused)}"
             app:iconStateSwitcherIndex="@{safeUnbox(searchToolbarViewModel.iconStateSwitcherIndex)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

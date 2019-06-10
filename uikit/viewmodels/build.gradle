@@ -74,8 +74,8 @@ dependencies {
     api project(':uikit-views')
 
     // libraries
-    compileOnly project(':tool-annotation-processor')
     implementation project(':tool-viewmodel-factory')
+    compileOnly project(':tool-annotation-processor')
     annotationProcessor project(':tool-annotation-processor')
 
     api "com.google.dagger:dagger-android-support:$daggerVersion"
