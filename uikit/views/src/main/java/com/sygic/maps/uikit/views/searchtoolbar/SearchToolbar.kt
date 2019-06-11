@@ -42,9 +42,9 @@ import com.sygic.maps.uikit.views.databinding.LayoutSearchToolbarInternalBinding
  * A [SearchToolbar] can be used as input component to the search screen. It contains [EditText] input field, state
  * switcher (MAGNIFIER or PROGRESSBAR) and clear [Button].
  *
- * The [SearchToolbar] search icon and the clear button icon can be changed with the custom _searchToolbarStyle_ style
- * or you can use the standard android attributes as _colorBackground_, _textColorPrimary_ or _textColorSecondary_ definition.
- * The [SearchToolbar] hint can be overridden by the _search_hint_ string.
+ * The [SearchToolbar] search icon and the clear button icon can be changed with the custom _searchToolbarStyle_
+ * (the _searchIcon_ or _clearButtonIcon_ attribute) or you can use the standard android attributes as _colorBackground_,
+ * _textColorPrimary_ or _textColorSecondary_ definition. The [SearchToolbar] hint can be overridden by the _search_hint_ string.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchToolbar @JvmOverloads constructor(

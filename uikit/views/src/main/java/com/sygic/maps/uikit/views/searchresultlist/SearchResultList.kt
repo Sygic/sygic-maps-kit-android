@@ -29,6 +29,8 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.databinding.BindingMethod
 import androidx.databinding.BindingMethods
@@ -40,12 +42,18 @@ import com.sygic.maps.uikit.views.common.AdvanceInfoView
 import com.sygic.maps.uikit.views.common.EmptyRecyclerView
 import com.sygic.maps.uikit.views.databinding.LayoutSearchResultListInternalBinding
 import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
+import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 
 /**
  * A [SearchResultList] can be used as an visual presentation component for the search result items. It contains
  * [EmptyRecyclerView] and pre-customized [AdvanceInfoView] component.
  *
- * TODO: MS-5681
+ * The [SearchResultList] item layout can be completely changed with the custom _searchResultListStyle_
+ * (the _itemLayoutId_ attribute) or you can use the standard android attributes as _colorBackground_, _textColorPrimary_
+ * or _textColorSecondary_ definition. Note, the custom item layout provided by _itemLayoutId_ need to have
+ * searchItemIcon ([ImageView]), searchItemIconRing ([ImageView]), searchItemTitle ([TextView]) and searchItemSubtitle ([TextView]).
+ * Or you can extend the [SearchResultListAdapter] and provide your custom [ResultListAdapter] with your custom ViewHolder
+ * logic (see [setAdapter] method and [SearchResultListAdapter] implementation).
  */
 @BindingMethods(
     BindingMethod(type = SearchResultList::class, attribute = "onScrollListener", method = "addOnScrollListener")
