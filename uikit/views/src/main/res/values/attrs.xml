@@ -63,4 +63,8 @@
         <attr name="clearButtonIcon" />
     </declare-styleable>
 
+    <declare-styleable name="SearchResultList">
+        <attr name="itemLayoutId" />
+    </declare-styleable>
+
 </resources>

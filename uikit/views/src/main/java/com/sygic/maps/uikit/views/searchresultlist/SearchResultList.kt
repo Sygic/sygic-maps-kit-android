@@ -29,6 +29,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.annotation.LayoutRes
 import androidx.databinding.BindingMethod
 import androidx.databinding.BindingMethods
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -54,16 +55,35 @@ open class SearchResultList @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.searchResultListStyle,
-    defStyleRes: Int = R.style.SygicSearchResultListStyle // TODO: MS-5681
+    defStyleRes: Int = R.style.SygicSearchResultListStyle
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private val binding: LayoutSearchResultListInternalBinding =
         LayoutSearchResultListInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
+    @LayoutRes
+    private var itemLayoutId: Int = R.layout.layout_search_item_result_internal
+
     init {
         binding.searchResultListRecyclerView.setHasFixedSize(true)
         binding.searchResultListRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.searchResultListRecyclerView.itemAnimator = DefaultItemAnimator()
+
+        attrs?.let { attributeSet ->
+            context.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.SearchResultList,
+                defStyleAttr,
+                defStyleRes
+            ).apply {
+                itemLayoutId = getResourceId(
+                    R.styleable.SearchResultList_itemLayoutId,
+                    R.layout.layout_search_item_result_internal
+                )
+
+                recycle()
+            }
+        }
     }
 
     /**
@@ -75,6 +95,7 @@ open class SearchResultList @JvmOverloads constructor(
      * @param adapter The new adapter to set, or null to set no adapter.
      */
     fun <T : Parcelable> setAdapter(adapter: ResultListAdapter<T, ResultListAdapter.ItemViewHolder<T>>) {
+        adapter.itemLayoutId = itemLayoutId
         binding.searchResultListRecyclerView.adapter = adapter
     }
 

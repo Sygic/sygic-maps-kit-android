@@ -66,8 +66,8 @@
         <item name="clearButtonIcon">@drawable/ic_close</item>
     </style>
 
-    <!--TODO: MS-5681 -->
     <style name="SygicSearchResultListStyle">
+        <item name="itemLayoutId">@layout/layout_search_item_result_internal</item>
     </style>
 
     <style name="SygicZoomControlsMenuStyle">
