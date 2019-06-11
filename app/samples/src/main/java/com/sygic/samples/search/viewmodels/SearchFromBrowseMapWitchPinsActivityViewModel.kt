@@ -43,6 +43,8 @@ import com.sygic.sdk.search.*
 import com.sygic.sdk.search.detail.DetailPoiCategory
 import com.sygic.sdk.search.detail.DetailPoiCategoryGroup
 
+private const val MARGIN = 80
+
 class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), DefaultLifecycleObserver {
 
     val placeBrowseMapFragmentObservable: LiveData<BrowseMapFragmentInitComponent> = SingleLiveEvent()
@@ -107,7 +109,8 @@ class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), DefaultLifecy
     }
 
     private fun setCameraRectangle(geoBoundingBox: GeoBoundingBox) {
-        setCameraRectangleObservable.asSingleEvent().value = MapRectangle(geoBoundingBox, 20, 20, 20, 20)
+        setCameraRectangleObservable.asSingleEvent().value =
+            MapRectangle(geoBoundingBox, MARGIN, MARGIN, MARGIN, MARGIN)
     }
 }
 
