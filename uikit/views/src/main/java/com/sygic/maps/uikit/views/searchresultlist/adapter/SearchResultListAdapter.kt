@@ -26,13 +26,17 @@ package com.sygic.maps.uikit.views.searchresultlist.adapter
 
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.LayoutRes
 import com.sygic.maps.uikit.views.common.extensions.backgroundTint
 import com.sygic.maps.uikit.views.common.extensions.text
 import com.sygic.maps.uikit.views.common.extensions.tint
 import com.sygic.maps.uikit.views.common.extensions.visible
-import com.sygic.maps.uikit.views.databinding.LayoutSearchItemResultInternalBinding
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
+import kotlinx.android.synthetic.main.layout_search_item_result_internal.view.*
 
 open class SearchResultListAdapter<P : Parcelable> : ResultListAdapter<P, ResultListAdapter.ItemViewHolder<P>>() {
 
@@ -46,25 +50,30 @@ open class SearchResultListAdapter<P : Parcelable> : ResultListAdapter<P, Result
 
     override fun onBindViewHolder(holder: ItemViewHolder<P>, position: Int) = holder.update(items[position])
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder<P> = ListItemViewHolder(
-        LayoutSearchItemResultInternalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    )
+    override fun onCreateViewHolder(
+        parent: ViewGroup, inflater: LayoutInflater, @LayoutRes layoutId: Int, viewType: Int
+    ): ItemViewHolder<P> = ListItemViewBindingHolder(inflater.inflate(layoutId, parent, false))
 
-    inner class ListItemViewHolder(val binding: LayoutSearchItemResultInternalBinding) : ItemViewHolder<P>(binding.root) {
+    open inner class ListItemViewBindingHolder(itemView: View) : ItemViewHolder<P>(itemView) {
+
+        private val searchItemIcon: ImageView = itemView.searchItemIcon
+        private val searchItemIconRing: ImageView = itemView.searchItemIconRing
+        private val searchItemTitle: TextView = itemView.searchItemTitle
+        private val searchItemSubtitle: TextView = itemView.searchItemSubtitle
 
         init {
-            binding.root.setOnClickListener { clickListener?.onSearchResultItemClick(items[adapterPosition]) }
+            itemView.setOnClickListener { clickListener?.onSearchResultItemClick(items[adapterPosition]) }
         }
 
         override fun update(searchResultItem: SearchResultItem<out P>) {
-            binding.searchItemIcon.setImageResource(searchResultItem.icon)
-            binding.searchItemIcon.tint(searchResultItem.iconColor)
-            binding.searchItemIcon.backgroundTint(searchResultItem.iconBackgroundColor)
-            binding.searchItemIconRing.tint(searchResultItem.iconBackgroundColor)
-            binding.searchItemIconRing.visible(searchResultItem.iconRingVisible)
-            binding.searchItemTitle.text(searchResultItem.title)
-            binding.searchItemSubtitle.text(searchResultItem.subTitle)
-            binding.searchItemSubtitle.visible(searchResultItem.subTitle.isNotEmpty())
+            searchItemIcon.setImageResource(searchResultItem.icon)
+            searchItemIcon.tint(searchResultItem.iconColor)
+            searchItemIcon.backgroundTint(searchResultItem.iconBackgroundColor)
+            searchItemIconRing.tint(searchResultItem.iconBackgroundColor)
+            searchItemIconRing.visible(searchResultItem.iconRingVisible)
+            searchItemTitle.text(searchResultItem.title)
+            searchItemSubtitle.text(searchResultItem.subTitle)
+            searchItemSubtitle.visible(searchResultItem.subTitle.isNotEmpty())
         }
     }
 }

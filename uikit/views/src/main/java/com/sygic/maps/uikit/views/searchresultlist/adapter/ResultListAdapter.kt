@@ -25,17 +25,31 @@
 package com.sygic.maps.uikit.views.searchresultlist.adapter
 
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
+import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 
 abstract class ResultListAdapter<P : Parcelable, T : ResultListAdapter.ItemViewHolder<P>> : RecyclerView.Adapter<T>() {
 
     var clickListener: ClickListener<P>? = null
+    internal var itemLayoutId = R.layout.layout_search_item_result_internal
 
     interface ClickListener<P : Parcelable> {
         fun onSearchResultItemClick(searchResultItem: SearchResultItem<out P>)
     }
+
+    abstract fun onCreateViewHolder(
+        parent: ViewGroup,
+        inflater: LayoutInflater, @LayoutRes layoutId: Int,
+        viewType: Int
+    ): T
+
+    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T =
+        onCreateViewHolder(parent, LayoutInflater.from(parent.context), itemLayoutId, viewType)
 
     abstract class ItemViewHolder<P : Parcelable>(view: View) : RecyclerView.ViewHolder(view) {
         open fun update(searchResultItem: SearchResultItem<out P>) {}
