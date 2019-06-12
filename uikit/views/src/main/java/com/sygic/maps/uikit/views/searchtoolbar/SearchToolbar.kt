@@ -39,7 +39,7 @@ import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.databinding.LayoutSearchToolbarInternalBinding
 
 /**
- * A [SearchToolbar] can be used as input component to the search screen. It contains [EditText] input field, state
+ * A [SearchToolbar] can be used as an input component to the search screen. It contains [EditText] input field, state
  * switcher (MAGNIFIER or PROGRESSBAR) and clear [Button].
  *
  * The [SearchToolbar] search icon and the clear button icon can be changed with the custom _searchToolbarStyle_
