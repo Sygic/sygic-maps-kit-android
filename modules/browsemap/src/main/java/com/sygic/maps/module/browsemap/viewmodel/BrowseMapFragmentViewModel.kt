@@ -35,10 +35,12 @@ import com.sygic.maps.module.common.component.*
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.extensions.onMapClick
 import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.listener.OnMapClickListenerWrapper
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
+import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
 import com.sygic.maps.tools.annotations.Assisted
@@ -133,10 +135,12 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        if (owner is BrowseMapFragment) {
-            owner.mapClickListenerProvider.observe(owner, Observer {listener ->
+        if (owner is OnMapClickListenerWrapper) {
+            owner.mapClickListenerProvider.observe(owner, Observer { listener ->
                 onMapClickListener = listener
             })
+        }
+        if (owner is ModuleConnectionProviderWrapper) {
             owner.moduleConnectionProvider.observe(owner, Observer { provider ->
                 searchConnectionProvider = provider
             })
