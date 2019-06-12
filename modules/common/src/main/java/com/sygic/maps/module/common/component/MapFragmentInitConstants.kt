@@ -22,27 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.provider
+package com.sygic.maps.module.common.component
 
-import androidx.annotation.RestrictTo
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
+import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 
-/**
- * Interface definition designed for a independent module connection.
- */
-interface ModuleConnectionProvider {
+const val MAP_SELECTION_MODE_DEFAULT_VALUE = MapSelectionMode.MARKERS_ONLY
+const val POSITION_ON_MAP_ENABLED_DEFAULT_VALUE = false
+const val COMPASS_ENABLED_DEFAULT_VALUE = false
+const val COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE = false
+const val POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE = false
+const val ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE = false
 
-    /**
-     * A *[fragment]* to be used as a target for the transaction.
-     *
-     * @param [Fragment] target fragment.
-     *
-     */
-    val fragment: Fragment
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ModuleConnectionProviderWrapper {
-    val moduleConnectionProvider: LiveData<ModuleConnectionProvider>
-}

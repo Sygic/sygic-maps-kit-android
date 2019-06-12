@@ -24,6 +24,8 @@
 
 package com.sygic.maps.module.common.listener
 
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
@@ -68,4 +70,9 @@ interface OnMapClickListener {
      * @param data [ViewObjectData] belonging to the click on the map.
      */
     fun onMapDataReceived(data: ViewObjectData)
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface OnMapClickListenerWrapper {
+    val mapClickListenerProvider: LiveData<OnMapClickListener>
 }
