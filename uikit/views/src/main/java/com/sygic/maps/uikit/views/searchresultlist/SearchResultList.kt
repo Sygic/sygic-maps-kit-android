@@ -50,10 +50,10 @@ import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapt
  *
  * The [SearchResultList] item layout can be completely changed with the custom _searchResultListStyle_
  * (the _itemLayoutId_ attribute) or you can use the standard android attributes as _colorBackground_, _textColorPrimary_
- * or _textColorSecondary_ definition. Note, the custom item layout provided by _itemLayoutId_ need to have
- * searchItemIcon ([ImageView]), searchItemIconRing ([ImageView]), searchItemTitle ([TextView]) and searchItemSubtitle ([TextView]).
- * Or you can extend the [SearchResultListAdapter] and provide your custom [ResultListAdapter] with your custom ViewHolder
- * logic (see [setAdapter] method and [SearchResultListAdapter] implementation).
+ * or _textColorSecondary_ definition. Note, the custom item layout provided by _itemLayoutId_ need to have the
+ * _searchItemIcon_ ([ImageView]), _searchItemIconRing_ ([ImageView]), _searchItemTitle_ ([TextView]) and _searchItemSubtitle_
+ * ([TextView]) identifiers. Or you can extend the [SearchResultListAdapter] and provide your custom [ResultListAdapter] with your
+ * custom ViewHolder logic (see [setAdapter] method and [SearchResultListAdapter] implementation).
  */
 @BindingMethods(
     BindingMethod(type = SearchResultList::class, attribute = "onScrollListener", method = "addOnScrollListener")
