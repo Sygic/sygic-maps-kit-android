@@ -25,31 +25,22 @@
 package com.sygic.samples.search.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.module.search.provider.SearchConnectionProvider
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
-import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.maps.module.search.SearchFragment
+import com.sygic.sdk.search.SearchResult
 
-class SearchFromBrowseMapActivityViewModel : ViewModel(), DefaultLifecycleObserver {
+class SearchFromBrowseMapActivityViewModel : ViewModel(), ModuleConnectionProvider {
 
-    val placeBrowseMapFragmentObservable: LiveData<BrowseMapFragmentInitComponent> = SingleLiveEvent()
-    val moduleConnectionObservable: LiveData<ModuleConnectionProvider> = SingleLiveEvent()
-
-    init {
-        placeBrowseMapFragmentObservable.asSingleEvent().value =
-            BrowseMapFragmentInitComponent(11F, GeoCoordinates(48.145764, 17.126015))
+    private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
+        searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo: MS-5213 add it to the map?
     }
 
-    override fun onCreate(owner: LifecycleOwner) {
-        val searchConnectionProvider = SearchConnectionProvider { searchResultList ->
-            searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo: MS-5213 add it to the map?
+    override val fragment: Fragment
+        get() {
+            val searchFragment = SearchFragment()
+            searchFragment.setResultCallback(callback)
+            return searchFragment
         }
-        moduleConnectionObservable.asSingleEvent().value = searchConnectionProvider
-    }
 }
