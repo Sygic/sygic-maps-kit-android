@@ -22,8 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.search.components
+package com.sygic.maps.module.common.component
 
-import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 
-data class BrowseMapFragmentInitComponent(val zoomLevel: Float, val position: GeoCoordinates)
+const val MAP_SELECTION_MODE_DEFAULT_VALUE = MapSelectionMode.MARKERS_ONLY
+const val POSITION_ON_MAP_ENABLED_DEFAULT_VALUE = false
+const val COMPASS_ENABLED_DEFAULT_VALUE = false
+const val COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE = false
+const val POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE = false
+const val ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE = false
+

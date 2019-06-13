@@ -22,22 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.search.provider
+package com.sygic.maps.uikit.viewmodels.searchtoolbar.component
 
-import androidx.fragment.app.Fragment
-import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.module.search.SearchFragment
-import com.sygic.sdk.search.SearchResult
-
-/**
- * A Search module connection implementation.
- */
-class SearchConnectionProvider(private val callback: (searchResultList: List<SearchResult>) -> Unit) : ModuleConnectionProvider {
-
-    override val fragment: Fragment
-        get() {
-            val searchFragment = SearchFragment()
-            searchFragment.setResultCallback(callback)
-            return searchFragment
-        }
-}
+const val KEY_SEARCH_INPUT = "search_input"
+const val KEY_SEARCH_LOCATION = "search_location"
+const val KEY_SEARCH_MAX_RESULTS_COUNT = "search_max_results_count"

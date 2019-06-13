@@ -25,12 +25,13 @@
 package com.sygic.modules.browsemap
 
 import android.app.Application
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
+import com.sygic.maps.module.browsemap.*
 import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel
-import com.sygic.maps.module.common.component.MapFragmentInitComponent
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
@@ -80,7 +81,6 @@ class BrowseMapFragmentViewModelTest {
     @Mock
     internal lateinit var themeManager: ThemeManager
 
-    private lateinit var mapFragmentInitComponent: MapFragmentInitComponent
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
 
     @Before
@@ -99,17 +99,17 @@ class BrowseMapFragmentViewModelTest {
 
         whenever(locationManager.positionOnMapEnabled).thenReturn(true)
 
-        mapFragmentInitComponent = MapFragmentInitComponent()
-        mapFragmentInitComponent.mapSelectionMode = MapSelectionMode.FULL
-        mapFragmentInitComponent.positionOnMapEnabled = true
-        mapFragmentInitComponent.compassEnabled = true
-        mapFragmentInitComponent.compassHideIfNorthUp = true
-        mapFragmentInitComponent.positionLockFabEnabled = true
-        mapFragmentInitComponent.zoomControlsEnabled = true
+        val arguments = mock<Bundle>()
+        whenever(arguments.getInt(eq(KEY_MAP_SELECTION_MODE), any<Int>())).thenReturn(MapSelectionMode.FULL)
+        whenever(arguments.getBoolean(eq(KEY_POSITION_ON_MAP), any<Boolean>())).thenReturn(true)
+        whenever(arguments.getBoolean(eq(KEY_COMPASS_ENABLED), any<Boolean>())).thenReturn(true)
+        whenever(arguments.getBoolean(eq(KEY_COMPASS_HIDE_IF_NORTH), any<Boolean>())).thenReturn(true)
+        whenever(arguments.getBoolean(eq(KEY_POSITION_LOCK_FAB), any<Boolean>())).thenReturn(true)
+        whenever(arguments.getBoolean(eq(KEY_ZOOM_CONTROLS), any<Boolean>())).thenReturn(true)
 
         browseMapFragmentViewModel = BrowseMapFragmentViewModel(
             app,
-            mapFragmentInitComponent,
+            arguments,
             extendedMapDataModel,
             poiDataManager,
             mapInteractionManager,
@@ -126,12 +126,12 @@ class BrowseMapFragmentViewModelTest {
 
     @Test
     fun initComponentTest() {
-        assertEquals(browseMapFragmentViewModel.mapSelectionMode, MapSelectionMode.FULL)
-        assertEquals(browseMapFragmentViewModel.positionOnMapEnabled, true)
-        assertEquals(browseMapFragmentViewModel.compassEnabled.value, true)
-        assertEquals(browseMapFragmentViewModel.compassHideIfNorthUp.value, true)
-        assertEquals(browseMapFragmentViewModel.positionLockFabEnabled.value, true)
-        assertEquals(browseMapFragmentViewModel.zoomControlsEnabled.value, true)
+        assertEquals(MapSelectionMode.FULL, browseMapFragmentViewModel.mapSelectionMode)
+        assertEquals(true, browseMapFragmentViewModel.positionOnMapEnabled)
+        assertEquals(true, browseMapFragmentViewModel.compassEnabled.value)
+        assertEquals(true, browseMapFragmentViewModel.compassHideIfNorthUp.value)
+        assertEquals(true, browseMapFragmentViewModel.positionLockFabEnabled.value)
+        assertEquals(true, browseMapFragmentViewModel.zoomControlsEnabled.value)
 
         verify(locationManager).requestToEnableGps(any(), any())
         verify(permissionsManager).checkPermissionGranted(anyString(), any())
