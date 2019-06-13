@@ -24,7 +24,9 @@
 
 package com.sygic.maps.module.common.provider
 
+import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 
 /**
  * Interface definition designed for a independent module connection.
@@ -38,4 +40,9 @@ interface ModuleConnectionProvider {
      *
      */
     val fragment: Fragment
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface ModuleConnectionProviderWrapper {
+    val moduleConnectionProvider: LiveData<ModuleConnectionProvider>
 }

@@ -33,8 +33,8 @@ import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
 import com.sygic.samples.search.viewmodels.SearchFromBrowseMapActivityViewModel
+import com.sygic.sdk.position.GeoCoordinates
 
 class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
@@ -48,38 +48,37 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_search_from_browse_map)
 
         viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapActivityViewModel::class.java).apply {
-            this.placeBrowseMapFragmentObservable.observe(
-                this@SearchFromBrowseMapActivity,
-                Observer<BrowseMapFragmentInitComponent> { placeBrowseMapFragment(it) })
-            this.moduleConnectionObservable.observe(
-                this@SearchFromBrowseMapActivity,
-                Observer<ModuleConnectionProvider> { setFragmentModuleConnection(it) })
             this.showToastObservable.observe(
                 this@SearchFromBrowseMapActivity,
                 Observer<String> { longToast(it) })
         }
-        lifecycle.addObserver(viewModel)
+
+        if (savedInstanceState == null) {
+            setFragmentModuleConnection(
+                placeBrowseMapFragment(11F, GeoCoordinates(48.145764, 17.126015)), viewModel
+            )
+        } else {
+            setFragmentModuleConnection(
+                supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment, viewModel
+            )
+        }
     }
 
     // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
     // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
-    private fun placeBrowseMapFragment(component: BrowseMapFragmentInitComponent) = supportFragmentManager
-        ?.beginTransaction()
-        ?.replace(R.id.fragmentContainer, BrowseMapFragment().apply {
-            cameraDataModel.zoomLevel = component.zoomLevel
-            cameraDataModel.position = component.position
-        }, BROWSE_MAP_FRAGMENT_TAG)
-        ?.commitNow() //ToDo: MS-5686
+    private fun placeBrowseMapFragment(zoomLevel: Float, position: GeoCoordinates) =
+        BrowseMapFragment().apply {
+            cameraDataModel.zoomLevel = zoomLevel
+            cameraDataModel.position = position
+        }.also {
+            supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
+                ?.commit()
+        }
 
-    private fun setFragmentModuleConnection(moduleConnectionProvider: ModuleConnectionProvider) =
-        findBrowseMapFragment()?.setSearchConnectionProvider(moduleConnectionProvider)
-
-    private fun findBrowseMapFragment(): BrowseMapFragment? =
-        supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG)?.let { it as BrowseMapFragment }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        lifecycle.removeObserver(viewModel)
-    }
+    private fun setFragmentModuleConnection(
+        fragment: BrowseMapFragment,
+        moduleConnectionProvider: ModuleConnectionProvider
+    ) = fragment.setSearchConnectionProvider(moduleConnectionProvider)
 }
