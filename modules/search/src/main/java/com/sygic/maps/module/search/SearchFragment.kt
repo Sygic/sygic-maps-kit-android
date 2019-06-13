@@ -32,10 +32,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
+import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
@@ -48,6 +51,7 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATION
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
@@ -63,7 +67,7 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
  * several pre build-in elements such as [SearchToolbar] or [SearchResultList].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class SearchFragment : Fragment(), SdkInitializationManager.Callback {
+class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
 
     private val modulesComponent = ModulesComponentDelegate()
 
@@ -75,6 +79,8 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     private lateinit var fragmentViewModel: SearchFragmentViewModel
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
     private lateinit var searchResultListViewModel: SearchResultListViewModel
+
+    override val searchResultCallbackProvider: LiveData<SearchResultCallback> = MutableLiveData<SearchResultCallback>()
 
     private var injected = false
     private fun inject() {
@@ -161,7 +167,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
         fragmentViewModel = ViewModelProviders.of(
             this,
-            viewModelFactory/*.with(searchFragmentInitComponent)*/ //todo
+            viewModelFactory
         )[SearchFragmentViewModel::class.java].apply {
             this.hideKeyboardObservable.observe(
                 this@SearchFragment,
@@ -221,11 +227,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      * @param callback [SearchResultCallback] callback to invoke when a search process is done.
      */
     fun setResultCallback(callback: SearchResultCallback?) {
-        if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.searchResultCallback = callback
-        } else {
-            //searchFragmentInitComponent.searchResultCallback = callback //todo
-        }
+        searchResultCallbackProvider.asMutable().value = callback
     }
 
     /**
