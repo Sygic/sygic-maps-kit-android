@@ -117,17 +117,19 @@ class BrowseMapFragmentViewModel internal constructor(
     private var poiDetailsView: UiObject? = null
 
     init {
-        detailsViewFactory = arguments.getParcelableValue(KEY_DETAILS_VIEW_FACTORY)
+        with(arguments) {
+            detailsViewFactory = getParcelableValue(KEY_DETAILS_VIEW_FACTORY)
 
-        mapSelectionMode = arguments.getInt(KEY_MAP_SELECTION_MODE, MAP_SELECTION_MODE_DEFAULT_VALUE)
-        positionOnMapEnabled = arguments.getBoolean(KEY_POSITION_ON_MAP, POSITION_ON_MAP_ENABLED_DEFAULT_VALUE)
-        compassEnabled.value = arguments.getBoolean(KEY_COMPASS_ENABLED, COMPASS_ENABLED_DEFAULT_VALUE)
-        compassHideIfNorthUp.value = arguments.getBoolean(KEY_COMPASS_HIDE_IF_NORTH, COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE)
-        positionLockFabEnabled.value = arguments.getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
-        zoomControlsEnabled.value = arguments.getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
+            mapSelectionMode = getInt(KEY_MAP_SELECTION_MODE, MAP_SELECTION_MODE_DEFAULT_VALUE)
+            positionOnMapEnabled = getBoolean(KEY_POSITION_ON_MAP, POSITION_ON_MAP_ENABLED_DEFAULT_VALUE)
+            compassEnabled.value = getBoolean(KEY_COMPASS_ENABLED, COMPASS_ENABLED_DEFAULT_VALUE)
+            compassHideIfNorthUp.value = getBoolean(KEY_COMPASS_HIDE_IF_NORTH, COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE)
+            positionLockFabEnabled.value = getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
+            zoomControlsEnabled.value = getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
 
-        arguments.getString(ThemeManager.SkinLayer.DayNight.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, skin) }
-        arguments.getString(ThemeManager.SkinLayer.Vehicle.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, skin) }
+            getString(ThemeManager.SkinLayer.DayNight.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, skin) }
+            getString(ThemeManager.SkinLayer.Vehicle.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, skin) }
+        }
 
         mapInteractionManager.addOnMapClickListener(this)
     }

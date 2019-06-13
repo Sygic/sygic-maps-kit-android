@@ -35,14 +35,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
-import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
-import com.sygic.maps.module.search.extensions.resolveAttributes
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
+import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATION
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
+import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
@@ -60,7 +63,6 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
     private val modulesComponent = ModulesComponentDelegate()
-    private val searchToolbarInitComponent = SearchToolbarInitComponent()
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -88,11 +90,12 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     var searchInput: String
         get() = if (::searchToolbarViewModel.isInitialized) {
             searchToolbarViewModel.inputText.value.toString()
-        } else searchToolbarInitComponent.initialSearchInput
+        } else arguments.getString(KEY_SEARCH_INPUT, EMPTY_STRING)
         set(value) {
+            arguments = Bundle(arguments).apply { putString(KEY_SEARCH_INPUT, value) }
             if (::searchToolbarViewModel.isInitialized) {
                 searchToolbarViewModel.inputText.value = value
-            } else searchToolbarInitComponent.initialSearchInput = value
+            }
         }
 
     /**
@@ -105,11 +108,12 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     var searchLocation: GeoCoordinates?
         get() = if (::searchToolbarViewModel.isInitialized) {
             searchToolbarViewModel.searchLocation
-        } else searchToolbarInitComponent.initialSearchLocation
+        } else arguments.getParcelableValue(KEY_SEARCH_LOCATION)
         set(value) {
+            arguments = Bundle(arguments).apply { putParcelable(KEY_SEARCH_LOCATION, value) }
             if (::searchToolbarViewModel.isInitialized) {
                 searchToolbarViewModel.searchLocation = value
-            } else searchToolbarInitComponent.initialSearchLocation = value
+            }
         }
 
     /**
@@ -122,17 +126,24 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     var maxResultsCount: Int
         get() = if (::searchToolbarViewModel.isInitialized) {
             searchToolbarViewModel.maxResultsCount
-        } else searchToolbarInitComponent.maxResultsCount
+        } else arguments.getInt(KEY_SEARCH_MAX_RESULTS_COUNT, MAX_RESULTS_COUNT_DEFAULT_VALUE)
         set(value) {
+            arguments = Bundle(arguments).apply { putInt(KEY_SEARCH_MAX_RESULTS_COUNT, value) }
             if (::searchToolbarViewModel.isInitialized) {
                 searchToolbarViewModel.maxResultsCount = value
-            } else searchToolbarInitComponent.maxResultsCount = value
+            }
         }
 
-    override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+    init {
+        if (arguments == null) {
+            arguments = Bundle.EMPTY
+        }
+    }
+
+    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         inject()
         super.onInflate(context, attrs, savedInstanceState)
-        resolveAttributes(attrs, searchToolbarInitComponent)
+        resolveAttributes(attrs)
     }
 
     override fun onAttach(context: Context?) {
@@ -145,7 +156,8 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchFragmentViewModel::class.java]
-        searchToolbarViewModel = ViewModelProviders.of(this, viewModelFactory.with(searchToolbarInitComponent))[SearchToolbarViewModel::class.java]
+        searchToolbarViewModel =
+            ViewModelProviders.of(this, viewModelFactory.with(arguments))[SearchToolbarViewModel::class.java]
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(searchToolbarViewModel)
@@ -189,5 +201,27 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
         lifecycle.removeObserver(fragmentViewModel)
         lifecycle.removeObserver(searchToolbarViewModel)
+    }
+
+    fun resolveAttributes(attributes: AttributeSet) {
+        with(requireContext().obtainStyledAttributes(attributes, R.styleable.SearchFragment)) {
+            if (hasValue(R.styleable.SearchFragment_sygic_initial_search_input)) {
+                searchInput = getString(R.styleable.SearchFragment_sygic_initial_search_input) ?: EMPTY_STRING
+            }
+            if (hasValue(R.styleable.SearchFragment_sygic_initial_latitude)
+                && hasValue(R.styleable.SearchFragment_sygic_initial_longitude)
+            ) {
+                searchLocation = GeoCoordinates(
+                    getFloat(R.styleable.SearchFragment_sygic_initial_latitude, Float.NaN).toDouble(),
+                    getFloat(R.styleable.SearchFragment_sygic_initial_longitude, Float.NaN).toDouble()
+                )
+            }
+            if (hasValue(R.styleable.SearchFragment_sygic_max_results_count)) {
+                maxResultsCount =
+                    getInt(R.styleable.SearchFragment_sygic_max_results_count, MAX_RESULTS_COUNT_DEFAULT_VALUE)
+            }
+
+            recycle()
+        }
     }
 }

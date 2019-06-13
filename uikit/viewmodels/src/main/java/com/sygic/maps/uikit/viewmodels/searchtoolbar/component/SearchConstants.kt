@@ -24,21 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.searchtoolbar.component
 
-import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.sdk.position.GeoCoordinates
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SearchToolbarInitComponent {
-
-    var initialSearchInput: String = EMPTY_STRING
-    var initialSearchLocation: GeoCoordinates? = null
-    var maxResultsCount: Int = MAX_RESULTS_COUNT_DEFAULT_VALUE
-
-    fun recycle() {
-        initialSearchInput = EMPTY_STRING
-        initialSearchLocation = null
-        maxResultsCount = MAX_RESULTS_COUNT_DEFAULT_VALUE
-    }
-}
+const val KEY_SEARCH_INPUT = "search_input"
+const val KEY_SEARCH_LOCATION = "search_location"
+const val KEY_SEARCH_MAX_RESULTS_COUNT = "search_max_results_count"

@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.searchtoolbar
 
+import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -31,9 +32,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
-import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATION
+import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.getInt
+import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.common.extensions.getString
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
@@ -51,7 +58,7 @@ private const val DEFAULT_SEARCH_DELAY = 300L
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchToolbarViewModel internal constructor(
-    @Assisted initComponent: SearchToolbarInitComponent,
+    @Assisted arguments: Bundle?,
     private val searchManager: SearchManager
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -83,10 +90,11 @@ open class SearchToolbarViewModel internal constructor(
     val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        inputText.value = initComponent.initialSearchInput
-        searchLocation = initComponent.initialSearchLocation
-        maxResultsCount = initComponent.maxResultsCount
-        initComponent.recycle()
+        with(arguments) {
+            inputText.value = getString(KEY_SEARCH_INPUT, EMPTY_STRING)
+            searchLocation = getParcelableValue(KEY_SEARCH_LOCATION)
+            maxResultsCount = getInt(KEY_SEARCH_MAX_RESULTS_COUNT, MAX_RESULTS_COUNT_DEFAULT_VALUE)
+        }
 
         searchToolbarFocused.value = true
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
