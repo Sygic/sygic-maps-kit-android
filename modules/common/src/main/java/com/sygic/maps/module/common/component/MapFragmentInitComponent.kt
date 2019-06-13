@@ -30,6 +30,7 @@ import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 
 const val MAP_SELECTION_MODE_DEFAULT_VALUE = MapSelectionMode.MARKERS_ONLY
 const val POSITION_ON_MAP_ENABLED_DEFAULT_VALUE = false
@@ -55,6 +56,7 @@ class MapFragmentInitComponent {
 
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
+    var searchConnectionProvider: ModuleConnectionProvider? = null
 
     fun recycle() {
         attributes = null
@@ -70,5 +72,6 @@ class MapFragmentInitComponent {
 
         onMapClickListener = null
         detailsViewFactory = null
+        searchConnectionProvider = null
     }
 }

@@ -22,17 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.initialization.manager
+package com.sygic.maps.uikit.viewmodels.common.initialization
 
-import android.app.Application
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SdkInitializationManager {
 
+    @InitializationState
+    var initializationState: Int
+
+    @FunctionalInterface
     interface Callback {
         fun onSdkInitialized()
     }
 
-    fun initialize(application: Application, callback: Callback)
+    fun initialize(callback: Callback)
+    fun initialize(callback: () -> Unit) { initialize(object : Callback { override fun onSdkInitialized() = callback() }) }
+
+    fun isInitialized() = initializationState == InitializationState.INITIALIZED
+
+    fun onReady(block: () -> Unit) = if (isInitialized()) block.invoke() else initialize { block.invoke() }
 }

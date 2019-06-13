@@ -22,17 +22,26 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.positionlockfab;
+package com.sygic.maps.module.search.di.module;
 
-import androidx.annotation.IntDef;
+import com.sygic.maps.module.common.di.util.ViewModelKey;
+import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
+import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel;
+import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModelFactory;
+import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
+import dagger.Binds;
+import dagger.Module;
+import dagger.multibindings.IntoMap;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+@Module(
+    includes = {
+            ViewModelModuleBase.class
+    }
+)
+public abstract class ViewModelModule {
 
-@IntDef({LockState.UNLOCKED, LockState.LOCKED, LockState.LOCKED_AUTOROTATE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface LockState {
-    int UNLOCKED = 0;
-    int LOCKED = 1;
-    int LOCKED_AUTOROTATE = 2;
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchFragmentViewModel.class)
+    abstract ViewModelCreatorFactory putSearchFragmentViewModelFactory(SearchFragmentViewModelFactory factory);
 }

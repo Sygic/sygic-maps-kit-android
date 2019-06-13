@@ -37,10 +37,11 @@ buildscript {
         androidCompileSdkVersion = 28
         androidTargerSdkVersion = androidCompileSdkVersion
 
-        moduleBrowsemapVersion = '1.0.4'
-        moduleCommonVersion = '1.0.3'
+        moduleSearchVersion = '1.0.0'
+        moduleBrowsemapVersion = '1.1.0'
+        moduleCommonVersion = '1.1.0'
         uikitViewsVersion = '1.1.0'
-        uikitViewmodelsVersion = '1.0.3'
+        uikitViewmodelsVersion = '1.1.0'
         toolsViewmodelFactoryVersion = '1.0.1'
 
         kotlinVersion = '1.3.31'
@@ -53,7 +54,7 @@ buildscript {
         annotationsVersion = '1.0.0'
         playServicesLocationVersion = '16.0.0'
         sygicSdkVersion = '13.0.0'
-        daggerVersion = '2.16'
+        daggerVersion = '2.19'
         javaxInjectVersion = '1'
         javaPoetVersion = '1.11.1'
         junitVersion = '4.12'

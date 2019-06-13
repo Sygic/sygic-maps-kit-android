@@ -30,10 +30,16 @@
     <declare-styleable name="Theme">
         <attr name="compassStyle" format="reference"/>
         <attr name="positionLockFabStyle" format="reference" />
+        <attr name="searchFabStyle" format="reference" />
         <attr name="zoomControlsMenuStyle" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="PositionLockFab">
+        <attr name="android:tint" />
+        <attr name="android:backgroundTint" />
+    </declare-styleable>
+
+    <declare-styleable name="SearchFab">
         <attr name="android:tint" />
         <attr name="android:backgroundTint" />
     </declare-styleable>

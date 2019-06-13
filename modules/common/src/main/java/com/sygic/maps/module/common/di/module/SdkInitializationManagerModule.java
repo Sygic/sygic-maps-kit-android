@@ -24,8 +24,10 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import com.sygic.maps.module.common.initialization.manager.SdkInitializationManager;
-import com.sygic.maps.module.common.initialization.manager.SdkInitializationManagerImpl;
+import android.app.Application;
+import androidx.annotation.NonNull;
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
 import dagger.Module;
 import dagger.Provides;
 
@@ -36,7 +38,7 @@ public class SdkInitializationManagerModule {
 
     @Singleton
     @Provides
-    SdkInitializationManager provideSdkInitializationManager() {
-        return new SdkInitializationManagerImpl();
+    SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
+        return new SdkInitializationManagerImpl(application);
     }
 }

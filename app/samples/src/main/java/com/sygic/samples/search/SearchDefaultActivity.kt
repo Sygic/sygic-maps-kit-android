@@ -22,14 +22,19 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.fragments
+package com.sygic.samples.search
 
+import android.os.Bundle
 import com.sygic.samples.R
-import com.sygic.samples.Samples
-import com.sygic.samples.app.models.Sample
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-class BrowseMapSamplesListFragment : BaseSamplesListFragment() {
+class SearchDefaultActivity : CommonSampleActivity() {
 
-    override val title: Int = R.string.browse_map_samples
-    override val items: List<Sample> = Samples.browseMapSampleList
+    override val wikiModulePath: String = "Module-Search#search---default"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_search_default)
+    }
 }

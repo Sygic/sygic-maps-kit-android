@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.maps.module.browsemap.di.BrowseMapComponent
@@ -37,6 +38,7 @@ import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.uikit.views.compass.CompassView
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
@@ -44,9 +46,13 @@ import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
+import com.sygic.maps.uikit.views.common.extensions.openFragment
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.maps.uikit.views.searchfab.SearchFab
+
+const val BROWSE_MAP_FRAGMENT_TAG = "browse_map_fragment_tag"
 
 /**
  * A *[BrowseMapFragment]* is the most basic component from our portfolio. It can be easily used to display view objects
@@ -183,6 +189,9 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
             this.poiDetailListenerObservable.observe(
                 this@BrowseMapFragment,
                 Observer<DialogFragmentListener> { setPoiDetailListener(it) })
+            this.openFragmentObservable.observe(
+                this@BrowseMapFragment,
+                Observer<Fragment> { openFragment(it) })
         }
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
@@ -234,6 +243,20 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
             fragmentViewModel.detailsViewFactory = factory
         } else {
             mapFragmentInitComponent.detailsViewFactory = factory
+        }
+    }
+
+    /**
+     * Set a Search module connection provider to be used when a click to the [SearchFab] has been made. If not null,
+     * the [SearchFab] will be automatically displayed.
+     *
+     * @param searchConnectionProvider [ModuleConnectionProvider] a search module connection provider.
+     */
+    fun setSearchConnectionProvider(searchConnectionProvider: ModuleConnectionProvider?) {
+        if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.searchConnectionProvider = searchConnectionProvider
+        } else {
+            mapFragmentInitComponent.searchConnectionProvider = searchConnectionProvider
         }
     }
 

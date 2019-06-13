@@ -32,9 +32,12 @@
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_browse_map_module"
-                    android:checked="true"
                     android:icon="@drawable/ic_map"
                     android:title="@string/browse_map" />
+                <item
+                    android:id="@+id/nav_search_module"
+                    android:icon="@drawable/ic_search"
+                    android:title="@string/search" />
             </group>
         </menu>
     </item>

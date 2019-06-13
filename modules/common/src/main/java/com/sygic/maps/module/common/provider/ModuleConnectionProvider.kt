@@ -22,27 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.utils
+package com.sygic.maps.module.common.provider
 
-import android.app.Application
-import android.content.pm.PackageManager
-import androidx.annotation.RestrictTo
-import com.sygic.maps.module.common.R
-import com.sygic.maps.module.common.listener.OnMapClickListener
-import com.sygic.maps.uikit.viewmodels.common.extensions.getSelectionType
-import com.sygic.sdk.map.`object`.ViewObject
+import androidx.fragment.app.Fragment
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun Application.getApiKey(): String? {
-    return try {
-        val applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
-        applicationInfo.metaData.getString(getString(R.string.com_sygic_api_key))
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
-    } catch (e: NullPointerException) {
-        null
-    }
+/**
+ * Interface definition designed for a independent module connection.
+ */
+interface ModuleConnectionProvider {
+
+    /**
+     * A *[fragment]* to be used as a target for the transaction.
+     *
+     * @param [Fragment] target fragment.
+     *
+     */
+    val fragment: Fragment
 }
-
-fun OnMapClickListener.onMapClick(viewObject: ViewObject<*>): Boolean =
-    onMapClick(viewObject.getSelectionType(), viewObject.position.latitude, viewObject.position.longitude)

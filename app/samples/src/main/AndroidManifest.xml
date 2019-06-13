@@ -47,6 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".browsemap.BrowseMapDefaultActivity"
             android:label="@string/browse_map_default"
@@ -74,6 +75,16 @@
         <activity
             android:name=".browsemap.BrowseMapDetailsWindowActivity"
             android:label="@string/browse_map_details_window"
+            android:theme="@style/AppTheme.NoExitAnimation" />
+
+        <activity
+            android:name=".search.SearchDefaultActivity"
+            android:label="@string/search_default"
+            android:theme="@style/AppTheme.NoExitAnimation"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name=".search.SearchFromBrowseMapActivity"
+            android:label="@string/search_from_browse_map"
             android:theme="@style/AppTheme.NoExitAnimation" />
 
         <meta-data

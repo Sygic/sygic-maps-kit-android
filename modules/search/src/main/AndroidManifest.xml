@@ -22,6 +22,4 @@
   ~ SOFTWARE.
   -->
 
-<resources>
-    <string name="com_sygic_api_key">com-sygic-api-key</string>
-</resources>
+<manifest package="com.sygic.maps.module.search" />
