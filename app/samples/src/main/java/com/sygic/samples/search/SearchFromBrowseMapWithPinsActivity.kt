@@ -32,7 +32,6 @@ import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
 import com.sygic.samples.search.viewmodels.SearchFromBrowseMapWitchPinsActivityViewModel
 import com.sygic.sdk.map.MapRectangle
 import com.sygic.sdk.position.GeoCoordinates
@@ -50,12 +49,6 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_search_from_browse_map_pins)
 
         viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapWitchPinsActivityViewModel::class.java).apply {
-            this.placeBrowseMapFragmentObservable.observe(
-                this@SearchFromBrowseMapWithPinsActivity,
-                Observer<BrowseMapFragmentInitComponent> { placeBrowseMapFragment(it) })
-            this.moduleConnectionObservable.observe(
-                this@SearchFromBrowseMapWithPinsActivity,
-                Observer<ModuleConnectionProvider> { setFragmentModuleConnection(it) })
             this.addMapMarkerObservable.observe(
                 this@SearchFromBrowseMapWithPinsActivity,
                 Observer<MapMarker> { addMapMarker(it) })
@@ -72,20 +65,32 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
                 this@SearchFromBrowseMapWithPinsActivity,
                 Observer<Float> { setCameraZoomLevel(it) })
         }
-        lifecycle.addObserver(viewModel)
+
+        if (savedInstanceState == null) {
+            setFragmentModuleConnection(placeBrowseMapFragment(2F), viewModel)
+        } else {
+            setFragmentModuleConnection(
+                supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment, viewModel
+            )
+        }
     }
 
     // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
     // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
-    private fun placeBrowseMapFragment(component: BrowseMapFragmentInitComponent) = supportFragmentManager
-        ?.beginTransaction()
-        ?.replace(R.id.fragmentContainer, BrowseMapFragment().apply {
-            cameraDataModel.zoomLevel = component.zoomLevel
-        }, BROWSE_MAP_FRAGMENT_TAG)
-        ?.commitNow() //ToDo: MS-5686
+    private fun placeBrowseMapFragment(zoomLevel: Float) =
+        BrowseMapFragment().apply {
+            cameraDataModel.zoomLevel = zoomLevel
+        }.also {
+            supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
+                ?.commit()
+        }
 
-    private fun setFragmentModuleConnection(moduleConnectionProvider: ModuleConnectionProvider) =
-        findBrowseMapFragment()?.setSearchConnectionProvider(moduleConnectionProvider)
+    private fun setFragmentModuleConnection(
+        fragment: BrowseMapFragment,
+        moduleConnectionProvider: ModuleConnectionProvider
+    ) = fragment.setSearchConnectionProvider(moduleConnectionProvider)
 
     private fun addMapMarker(mapMarker: MapMarker) = findBrowseMapFragment()?.addMapMarker(mapMarker)
 
@@ -105,10 +110,4 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
 
     private fun findBrowseMapFragment(): BrowseMapFragment? =
         supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG)?.let { it as BrowseMapFragment }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        lifecycle.removeObserver(viewModel)
-    }
 }

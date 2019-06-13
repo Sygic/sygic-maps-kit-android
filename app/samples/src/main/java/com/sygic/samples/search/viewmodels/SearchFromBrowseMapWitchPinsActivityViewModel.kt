@@ -24,17 +24,15 @@
 
 package com.sygic.samples.search.viewmodels
 
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.module.search.provider.SearchConnectionProvider
+import com.sygic.maps.module.search.SearchFragment
 import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logInfo
-import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
 import com.sygic.sdk.map.MapRectangle
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.position.GeoBoundingBox
@@ -45,64 +43,57 @@ import com.sygic.sdk.search.detail.DetailPoiCategoryGroup
 
 private const val MARGIN = 80
 
-class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), DefaultLifecycleObserver {
+class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), ModuleConnectionProvider {
 
-    val placeBrowseMapFragmentObservable: LiveData<BrowseMapFragmentInitComponent> = SingleLiveEvent()
-    val moduleConnectionObservable: LiveData<ModuleConnectionProvider> = SingleLiveEvent()
     val addMapMarkerObservable: LiveData<MapMarker> = SingleLiveEvent()
     val removeAllMapMarkersObservable: LiveData<Any> = SingleLiveEvent()
     val setCameraPositionObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
     val setCameraRectangleObservable: LiveData<MapRectangle> = SingleLiveEvent()
     val setCameraZoomLevelObservable: LiveData<Float> = SingleLiveEvent()
 
-    private val searchConnectionProvider = SearchConnectionProvider { searchResultList ->
+    private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
         removeAllMapMarkersObservable.asSingleEvent().call()
 
-        if (searchResultList.isEmpty()) {
-            return@SearchConnectionProvider
-        }
+        if (searchResultList.isNotEmpty()) {
+            if (searchResultList.isOnlyCategory()) {
+                (searchResultList.first() as MapSearchResult).loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
+                    if (state == SearchResult.ResultState.Success) {
+                        when (mapSearchDetail) {
+                            is DetailPoiCategory -> mapSearchDetail.poiList.forEach { addMapMarker(it.position) }
+                            is DetailPoiCategoryGroup -> mapSearchDetail.poiList.forEach { addMapMarker(it.position) }
+                        }
 
-        if (searchResultList.isOnlyCategory()) {
-            (searchResultList.first() as MapSearchResult).loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
-                if (state == SearchResult.ResultState.Success) {
-                    when (mapSearchDetail) {
-                        is DetailPoiCategory -> mapSearchDetail.poiList.forEach { addMapMarker(it.position) }
-                        is DetailPoiCategoryGroup -> mapSearchDetail.poiList.forEach { addMapMarker(it.position) }
+                        setCameraRectangle(mapSearchDetail.boundingBox)
                     }
+                })
+            } else {
+                searchResultList.toGeoCoordinatesList().let { geoCoordinatesList ->
+                    if (geoCoordinatesList.isNotEmpty()) {
 
-                    setCameraRectangle(mapSearchDetail.boundingBox)
-                }
-            })
-            return@SearchConnectionProvider
-        }
-
-        searchResultList.toGeoCoordinatesList().let { geoCoordinatesList ->
-            if (geoCoordinatesList.isNotEmpty()) {
-
-                if (geoCoordinatesList.size == 1) {
-                    addMapMarker(geoCoordinatesList.first())
-                    setCameraPositionObservable.asSingleEvent().value = geoCoordinatesList.first()
-                    setCameraZoomLevelObservable.asSingleEvent().value = 10F
-                } else {
-                    val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
-                    geoCoordinatesList.forEach { geoCoordinates ->
-                        addMapMarker(geoCoordinates)
-                        geoBoundingBox.union(geoCoordinates)
+                        if (geoCoordinatesList.size == 1) {
+                            addMapMarker(geoCoordinatesList.first())
+                            setCameraPositionObservable.asSingleEvent().value = geoCoordinatesList.first()
+                            setCameraZoomLevelObservable.asSingleEvent().value = 10F
+                        } else {
+                            val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
+                            geoCoordinatesList.forEach { geoCoordinates ->
+                                addMapMarker(geoCoordinates)
+                                geoBoundingBox.union(geoCoordinates)
+                            }
+                            setCameraRectangle(geoBoundingBox)
+                        }
                     }
-                    setCameraRectangle(geoBoundingBox)
                 }
             }
         }
     }
 
-    init {
-        placeBrowseMapFragmentObservable.asSingleEvent().value =
-            BrowseMapFragmentInitComponent(2F, GeoCoordinates(48.145764, 17.126015))
-    }
-
-    override fun onCreate(owner: LifecycleOwner) {
-        moduleConnectionObservable.asSingleEvent().value = searchConnectionProvider
-    }
+    override val fragment: Fragment
+        get() {
+            val searchFragment = SearchFragment()
+            searchFragment.setResultCallback(callback)
+            return searchFragment
+        }
 
     private fun addMapMarker(position: GeoCoordinates) {
         addMapMarkerObservable.asSingleEvent().value = MapMarker.at(position).build()
