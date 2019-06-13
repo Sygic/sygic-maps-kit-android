@@ -25,34 +25,50 @@
 package com.sygic.maps.module.browsemap
 
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.maps.module.browsemap.di.BrowseMapComponent
 import com.sygic.maps.module.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.maps.module.common.MapFragmentWrapper
+import com.sygic.maps.module.common.component.*
 import com.sygic.maps.module.common.detail.DetailsViewFactory
-import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.listener.OnMapClickListenerWrapper
+import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.uikit.views.compass.CompassView
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
-import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
+import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
+import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.extensions.getBoolean
+import com.sygic.maps.uikit.views.common.extensions.getInt
 import com.sygic.maps.uikit.views.common.extensions.openFragment
+import com.sygic.maps.uikit.views.compass.CompassView
+import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
-import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 import com.sygic.maps.uikit.views.searchfab.SearchFab
+import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
+import com.sygic.sdk.map.`object`.MapMarker
 
 const val BROWSE_MAP_FRAGMENT_TAG = "browse_map_fragment_tag"
+internal const val KEY_DETAILS_VIEW_FACTORY = "details_view_factory"
+internal const val KEY_MAP_SELECTION_MODE = "map_selection_mode"
+internal const val KEY_COMPASS_ENABLED = "compass_enabled"
+internal const val KEY_COMPASS_HIDE_IF_NORTH = "compass_hide_north"
+internal const val KEY_POSITION_ON_MAP = "position_on_map"
+internal const val KEY_POSITION_LOCK_FAB = "position_lock_fab"
+internal const val KEY_ZOOM_CONTROLS = "zoom_controls"
 
 /**
  * A *[BrowseMapFragment]* is the most basic component from our portfolio. It can be easily used to display view objects
@@ -61,12 +77,16 @@ const val BROWSE_MAP_FRAGMENT_TAG = "browse_map_fragment_tag"
  * [PoiDetailBottomDialogFragment].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
+class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMapClickListenerWrapper,
+    ModuleConnectionProviderWrapper {
 
     override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
+
+    override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData<ModuleConnectionProvider>()
+    override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData<OnMapClickListener>()
 
     override fun executeInjector() =
         injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
@@ -84,11 +104,12 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     var mapSelectionMode: Int
         get() = if (::fragmentViewModel.isInitialized) {
             fragmentViewModel.mapSelectionMode
-        } else mapFragmentInitComponent.mapSelectionMode
+        } else arguments.getInt(KEY_MAP_SELECTION_MODE, MAP_SELECTION_MODE_DEFAULT_VALUE)
         set(value) {
+            arguments = Bundle(arguments).apply { putInt(KEY_MAP_SELECTION_MODE, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.mapSelectionMode = value
-            } else mapFragmentInitComponent.mapSelectionMode = value
+            }
         }
 
     /**
@@ -101,11 +122,12 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     var compassEnabled: Boolean
         get() = if (::fragmentViewModel.isInitialized) {
             fragmentViewModel.compassEnabled.value!!
-        } else mapFragmentInitComponent.compassEnabled
+        } else arguments.getBoolean(KEY_COMPASS_ENABLED, COMPASS_ENABLED_DEFAULT_VALUE)
         set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_COMPASS_ENABLED, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.compassEnabled.value = value
-            } else mapFragmentInitComponent.compassEnabled = value
+            }
         }
 
     /**
@@ -118,11 +140,12 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     var compassHideIfNorthUp: Boolean
         get() = if (::fragmentViewModel.isInitialized) {
             fragmentViewModel.compassHideIfNorthUp.value!!
-        } else mapFragmentInitComponent.compassHideIfNorthUp
+        } else arguments.getBoolean(KEY_COMPASS_HIDE_IF_NORTH, COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE)
         set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_COMPASS_HIDE_IF_NORTH, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.compassHideIfNorthUp.value = value
-            } else mapFragmentInitComponent.compassHideIfNorthUp = value
+            }
         }
 
     /**
@@ -135,11 +158,12 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     var positionOnMapEnabled: Boolean
         get() = if (::fragmentViewModel.isInitialized) {
             fragmentViewModel.positionOnMapEnabled
-        } else mapFragmentInitComponent.positionOnMapEnabled
+        } else arguments.getBoolean(KEY_POSITION_ON_MAP, POSITION_ON_MAP_ENABLED_DEFAULT_VALUE)
         set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_POSITION_ON_MAP, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.positionOnMapEnabled = value
-            } else mapFragmentInitComponent.positionOnMapEnabled = value
+            }
         }
 
     /**
@@ -152,11 +176,12 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     var positionLockFabEnabled: Boolean
         get() = if (::fragmentViewModel.isInitialized) {
             fragmentViewModel.positionLockFabEnabled.value!!
-        } else mapFragmentInitComponent.positionLockFabEnabled
+        } else arguments.getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
         set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_POSITION_LOCK_FAB, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.positionLockFabEnabled.value = value
-            } else mapFragmentInitComponent.positionLockFabEnabled = value
+            }
         }
 
     /**
@@ -169,17 +194,18 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
     var zoomControlsEnabled: Boolean
         get() = if (::fragmentViewModel.isInitialized) {
             fragmentViewModel.zoomControlsEnabled.value!!
-        } else mapFragmentInitComponent.zoomControlsEnabled
+        } else arguments.getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
         set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_ZOOM_CONTROLS, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.zoomControlsEnabled.value = value
-            } else mapFragmentInitComponent.zoomControlsEnabled = value
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, mapFragmentInitComponent).apply {
+        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, arguments).apply {
             this.poiDetailObservable.observe(
                 this@BrowseMapFragment,
                 Observer<Any> { showPoiDetail() })
@@ -225,11 +251,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
      * @param onMapClickListener [OnMapClickListener] callback to invoke on map click.
      */
     fun setOnMapClickListener(onMapClickListener: OnMapClickListener?) {
-        if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.onMapClickListener = onMapClickListener
-        } else {
-            mapFragmentInitComponent.onMapClickListener = onMapClickListener
-        }
+        mapClickListenerProvider.asMutable().value = onMapClickListener
     }
 
     /**
@@ -239,10 +261,10 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
      * @param factory [DetailsViewFactory] used to generate details window.
      */
     fun setDetailsViewFactory(factory: DetailsViewFactory?) {
+        arguments = Bundle(arguments).apply { putParcelable(KEY_DETAILS_VIEW_FACTORY, factory) }
+
         if (::fragmentViewModel.isInitialized) {
             fragmentViewModel.detailsViewFactory = factory
-        } else {
-            mapFragmentInitComponent.detailsViewFactory = factory
         }
     }
 
@@ -253,11 +275,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
      * @param searchConnectionProvider [ModuleConnectionProvider] a search module connection provider.
      */
     fun setSearchConnectionProvider(searchConnectionProvider: ModuleConnectionProvider?) {
-        if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.searchConnectionProvider = searchConnectionProvider
-        } else {
-            mapFragmentInitComponent.searchConnectionProvider = searchConnectionProvider
-        }
+        moduleConnectionProvider.asMutable().value = searchConnectionProvider
     }
 
     private fun showPoiDetail() {
@@ -286,5 +304,54 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>() {
         lifecycle.removeObserver(compassViewModel)
         lifecycle.removeObserver(positionLockFabViewModel)
         lifecycle.removeObserver(zoomControlsViewModel)
+    }
+
+    override fun resolveAttributes(attributes: AttributeSet) {
+        with(requireContext().obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)) {
+            if (hasValue(R.styleable.BrowseMapFragment_sygic_map_selectionMode)) {
+                mapSelectionMode =
+                    getInt(
+                        R.styleable.BrowseMapFragment_sygic_map_selectionMode,
+                        MAP_SELECTION_MODE_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.BrowseMapFragment_sygic_positionOnMap_enabled)) {
+                positionOnMapEnabled =
+                    getBoolean(
+                        R.styleable.BrowseMapFragment_sygic_positionOnMap_enabled,
+                        POSITION_ON_MAP_ENABLED_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.BrowseMapFragment_sygic_compass_enabled)) {
+                compassEnabled =
+                    getBoolean(
+                        R.styleable.BrowseMapFragment_sygic_compass_enabled,
+                        COMPASS_ENABLED_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.BrowseMapFragment_sygic_compass_hideIfNorthUp)) {
+                compassHideIfNorthUp =
+                    getBoolean(
+                        R.styleable.BrowseMapFragment_sygic_compass_hideIfNorthUp,
+                        COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.BrowseMapFragment_sygic_positionLockFab_enabled)) {
+                positionLockFabEnabled =
+                    getBoolean(
+                        R.styleable.BrowseMapFragment_sygic_positionLockFab_enabled,
+                        POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.BrowseMapFragment_sygic_zoomControls_enabled)) {
+                zoomControlsEnabled =
+                    getBoolean(
+                        R.styleable.BrowseMapFragment_sygic_zoomControls_enabled,
+                        ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE
+                    )
+            }
+
+            recycle()
+        }
     }
 }
