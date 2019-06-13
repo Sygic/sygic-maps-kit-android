@@ -24,29 +24,24 @@
 
 package com.sygic.samples.search.viewmodels
 
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.module.search.provider.SearchConnectionProvider
+import com.sygic.maps.module.search.SearchFragment
 import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.samples.search.components.BrowseMapFragmentInitComponent
-import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.MapSearchResult
 import com.sygic.sdk.search.Search
 import com.sygic.sdk.search.SearchResult
 import com.sygic.sdk.search.detail.*
 
-class SearchFromBrowseMapActivityViewModel : ViewModel(), DefaultLifecycleObserver {
+class SearchFromBrowseMapActivityViewModel : ViewModel(), ModuleConnectionProvider {
 
-    val placeBrowseMapFragmentObservable: LiveData<BrowseMapFragmentInitComponent> = SingleLiveEvent()
-    val moduleConnectionObservable: LiveData<ModuleConnectionProvider> = SingleLiveEvent()
     val showToastObservable: LiveData<String> = SingleLiveEvent()
 
-    private val searchConnectionProvider = SearchConnectionProvider { searchResultList ->
+    private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
         searchResultList.forEach { searchResult ->
             when (searchResult) {
                 is MapSearchResult -> {
@@ -74,14 +69,12 @@ class SearchFromBrowseMapActivityViewModel : ViewModel(), DefaultLifecycleObserv
         }
     }
 
-    init {
-        placeBrowseMapFragmentObservable.asSingleEvent().value =
-            BrowseMapFragmentInitComponent(11F, GeoCoordinates(48.145764, 17.126015))
-    }
-
-    override fun onCreate(owner: LifecycleOwner) {
-        moduleConnectionObservable.asSingleEvent().value = searchConnectionProvider
-    }
+    override val fragment: Fragment
+        get() {
+            val searchFragment = SearchFragment()
+            searchFragment.setResultCallback(callback)
+            return searchFragment
+        }
 
     private fun showToast(string: String) {
         showToastObservable.asSingleEvent().value = string

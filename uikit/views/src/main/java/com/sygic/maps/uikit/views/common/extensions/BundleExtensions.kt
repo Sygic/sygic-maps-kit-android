@@ -22,23 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.searchtoolbar.component
+package com.sygic.maps.uikit.views.common.extensions
 
-import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.sdk.position.GeoCoordinates
+import android.os.Bundle
+import android.os.Parcelable
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SearchToolbarInitComponent {
+fun Bundle?.getInt(key: String, defaultValue: Int): Int = this?.getInt(key, defaultValue) ?: defaultValue
 
-    var initialSearchInput: String = EMPTY_STRING
-    var initialSearchLocation: GeoCoordinates? = null
-    var maxResultsCount: Int = MAX_RESULTS_COUNT_DEFAULT_VALUE
+fun Bundle?.getBoolean(key: String, defaultValue: Boolean): Boolean = this?.getBoolean(key, defaultValue) ?: defaultValue
 
-    fun recycle() {
-        initialSearchInput = EMPTY_STRING
-        initialSearchLocation = null
-        maxResultsCount = MAX_RESULTS_COUNT_DEFAULT_VALUE
-    }
-}
+fun Bundle?.getString(key: String): String? = this?.getString(key)
+
+fun Bundle?.getString(key: String, defaultValue: String): String = this?.getString(key) ?: defaultValue
+
+fun <T: Parcelable> Bundle?.getParcelableValue(key: String): T? = this?.getParcelable(key)
