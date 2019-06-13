@@ -261,7 +261,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
      * @param factory [DetailsViewFactory] used to generate details window.
      */
     fun setDetailsViewFactory(factory: DetailsViewFactory?) {
-        arguments?.putParcelable(KEY_DETAILS_VIEW_FACTORY, factory)
+        arguments = Bundle(arguments).apply { putParcelable(KEY_DETAILS_VIEW_FACTORY, factory) }
 
         if (::fragmentViewModel.isInitialized) {
             fragmentViewModel.detailsViewFactory = factory

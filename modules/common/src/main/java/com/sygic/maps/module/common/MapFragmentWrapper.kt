@@ -76,6 +76,7 @@ import javax.inject.Inject
 abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected abstract fun executeInjector()
+    protected abstract fun resolveAttributes(attributes: AttributeSet)
 
     protected val modulesComponent = ModulesComponentDelegate()
 
@@ -131,8 +132,6 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         super.onInflate(context, attrs, savedInstanceState)
         resolveAttributes(attrs)
     }
-
-    protected abstract fun resolveAttributes(attributes: AttributeSet)
 
     override fun onAttach(context: Context) {
         executeInjector()
