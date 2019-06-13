@@ -36,6 +36,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.poidetail.dialog.BottomSheetDialog
@@ -106,7 +107,7 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
                 this@PoiDetailBottomDialogFragment,
                 Observer<Int> { setState(it) })
 
-            this.onDataChanged(arguments?.getParcelable(POI_DETAIL_DATA))
+            this.onDataChanged(arguments.getParcelableValue(POI_DETAIL_DATA))
             this.listener = dialogFragmentListener
             dialogFragmentListener = null
         }
