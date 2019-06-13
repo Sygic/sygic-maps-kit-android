@@ -29,4 +29,5 @@
     <string name="no_email_client">Unable to find e-mail client</string>
     <string name="no_phone_client">Unable to find phone client</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="search">Search</string>
 </resources>

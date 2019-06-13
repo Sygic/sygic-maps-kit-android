@@ -61,6 +61,10 @@
         <item name="android:backgroundTint">?android:attr/colorBackground</item>
     </style>
 
+    <!--TODO: MS-5681 -->
+    <style name="SygicSearchToolbarStyle">
+    </style>
+
     <style name="SygicZoomControlsMenuStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>

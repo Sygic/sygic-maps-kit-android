@@ -22,17 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.common.extensions
+package com.sygic.maps.uikit.views.searchtoolbar;
 
-import android.os.Bundle
-import android.os.Parcelable
+import androidx.annotation.IntDef;
 
-fun Bundle?.getInt(key: String, defaultValue: Int): Int = this?.getInt(key, defaultValue) ?: defaultValue
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-fun Bundle?.getBoolean(key: String, defaultValue: Boolean): Boolean = this?.getBoolean(key, defaultValue) ?: defaultValue
-
-fun Bundle?.getString(key: String): String? = this?.getString(key)
-
-fun Bundle?.getString(key: String, defaultValue: String): String = this?.getString(key) ?: defaultValue
-
-fun <T: Parcelable> Bundle?.getParcelableValue(key: String): T? = this?.getParcelable(key)
+@IntDef({SearchToolbarIconStateSwitcherIndex.MAGNIFIER, SearchToolbarIconStateSwitcherIndex.PROGRESSBAR})
+@Retention(RetentionPolicy.SOURCE)
+public @interface SearchToolbarIconStateSwitcherIndex {
+    int MAGNIFIER = 0;
+    int PROGRESSBAR = 1;
+}
