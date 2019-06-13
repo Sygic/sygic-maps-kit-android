@@ -25,21 +25,24 @@
 package com.sygic.maps.module.browsemap.viewmodel
 
 import android.app.Application
+import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
+import com.sygic.maps.module.browsemap.*
 import com.sygic.maps.module.browsemap.detail.PoiDetailsObject
-import com.sygic.maps.module.browsemap.extensions.resolveAttributes
-import com.sygic.maps.module.common.component.MapFragmentInitComponent
+import com.sygic.maps.module.common.component.*
 import com.sygic.maps.module.common.detail.DetailsViewFactory
+import com.sygic.maps.module.common.extensions.onMapClick
 import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.listener.OnMapClickListenerWrapper
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
+import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
-import com.sygic.maps.module.common.extensions.onMapClick
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload
@@ -48,7 +51,7 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
@@ -63,7 +66,7 @@ import com.sygic.sdk.map.`object`.data.ViewObjectData
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BrowseMapFragmentViewModel internal constructor(
     app: Application,
-    @Assisted initComponent: MapFragmentInitComponent,
+    @Assisted arguments: Bundle?,
     private val mapDataModel: ExtendedMapDataModel,
     private val poiDataManager: PoiDataManager,
     private val mapInteractionManager: MapInteractionManager,
@@ -73,7 +76,7 @@ class BrowseMapFragmentViewModel internal constructor(
 ) : AndroidViewModel(app), ThemeSupportedViewModel, DefaultLifecycleObserver, MapInteractionManager.Listener {
 
     @MapSelectionMode
-    var mapSelectionMode: Int
+    var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
     var positionOnMapEnabled: Boolean
         get() = locationManager.positionOnMapEnabled
         set(value) {
@@ -114,23 +117,33 @@ class BrowseMapFragmentViewModel internal constructor(
     private var poiDetailsView: UiObject? = null
 
     init {
-        initComponent.resolveAttributes(app)
-        mapSelectionMode = initComponent.mapSelectionMode
-        positionOnMapEnabled = initComponent.positionOnMapEnabled
-        compassEnabled.value = initComponent.compassEnabled
-        compassHideIfNorthUp.value = initComponent.compassHideIfNorthUp
-        positionLockFabEnabled.value = initComponent.positionLockFabEnabled
-        zoomControlsEnabled.value = initComponent.zoomControlsEnabled
-        onMapClickListener = initComponent.onMapClickListener
-        detailsViewFactory = initComponent.detailsViewFactory
-        searchConnectionProvider = initComponent.searchConnectionProvider
-        initComponent.skins.forEach { entry -> themeManager.setSkinAtLayer(entry.key, entry.value) }
-        initComponent.recycle()
+        detailsViewFactory = arguments.getParcelableValue(KEY_DETAILS_VIEW_FACTORY)
+
+        mapSelectionMode = arguments.getInt(KEY_MAP_SELECTION_MODE, MAP_SELECTION_MODE_DEFAULT_VALUE)
+        positionOnMapEnabled = arguments.getBoolean(KEY_POSITION_ON_MAP, POSITION_ON_MAP_ENABLED_DEFAULT_VALUE)
+        compassEnabled.value = arguments.getBoolean(KEY_COMPASS_ENABLED, COMPASS_ENABLED_DEFAULT_VALUE)
+        compassHideIfNorthUp.value = arguments.getBoolean(KEY_COMPASS_HIDE_IF_NORTH, COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE)
+        positionLockFabEnabled.value = arguments.getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
+        zoomControlsEnabled.value = arguments.getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
+
+        arguments.getString(ThemeManager.SkinLayer.DayNight.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, skin) }
+        arguments.getString(ThemeManager.SkinLayer.Vehicle.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, skin) }
 
         mapInteractionManager.addOnMapClickListener(this)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
+        if (owner is OnMapClickListenerWrapper) {
+            owner.mapClickListenerProvider.observe(owner, Observer { listener ->
+                onMapClickListener = listener
+            })
+        }
+        if (owner is ModuleConnectionProviderWrapper) {
+            owner.moduleConnectionProvider.observe(owner, Observer { provider ->
+                searchConnectionProvider = provider
+            })
+
+        }
         poiDetailListenerObservable.asSingleEvent().value = dialogFragmentListener
     }
 
@@ -251,7 +264,8 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) = themeManager.setSkinAtLayer(layer, skin)
 
-    fun onSearchFabClick() = searchConnectionProvider?.let { openFragmentObservable.asSingleEvent().value = it.fragment }
+    fun onSearchFabClick() =
+        searchConnectionProvider?.let { openFragmentObservable.asSingleEvent().value = it.fragment }
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.setSdkPositionUpdatingEnabled(false)
@@ -259,7 +273,6 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun onDestroy(owner: LifecycleOwner) {
         onMapClickListener = null
-        detailsViewFactory = null
         searchConnectionProvider = null
     }
 
