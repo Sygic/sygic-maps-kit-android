@@ -21,11 +21,12 @@
 package com.sygic.maps.uikit.views.common.extensions
 
 import android.os.Bundle
+import android.os.Parcelable
 
-fun Bundle?.getInt(key: String, defaultValue: Int): Int {
-    return this?.getInt(key, defaultValue) ?: defaultValue
-}
+fun Bundle?.getInt(key: String, defaultValue: Int): Int = this?.getInt(key, defaultValue) ?: defaultValue
 
-fun Bundle?.getBoolean(key: String, defaultValue: Boolean): Boolean {
-    return this?.getBoolean(key, defaultValue) ?: defaultValue
-}
+fun Bundle?.getBoolean(key: String, defaultValue: Boolean): Boolean = this?.getBoolean(key, defaultValue) ?: defaultValue
+
+fun Bundle?.getString(key: String): String? = this?.getString(key)
+
+fun <T: Parcelable> Bundle?.getParcelableValue(key: String): T? = this?.getParcelable(key)

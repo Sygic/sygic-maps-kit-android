@@ -51,9 +51,7 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.extensions.getBoolean
-import com.sygic.maps.uikit.views.common.extensions.getInt
+import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
@@ -119,7 +117,7 @@ class BrowseMapFragmentViewModel internal constructor(
     private var poiDetailsView: UiObject? = null
 
     init {
-        detailsViewFactory = arguments?.getParcelable(KEY_DETAILS_VIEW_FACTORY)
+        detailsViewFactory = arguments.getParcelableValue(KEY_DETAILS_VIEW_FACTORY)
 
         mapSelectionMode = arguments.getInt(KEY_MAP_SELECTION_MODE, MAP_SELECTION_MODE_DEFAULT_VALUE)
         positionOnMapEnabled = arguments.getBoolean(KEY_POSITION_ON_MAP, POSITION_ON_MAP_ENABLED_DEFAULT_VALUE)
@@ -128,8 +126,8 @@ class BrowseMapFragmentViewModel internal constructor(
         positionLockFabEnabled.value = arguments.getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
         zoomControlsEnabled.value = arguments.getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
 
-        arguments?.getString(ThemeManager.SkinLayer.DayNight.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, skin) }
-        arguments?.getString(ThemeManager.SkinLayer.Vehicle.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, skin) }
+        arguments.getString(ThemeManager.SkinLayer.DayNight.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, skin) }
+        arguments.getString(ThemeManager.SkinLayer.Vehicle.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, skin) }
 
         mapInteractionManager.addOnMapClickListener(this)
     }
