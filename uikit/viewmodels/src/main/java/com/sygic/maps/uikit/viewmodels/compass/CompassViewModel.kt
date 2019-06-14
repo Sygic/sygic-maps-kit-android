@@ -62,7 +62,7 @@ open class CompassViewModel internal constructor(
         cameraModel.removePositionChangedListener(this)
     }
 
-    fun onClick() {
+    open fun onClick() {
         cameraModel.setRotation(NORTH_UP, DEFAULT_ANIMATION)
     }
 

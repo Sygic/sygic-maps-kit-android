@@ -62,7 +62,7 @@ open class SearchResultListAdapter<P : Parcelable> : ResultListAdapter<P, Result
         private val searchItemSubtitle: TextView = itemView.searchItemSubtitle
 
         init {
-            itemView.setOnClickListener { clickListener?.onSearchResultItemClick(items[adapterPosition]) }
+            itemView.setOnClickListener { v -> clickListener?.onSearchResultItemClick(v, items[adapterPosition]) }
         }
 
         override fun update(searchResultItem: SearchResultItem<out P>) {
