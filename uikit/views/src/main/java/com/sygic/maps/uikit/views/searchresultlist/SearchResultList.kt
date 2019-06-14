@@ -29,8 +29,6 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import androidx.databinding.BindingMethod
-import androidx.databinding.BindingMethods
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,9 +44,6 @@ import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
  *
  * TODO: MS-5681
  */
-@BindingMethods(
-    BindingMethod(type = SearchResultList::class, attribute = "onScrollListener", method = "addOnScrollListener")
-)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultList @JvmOverloads constructor(
     context: Context,
@@ -89,6 +84,19 @@ open class SearchResultList @JvmOverloads constructor(
      */
     fun addOnScrollListener(listener: RecyclerView.OnScrollListener) {
         binding.searchResultListRecyclerView.addOnScrollListener(listener)
+    }
+
+    /**
+     * Remove a listener observing changes.
+     *
+     * Components that add a listener should take care to remove it when finished.
+     * Other components that take ownership of a view may call [clearOnScrollListeners]
+     * to remove all attached listeners.
+     *
+     * @param listener listener to remove
+     */
+    fun removeOnScrollListener(listener: RecyclerView.OnScrollListener) {
+        binding.searchResultListRecyclerView.removeOnScrollListener(listener)
     }
 
     /**
