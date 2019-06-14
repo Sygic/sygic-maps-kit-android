@@ -105,11 +105,11 @@ open class SearchToolbar @JvmOverloads constructor(
         binding.searchToolbarInputEditText.requestFocus()
 
     override fun setOnFocusChangeListener(listener: OnFocusChangeListener) {
-        binding.inputEditText.onFocusChangeListener = listener
+        binding.searchToolbarInputEditText.onFocusChangeListener = listener
     }
 
     override fun getOnFocusChangeListener(): OnFocusChangeListener {
-        return binding.inputEditText.onFocusChangeListener
+        return binding.searchToolbarInputEditText.onFocusChangeListener
     }
 
     /**
