@@ -40,14 +40,12 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Search#search---from-browse-map"
 
-    private lateinit var viewModel: SearchFromBrowseMapActivityViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_search_from_browse_map)
 
-        viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapActivityViewModel::class.java).apply {
+        val viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapActivityViewModel::class.java).apply {
             this.showToastObservable.observe(
                 this@SearchFromBrowseMapActivity,
                 Observer<String> { longToast(it) })

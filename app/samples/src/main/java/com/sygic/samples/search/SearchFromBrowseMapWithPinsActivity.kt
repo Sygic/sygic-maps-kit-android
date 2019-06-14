@@ -41,30 +41,29 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Search#search---from-browse-map-with-pins"
 
-    private lateinit var viewModel: SearchFromBrowseMapWitchPinsActivityViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_search_from_browse_map_pins)
 
-        viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapWitchPinsActivityViewModel::class.java).apply {
-            this.addMapMarkerObservable.observe(
-                this@SearchFromBrowseMapWithPinsActivity,
-                Observer<MapMarker> { addMapMarker(it) })
-            this.removeAllMapMarkersObservable.observe(
-                this@SearchFromBrowseMapWithPinsActivity,
-                Observer<Any> { removeAllMapMarkers() })
-            this.setCameraPositionObservable.observe(
-                this@SearchFromBrowseMapWithPinsActivity,
-                Observer<GeoCoordinates> { setCameraPosition(it) })
-            this.setCameraRectangleObservable.observe(
-                this@SearchFromBrowseMapWithPinsActivity,
-                Observer<MapRectangle> { setCameraRectangle(it) })
-            this.setCameraZoomLevelObservable.observe(
-                this@SearchFromBrowseMapWithPinsActivity,
-                Observer<Float> { setCameraZoomLevel(it) })
-        }
+        val viewModel =
+            ViewModelProviders.of(this).get(SearchFromBrowseMapWitchPinsActivityViewModel::class.java).apply {
+                this.addMapMarkerObservable.observe(
+                    this@SearchFromBrowseMapWithPinsActivity,
+                    Observer<MapMarker> { addMapMarker(it) })
+                this.removeAllMapMarkersObservable.observe(
+                    this@SearchFromBrowseMapWithPinsActivity,
+                    Observer<Any> { removeAllMapMarkers() })
+                this.setCameraPositionObservable.observe(
+                    this@SearchFromBrowseMapWithPinsActivity,
+                    Observer<GeoCoordinates> { setCameraPosition(it) })
+                this.setCameraRectangleObservable.observe(
+                    this@SearchFromBrowseMapWithPinsActivity,
+                    Observer<MapRectangle> { setCameraRectangle(it) })
+                this.setCameraZoomLevelObservable.observe(
+                    this@SearchFromBrowseMapWithPinsActivity,
+                    Observer<Float> { setCameraZoomLevel(it) })
+            }
 
         if (savedInstanceState == null) {
             setFragmentModuleConnection(placeBrowseMapFragment(2F), viewModel)
