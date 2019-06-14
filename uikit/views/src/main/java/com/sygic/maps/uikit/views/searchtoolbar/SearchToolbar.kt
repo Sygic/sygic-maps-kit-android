@@ -119,20 +119,6 @@ open class SearchToolbar @JvmOverloads constructor(
     }
 
     /**
-     * Called when this view wants to give up focus. If focus is cleared
-     * [View.OnFocusChangeListener] is called.
-     *
-     * Note: When not in touch-mode, the framework will try to give focus
-     * to the first focusable View from the top after focus is cleared. Hence, if this
-     * View is the first from the top that can take focus, then all callbacks
-     * related to clearing focus will be invoked after which the framework will
-     * give focus to this view.
-     */
-    fun clearInputEditTextFocus() {
-        binding.inputEditText.clearFocus()
-    }
-
-    /**
      * Set the visibility state of the IconStateSwitcher view.
      *
      * @param visibility One of VISIBLE, INVISIBLE, or GONE.
