@@ -1,18 +1,14 @@
 /*
  * Copyright (c) 2019 Sygic a.s. All rights reserved.
- *
  * This project is licensed under the MIT License.
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,36 +18,44 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.searchresultlist.adapter
+package com.sygic.maps.uikit.views.searchresultlist
 
-import android.os.Parcelable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.LayoutRes
+import androidx.databinding.BindingAdapter
+import androidx.databinding.adapters.ListenerUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 
-abstract class ResultListAdapter<P : Parcelable, T : ResultListAdapter.ItemViewHolder<P>> : RecyclerView.Adapter<T>() {
 
-    var clickListener: ClickListener<P>? = null
-    internal var itemLayoutId = R.layout.layout_search_item_result_internal
+@BindingAdapter(
+    value = ["android:onScroll", "android:onScrollStateChanged"], requireAll = false
+)
+fun setOnScroll(view: SearchResultList, scrollListener: OnScrolled?, scrollStateListener: OnScrollStateChanged?) {
 
-    interface ClickListener<P : Parcelable> {
-        fun onSearchResultItemClick(view: View, searchResultItem: SearchResultItem<out P>)
+    val listener =
+        if (scrollListener == null && scrollStateListener == null) null else object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                scrollListener?.onScrolled(recyclerView, dx, dy)
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                scrollStateListener?.onScrollStateChanged(recyclerView, newState)
+            }
+        }
+
+    ListenerUtil.trackListener(view, listener, R.id.searchResultListScrollListener)?.let {
+        view.removeOnScrollListener(it)
     }
 
-    abstract fun onCreateViewHolder(
-        parent: ViewGroup,
-        inflater: LayoutInflater, @LayoutRes layoutId: Int,
-        viewType: Int
-    ): T
-
-    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T =
-        onCreateViewHolder(parent, LayoutInflater.from(parent.context), itemLayoutId, viewType)
-
-    abstract class ItemViewHolder<P : Parcelable>(view: View) : RecyclerView.ViewHolder(view) {
-        open fun update(searchResultItem: SearchResultItem<out P>) {}
+    listener?.let {
+        view.addOnScrollListener(it)
     }
+
+}
+
+interface OnScrolled {
+    fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int)
+}
+
+interface OnScrollStateChanged {
+    fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int)
 }
