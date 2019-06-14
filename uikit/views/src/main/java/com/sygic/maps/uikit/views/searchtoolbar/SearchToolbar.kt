@@ -76,14 +76,6 @@ open class SearchToolbar @JvmOverloads constructor(
         descendantFocusability = FOCUS_AFTER_DESCENDANTS
     }
 
-    override fun setOnFocusChangeListener(listener: OnFocusChangeListener) {
-        binding.inputEditText.onFocusChangeListener = listener
-    }
-
-    override fun getOnFocusChangeListener(): OnFocusChangeListener {
-        return binding.inputEditText.onFocusChangeListener
-    }
-
     private fun setTextInternal(text: CharSequence) {
         binding.inputEditText.setText(text)
         binding.inputEditText.setSelection(text.length)
@@ -91,6 +83,14 @@ open class SearchToolbar @JvmOverloads constructor(
 
     override fun onRequestFocusInDescendants(direction: Int, previouslyFocusedRect: Rect?): Boolean =
         binding.inputEditText.requestFocus()
+
+    override fun setOnFocusChangeListener(listener: OnFocusChangeListener) {
+        binding.inputEditText.onFocusChangeListener = listener
+    }
+
+    override fun getOnFocusChangeListener(): OnFocusChangeListener {
+        return binding.inputEditText.onFocusChangeListener
+    }
 
     /**
      * Set the focused state of the [SearchToolbar] view. Internally is called [requestFocus]

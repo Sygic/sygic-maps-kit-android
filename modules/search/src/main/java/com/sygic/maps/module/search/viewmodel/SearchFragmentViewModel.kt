@@ -28,7 +28,6 @@ import android.app.Application
 import android.widget.TextView
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
-import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -45,13 +44,10 @@ class SearchFragmentViewModel internal constructor(
     app: Application
 ) : AndroidViewModel(app), DefaultLifecycleObserver {
 
-    private var searchResultCallback: SearchResultCallback? = null
-
     val onFinishObservable: LiveData<Any> = SingleLiveEvent()
 
+    private var searchResultCallback: SearchResultCallback? = null
     private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
-
-    private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
 
     override fun onCreate(owner: LifecycleOwner) {
         if (owner is SearchResultCallbackWrapper) {
@@ -71,15 +67,6 @@ class SearchFragmentViewModel internal constructor(
     fun onActionSearchClick(view: TextView) {
         view.hideKeyboard()
         invokeCallbackAndFinish(currentSearchResults)
-    }
-
-    fun onResultListScrollStateChanged(view: RecyclerView, scrollState: Int) {
-        if (lastScrollState != scrollState && scrollState != RecyclerView.SCROLL_STATE_IDLE) {
-            view.hideKeyboard()
-        }
-
-        view.requestFocus()
-        lastScrollState = scrollState
     }
 
     private fun invokeCallbackAndFinish(searchResultList: List<SearchResultItem<out SearchResult>>) {

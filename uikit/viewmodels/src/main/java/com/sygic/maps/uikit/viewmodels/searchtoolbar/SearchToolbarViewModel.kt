@@ -63,6 +63,9 @@ open class SearchToolbarViewModel internal constructor(
     private val searchManager: SearchManager
 ) : ViewModel(), DefaultLifecycleObserver {
 
+    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
+    val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
+
     val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
     val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>() {
         override fun setValue(value: CharSequence) {
@@ -87,9 +90,6 @@ open class SearchToolbarViewModel internal constructor(
 
     private var searchCoroutineJob: Job? = null
     private var lastSearchedString: String = EMPTY_STRING
-
-    val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
-    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         with(arguments) {
@@ -123,16 +123,16 @@ open class SearchToolbarViewModel internal constructor(
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
     }
 
-    fun retrySearch() {
+    open fun retrySearch() {
         search(lastSearchedString)
     }
 
-    fun onClearButtonClick() {
+    open fun onClearButtonClick() {
         cancelSearch()
         inputText.value = EMPTY_STRING
     }
 
-    fun onEditorActionEvent(view: TextView, actionId: Int): Boolean {
+    open fun onEditorActionEvent(view: TextView, actionId: Int): Boolean {
         return when (actionId) {
             EditorInfo.IME_ACTION_SEARCH -> {
                 onActionSearchClickObservable.asSingleEvent().value = view
@@ -142,7 +142,7 @@ open class SearchToolbarViewModel internal constructor(
         }
     }
 
-    fun onFocusChanged(view: View, hasFocus: Boolean) {
+    open fun onFocusChanged(view: View, hasFocus: Boolean) {
         searchToolbarFocused.value = hasFocus
         if (hasFocus) view.showKeyboard()
     }

@@ -29,6 +29,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
@@ -53,13 +54,15 @@ open class SearchResultListViewModel internal constructor(
     private val searchManager: SearchManager
 ) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener<SearchResult> {
 
-    private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
-    private val resultListAdapter = SearchResultListAdapter<SearchResult>()
-
     val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
     val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<out SearchResult>>> = SingleLiveEvent()
 
     val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> = MutableLiveData()
+
+    private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
+    private val resultListAdapter = SearchResultListAdapter<SearchResult>()
+
+    private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
 
     private val searchResultsListener = Search.SearchResultsListener { input, _, results ->
         results.toSearchResultList().let {
@@ -75,6 +78,15 @@ open class SearchResultListViewModel internal constructor(
         activeAdapter.value = defaultStateAdapter
 
         searchManager.addSearchResultsListener(searchResultsListener)
+    }
+
+    open fun onResultListScrollStateChanged(view: RecyclerView, scrollState: Int) {
+        if (lastScrollState != scrollState && scrollState != RecyclerView.SCROLL_STATE_IDLE) {
+            view.hideKeyboard()
+        }
+
+        view.requestFocus()
+        lastScrollState = scrollState
     }
 
     override fun onSearchResultItemClick(view: View, searchResultItem: SearchResultItem<out SearchResult>) {
