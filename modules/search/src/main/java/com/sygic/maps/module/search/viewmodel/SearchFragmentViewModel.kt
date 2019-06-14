@@ -25,13 +25,10 @@
 package com.sygic.maps.module.search.viewmodel
 
 import android.app.Application
+import android.widget.TextView
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
-import androidx.lifecycle.Observer
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -48,10 +45,9 @@ class SearchFragmentViewModel internal constructor(
     app: Application
 ) : AndroidViewModel(app), DefaultLifecycleObserver {
 
-    var searchResultCallback: SearchResultCallback? = null
+    private var searchResultCallback: SearchResultCallback? = null
 
-    val hideKeyboardObservable: LiveData<Any> = SingleLiveEvent()
-    val popBackStackObservable: LiveData<Any> = SingleLiveEvent()
+    val onFinishObservable: LiveData<Any> = SingleLiveEvent()
 
     private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
 
@@ -72,11 +68,14 @@ class SearchFragmentViewModel internal constructor(
     fun onSearchResultItemClick(searchResultItem: SearchResultItem<out SearchResult>) =
         invokeCallbackAndFinish(listOf(searchResultItem))
 
-    fun onActionSearchClick() = invokeCallbackAndFinish(currentSearchResults)
+    fun onActionSearchClick(view: TextView) {
+        view.hideKeyboard()
+        invokeCallbackAndFinish(currentSearchResults)
+    }
 
     fun onResultListScrollStateChanged(view: RecyclerView, scrollState: Int) {
         if (lastScrollState != scrollState && scrollState != RecyclerView.SCROLL_STATE_IDLE) {
-            view.context.hideKeyboard(view)
+            view.hideKeyboard()
         }
 
         view.requestFocus()
@@ -85,14 +84,12 @@ class SearchFragmentViewModel internal constructor(
 
     private fun invokeCallbackAndFinish(searchResultList: List<SearchResultItem<out SearchResult>>) {
         searchResultCallback?.onSearchResult(searchResultList.toSdkSearchResultList())
-        hideKeyboardObservable.asSingleEvent().call()
-        popBackStackObservable.asSingleEvent().call()
+        onFinishObservable.asSingleEvent().call()
     }
 
     override fun onCleared() {
         super.onCleared()
 
         searchResultCallback = null
-        hideKeyboardObservable.asSingleEvent().call()
     }
 }

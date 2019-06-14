@@ -62,7 +62,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:onClearButtonClickListener="@{() -> searchToolbarViewModel.onClearButtonClick()}"
-            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(actionId)}"
+            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(v, actionId)}"
             android:onFocusChange="@{searchToolbarViewModel::onFocusChanged}" />
 
         <com.sygic.maps.uikit.views.searchresultlist.SearchResultList

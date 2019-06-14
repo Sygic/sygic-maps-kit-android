@@ -39,7 +39,7 @@ abstract class ResultListAdapter<P : Parcelable, T : ResultListAdapter.ItemViewH
     internal var itemLayoutId = R.layout.layout_search_item_result_internal
 
     interface ClickListener<P : Parcelable> {
-        fun onSearchResultItemClick(searchResultItem: SearchResultItem<out P>)
+        fun onSearchResultItemClick(view: View, searchResultItem: SearchResultItem<out P>)
     }
 
     abstract fun onCreateViewHolder(

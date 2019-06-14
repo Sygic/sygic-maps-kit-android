@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.searchresultlist
 
+import android.view.View
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,6 +33,7 @@ import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
 import com.sygic.maps.uikit.views.searchresultlist.adapter.DefaultStateAdapter
@@ -75,7 +77,8 @@ open class SearchResultListViewModel internal constructor(
         searchManager.addSearchResultsListener(searchResultsListener)
     }
 
-    override fun onSearchResultItemClick(searchResultItem: SearchResultItem<out SearchResult>) {
+    override fun onSearchResultItemClick(view: View, searchResultItem: SearchResultItem<out SearchResult>) {
+        view.hideKeyboard()
         onSearchResultItemClickObservable.asSingleEvent().value = searchResultItem
     }
 

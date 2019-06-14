@@ -30,6 +30,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -169,10 +170,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
             this,
             viewModelFactory
         )[SearchFragmentViewModel::class.java].apply {
-            this.hideKeyboardObservable.observe(
-                this@SearchFragment,
-                Observer<Any> { hideKeyboard() })
-            this.popBackStackObservable.observe(
+            this.onFinishObservable.observe(
                 this@SearchFragment,
                 Observer<Any> { fragmentManager?.popBackStack() })
         }
@@ -182,7 +180,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
         )[SearchToolbarViewModel::class.java].apply {
             this.onActionSearchClickObservable.observe(
                 this@SearchFragment,
-                Observer<Any> { fragmentViewModel.onActionSearchClick() })
+                Observer<TextView> { view -> fragmentViewModel.onActionSearchClick(view) })
         }
         searchResultListViewModel = ViewModelProviders.of(
             this,
