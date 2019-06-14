@@ -24,4 +24,5 @@
 
 <resources>
     <item name="internalFragmentContainer" type="id"/>
+    <item name="searchResultListScrollListener" type="id"/>
 </resources>

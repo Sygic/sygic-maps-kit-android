@@ -32,8 +32,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.databinding.BindingMethod
-import androidx.databinding.BindingMethods
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,9 +53,6 @@ import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapt
  * ([TextView]) identifiers. Or you can extend the [SearchResultListAdapter] and provide your custom [ResultListAdapter] with your
  * custom ViewHolder logic (see [setAdapter] method and [SearchResultListAdapter] implementation).
  */
-@BindingMethods(
-    BindingMethod(type = SearchResultList::class, attribute = "onScrollListener", method = "addOnScrollListener")
-)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultList @JvmOverloads constructor(
     context: Context,
@@ -118,6 +113,19 @@ open class SearchResultList @JvmOverloads constructor(
      */
     fun addOnScrollListener(listener: RecyclerView.OnScrollListener) {
         binding.searchResultListRecyclerView.addOnScrollListener(listener)
+    }
+
+    /**
+     * Remove a listener observing changes.
+     *
+     * Components that add a listener should take care to remove it when finished.
+     * Other components that take ownership of a view may call [clearOnScrollListeners]
+     * to remove all attached listeners.
+     *
+     * @param listener listener to remove
+     */
+    fun removeOnScrollListener(listener: RecyclerView.OnScrollListener) {
+        binding.searchResultListRecyclerView.removeOnScrollListener(listener)
     }
 
     /**
