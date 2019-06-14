@@ -24,58 +24,58 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-            name="searchFragmentViewModel"
-            type="com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel" />
+                name="searchFragmentViewModel"
+                type="com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel"/>
 
         <variable
-            name="searchToolbarViewModel"
-            type="com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel" />
+                name="searchToolbarViewModel"
+                type="com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel"/>
 
         <variable
-            name="searchResultListViewModel"
-            type="com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel" />
+                name="searchResultListViewModel"
+                type="com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel"/>
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:attr/colorBackground"
-        android:clickable="true"
-        android:clipChildren="false"
-        android:focusable="true">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/colorBackground"
+            android:clickable="true"
+            android:clipChildren="false"
+            android:focusable="true">
 
         <com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
-            android:id="@+id/searchToolbar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="@={searchToolbarViewModel.inputText}"
-            app:focused="@{safeUnbox(searchToolbarViewModel.searchToolbarFocused)}"
-            app:iconStateSwitcherIndex="@{safeUnbox(searchToolbarViewModel.iconStateSwitcherIndex)}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:onClearButtonClickListener="@{() -> searchToolbarViewModel.onClearButtonClick()}"
-            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(v, actionId)}"
-            android:onFocusChange="@{searchToolbarViewModel::onFocusChanged}" />
+                android:id="@+id/searchToolbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@={searchToolbarViewModel.inputText}"
+                android:onFocusChange="@{searchToolbarViewModel::onFocusChanged}"
+                app:focused="@{safeUnbox(searchToolbarViewModel.searchToolbarFocused)}"
+                app:iconStateSwitcherIndex="@{safeUnbox(searchToolbarViewModel.iconStateSwitcherIndex)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:onClearButtonClickListener="@{() -> searchToolbarViewModel.onClearButtonClick()}"
+                app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(v, actionId)}"/>
 
         <com.sygic.maps.uikit.views.searchresultlist.SearchResultList
-            android:id="@+id/searchResultList"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            app:adapter="@{searchResultListViewModel.activeAdapter}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchToolbar"
-            android:onScrollStateChanged="@{searchFragmentViewModel::onResultListScrollStateChanged}" />
+                android:id="@+id/searchResultList"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                app:adapter="@{searchResultListViewModel.activeAdapter}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchToolbar"
+                android:onScrollStateChanged="@{searchFragmentViewModel::onResultListScrollStateChanged}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
