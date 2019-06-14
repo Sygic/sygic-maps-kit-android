@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.searchtoolbar
 
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -36,6 +37,7 @@ import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.SearchToolbarInitComponent
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
@@ -136,6 +138,11 @@ open class SearchToolbarViewModel internal constructor(
             }
             else -> false
         }
+    }
+
+    fun onFocusChanged(view: View, hasFocus: Boolean) {
+        searchToolbarFocused.value = hasFocus
+        if (hasFocus) view.context.showKeyboard(view)
     }
 
     override fun onCleared() {

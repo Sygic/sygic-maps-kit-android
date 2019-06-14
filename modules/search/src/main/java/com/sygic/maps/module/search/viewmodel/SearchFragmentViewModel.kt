@@ -29,12 +29,14 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.component.SearchFragmentInitComponent
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSdkSearchResultList
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.search.SearchResult
@@ -53,6 +55,8 @@ class SearchFragmentViewModel internal constructor(
 
     private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
 
+    private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
+
     init {
         with(initComponent) {
             this@SearchFragmentViewModel.searchResultCallback = searchResultCallback
@@ -68,6 +72,15 @@ class SearchFragmentViewModel internal constructor(
         invokeCallbackAndFinish(listOf(searchResultItem))
 
     fun onActionSearchClick() = invokeCallbackAndFinish(currentSearchResults)
+
+    fun onResultListScrollStateChanged(view: RecyclerView, scrollState: Int) {
+        if (lastScrollState != scrollState && scrollState != RecyclerView.SCROLL_STATE_IDLE) {
+            view.context.hideKeyboard(view)
+        }
+
+        view.requestFocus()
+        lastScrollState = scrollState
+    }
 
     private fun invokeCallbackAndFinish(searchResultList: List<SearchResultItem<out SearchResult>>) {
         searchResultCallback?.onSearchResult(searchResultList.toSdkSearchResultList())

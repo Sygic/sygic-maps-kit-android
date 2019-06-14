@@ -62,7 +62,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:onClearButtonClickListener="@{() -> searchToolbarViewModel.onClearButtonClick()}"
-            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(actionId)}" />
+            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(actionId)}"
+            android:onFocusChange="@{searchToolbarViewModel::onFocusChanged}" />
 
         <com.sygic.maps.uikit.views.searchresultlist.SearchResultList
             android:id="@+id/searchResultList"
@@ -74,7 +75,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchToolbar"
-            app:onScrollListener="@{searchResultListViewModel.onScrollListener}" />
+            android:onScrollStateChanged="@{searchFragmentViewModel::onResultListScrollStateChanged}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
