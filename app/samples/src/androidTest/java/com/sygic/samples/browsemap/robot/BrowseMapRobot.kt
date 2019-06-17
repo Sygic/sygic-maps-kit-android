@@ -27,46 +27,27 @@ package com.sygic.samples.browsemap.robot
 import android.graphics.Point
 import android.view.InputDevice
 import android.view.MotionEvent
-import androidx.annotation.IdRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.*
 import androidx.test.espresso.action.ViewActions.actionWithAssertions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.sdk.map.MapFragment
-import com.sygic.sdk.map.`object`.MapMarker
-import org.hamcrest.core.AllOf.allOf
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.base.BaseRobot
 import com.sygic.samples.base.idling.PoiDetailVisibilityIdlingResource
-import org.hamcrest.Matchers.not
+import com.sygic.sdk.map.MapFragment
+import com.sygic.sdk.map.`object`.MapMarker
 
 fun browseMap(commonSampleActivity: CommonSampleActivity, func: BrowseMapRobot.() -> Unit) =
-    BrowseMapRobot(commonSampleActivity).apply { func() }
+        BrowseMapRobot(commonSampleActivity).apply { func() }
 
 @Suppress("MemberVisibilityCanBePrivate")
-class BrowseMapRobot(private val activity: CommonSampleActivity) {
-
-    init {
-        onView(withId(R.id.browseMapFragment)).check(matches(isDisplayed()))
-    }
-
-    fun isViewDisplayed(@IdRes viewId: Int) {
-        onView(allOf(withId(viewId), withParent(withId(R.id.browseMapFragment)))).check(matches(isDisplayed()))
-    }
-
-    fun isViewNotDisplayed(@IdRes viewId: Int) {
-        onView(allOf(withId(viewId), withParent(withId(R.id.browseMapFragment)))).check(matches(not(isDisplayed())))
-    }
-
-    fun clickOnView(@IdRes viewId: Int) {
-        onView(withId(viewId)).perform(ViewActions.click())
-    }
+class BrowseMapRobot(private val activity: CommonSampleActivity) : BaseRobot(activity, R.id.browseMapFragment) {
 
     fun clickOnMapToLocation(generalLocation: GeneralLocation) {
         onView(withId(R.id.browseMapFragment)).perform(
@@ -127,11 +108,6 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) {
 
             IdlingRegistry.getInstance().unregister(it)
         }
-    }
-
-    fun isToastVisible() {
-        onView(withId(android.R.id.message)).inRoot(withDecorView(not(activity.window.decorView)))
-            .check(matches(isDisplayed()))
     }
 
     private fun getScreenPointFromMapMarker(mapMarker: MapMarker): Point? {

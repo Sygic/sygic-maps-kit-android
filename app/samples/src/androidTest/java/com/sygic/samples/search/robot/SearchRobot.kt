@@ -22,35 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.base
+package com.sygic.samples.search.robot
 
-import android.Manifest
-import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.IdlingResource
-import androidx.test.rule.GrantPermissionRule
+import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.base.idling.MapReadyIdlingResource
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
+import com.sygic.samples.base.BaseRobot
 
-abstract class BaseMapTest(activityClass: Class<out CommonSampleActivity>) : BaseTest(activityClass) {
+fun search(commonSampleActivity: CommonSampleActivity, func: SearchRobot.() -> Unit) =
+        SearchRobot(commonSampleActivity).apply { func() }
 
-    @get:Rule
-    val grantLocationPermissionRule: GrantPermissionRule =
-            GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+@Suppress("MemberVisibilityCanBePrivate")
+class SearchRobot(private val activity: CommonSampleActivity) : BaseRobot(activity, R.id.searchFragment) {
 
-    private lateinit var mapReadyIdlingResource: IdlingResource
-
-    @Before
-    fun registerIdlingResource() {
-        mapReadyIdlingResource = MapReadyIdlingResource(activity)
-
-        IdlingRegistry.getInstance().register(mapReadyIdlingResource)
-    }
-
-    @After
-    fun unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(mapReadyIdlingResource)
-    }
 }

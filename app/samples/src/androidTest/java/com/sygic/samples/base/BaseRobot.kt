@@ -24,33 +24,37 @@
 
 package com.sygic.samples.base
 
-import android.Manifest
-import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.IdlingResource
-import androidx.test.rule.GrantPermissionRule
+import androidx.annotation.IdRes
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.base.idling.MapReadyIdlingResource
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
+import org.hamcrest.Matchers.not
+import org.hamcrest.core.AllOf.allOf
 
-abstract class BaseMapTest(activityClass: Class<out CommonSampleActivity>) : BaseTest(activityClass) {
+@Suppress("MemberVisibilityCanBePrivate")
+abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes private val parentViewId: Int) {
 
-    @get:Rule
-    val grantLocationPermissionRule: GrantPermissionRule =
-            GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-
-    private lateinit var mapReadyIdlingResource: IdlingResource
-
-    @Before
-    fun registerIdlingResource() {
-        mapReadyIdlingResource = MapReadyIdlingResource(activity)
-
-        IdlingRegistry.getInstance().register(mapReadyIdlingResource)
+    init {
+        onView(withId(parentViewId)).check(matches(isDisplayed()))
     }
 
-    @After
-    fun unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(mapReadyIdlingResource)
+    fun isViewDisplayed(@IdRes viewId: Int) {
+        onView(allOf(withId(viewId), withParent(withId(parentViewId)))).check(matches(isDisplayed()))
+    }
+
+    fun isViewNotDisplayed(@IdRes viewId: Int) {
+        onView(allOf(withId(viewId), withParent(withId(parentViewId)))).check(matches(not(isDisplayed())))
+    }
+
+    fun clickOnView(@IdRes viewId: Int) {
+        onView(withId(viewId)).perform(ViewActions.click())
+    }
+
+    fun isToastVisible() {
+        onView(withId(android.R.id.message)).inRoot(withDecorView(not(activity.window.decorView)))
+                .check(matches(isDisplayed()))
     }
 }
