@@ -29,44 +29,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.search.SearchFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.sdk.search.MapSearchResult
-import com.sygic.sdk.search.Search
 import com.sygic.sdk.search.SearchResult
-import com.sygic.sdk.search.detail.*
 
 class SearchFromBrowseMapActivityViewModel : ViewModel(), ModuleConnectionProvider {
 
     val showToastObservable: LiveData<String> = SingleLiveEvent()
 
     private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
-        searchResultList.forEach { searchResult ->
-            when (searchResult) {
-                is MapSearchResult -> {
-                    searchResult.loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
-                        if (state == SearchResult.ResultState.Success) {
-                            when (mapSearchDetail) {
-                                is DetailStreet -> showToast("[DetailStreet] $mapSearchDetail")
-                                is DetailCountry -> showToast("[DetailCountry] $mapSearchDetail")
-                                is DetailAddressPoint -> showToast("[DetailAddressPoint] $mapSearchDetail")
-                                is DetailPostalAddress -> showToast("[DetailPostalAddress] $mapSearchDetail")
-                                is DetailPostal -> showToast("[DetailPostal] CityNames: ${mapSearchDetail.cityNames}")
-                                is DetailCity -> showToast("[DetailCity] Is capital: ${mapSearchDetail.isCapital}, Population: ${mapSearchDetail.population}")
-                                is DetailPoiCategoryGroup -> showToast("[DetailPoiCategoryGroup] PoiList: ${mapSearchDetail.poiList}")
-                                is DetailPoiCategory -> showToast("[DetailPoiCategory] PoiList: ${mapSearchDetail.poiList}")
-                                is DetailPoi -> showToast("[DetailPoi] Name: ${mapSearchDetail.name}, Category: ${mapSearchDetail.categoryId}, Group: ${mapSearchDetail.groupId}")
-                                else -> showToast(mapSearchDetail.toString())
-                            }
-                        } else {
-                            showToast("Something went wrong :( (error: $state)")
-                        }
-                    })
-                }
-                else -> showToast("[SearchResult] $searchResult")
-            }
-        }
+        showToastObservable.asSingleEvent().value = searchResultList.joinToString()
     }
 
     override val fragment: Fragment
@@ -75,8 +47,4 @@ class SearchFromBrowseMapActivityViewModel : ViewModel(), ModuleConnectionProvid
             searchFragment.setResultCallback(callback)
             return searchFragment
         }
-
-    private fun showToast(string: String) {
-        showToastObservable.asSingleEvent().value = string
-    }
 }
