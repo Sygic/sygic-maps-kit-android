@@ -25,6 +25,7 @@
 package com.sygic.samples.base
 
 import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -34,11 +35,15 @@ import com.sygic.samples.app.activities.CommonSampleActivity
 import org.hamcrest.Matchers.not
 import org.hamcrest.core.AllOf.allOf
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes private val parentViewId: Int) {
 
     init {
         onView(withId(parentViewId)).check(matches(isDisplayed()))
+    }
+
+    fun clickOnView(@IdRes viewId: Int) {
+        onView(withId(viewId)).perform(ViewActions.click())
     }
 
     fun isViewDisplayed(@IdRes viewId: Int) {
@@ -49,12 +54,16 @@ abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes priv
         onView(allOf(withId(viewId), withParent(withId(parentViewId)))).check(matches(not(isDisplayed())))
     }
 
-    fun clickOnView(@IdRes viewId: Int) {
-        onView(withId(viewId)).perform(ViewActions.click())
-    }
-
     fun isToastVisible() {
         onView(withId(android.R.id.message)).inRoot(withDecorView(not(activity.window.decorView)))
                 .check(matches(isDisplayed()))
+    }
+
+    fun viewContainsText(@IdRes viewId: Int, @StringRes text: Int) {
+        viewContainsText(viewId, activity.getString(text))
+    }
+
+    fun viewContainsText(@IdRes viewId: Int, text: String) {
+        onView(withId(viewId)).check(matches(withText(text)))
     }
 }

@@ -60,7 +60,7 @@ class SearchFragmentViewModelTest {
 
     @Test
     fun onCreateTest() {
-        val searchResultCallbackProvider: LiveData<SearchResultCallback> = mock()
+        val searchResultCallbackProvider = mock<LiveData<SearchResultCallback>>()
         val lifecycleOwnerMock = mock<LifecycleOwner>(extraInterfaces = arrayOf(SearchResultCallbackWrapper::class))
         whenever((lifecycleOwnerMock as SearchResultCallbackWrapper).searchResultCallbackProvider).thenReturn(
             searchResultCallbackProvider

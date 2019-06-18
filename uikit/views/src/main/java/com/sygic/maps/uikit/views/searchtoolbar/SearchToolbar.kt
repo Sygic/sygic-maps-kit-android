@@ -63,9 +63,9 @@ open class SearchToolbar @JvmOverloads constructor(
      * @return current text from the input [EditText].
      */
     var text: CharSequence
-        get() = binding.inputEditText.text?.toString() ?: EMPTY_STRING
+        get() = binding.searchToolbarInputEditText.text?.toString() ?: EMPTY_STRING
         set(value) {
-            binding.inputEditText.text?.let { editable ->
+            binding.searchToolbarInputEditText.text?.let { editable ->
                 if (editable.toString() != value) setTextInternal(value)
             } ?: run {
                 setTextInternal(value)
@@ -77,19 +77,19 @@ open class SearchToolbar @JvmOverloads constructor(
     }
 
     private fun setTextInternal(text: CharSequence) {
-        binding.inputEditText.setText(text)
-        binding.inputEditText.setSelection(text.length)
+        binding.searchToolbarInputEditText.setText(text)
+        binding.searchToolbarInputEditText.setSelection(text.length)
     }
 
     override fun onRequestFocusInDescendants(direction: Int, previouslyFocusedRect: Rect?): Boolean =
-        binding.inputEditText.requestFocus()
+        binding.searchToolbarInputEditText.requestFocus()
 
     override fun setOnFocusChangeListener(listener: OnFocusChangeListener) {
-        binding.inputEditText.onFocusChangeListener = listener
+        binding.searchToolbarInputEditText.onFocusChangeListener = listener
     }
 
     override fun getOnFocusChangeListener(): OnFocusChangeListener {
-        return binding.inputEditText.onFocusChangeListener
+        return binding.searchToolbarInputEditText.onFocusChangeListener
     }
 
     /**
@@ -115,7 +115,7 @@ open class SearchToolbar @JvmOverloads constructor(
      * modifier will, however, allow the user to insert a newline character.
      */
     fun setOnEditorActionListener(listener: TextView.OnEditorActionListener) {
-        binding.inputEditText.setOnEditorActionListener(listener)
+        binding.searchToolbarInputEditText.setOnEditorActionListener(listener)
     }
 
     /**
@@ -142,7 +142,7 @@ open class SearchToolbar @JvmOverloads constructor(
      * @param visibility One of VISIBLE, INVISIBLE, or GONE.
      */
     fun setClearButtonVisibility(visibility: Int) {
-        binding.clearButton.visibility = visibility
+        binding.searchToolbarClearButton.visibility = visibility
     }
 
     /**
@@ -151,6 +151,6 @@ open class SearchToolbar @JvmOverloads constructor(
      * @param listener [View.OnClickListener] callback to invoke on ClearButton view click.
      */
     fun setOnClearButtonClickListener(listener: OnClickListener) {
-        binding.clearButton.setOnClickListener(listener)
+        binding.searchToolbarClearButton.setOnClickListener(listener)
     }
 }
