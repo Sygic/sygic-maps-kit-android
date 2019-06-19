@@ -39,7 +39,7 @@
             app:emptyView="@id/searchResultListEmptyView"
             tools:listitem="@layout/layout_search_item_result_internal" />
 
-        <com.sygic.maps.uikit.views.common.AdvanceInfoView
+        <com.sygic.maps.uikit.views.common.AdvancedInfoView
             android:id="@+id/searchResultListEmptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
