@@ -22,10 +22,32 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.base
+package com.sygic.samples.search
 
-import com.sygic.samples.app.activities.CommonSampleActivity
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sygic.samples.R
+import com.sygic.samples.base.BaseTest
+import com.sygic.samples.search.robot.search
+import org.junit.Test
+import org.junit.runner.RunWith
 
-abstract class BaseSearchTest(activityClass: Class<out CommonSampleActivity>) : BaseTest(activityClass) {
+@RunWith(AndroidJUnit4::class)
+class SearchFromBrowseMapEspressoTest : BaseTest(SearchFromBrowseMapActivity::class.java) {
 
+    @Test
+    fun searchWithCallback() {
+        search(activity) {
+            clickOnView(R.id.searchFab)
+
+            isViewDisplayed(R.id.searchToolbar)
+            isViewDisplayed(R.id.searchResultList)
+
+            enterText( "London Eye")
+            containsSearchResultListItemWithText("Coca‑Cola London Eye")
+
+            clickOnFirstRecyclerViewItem()
+
+            //todo: continue here
+        }
+    }
 }

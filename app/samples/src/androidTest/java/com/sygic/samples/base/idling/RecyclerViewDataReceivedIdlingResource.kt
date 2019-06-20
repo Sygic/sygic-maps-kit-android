@@ -22,30 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.search
+package com.sygic.samples.base.idling
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sygic.samples.R
-import com.sygic.samples.base.BaseTest
-import com.sygic.samples.search.robot.search
-import org.junit.Test
-import org.junit.runner.RunWith
+import androidx.annotation.IdRes
+import androidx.recyclerview.widget.RecyclerView
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-@RunWith(AndroidJUnit4::class)
-class SearchPreFilledInputEspressoTest : BaseTest(SearchPreFilledInputActivity::class.java) {
+open class RecyclerViewDataReceivedIdlingResource(
+    activity: CommonSampleActivity,
+    @IdRes private val recyclerViewId: Int
+) : BaseIdlingResource(activity) {
 
-    @Test
-    fun searchFragmentDisplayed() {
-        search(activity) {
-            isViewDisplayed(R.id.searchToolbar)
-            isViewDisplayed(R.id.searchResultList)
-        }
-    }
+    protected val recyclerViewAdapter: RecyclerView.Adapter<*>?
+        get() = activity.findViewById<RecyclerView>(recyclerViewId)?.adapter
 
-    @Test
-    fun inputPreFilled() {
-        search(activity) {
-            viewContainsText(R.id.searchToolbarInputEditText, "London Eye")
-        }
-    }
+    override fun getName(): String = "RecyclerViewDataReceivedIdlingResource"
+
+    override fun isIdle(): Boolean = recyclerViewAdapter?.let { it.itemCount > 0 } ?: false
 }

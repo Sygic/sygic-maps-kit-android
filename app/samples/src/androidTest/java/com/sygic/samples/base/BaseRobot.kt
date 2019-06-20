@@ -26,9 +26,11 @@ package com.sygic.samples.base
 
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.sygic.samples.app.activities.CommonSampleActivity
@@ -38,12 +40,14 @@ import org.hamcrest.core.AllOf.allOf
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes private val parentViewId: Int) {
 
-    init {
-        onView(withId(parentViewId)).check(matches(isDisplayed()))
+    fun clickOnView(@IdRes viewId: Int) {
+        onView(withId(viewId)).perform(click())
     }
 
-    fun clickOnView(@IdRes viewId: Int) {
-        onView(withId(viewId)).perform(ViewActions.click())
+    fun clickOnFirstRecyclerViewItem(@IdRes recyclerViewId: Int) = clickOnRecyclerViewItemAtPosition(recyclerViewId, 0)
+
+    fun clickOnRecyclerViewItemAtPosition(@IdRes recyclerViewId: Int, position: Int) {
+        onView(withId(recyclerViewId)).perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(position, click()))
     }
 
     fun isViewDisplayed(@IdRes viewId: Int) {
@@ -56,7 +60,7 @@ abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes priv
 
     fun isToastVisible() {
         onView(withId(android.R.id.message)).inRoot(withDecorView(not(activity.window.decorView)))
-                .check(matches(isDisplayed()))
+            .check(matches(isDisplayed()))
     }
 
     fun viewContainsText(@IdRes viewId: Int, @StringRes text: Int) {
@@ -65,5 +69,9 @@ abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes priv
 
     fun viewContainsText(@IdRes viewId: Int, text: String) {
         onView(withId(viewId)).check(matches(withText(text)))
+    }
+
+    fun enterText(@IdRes viewId: Int, text: String) {
+        onView(withId(viewId)).perform(typeText(text), closeSoftKeyboard())
     }
 }

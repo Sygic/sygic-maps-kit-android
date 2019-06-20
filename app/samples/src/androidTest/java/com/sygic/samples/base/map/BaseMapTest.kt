@@ -22,30 +22,36 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.search
+package com.sygic.samples.base.map
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sygic.samples.R
+import android.Manifest
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
+import androidx.test.rule.GrantPermissionRule
+import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.base.BaseTest
-import com.sygic.samples.search.robot.search
-import org.junit.Test
-import org.junit.runner.RunWith
+import com.sygic.samples.base.idling.MapReadyIdlingResource
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
 
-@RunWith(AndroidJUnit4::class)
-class SearchPreFilledInputEspressoTest : BaseTest(SearchPreFilledInputActivity::class.java) {
+abstract class BaseMapTest(activityClass: Class<out CommonSampleActivity>) : BaseTest(activityClass) {
 
-    @Test
-    fun searchFragmentDisplayed() {
-        search(activity) {
-            isViewDisplayed(R.id.searchToolbar)
-            isViewDisplayed(R.id.searchResultList)
-        }
+    @get:Rule
+    val grantLocationPermissionRule: GrantPermissionRule =
+            GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+
+    private lateinit var mapReadyIdlingResource: IdlingResource
+
+    @Before
+    fun registerIdlingResource() {
+        mapReadyIdlingResource = MapReadyIdlingResource(activity)
+
+        IdlingRegistry.getInstance().register(mapReadyIdlingResource)
     }
 
-    @Test
-    fun inputPreFilled() {
-        search(activity) {
-            viewContainsText(R.id.searchToolbarInputEditText, "London Eye")
-        }
+    @After
+    fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(mapReadyIdlingResource)
     }
 }

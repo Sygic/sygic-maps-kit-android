@@ -61,7 +61,7 @@ buildscript {
         extJUnitVersion = '1.1.0'
         testRulesVersion = '1.1.1'
         testRunnerVersion = '1.1.1'
-        espressoVersion = '3.1.1'
+        espressoVersion = '3.2.0'
         uiAutomatorVersion = '2.2.0'
         mockitoVersion = '2.28.2'
         mockitoKotlinVersion = '2.1.0'

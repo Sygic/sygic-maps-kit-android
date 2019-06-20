@@ -24,14 +24,33 @@
 
 package com.sygic.samples.search.robot
 
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.base.BaseRobot
+import com.sygic.samples.base.idling.SearchResultListDataReceivedIdlingResource
 
 fun search(commonSampleActivity: CommonSampleActivity, func: SearchRobot.() -> Unit) =
-        SearchRobot(commonSampleActivity).apply { func() }
+    SearchRobot(commonSampleActivity).apply { func() }
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 class SearchRobot(private val activity: CommonSampleActivity) : BaseRobot(activity, R.id.searchFragment) {
 
+    fun enterText(text: String) = enterText(R.id.searchToolbarInputEditText, text)
+
+    fun clickOnFirstRecyclerViewItem() = clickOnFirstRecyclerViewItem(R.id.searchResultListRecyclerView)
+
+    fun clickOnRecyclerViewItemAtPosition(position: Int) =
+        clickOnRecyclerViewItemAtPosition(R.id.searchResultListRecyclerView, position)
+
+    fun containsSearchResultListItemWithText(string: String) {
+        SearchResultListDataReceivedIdlingResource(activity).let {
+            IdlingRegistry.getInstance().register(it)
+            Espresso.onView(ViewMatchers.withText(string)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            IdlingRegistry.getInstance().unregister(it)
+        }
+    }
 }

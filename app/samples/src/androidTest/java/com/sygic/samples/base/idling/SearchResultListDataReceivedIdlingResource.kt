@@ -22,35 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.base
+package com.sygic.samples.base.idling
 
-import android.Manifest
-import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.IdlingResource
-import androidx.test.rule.GrantPermissionRule
+import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
+import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.base.idling.MapReadyIdlingResource
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
 
-abstract class BaseMapTest(activityClass: Class<out CommonSampleActivity>) : BaseTest(activityClass) {
+class SearchResultListDataReceivedIdlingResource(activity: CommonSampleActivity) :
+    RecyclerViewDataReceivedIdlingResource(activity, R.id.searchResultListRecyclerView) {
 
-    @get:Rule
-    val grantLocationPermissionRule: GrantPermissionRule =
-            GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-
-    private lateinit var mapReadyIdlingResource: IdlingResource
-
-    @Before
-    fun registerIdlingResource() {
-        mapReadyIdlingResource = MapReadyIdlingResource(activity)
-
-        IdlingRegistry.getInstance().register(mapReadyIdlingResource)
-    }
-
-    @After
-    fun unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(mapReadyIdlingResource)
-    }
+    override fun isIdle(): Boolean = super.isIdle() && recyclerViewAdapter is SearchResultListAdapter<*>
 }

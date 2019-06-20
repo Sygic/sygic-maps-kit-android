@@ -26,13 +26,13 @@ package com.sygic.samples.search
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sygic.samples.R
-import com.sygic.samples.base.BaseSearchTest
+import com.sygic.samples.base.BaseTest
 import com.sygic.samples.search.robot.search
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class SearchDefaultEspressoTest : BaseSearchTest(SearchDefaultActivity::class.java) {
+class SearchDefaultEspressoTest : BaseTest(SearchDefaultActivity::class.java) {
 
     @Test
     fun searchFragmentDisplayed() {

@@ -32,20 +32,22 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class SearchPreFilledInputEspressoTest : BaseTest(SearchPreFilledInputActivity::class.java) {
+class SearchFromBrowseMapPinsEspressoTest : BaseTest(SearchFromBrowseMapWithPinsActivity::class.java) {
 
     @Test
-    fun searchFragmentDisplayed() {
+    fun searchWithCallback() {
         search(activity) {
+            clickOnView(R.id.searchFab)
+
             isViewDisplayed(R.id.searchToolbar)
             isViewDisplayed(R.id.searchResultList)
-        }
-    }
 
-    @Test
-    fun inputPreFilled() {
-        search(activity) {
-            viewContainsText(R.id.searchToolbarInputEditText, "London Eye")
+            enterText( "London Eye")
+            containsSearchResultListItemWithText("Coca‑Cola London Eye")
+
+            clickOnFirstRecyclerViewItem()
+
+            //todo: continue here
         }
     }
 }

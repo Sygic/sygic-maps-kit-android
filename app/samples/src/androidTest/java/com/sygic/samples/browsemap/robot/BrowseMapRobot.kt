@@ -49,6 +49,10 @@ fun browseMap(commonSampleActivity: CommonSampleActivity, func: BrowseMapRobot.(
 @Suppress("MemberVisibilityCanBePrivate")
 class BrowseMapRobot(private val activity: CommonSampleActivity) : BaseRobot(activity, R.id.browseMapFragment) {
 
+    init {
+        onView(withId(R.id.browseMapFragment)).check(matches(isDisplayed()))
+    }
+
     fun clickOnMapToLocation(generalLocation: GeneralLocation) {
         onView(withId(R.id.browseMapFragment)).perform(
             actionWithAssertions(
