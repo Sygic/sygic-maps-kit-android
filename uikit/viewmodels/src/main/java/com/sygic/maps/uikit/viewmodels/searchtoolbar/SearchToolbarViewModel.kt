@@ -106,19 +106,13 @@ open class SearchToolbarViewModel internal constructor(
     }
 
     private fun search(input: String) {
-        cancelSearch()
-
         lastSearchedString = input
+        searchCoroutineJob?.cancel()
         searchCoroutineJob = scope.launch {
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
             if (input.isNotEmpty()) delay(searchDelay)
             searchManager.searchText(input, searchLocation)
         }
-    }
-
-    private fun cancelSearch() {
-        searchCoroutineJob?.cancel()
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
     }
 
     open fun retrySearch() {
@@ -147,7 +141,7 @@ open class SearchToolbarViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
-        cancelSearch()
+        searchCoroutineJob?.cancel()
         scope.cancel()
         searchToolbarFocused.value = false
         searchManager.removeSearchResultsListener(searchResultsListener)
