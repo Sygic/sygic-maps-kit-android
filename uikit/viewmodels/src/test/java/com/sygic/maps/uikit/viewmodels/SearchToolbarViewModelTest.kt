@@ -64,9 +64,11 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
 
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
 
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+
     @Before
     fun setup() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(mainThreadSurrogate)
 
         val arguments = mock<Bundle>()
         whenever(arguments.getString(eq(KEY_SEARCH_INPUT))).thenReturn(EMPTY_STRING)
@@ -156,5 +158,6 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        mainThreadSurrogate.close()
     }
 }
