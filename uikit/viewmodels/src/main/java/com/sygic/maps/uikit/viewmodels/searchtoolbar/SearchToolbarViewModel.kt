@@ -106,11 +106,12 @@ open class SearchToolbarViewModel internal constructor(
     }
 
     private fun search(input: String) {
+        cancelSearch()
+
         lastSearchedString = input
-        searchCoroutineJob?.cancel()
         searchCoroutineJob = scope.launch {
-            delay(searchDelay)
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
+            if (input.isNotEmpty()) delay(searchDelay)
             searchManager.searchText(input, searchLocation)
         }
     }
@@ -125,7 +126,6 @@ open class SearchToolbarViewModel internal constructor(
     }
 
     open fun onClearButtonClick() {
-        cancelSearch()
         inputText.value = EMPTY_STRING
     }
 
