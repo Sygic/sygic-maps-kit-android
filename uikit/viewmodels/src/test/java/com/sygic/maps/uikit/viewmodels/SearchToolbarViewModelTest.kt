@@ -41,8 +41,10 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -53,6 +55,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+@kotlinx.coroutines.ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine" java.lang.AssertionError: expected:<1> but was:<0>
 
@@ -64,11 +67,11 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
 
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
 
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+    private val testDispatcher = TestCoroutineDispatcher()
 
     @Before
     fun setup() {
-        Dispatchers.setMain(mainThreadSurrogate)
+        Dispatchers.setMain(testDispatcher)
 
         val arguments = mock<Bundle>()
         whenever(arguments.getString(eq(KEY_SEARCH_INPUT))).thenReturn(EMPTY_STRING)
@@ -89,56 +92,72 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
 
     @Test
     fun searchTest() {
-        runBlocking {
-            GlobalScope.launch(Dispatchers.Main) {
-                searchToolbarViewModel.inputText.value = "London Eye"
-                assertEquals(SearchToolbarIconStateSwitcherIndex.PROGRESSBAR, searchToolbarViewModel.iconStateSwitcherIndex.value)
-                verify(searchManager).searchText(eq("London Eye"), any())
-            }
+        runBlockingTest(testDispatcher) {
+            searchToolbarViewModel.inputText.value = "London Eye"
+            advanceTimeBy(100)
+            assertEquals(
+                SearchToolbarIconStateSwitcherIndex.MAGNIFIER,
+                searchToolbarViewModel.iconStateSwitcherIndex.value
+            )
+            advanceTimeBy(200)
+            assertEquals(
+                SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
+                searchToolbarViewModel.iconStateSwitcherIndex.value
+            )
+            verify(searchManager).searchText(eq("London Eye"), anyOrNull())
         }
     }
 
     @Test
     fun searchWithLocationTest() {
-        runBlocking {
-            GlobalScope.launch(Dispatchers.Main) {
-                val testLocation = GeoCoordinates(51.507320, -0.127786)
-                searchToolbarViewModel.searchLocation = testLocation
-                searchToolbarViewModel.inputText.value = "London Eye"
-                assertEquals(SearchToolbarIconStateSwitcherIndex.PROGRESSBAR, searchToolbarViewModel.iconStateSwitcherIndex.value)
-                verify(searchManager).searchText(eq("London Eye"), eq(testLocation))
-            }
+        runBlockingTest(testDispatcher) {
+            val testLocation = GeoCoordinates(51.507320, -0.127786)
+            searchToolbarViewModel.searchLocation = testLocation
+            searchToolbarViewModel.inputText.value = "London Eye"
+            advanceTimeBy(300)
+            assertEquals(
+                SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
+                searchToolbarViewModel.iconStateSwitcherIndex.value
+            )
+            verify(searchManager).searchText(eq("London Eye"), eq(testLocation))
         }
     }
 
     @Test
     fun retrySearchTest() {
-        runBlocking {
-            GlobalScope.launch(Dispatchers.Main) {
-                searchToolbarViewModel.inputText.value = "London Eye"
-                assertEquals(SearchToolbarIconStateSwitcherIndex.PROGRESSBAR, searchToolbarViewModel.iconStateSwitcherIndex.value)
-                verify(searchManager).searchText(eq("London Eye"), any())
+        runBlockingTest(testDispatcher) {
+            searchToolbarViewModel.inputText.value = "London Eye"
+            advanceTimeBy(300)
+            assertEquals(
+                SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
+                searchToolbarViewModel.iconStateSwitcherIndex.value
+            )
+            verify(searchManager).searchText(eq("London Eye"), anyOrNull())
 
-                searchToolbarViewModel.retrySearch()
-                verify(searchManager, never()).searchText(eq("London Eye"), any())
-                verify(searchManager, times(2)).searchText(eq("London Eye"), any())
-            }
+            searchToolbarViewModel.retrySearch()
+            advanceTimeBy(300)
+            verify(searchManager, times(2)).searchText(eq("London Eye"), anyOrNull())
         }
     }
 
     @Test
     fun onClearButtonClickTest() {
-        runBlocking {
-            GlobalScope.launch(Dispatchers.Main) {
-                searchToolbarViewModel.inputText.value = "London Eye"
-                assertEquals(SearchToolbarIconStateSwitcherIndex.PROGRESSBAR, searchToolbarViewModel.iconStateSwitcherIndex.value)
-                verify(searchManager).searchText(eq("London Eye"), any())
-            }
-        }
+        runBlockingTest(testDispatcher) {
+            searchToolbarViewModel.inputText.value = "London Eye"
+            advanceTimeBy(300)
+            assertEquals(
+                SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
+                searchToolbarViewModel.iconStateSwitcherIndex.value
+            )
+            verify(searchManager).searchText(eq("London Eye"), anyOrNull())
 
-        searchToolbarViewModel.onClearButtonClick()
-        assertEquals(SearchToolbarIconStateSwitcherIndex.MAGNIFIER, searchToolbarViewModel.iconStateSwitcherIndex.value)
-        assertEquals(EMPTY_STRING, searchToolbarViewModel.inputText.value)
+            searchToolbarViewModel.onClearButtonClick()
+            assertEquals(
+                SearchToolbarIconStateSwitcherIndex.MAGNIFIER,
+                searchToolbarViewModel.iconStateSwitcherIndex.value
+            )
+            assertEquals(EMPTY_STRING, searchToolbarViewModel.inputText.value)
+        }
     }
 
     @Test
@@ -158,6 +177,5 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        mainThreadSurrogate.close()
     }
 }
