@@ -26,7 +26,7 @@ package com.sygic.samples.search.robot
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
@@ -41,6 +41,10 @@ class SearchRobot(private val activity: CommonSampleActivity) : BaseRobot(activi
 
     fun enterText(text: String) = enterText(R.id.searchToolbarInputEditText, text)
 
+    fun enterTextAndCloseKeyboard(text: String) = enterTextAndCloseKeyboard(R.id.searchToolbarInputEditText, text)
+
+    fun pressSearchImeActionButton() = pressImeActionButton(R.id.searchToolbarInputEditText)
+
     fun clickOnFirstRecyclerViewItem() = clickOnFirstRecyclerViewItem(R.id.searchResultListRecyclerView)
 
     fun clickOnRecyclerViewItemAtPosition(position: Int) =
@@ -49,8 +53,12 @@ class SearchRobot(private val activity: CommonSampleActivity) : BaseRobot(activi
     fun containsSearchResultListItemWithText(string: String) {
         SearchResultListDataReceivedIdlingResource(activity).let {
             IdlingRegistry.getInstance().register(it)
-            Espresso.onView(ViewMatchers.withText(string)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            Espresso.onView(ViewMatchers.withText(string)).check(matches(ViewMatchers.isDisplayed()))
             IdlingRegistry.getInstance().unregister(it)
         }
+    }
+
+    fun containsMapPins() {
+        //todo: custom view matcher? but MapView is not view.
     }
 }

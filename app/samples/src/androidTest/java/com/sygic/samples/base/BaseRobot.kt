@@ -72,6 +72,14 @@ abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes priv
     }
 
     fun enterText(@IdRes viewId: Int, text: String) {
+        onView(withId(viewId)).perform(typeText(text))
+    }
+
+    fun enterTextAndCloseKeyboard(@IdRes viewId: Int, text: String) {
         onView(withId(viewId)).perform(typeText(text), closeSoftKeyboard())
+    }
+
+    fun pressImeActionButton(@IdRes viewId: Int) {
+        onView(withId(viewId)).perform(pressImeActionButton())
     }
 }

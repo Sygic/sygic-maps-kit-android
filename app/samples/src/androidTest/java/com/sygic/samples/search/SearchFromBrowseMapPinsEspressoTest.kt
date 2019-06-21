@@ -45,9 +45,9 @@ class SearchFromBrowseMapPinsEspressoTest : BaseTest(SearchFromBrowseMapWithPins
             enterText( "London Eye")
             containsSearchResultListItemWithText("Coca‑Cola London Eye")
 
-            clickOnFirstRecyclerViewItem()
+            pressSearchImeActionButton()
 
-            //todo: continue here
+            containsMapPins()
         }
     }
 }

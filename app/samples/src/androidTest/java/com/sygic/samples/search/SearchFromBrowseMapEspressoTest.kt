@@ -42,12 +42,12 @@ class SearchFromBrowseMapEspressoTest : BaseTest(SearchFromBrowseMapActivity::cl
             isViewDisplayed(R.id.searchToolbar)
             isViewDisplayed(R.id.searchResultList)
 
-            enterText( "London Eye")
+            enterTextAndCloseKeyboard( "London Eye")
             containsSearchResultListItemWithText("Coca‑Cola London Eye")
 
             clickOnFirstRecyclerViewItem()
 
-            //todo: continue here
+            isToastVisible()
         }
     }
 }
