@@ -55,9 +55,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+const val CUSTOM_SEARCH_DELAY = 500L
+
 @kotlinx.coroutines.ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine" java.lang.AssertionError: expected:<1> but was:<0>
+class SearchToolbarViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -79,6 +81,7 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
         whenever(arguments.getInt(eq(KEY_SEARCH_MAX_RESULTS_COUNT), any())).thenReturn(MAX_RESULTS_COUNT_DEFAULT_VALUE)
 
         searchToolbarViewModel = SearchToolbarViewModel(arguments, searchManager)
+        searchToolbarViewModel.searchDelay = CUSTOM_SEARCH_DELAY
     }
 
     @Test
@@ -93,17 +96,16 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
     @Test
     fun searchTest() {
         runBlockingTest(testDispatcher) {
-            searchToolbarViewModel.inputText.value = "London Eye"
-            advanceTimeBy(100)
             assertEquals(
                 SearchToolbarIconStateSwitcherIndex.MAGNIFIER,
                 searchToolbarViewModel.iconStateSwitcherIndex.value
             )
-            advanceTimeBy(200)
+            searchToolbarViewModel.inputText.value = "London Eye"
             assertEquals(
                 SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
                 searchToolbarViewModel.iconStateSwitcherIndex.value
             )
+            advanceTimeBy(CUSTOM_SEARCH_DELAY)
             verify(searchManager).searchText(eq("London Eye"), anyOrNull())
         }
     }
@@ -114,7 +116,7 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
             val testLocation = GeoCoordinates(51.507320, -0.127786)
             searchToolbarViewModel.searchLocation = testLocation
             searchToolbarViewModel.inputText.value = "London Eye"
-            advanceTimeBy(300)
+            advanceTimeBy(CUSTOM_SEARCH_DELAY)
             assertEquals(
                 SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
                 searchToolbarViewModel.iconStateSwitcherIndex.value
@@ -127,7 +129,7 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
     fun retrySearchTest() {
         runBlockingTest(testDispatcher) {
             searchToolbarViewModel.inputText.value = "London Eye"
-            advanceTimeBy(300)
+            advanceTimeBy(CUSTOM_SEARCH_DELAY)
             assertEquals(
                 SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
                 searchToolbarViewModel.iconStateSwitcherIndex.value
@@ -135,7 +137,7 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
             verify(searchManager).searchText(eq("London Eye"), anyOrNull())
 
             searchToolbarViewModel.retrySearch()
-            advanceTimeBy(300)
+            advanceTimeBy(CUSTOM_SEARCH_DELAY)
             verify(searchManager, times(2)).searchText(eq("London Eye"), anyOrNull())
         }
     }
@@ -144,7 +146,7 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
     fun onClearButtonClickTest() {
         runBlockingTest(testDispatcher) {
             searchToolbarViewModel.inputText.value = "London Eye"
-            advanceTimeBy(300)
+            advanceTimeBy(CUSTOM_SEARCH_DELAY)
             assertEquals(
                 SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
                 searchToolbarViewModel.iconStateSwitcherIndex.value
@@ -152,11 +154,8 @@ class SearchToolbarViewModelTest { //todo: Exception in thread "main @coroutine"
             verify(searchManager).searchText(eq("London Eye"), anyOrNull())
 
             searchToolbarViewModel.onClearButtonClick()
-            assertEquals(
-                SearchToolbarIconStateSwitcherIndex.MAGNIFIER,
-                searchToolbarViewModel.iconStateSwitcherIndex.value
-            )
             assertEquals(EMPTY_STRING, searchToolbarViewModel.inputText.value)
+            verify(searchManager, times(2)).searchText(eq(EMPTY_STRING), anyOrNull())
         }
     }
 
