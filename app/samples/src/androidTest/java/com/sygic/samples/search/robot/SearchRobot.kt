@@ -25,12 +25,15 @@
 package com.sygic.samples.search.robot
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.base.BaseRobot
+import com.sygic.samples.base.idling.MapPinsIdlingResource
 import com.sygic.samples.base.idling.SearchResultListDataReceivedIdlingResource
 
 fun search(commonSampleActivity: CommonSampleActivity, func: SearchRobot.() -> Unit) =
@@ -59,6 +62,10 @@ class SearchRobot(private val activity: CommonSampleActivity) : BaseRobot(activi
     }
 
     fun containsMapPins() {
-        //todo: custom view matcher? but MapView is not view.
+        MapPinsIdlingResource(activity).let {
+            IdlingRegistry.getInstance().register(it)
+            onView(withId(R.id.browseMapFragment)).check(matches(ViewMatchers.isDisplayed()))
+            IdlingRegistry.getInstance().unregister(it)
+        }
     }
 }
