@@ -25,6 +25,8 @@
 package com.sygic.maps.uikit.viewmodels.common.initialization
 
 import androidx.annotation.RestrictTo
+import com.sygic.maps.uikit.views.common.utils.logError
+import com.sygic.sdk.SygicEngine
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SdkInitializationManager {
@@ -32,9 +34,16 @@ interface SdkInitializationManager {
     @InitializationState
     var initializationState: Int
 
-    @FunctionalInterface
     interface Callback {
         fun onSdkInitialized()
+        fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
+            val errorType = when (error) {
+                SygicEngine.OnInitListener.InitError.InternalInit -> logError("Internal init")
+                SygicEngine.OnInitListener.InitError.Resources -> logError("Resources")
+                else -> "Unknown"
+            }
+            logError("SDK Initialization failed: $errorType error :(")
+        }
     }
 
     fun initialize(callback: Callback)
