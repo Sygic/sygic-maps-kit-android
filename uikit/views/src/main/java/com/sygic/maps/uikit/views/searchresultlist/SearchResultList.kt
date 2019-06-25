@@ -33,14 +33,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.common.AdvanceInfoView
+import com.sygic.maps.uikit.views.common.AdvancedInfoView
 import com.sygic.maps.uikit.views.common.EmptyRecyclerView
 import com.sygic.maps.uikit.views.databinding.LayoutSearchResultListInternalBinding
 import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
 
 /**
  * A [SearchResultList] can be used as an visual presentation component for the search result items. It contains
- * [EmptyRecyclerView] and pre-customized [AdvanceInfoView] component.
+ * [EmptyRecyclerView] and pre-customized [AdvancedInfoView] component.
  *
  * TODO: MS-5681
  */
@@ -100,7 +100,7 @@ open class SearchResultList @JvmOverloads constructor(
     }
 
     /**
-     * Remove all secondary listener that were notified of any changes in scroll state or position.
+     * Remove all listeners which are registered for scroll state or position changes.
      */
     fun clearOnScrollListeners() {
         binding.searchResultListRecyclerView.clearOnScrollListeners()

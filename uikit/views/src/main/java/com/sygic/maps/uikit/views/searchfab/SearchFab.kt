@@ -50,6 +50,7 @@ open class SearchFab @JvmOverloads constructor(
 
     init {
         isClickable = true
+        setImageResource(R.drawable.ic_search)
 
         attrs?.let { attributeSet ->
             context.obtainStyledAttributes(
@@ -58,8 +59,6 @@ open class SearchFab @JvmOverloads constructor(
                 defStyleAttr,
                 defStyleRes
             ).apply {
-
-                setImageResource(R.drawable.ic_search)
 
                 imageTintList = ColorStateList.valueOf(
                     getColor(
