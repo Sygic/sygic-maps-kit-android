@@ -26,4 +26,5 @@
 <resources>
     <color name="textColorPrimary">@color/mine_shaft</color>
     <color name="textColorSecondary">@color/boulder</color>
+    <color name="iconBackground">@color/shuttle_gray</color>
 </resources>

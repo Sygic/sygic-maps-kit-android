@@ -32,7 +32,20 @@
         <attr name="positionLockFabStyle" format="reference" />
         <attr name="searchFabStyle" format="reference" />
         <attr name="searchToolbarStyle" format="reference" />
+        <attr name="searchResultListStyle" format="reference" />
         <attr name="zoomControlsMenuStyle" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="AdvancedInfoView">
+        <attr name="imageSource" />
+        <attr name="imageDescription" />
+        <attr name="titleText" />
+        <attr name="suggestionText"/>
+        <attr name="actionButtonText"/>
+    </declare-styleable>
+
+    <declare-styleable name="EmptyRecyclerView">
+        <attr name="emptyView" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="PositionLockFab">

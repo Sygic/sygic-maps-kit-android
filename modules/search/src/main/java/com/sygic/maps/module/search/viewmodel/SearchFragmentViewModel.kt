@@ -25,10 +25,18 @@
 package com.sygic.maps.module.search.viewmodel
 
 import android.app.Application
+import android.widget.TextView
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.*
+import com.sygic.maps.module.search.callback.SearchResultCallback
+import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.toSdkSearchResultList
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
+import com.sygic.sdk.search.SearchResult
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -36,4 +44,39 @@ class SearchFragmentViewModel internal constructor(
     app: Application
 ) : AndroidViewModel(app), DefaultLifecycleObserver {
 
+    val onFinishObservable: LiveData<Any> = SingleLiveEvent()
+
+    private var searchResultCallback: SearchResultCallback? = null
+    private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
+
+    override fun onCreate(owner: LifecycleOwner) {
+        if (owner is SearchResultCallbackWrapper) {
+            owner.searchResultCallbackProvider.observe(owner, Observer { callback ->
+                searchResultCallback = callback
+            })
+        }
+    }
+
+    fun searchResultListDataChanged(searchResultListItems: List<SearchResultItem<out SearchResult>>) {
+        currentSearchResults = searchResultListItems
+    }
+
+    fun onSearchResultItemClick(searchResultItem: SearchResultItem<out SearchResult>) =
+        invokeCallbackAndFinish(listOf(searchResultItem))
+
+    fun onActionSearchClick(view: TextView) {
+        view.hideKeyboard()
+        invokeCallbackAndFinish(currentSearchResults)
+    }
+
+    private fun invokeCallbackAndFinish(searchResultList: List<SearchResultItem<out SearchResult>>) {
+        searchResultCallback?.onSearchResult(searchResultList.toSdkSearchResultList())
+        onFinishObservable.asSingleEvent().call()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        searchResultCallback = null
+    }
 }

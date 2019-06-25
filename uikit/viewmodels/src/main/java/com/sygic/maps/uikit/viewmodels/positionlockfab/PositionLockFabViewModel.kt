@@ -88,7 +88,7 @@ open class PositionLockFabViewModel internal constructor(
         }
     }
 
-    fun onClick() {
+    open fun onClick() {
         requestLocationAccess(permissionsManager, locationManager) {
             when (currentState.value) {
                 LockState.UNLOCKED -> {

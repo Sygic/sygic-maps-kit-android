@@ -25,10 +25,12 @@
 package com.sygic.samples.search
 
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
+import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.search.viewmodels.SearchFromBrowseMapActivityViewModel
@@ -45,7 +47,11 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_search_from_browse_map)
 
-        viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapActivityViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapActivityViewModel::class.java).apply {
+            this.showToastObservable.observe(
+                this@SearchFromBrowseMapActivity,
+                Observer<String> { longToast(it) })
+        }
 
         if (savedInstanceState == null) {
             setFragmentModuleConnection(

@@ -35,7 +35,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.databinding.LayoutSearchToolbarInternalBinding
 
 /**
@@ -56,10 +55,6 @@ open class SearchToolbar @JvmOverloads constructor(
     private val binding: LayoutSearchToolbarInternalBinding =
         LayoutSearchToolbarInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private val inputEditTextOnFocusChangedListener = OnFocusChangeListener { view, hasFocus ->
-        if (hasFocus) (view as EditText).showKeyboard()
-    }
-
     /**
      * Set the text to be displayed in the input [EditText].
      *
@@ -79,7 +74,6 @@ open class SearchToolbar @JvmOverloads constructor(
 
     init {
         descendantFocusability = FOCUS_AFTER_DESCENDANTS
-        binding.inputEditText.onFocusChangeListener = inputEditTextOnFocusChangedListener
     }
 
     private fun setTextInternal(text: CharSequence) {
@@ -89,6 +83,14 @@ open class SearchToolbar @JvmOverloads constructor(
 
     override fun onRequestFocusInDescendants(direction: Int, previouslyFocusedRect: Rect?): Boolean =
         binding.inputEditText.requestFocus()
+
+    override fun setOnFocusChangeListener(listener: OnFocusChangeListener) {
+        binding.inputEditText.onFocusChangeListener = listener
+    }
+
+    override fun getOnFocusChangeListener(): OnFocusChangeListener {
+        return binding.inputEditText.onFocusChangeListener
+    }
 
     /**
      * Set the focused state of the [SearchToolbar] view. Internally is called [requestFocus]
