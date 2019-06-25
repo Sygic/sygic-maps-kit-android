@@ -38,8 +38,8 @@ interface SdkInitializationManager {
         fun onSdkInitialized()
         fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
             val errorType = when (error) {
-                SygicEngine.OnInitListener.InitError.InternalInit -> logError("Internal init")
-                SygicEngine.OnInitListener.InitError.Resources -> logError("Resources")
+                SygicEngine.OnInitListener.InitError.InternalInit -> "Internal init"
+                SygicEngine.OnInitListener.InitError.Resources -> "Resources"
                 else -> "Unknown"
             }
             logError("SDK Initialization failed: $errorType error :(")
