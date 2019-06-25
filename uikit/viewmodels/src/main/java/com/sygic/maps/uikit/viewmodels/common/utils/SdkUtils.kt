@@ -28,7 +28,7 @@ import com.sygic.maps.uikit.views.searchresultlist.SearchResultListErrorViewSwit
 import com.sygic.sdk.search.SearchResult
 
 @SearchResultListErrorViewSwitcherIndex
-fun searchResultStateToErrorViewSwitcherIndex(@SearchResult.ResultState state: Int): Int {
+internal fun searchResultStateToErrorViewSwitcherIndex(@SearchResult.ResultState state: Int): Int {
     return when (state) {
         SearchResult.ResultState.Success -> SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND
         SearchResult.ResultState.NotAvailable -> SearchResultListErrorViewSwitcherIndex.NO_INTERNET_CONNECTION
