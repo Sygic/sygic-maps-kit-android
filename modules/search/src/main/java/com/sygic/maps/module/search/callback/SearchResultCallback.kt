@@ -24,7 +24,6 @@
 
 package com.sygic.maps.module.search.callback
 
-import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import com.sygic.sdk.search.SearchResult
 
@@ -43,7 +42,6 @@ interface SearchResultCallback {
     fun onSearchResult(searchResultList: List<SearchResult>)
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface SearchResultCallbackWrapper {
+internal interface SearchResultCallbackWrapper {
     val searchResultCallbackProvider: LiveData<SearchResultCallback>
 }

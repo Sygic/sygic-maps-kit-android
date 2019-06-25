@@ -30,7 +30,7 @@ import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.sdk.places.PoiInfo
 
 @ColorRes
-fun Int.toColorRes(): Int {
+internal fun Int.toColorRes(): Int {
     return when (this) {
         PoiInfo.PoiGroup.Unknown -> R.color.all_places
         PoiInfo.PoiGroup.Food_and_Drink -> R.color.food_and_drink
@@ -52,7 +52,7 @@ fun Int.toColorRes(): Int {
 }
 
 @DrawableRes
-fun Int.toGroupIconDrawableRes(): Int {
+internal fun Int.toGroupIconDrawableRes(): Int {
     return when (this) {
         PoiInfo.PoiGroup.Food_and_Drink -> R.drawable.ic_eat_food
         PoiInfo.PoiGroup.Accommodation -> R.drawable.ic_accomodation
@@ -73,7 +73,7 @@ fun Int.toGroupIconDrawableRes(): Int {
 }
 
 @DrawableRes
-fun Int.toCategoryIconDrawableRes(): Int {
+internal fun Int.toCategoryIconDrawableRes(): Int {
     return when (this) {
         PoiInfo.PoiCategory.TrafficLights -> R.drawable.ic_traffic_lights
         PoiInfo.PoiCategory.Winery -> R.drawable.ic_wine

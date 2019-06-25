@@ -36,7 +36,7 @@
         <attr name="zoomControlsMenuStyle" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="AdvanceInfoView">
+    <declare-styleable name="AdvancedInfoView">
         <attr name="imageSource" />
         <attr name="imageDescription" />
         <attr name="titleText" />

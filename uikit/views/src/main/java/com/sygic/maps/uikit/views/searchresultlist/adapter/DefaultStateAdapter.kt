@@ -29,12 +29,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-//ToDo: Use the Recents adapter instead when ready
 class DefaultStateAdapter<P : Parcelable> : ResultListAdapter<P, ResultListAdapter.ItemViewHolder<P>>() {
     override fun getItemCount(): Int = 1
-    override fun onCreateViewHolder(
-        parent: ViewGroup, inflater: LayoutInflater, layoutId: Int, viewType: Int
-    ): ItemViewHolder<P> = EmptyItemViewHolder(View(parent.context))
+    override fun onCreateViewHolder(parent: ViewGroup, inflater: LayoutInflater, layoutId: Int, viewType: Int): ItemViewHolder<P> = EmptyItemViewHolder(View(parent.context))
     override fun onBindViewHolder(holder: ItemViewHolder<P>, position: Int) {}
     inner class EmptyItemViewHolder(emptyView: View) : ItemViewHolder<P>(emptyView)
 }

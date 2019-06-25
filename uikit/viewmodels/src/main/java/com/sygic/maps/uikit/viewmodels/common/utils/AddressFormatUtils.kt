@@ -36,24 +36,50 @@ fun getStreetWithHouseNumberAndCityWithPostal(
     postal: String? = null
 ): String {
     val builder = StringBuilder()
-    val streetWithHouseNumber = street?.let { getStreetWithHouseNumber(street, houseNumber) }
+    val streetWithHouseNumber = getStreetWithHouseNumber(street, houseNumber)
+    val streetWithHouseNumberIsEmpty = TextUtils.isEmpty(streetWithHouseNumber)
+    val cityWithPostal = getCityWithPostal(city, postal)
+    val cityWithPostalIsEmpty = TextUtils.isEmpty(cityWithPostal)
 
-    streetWithHouseNumber?.let { builder.append(it) }
-    getCityWithPostal(city, postal)?.let {
-        if (!TextUtils.isEmpty(streetWithHouseNumber)) builder.append(", ")
-        builder.append(it)
+    if (!streetWithHouseNumberIsEmpty) builder.append(streetWithHouseNumber)
+    if (!cityWithPostalIsEmpty) {
+        if (!streetWithHouseNumberIsEmpty) builder.append(", ")
+        builder.append(cityWithPostal)
     }
+
     return builder.toString()
 }
 
 /**
  * Formatted example: Mlynské nivy 16
  */
-fun getStreetWithHouseNumber(street: String?, houseNumber: String?): String? =
-    houseNumber?.let { if (it.isNotEmpty()) String.format("%s %s", street, it) else street } ?: street
+fun getStreetWithHouseNumber(street: String?, houseNumber: String?): String? {
+    val streetIsEmpty = TextUtils.isEmpty(street)
+    val houseNumberIsEmpty = TextUtils.isEmpty(houseNumber)
+    if (!streetIsEmpty || !houseNumberIsEmpty) {
+
+        if (streetIsEmpty) return houseNumber
+        if (houseNumberIsEmpty) return street
+
+        return String.format("%s %s", street, houseNumber)
+    }
+
+    return null
+}
 
 /**
  * Formatted example: 821 09 Bratislava
  */
-fun getCityWithPostal(city: String?, postal: String?): String? =
-    postal?.let { if (it.isNotEmpty()) return String.format("%s %s", it, city) else city } ?: city
+fun getCityWithPostal(city: String?, postal: String?): String? {
+    val cityIsEmpty = TextUtils.isEmpty(city)
+    val postalIsEmpty = TextUtils.isEmpty(postal)
+    if (!cityIsEmpty || !postalIsEmpty) {
+
+        if (cityIsEmpty) return postal
+        if (postalIsEmpty) return city
+
+        return String.format("%s %s", postal, city)
+    }
+
+    return null
+}
