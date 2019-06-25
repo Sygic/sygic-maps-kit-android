@@ -33,9 +33,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 
-abstract class ResultListAdapter<P : Parcelable, T : ResultListAdapter.ItemViewHolder<P>> : RecyclerView.Adapter<T>() {
+abstract class ResultListAdapter<P : Parcelable, T : ResultListAdapter.ItemViewHolder<P>>(val clickListener: ClickListener<P>? = null) :
+    RecyclerView.Adapter<T>() {
 
-    var clickListener: ClickListener<P>? = null
     internal var itemLayoutId = R.layout.layout_search_item_result_internal
 
     interface ClickListener<P : Parcelable> {

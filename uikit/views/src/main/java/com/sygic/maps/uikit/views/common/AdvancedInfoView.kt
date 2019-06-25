@@ -33,49 +33,49 @@ import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.databinding.LayoutAdvanceInfoViewInternalBinding
+import com.sygic.maps.uikit.views.databinding.LayoutAdvancedInfoViewInternalBinding
 
 /**
- * A [AdvanceInfoView] is an easily customizable component to display a variety of information states (info, error, empty etc.)
+ * A [AdvancedInfoView] is an easily customizable component to display a variety of information states (info, error, empty etc.)
  *
  * Content and visibility of each individual parts can be changed with the _imageSource_, _titleText_, _suggestionText_
  * or _actionButtonText_ attribute.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class AdvanceInfoView @JvmOverloads constructor(
+class AdvancedInfoView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: LayoutAdvanceInfoViewInternalBinding =
-        LayoutAdvanceInfoViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding: LayoutAdvancedInfoViewInternalBinding =
+        LayoutAdvancedInfoViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
         orientation = VERTICAL
         gravity = Gravity.CENTER
 
         attrs?.let { attributeSet ->
-            context.obtainStyledAttributes(attributeSet, R.styleable.AdvanceInfoView, defStyleAttr, 0).apply {
+            context.obtainStyledAttributes(attributeSet, R.styleable.AdvancedInfoView, defStyleAttr, 0).apply {
 
-                getResourceId(R.styleable.AdvanceInfoView_imageSource, NO_ID).let {
+                getResourceId(R.styleable.AdvancedInfoView_imageSource, NO_ID).let {
                     if (it != NO_ID) setImageResource(it)
                 }
 
-                getResourceId(R.styleable.AdvanceInfoView_imageDescription, NO_ID).let {
+                getResourceId(R.styleable.AdvancedInfoView_imageDescription, NO_ID).let {
                     if (it != NO_ID) setImageDescription(it)
                 }
 
-                getResourceId(R.styleable.AdvanceInfoView_titleText, NO_ID).let {
+                getResourceId(R.styleable.AdvancedInfoView_titleText, NO_ID).let {
                     if (it != NO_ID) setTitleText(it)
                 }
 
-                getResourceId(R.styleable.AdvanceInfoView_suggestionText, NO_ID).let {
+                getResourceId(R.styleable.AdvancedInfoView_suggestionText, NO_ID).let {
                     if (it != NO_ID) setSuggestionText(it)
                 }
 
-                getResourceId(R.styleable.AdvanceInfoView_actionButtonText, NO_ID).let {
+                getResourceId(R.styleable.AdvancedInfoView_actionButtonText, NO_ID).let {
                     if (it != NO_ID) setActionButtonText(it)
                 }
 
