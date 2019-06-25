@@ -22,8 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.theme
+package com.sygic.maps.module.navigation.callback
 
-interface ThemeSupportedViewModel {
-    fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String)
+/**
+ * Interface definition for a callback to be invoked when a navigation process is done.
+ */
+@FunctionalInterface
+interface NavigationResultCallback { //todo
+
+    /**
+     * Called when a search process is done.
+     */
+    //fun onNavigationFinished()
 }

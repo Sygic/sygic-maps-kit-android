@@ -22,29 +22,32 @@
  * SOFTWARE.
  */
 
-apply from: 'buildSdk.gradle'
+package com.sygic.maps.module.navigation.viewmodel
 
-include ':app-samples',
-        ':module-common',
-        ':module-browsemap',
-        ':module-navigation',
-        ':module-search',
-        ':tool-annotation-processor',
-        ':tool-viewmodel-factory',
-        ':uikit-views',
-        ':uikit-viewmodels'
+import android.app.Application
+import android.os.Bundle
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.MutableLiveData
+import com.sygic.maps.module.common.theme.ThemeManager
+import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
+import com.sygic.maps.tools.annotations.Assisted
+import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.sdk.route.RouteInfo
 
-project(':app-samples').projectDir = new File("app/samples")
-project(':module-common').projectDir = new File("modules/common")
-project(':module-browsemap').projectDir = new File("modules/browsemap")
-project(':module-navigation').projectDir = new File("modules/navigation")
-project(':module-search').projectDir = new File("modules/search")
-project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
-project(':tool-viewmodel-factory').projectDir = new File("tools/viewmodel-factory")
-project(':uikit-views').projectDir = new File("uikit/views")
-project(':uikit-viewmodels').projectDir = new File("uikit/viewmodels")
+@AutoFactory
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class NavigationFragmentViewModel internal constructor(
+    app: Application,
+    @Assisted arguments: Bundle?,
+    private val themeManager: ThemeManager
+) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver {
 
-if (gradle.buildSdkFromSource()) {
-    include ':sdk'
-    project(':sdk').projectDir = gradle.getSdkDir()
+    val routeInfo: MutableLiveData<RouteInfo?> = MutableLiveData()
+
+    init {
+        with(arguments) {
+            //todo
+        }
+    }
 }

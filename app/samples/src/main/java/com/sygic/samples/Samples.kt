@@ -26,6 +26,7 @@ package com.sygic.samples
 
 import com.sygic.samples.browsemap.*
 import com.sygic.samples.app.models.Sample
+import com.sygic.samples.navigation.NavigationDefaultActivity
 import com.sygic.samples.search.SearchDefaultActivity
 import com.sygic.samples.search.SearchFromBrowseMapActivity
 
@@ -70,6 +71,13 @@ object Samples {
         Sample(
             SearchFromBrowseMapActivity::class.java, R.drawable.preview_search_from_browse_map,
             R.string.search_from_browse_map, R.string.search_from_browse_map_summary
+        )
+    )
+
+    val navigationSampleList: List<Sample> = listOf(
+        Sample(
+            NavigationDefaultActivity::class.java, R.drawable.preview_navigation_default, //todo
+            R.string.navigation_default, R.string.navigation_default_summary
         )
     )
 }

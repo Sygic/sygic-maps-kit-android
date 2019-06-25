@@ -58,8 +58,8 @@ To get familiar with all the features available, you can first try out our Sampl
         // Pattern: implementation 'sygic-prefix:module-name:version'
         implementation 'com.sygic.maps:module-browsemap:1.0.4'
         implementation 'com.sygic.maps:module-search:1.0.0'
+        implementation 'com.sygic.maps:module-navigation:1.0.0'
 
-        //implementation 'com.sygic.maps:module-navigation:1.0.1' (coming soon)
         ...
     }
     ```

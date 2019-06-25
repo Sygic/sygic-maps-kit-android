@@ -38,6 +38,10 @@
                     android:id="@+id/nav_search_module"
                     android:icon="@drawable/ic_search"
                     android:title="@string/search" />
+                <item
+                    android:id="@+id/nav_navigation_module"
+                    android:icon="@drawable/ic_navigation"
+                    android:title="@string/navigation" />
             </group>
         </menu>
     </item>

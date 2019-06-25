@@ -50,7 +50,7 @@ import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
-import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
+import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.location.GOOGLE_API_CLIENT_REQUEST_CODE

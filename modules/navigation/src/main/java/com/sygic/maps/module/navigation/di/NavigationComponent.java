@@ -22,29 +22,34 @@
  * SOFTWARE.
  */
 
-apply from: 'buildSdk.gradle'
+package com.sygic.maps.module.navigation.di;
 
-include ':app-samples',
-        ':module-common',
-        ':module-browsemap',
-        ':module-navigation',
-        ':module-search',
-        ':tool-annotation-processor',
-        ':tool-viewmodel-factory',
-        ':uikit-views',
-        ':uikit-viewmodels'
+import com.sygic.maps.module.navigation.NavigationFragment;
+import com.sygic.maps.module.navigation.di.module.ViewModelModule;
+import com.sygic.maps.module.common.di.ModulesComponent;
+import com.sygic.maps.module.common.di.util.ModuleBuilder;
+import dagger.Component;
 
-project(':app-samples').projectDir = new File("app/samples")
-project(':module-common').projectDir = new File("modules/common")
-project(':module-browsemap').projectDir = new File("modules/browsemap")
-project(':module-navigation').projectDir = new File("modules/navigation")
-project(':module-search').projectDir = new File("modules/search")
-project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
-project(':tool-viewmodel-factory').projectDir = new File("tools/viewmodel-factory")
-project(':uikit-views').projectDir = new File("uikit/views")
-project(':uikit-viewmodels').projectDir = new File("uikit/viewmodels")
+import javax.inject.Scope;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-if (gradle.buildSdkFromSource()) {
-    include ':sdk'
-    project(':sdk').projectDir = gradle.getSdkDir()
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+@interface Navigation { }
+
+@Navigation
+@Component(
+        modules = {
+                ViewModelModule.class
+        },
+        dependencies = {
+                ModulesComponent.class
+        }
+)
+public interface NavigationComponent {
+    @Component.Builder
+    abstract class Builder implements ModuleBuilder<NavigationComponent> {}
+
+    void inject(NavigationFragment fragment);
 }
