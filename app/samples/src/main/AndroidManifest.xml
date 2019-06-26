@@ -86,6 +86,15 @@
             android:name=".search.SearchFromBrowseMapActivity"
             android:label="@string/search_from_browse_map"
             android:theme="@style/AppTheme.NoExitAnimation" />
+        <activity
+            android:name=".search.SearchFromBrowseMapWithPinsActivity"
+            android:label="@string/search_from_browse_map_pins"
+            android:theme="@style/AppTheme.NoExitAnimation" />
+        <activity
+            android:name=".search.SearchPreFilledInputActivity"
+            android:label="@string/search_pre_filled_input"
+            android:theme="@style/AppTheme.NoExitAnimation"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
 
         <meta-data
             android:name="@string/com_sygic_api_key"

@@ -75,4 +75,8 @@
     <string name="search_default_summary">Search module with no configuration</string>
     <string name="search_from_browse_map">Search - From Browse Map</string>
     <string name="search_from_browse_map_summary">Search module integrated into the Browse Map module</string>
+    <string name="search_from_browse_map_pins">Search - From Browse Map (Pins)</string>
+    <string name="search_from_browse_map_pins_summary">Search module integrated into the Browse Map module with pins</string>
+    <string name="search_pre_filled_input">Search - Pre-filled input</string>
+    <string name="search_pre_filled_input_summary">Search module with a pre-filled input</string>
 </resources>
