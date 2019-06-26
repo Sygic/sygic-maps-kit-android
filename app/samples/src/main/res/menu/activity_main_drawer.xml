@@ -42,7 +42,7 @@
         </menu>
     </item>
 
-    <item android:title="@string/ui_kit">
+    <item android:title="@string/ui_kit_components">
         <menu>
             <item
                 android:id="@+id/nav_ui_kit_compass"
@@ -63,6 +63,16 @@
                 android:id="@+id/nav_ui_kit_zoom_controls"
                 android:icon="@drawable/ic_zoom_controls"
                 android:title="@string/zoom_controls" />
+
+            <item
+                android:id="@+id/nav_ui_kit_search_toolbar"
+                android:icon="@drawable/ic_search_toolbar"
+                android:title="@string/search_toolbar" />
+
+            <item
+                android:id="@+id/nav_ui_kit_search_result_list"
+                android:icon="@drawable/ic_search_result_list"
+                android:title="@string/search_result_list" />
         </menu>
     </item>
 

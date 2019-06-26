@@ -61,7 +61,7 @@ fun setTextWatcher(
         }
     }
 
-    val editText = toolbar.inputEditText
+    val editText = toolbar.searchToolbarInputEditText
     ListenerUtil.trackListener(editText, newValue, androidx.databinding.library.baseAdapters.R.id.textWatcher)?.let {
         editText.removeTextChangedListener(it)
     }
@@ -73,7 +73,7 @@ fun setTextWatcher(
 
 @BindingAdapter("android:text")
 fun setSearchText(toolbar: SearchToolbar, text: CharSequence?) {
-    with(toolbar.inputEditText) {
+    with(toolbar.searchToolbarInputEditText) {
         getText().let {
             if (it.toString() == text.toString() || (text == null && it.isEmpty())) {
                 return

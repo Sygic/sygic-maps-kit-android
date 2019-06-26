@@ -72,6 +72,8 @@ class SdkInitializationManagerImpl(
     }
 
     override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
-        /* Currently do nothing */
+        synchronized(this) { initializationState = InitializationState.ERROR }
+        callbacks.forEach { it.onError(error) }
+        callbacks.clear()
     }
 }

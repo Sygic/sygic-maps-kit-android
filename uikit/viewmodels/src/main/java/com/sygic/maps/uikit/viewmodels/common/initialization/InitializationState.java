@@ -30,10 +30,12 @@ import androidx.annotation.RestrictTo;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@IntDef({InitializationState.INITIALIZATION_NOT_STARTED, InitializationState.INITIALIZING, InitializationState.INITIALIZED})
+@IntDef({InitializationState.ERROR, InitializationState.INITIALIZATION_NOT_STARTED,
+        InitializationState.INITIALIZING, InitializationState.INITIALIZED})
 @Retention(RetentionPolicy.SOURCE)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public @interface InitializationState {
+    int ERROR = -1;
     int INITIALIZATION_NOT_STARTED = 0;
     int INITIALIZING = 1;
     int INITIALIZED = 2;
