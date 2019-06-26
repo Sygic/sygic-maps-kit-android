@@ -29,6 +29,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
@@ -57,6 +58,7 @@ open class SearchResultList @JvmOverloads constructor(
     init {
         binding.searchResultListRecyclerView.setHasFixedSize(true)
         binding.searchResultListRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.searchResultListRecyclerView.itemAnimator = DefaultItemAnimator()
     }
 
     /**
@@ -102,5 +104,24 @@ open class SearchResultList @JvmOverloads constructor(
      */
     fun clearOnScrollListeners() {
         binding.searchResultListRecyclerView.clearOnScrollListeners()
+    }
+
+    /**
+     * Set an active error view of the ErrorViewSwitcher.
+     *
+     * @param index [SearchResultListErrorViewSwitcherIndex] No Results, Slow internet connection, No internet
+     * connection or General error.
+     */
+    fun setErrorViewSwitcherIndex(@SearchResultListErrorViewSwitcherIndex index: Int) {
+        binding.searchResultListErrorViewAnimator.displayedChild = index
+    }
+
+    /**
+     * Register a callback to be invoked when [SearchResultList] error view with action button is clicked.
+     *
+     * @param listener [OnClickListener] callback to invoke on [SearchResultList] error view with action button click.
+     */
+    fun setOnErrorViewWithActionListener(listener: OnClickListener) {
+        binding.searchResultListErrorViewWithAction.setOnClickListener(listener)
     }
 }

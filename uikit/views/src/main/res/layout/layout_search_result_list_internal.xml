@@ -27,28 +27,76 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/topGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.08" />
+
         <com.sygic.maps.uikit.views.common.EmptyRecyclerView
             android:id="@+id/searchResultListRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:scrollbars="vertical"
-            app:emptyView="@id/searchResultListEmptyView"
+            app:emptyView="@id/searchResultListErrorViewAnimator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/layout_search_item_result_internal" />
 
-        <com.sygic.maps.uikit.views.common.AdvancedInfoView
-            android:id="@+id/searchResultListEmptyView"
-            android:layout_width="match_parent"
+        <ViewAnimator
+            android:id="@+id/searchResultListErrorViewAnimator"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            app:imageDescription="@string/magnifying_glass"
-            app:imageSource="@drawable/ic_search"
-            app:suggestionText="@string/try_changing_your_search_criteria"
-            app:titleText="@string/no_results_found" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topGuideline">
 
-    </FrameLayout>
+            <!-- NO_RESULTS_FOUND -->
+            <com.sygic.maps.uikit.views.common.AdvancedInfoView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:imageDescription="@string/magnifying_glass"
+                app:imageSource="@drawable/ic_search"
+                app:suggestionText="@string/try_changing_your_search_criteria"
+                app:titleText="@string/no_results_found" />
+
+            <!-- SLOW_INTERNET_CONNECTION -->
+            <com.sygic.maps.uikit.views.common.AdvancedInfoView
+                android:id="@+id/searchResultListErrorViewWithAction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:actionButtonText="@string/try_again"
+                app:imageDescription="@string/magnifying_glass"
+                app:imageSource="@drawable/ic_search"
+                app:titleText="@string/current_internet_connection_is_too_slow" />
+
+            <!-- NO_INTERNET_CONNECTION -->
+            <com.sygic.maps.uikit.views.common.AdvancedInfoView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:imageDescription="@string/magnifying_glass"
+                app:imageSource="@drawable/ic_search"
+                app:suggestionText="@string/check_the_signal_in_your_area"
+                app:titleText="@string/no_internet_connection" />
+
+            <!-- GENERAL_ERROR -->
+            <com.sygic.maps.uikit.views.common.AdvancedInfoView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:imageDescription="@string/magnifying_glass"
+                app:imageSource="@drawable/ic_search"
+                app:suggestionText="@string/try_again_later"
+                app:titleText="@string/sorry_something_went_wrong" />
+
+        </ViewAnimator>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
-

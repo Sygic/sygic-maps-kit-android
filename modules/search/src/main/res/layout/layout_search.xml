@@ -72,6 +72,8 @@
             android:layout_marginTop="8dp"
             android:onScrollStateChanged="@{searchResultListViewModel::onResultListScrollStateChanged}"
             app:adapter="@{searchResultListViewModel.activeAdapter}"
+            app:errorViewSwitcherIndex="@{safeUnbox(searchResultListViewModel.errorViewSwitcherIndex)}"
+            app:onErrorViewWithActionListener="@{() -> searchToolbarViewModel.retrySearch()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

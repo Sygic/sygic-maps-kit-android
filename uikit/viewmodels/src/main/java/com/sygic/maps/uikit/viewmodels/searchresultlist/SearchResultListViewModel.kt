@@ -33,10 +33,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
+import com.sygic.maps.uikit.viewmodels.common.utils.searchResultStateToErrorViewSwitcherIndex
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
+import com.sygic.maps.uikit.views.searchresultlist.SearchResultListErrorViewSwitcherIndex
 import com.sygic.maps.uikit.views.searchresultlist.adapter.DefaultStateAdapter
 import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
@@ -57,6 +59,7 @@ open class SearchResultListViewModel internal constructor(
     val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
     val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<out SearchResult>>> = SingleLiveEvent()
 
+    val errorViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
     val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> = MutableLiveData()
 
     private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
@@ -64,17 +67,19 @@ open class SearchResultListViewModel internal constructor(
 
     private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
 
-    private val searchResultsListener = Search.SearchResultsListener { input, _, results ->
+    private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
         results.toSearchResultList().let {
             resultListAdapter.items = it
             searchResultListDataChangedObservable.asSingleEvent().value = it
         }
 
+        errorViewSwitcherIndex.value = searchResultStateToErrorViewSwitcherIndex(state)
         activeAdapter.value = if (input.isNotEmpty()) resultListAdapter else defaultStateAdapter
     }
 
     init {
         activeAdapter.value = defaultStateAdapter
+        errorViewSwitcherIndex.value = SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND
         searchManager.addSearchResultsListener(searchResultsListener)
     }
 
