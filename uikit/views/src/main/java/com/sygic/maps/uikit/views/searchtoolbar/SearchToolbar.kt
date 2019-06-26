@@ -38,18 +38,19 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.databinding.LayoutSearchToolbarInternalBinding
 
 /**
- * A [SearchToolbar] can be used as input component to the search screen. It contains [EditText] input field, state
+ * A [SearchToolbar] can be used as an input component to the search screen. It contains [EditText] input field, state
  * switcher (MAGNIFIER or PROGRESSBAR) and clear [Button].
  *
- * TODO MS-5681
- *
+ * The [SearchToolbar] search icon and the clear button icon can be changed with the custom _searchToolbarStyle_
+ * (the _searchIcon_ or _clearButtonIcon_ attribute) or you can use the standard android attributes as _colorBackground_,
+ * _textColorPrimary_ or _textColorSecondary_ definition. The [SearchToolbar] hint can be overridden by the _search_hint_ string.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchToolbar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.searchToolbarStyle,
-    defStyleRes: Int = R.style.SygicSearchToolbarStyle // TODO: MS-5681
+    defStyleRes: Int = R.style.SygicSearchToolbarStyle
 ) : Toolbar(context, attrs, defStyleAttr) {
 
     private val binding: LayoutSearchToolbarInternalBinding =
@@ -74,6 +75,25 @@ open class SearchToolbar @JvmOverloads constructor(
 
     init {
         descendantFocusability = FOCUS_AFTER_DESCENDANTS
+
+        attrs?.let { attributeSet ->
+            context.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.SearchToolbar,
+                defStyleAttr,
+                defStyleRes
+            ).apply {
+                binding.searchToolbarSearchIcon.setImageResource(
+                    getResourceId(R.styleable.SearchToolbar_searchIcon, R.drawable.ic_search_robust)
+                )
+
+                binding.searchToolbarClearButton.setImageResource(
+                    getResourceId(R.styleable.SearchToolbar_clearButtonIcon, R.drawable.ic_close)
+                )
+
+                recycle()
+            }
+        }
     }
 
     private fun setTextInternal(text: CharSequence) {

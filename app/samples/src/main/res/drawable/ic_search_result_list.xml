@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
   ~
@@ -23,21 +22,13 @@
   ~ SOFTWARE.
   -->
 
-<resources>
-    <string name="send_email">Send e-mail</string>
-    <string name="no_browser_client">Unable to find Web browser</string>
-    <string name="no_email_client">Unable to find e-mail client</string>
-    <string name="no_phone_client">Unable to find phone client</string>
-    <string name="copied_to_clipboard">Copied to clipboard</string>
-    <string name="magnifying_glass">Magnifying glass</string>
-    <string name="search">Search</string>
-    <string name="search_hint">@string/search</string>
-    <string name="no_results_found">No results found</string>
-    <string name="try_changing_your_search_criteria">Try changing your search criteria</string>
-    <string name="try_again">Try again</string>
-    <string name="current_internet_connection_is_too_slow">Your current internet connection is too slow</string>
-    <string name="no_internet_connection">No internet connection</string>
-    <string name="check_the_signal_in_your_area">Check the signal in your area or turn on mobile data or WiFi</string>
-    <string name="sorry_something_went_wrong">Sorry, something went wrong</string>
-    <string name="try_again_later">Try again later</string>
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="?android:attr/textColorPrimary"
+        android:pathData="M4,14h4v-4L4,10v4zM4,19h4v-4L4,15v4zM4,9h4L8,5L4,5v4zM9,14h12v-4L9,10v4zM9,19h12v-4L9,15v4zM9,5v4h12L21,5L9,5z" />
+</vector>

@@ -48,11 +48,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/searchToolbarSearchIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_search_robust"
-                android:tint="?android:attr/textColorPrimary" />
+                android:tint="?android:attr/textColorPrimary"
+                tools:src="@drawable/ic_search_robust" />
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Inverse"
@@ -72,7 +73,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="start|center_vertical"
-            android:hint="@string/search"
+            android:hint="@string/search_hint"
             android:imeOptions="actionSearch|flagNoExtractUi"
             android:inputType="textNoSuggestions"
             android:maxLines="1"
@@ -85,19 +86,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/searchToolbarClearButton"
             app:layout_constraintStart_toEndOf="@+id/searchToolbarIconStateSwitcher"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/searchToolbarClearButton"
             android:layout_width="48dp"
             android:layout_height="0dp"
             android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_close"
             android:tint="?android:attr/textColorSecondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_close" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

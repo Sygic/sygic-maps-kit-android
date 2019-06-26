@@ -55,7 +55,7 @@ class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), ModuleConnect
         removeAllMapMarkersObservable.asSingleEvent().call()
 
         if (searchResultList.isNotEmpty()) {
-            if (searchResultList.isOnlyCategory()) {
+            if (searchResultList.isCategoryResult()) {
                 (searchResultList.first() as MapSearchResult).loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
                     if (state == SearchResult.ResultState.Success) {
                         when (mapSearchDetail) {
@@ -117,7 +117,7 @@ private fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
     return geoCoordinatesList
 }
 
-private fun List<SearchResult>.isOnlyCategory(): Boolean {
+private fun List<SearchResult>.isCategoryResult(): Boolean {
     val firstSearchResult = first()
     return size == 1 && firstSearchResult is MapSearchResult
             && (firstSearchResult.dataType == MapSearchResult.DataType.PoiCategoryGroup

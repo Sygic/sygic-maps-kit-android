@@ -27,4 +27,3 @@
     <solid android:color="?android:attr/colorBackground" />
     <corners android:radius="3dp" />
 </shape>
-

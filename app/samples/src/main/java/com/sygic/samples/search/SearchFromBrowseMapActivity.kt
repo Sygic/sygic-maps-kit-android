@@ -53,7 +53,10 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
         if (savedInstanceState == null) {
             setFragmentModuleConnection(
-                placeBrowseMapFragment(11F, GeoCoordinates(48.145764, 17.126015)), viewModel
+                placeBrowseMapFragment().apply {
+                    cameraDataModel.zoomLevel = 11F
+                    cameraDataModel.position = GeoCoordinates(48.145764, 17.126015)
+                }, viewModel
             )
         } else {
             setFragmentModuleConnection(
@@ -64,11 +67,8 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
     // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
     // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
-    private fun placeBrowseMapFragment(zoomLevel: Float, position: GeoCoordinates) =
-        BrowseMapFragment().apply {
-            cameraDataModel.zoomLevel = zoomLevel
-            cameraDataModel.position = position
-        }.also {
+    private fun placeBrowseMapFragment() =
+        BrowseMapFragment().also {
             supportFragmentManager
                 ?.beginTransaction()
                 ?.replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
