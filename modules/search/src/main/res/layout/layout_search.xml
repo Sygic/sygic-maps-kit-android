@@ -24,7 +24,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -35,6 +35,10 @@
         <variable
             name="searchToolbarViewModel"
             type="com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel" />
+
+        <variable
+            name="searchResultListViewModel"
+            type="com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel" />
 
     </data>
 
@@ -51,6 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:onFocusChange="@{searchToolbarViewModel::onFocusChanged}"
             android:text="@={searchToolbarViewModel.inputText}"
             app:focused="@{safeUnbox(searchToolbarViewModel.searchToolbarFocused)}"
             app:iconStateSwitcherIndex="@{safeUnbox(searchToolbarViewModel.iconStateSwitcherIndex)}"
@@ -58,7 +63,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:onClearButtonClickListener="@{() -> searchToolbarViewModel.onClearButtonClick()}"
-            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(actionId)}" />
+            app:onEditorActionListener="@{(v, actionId, event) -> searchToolbarViewModel.onEditorActionEvent(v, actionId)}" />
+
+        <com.sygic.maps.uikit.views.searchresultlist.SearchResultList
+            android:id="@+id/searchResultList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:onScrollStateChanged="@{searchResultListViewModel::onResultListScrollStateChanged}"
+            app:adapter="@{searchResultListViewModel.activeAdapter}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchToolbar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

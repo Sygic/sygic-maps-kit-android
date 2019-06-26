@@ -41,7 +41,7 @@ open class SearchFabViewModel internal constructor() : ViewModel() {
 
     val searchFragmentObservable: LiveData<Any> = SingleLiveEvent()
 
-    fun onClick() {
+    open fun onClick() {
         searchFragmentObservable.asSingleEvent().call()
     }
 }

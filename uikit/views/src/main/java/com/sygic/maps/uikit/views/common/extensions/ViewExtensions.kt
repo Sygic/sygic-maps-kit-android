@@ -24,7 +24,28 @@
 
 package com.sygic.maps.uikit.views.common.extensions
 
-import android.widget.EditText
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.ColorRes
+import androidx.appcompat.content.res.AppCompatResources
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 
-fun EditText.showKeyboard() = context?.showKeyboard(this)
-fun EditText.hideKeyboard() = context?.hideKeyboard(this)
+fun View.showKeyboard() = context?.showKeyboard(this)
+fun View.hideKeyboard() = context?.hideKeyboard(this)
+
+fun View.visible(visible: Boolean, invisibleValue: Int = View.GONE) {
+    visibility = if (visible) View.VISIBLE else invisibleValue
+}
+
+fun TextView.text(textHolder: TextHolder) {
+    text = textHolder.getText(context)
+}
+
+fun ImageView.tint(@ColorRes color: Int) {
+    imageTintList = AppCompatResources.getColorStateList(context, color)
+}
+
+fun ImageView.backgroundTint(@ColorRes color: Int) {
+    backgroundTintList = AppCompatResources.getColorStateList(context, color)
+}

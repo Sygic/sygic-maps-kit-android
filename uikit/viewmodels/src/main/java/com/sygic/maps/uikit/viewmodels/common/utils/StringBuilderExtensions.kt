@@ -24,7 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.common.utils
 
-
 fun StringBuilder.appendOnNewLine(stringToAppend: CharSequence): StringBuilder {
     if (this.isNotEmpty())
         append("\n")

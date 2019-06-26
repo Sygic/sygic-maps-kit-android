@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.search.callback
 
+import androidx.lifecycle.LiveData
 import com.sygic.sdk.search.SearchResult
 
 /**
@@ -39,4 +40,8 @@ interface SearchResultCallback {
      *
      */
     fun onSearchResult(searchResultList: List<SearchResult>)
+}
+
+internal interface SearchResultCallbackWrapper {
+    val searchResultCallbackProvider: LiveData<SearchResultCallback>
 }

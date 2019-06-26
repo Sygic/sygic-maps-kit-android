@@ -25,9 +25,9 @@
 package com.sygic.samples.browsemap
 
 import android.os.Bundle
-import android.widget.Toast
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.browsemap.payload.CustomDataPayload
@@ -57,9 +57,9 @@ class BrowseMapClickListenerActivity : CommonSampleActivity() {
                     when (payload) {
                         is CustomDataPayload -> {
                             // Note: This is my custom payload
-                            Toast.makeText(this@BrowseMapClickListenerActivity, payload.customString, Toast.LENGTH_LONG).show()
+                            longToast(payload.customString)
                         }
-                        else -> Toast.makeText(this@BrowseMapClickListenerActivity, payload.toString(), Toast.LENGTH_LONG).show()
+                        else -> longToast(payload.toString())
                     }
                 }
             }

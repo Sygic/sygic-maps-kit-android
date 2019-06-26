@@ -25,9 +25,12 @@
 package com.sygic.maps.uikit.viewmodels.searchtoolbar
 
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.TextView
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.Assisted
@@ -37,10 +40,8 @@ import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATION
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.views.common.extensions.getInt
-import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
-import com.sygic.maps.uikit.views.common.extensions.getString
+import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
@@ -61,6 +62,9 @@ open class SearchToolbarViewModel internal constructor(
     @Assisted arguments: Bundle?,
     private val searchManager: SearchManager
 ) : ViewModel(), DefaultLifecycleObserver {
+
+    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
+    val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
 
     val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
     val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>() {
@@ -86,8 +90,6 @@ open class SearchToolbarViewModel internal constructor(
 
     private var searchCoroutineJob: Job? = null
     private var lastSearchedString: String = EMPTY_STRING
-
-    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         with(arguments) {
@@ -121,29 +123,35 @@ open class SearchToolbarViewModel internal constructor(
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
     }
 
-    fun retrySearch() {
+    open fun retrySearch() {
         search(lastSearchedString)
     }
 
-    fun onClearButtonClick() {
+    open fun onClearButtonClick() {
         cancelSearch()
         inputText.value = EMPTY_STRING
     }
 
-    fun onEditorActionEvent(actionId: Int): Boolean {
+    open fun onEditorActionEvent(view: TextView, actionId: Int): Boolean {
         return when (actionId) {
             EditorInfo.IME_ACTION_SEARCH -> {
-                searchToolbarFocused.value = false
+                onActionSearchClickObservable.asSingleEvent().value = view
                 true
             }
             else -> false
         }
     }
 
+    open fun onFocusChanged(view: View, hasFocus: Boolean) {
+        searchToolbarFocused.value = hasFocus
+        if (hasFocus) view.showKeyboard()
+    }
+
     override fun onCleared() {
         super.onCleared()
 
         cancelSearch()
+        searchToolbarFocused.value = false
         searchManager.removeSearchResultsListener(searchResultsListener)
     }
 }

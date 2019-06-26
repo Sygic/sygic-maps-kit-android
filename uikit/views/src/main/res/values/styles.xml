@@ -65,6 +65,10 @@
     <style name="SygicSearchToolbarStyle">
     </style>
 
+    <!--TODO: MS-5681 -->
+    <style name="SygicSearchResultListStyle">
+    </style>
+
     <style name="SygicZoomControlsMenuStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>

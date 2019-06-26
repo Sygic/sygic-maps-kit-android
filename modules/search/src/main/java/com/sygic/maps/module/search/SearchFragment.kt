@@ -30,22 +30,30 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
+import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
+import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATION
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
@@ -57,10 +65,10 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 /**
  * A *[SearchFragment]* is the core component for any search operation. It can be easily used to display search input
  * and search result list on the same screen. It can be modified with initial search input or coordinates. It comes with
- * several pre build-in elements such as [SearchToolbar] or [SearchResultList]. TODO imports (MS-5212, MS-5213)
+ * several pre build-in elements such as [SearchToolbar] or [SearchResultList].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class SearchFragment : Fragment(), SdkInitializationManager.Callback {
+class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
 
     private val modulesComponent = ModulesComponentDelegate()
 
@@ -71,6 +79,9 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
     private lateinit var fragmentViewModel: SearchFragmentViewModel
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
+    private lateinit var searchResultListViewModel: SearchResultListViewModel
+
+    override val searchResultCallbackProvider: LiveData<SearchResultCallback> = MutableLiveData<SearchResultCallback>()
 
     private var injected = false
     private fun inject() {
@@ -155,12 +166,37 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = ViewModelProviders.of(this, viewModelFactory)[SearchFragmentViewModel::class.java]
-        searchToolbarViewModel =
-            ViewModelProviders.of(this, viewModelFactory.with(arguments))[SearchToolbarViewModel::class.java]
+        fragmentViewModel = ViewModelProviders.of(
+            this,
+            viewModelFactory
+        )[SearchFragmentViewModel::class.java].apply {
+            this.onFinishObservable.observe(
+                this@SearchFragment,
+                Observer<Any> { fragmentManager?.popBackStack() })
+        }
+        searchToolbarViewModel = ViewModelProviders.of(
+            this,
+            viewModelFactory.with(arguments)
+        )[SearchToolbarViewModel::class.java].apply {
+            this.onActionSearchClickObservable.observe(
+                this@SearchFragment,
+                Observer<TextView> { view -> fragmentViewModel.onActionSearchClick(view) })
+        }
+        searchResultListViewModel = ViewModelProviders.of(
+            this,
+            viewModelFactory
+        )[SearchResultListViewModel::class.java].apply {
+            this.onSearchResultItemClickObservable.observe(
+                this@SearchFragment,
+                Observer<SearchResultItem<out SearchResult>> { fragmentViewModel.onSearchResultItemClick(it) })
+            this.searchResultListDataChangedObservable.observe(
+                this@SearchFragment,
+                Observer<List<SearchResultItem<out SearchResult>>> { fragmentViewModel.searchResultListDataChanged(it) })
+        }
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(searchToolbarViewModel)
+        lifecycle.addObserver(searchResultListViewModel)
     }
 
     @CallSuper
@@ -173,6 +209,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
         binding.lifecycleOwner = this
         binding.searchFragmentViewModel = fragmentViewModel
         binding.searchToolbarViewModel = searchToolbarViewModel
+        binding.searchResultListViewModel = searchResultListViewModel
         return binding.root
     }
 
@@ -182,7 +219,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
      * @param callback [SearchResultCallback] callback to invoke when a search process is done.
      */
     fun setResultCallback(callback: SearchResultCallback?) {
-        //ToDO: MS-5213
+        searchResultCallbackProvider.asMutable().value = callback
     }
 
     /**
@@ -201,6 +238,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback {
 
         lifecycle.removeObserver(fragmentViewModel)
         lifecycle.removeObserver(searchToolbarViewModel)
+        lifecycle.removeObserver(searchResultListViewModel)
     }
 
     fun resolveAttributes(attributes: AttributeSet) {

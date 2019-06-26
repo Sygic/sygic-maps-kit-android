@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M6 18L6 18.5C6 19.3 5.3 20 4.5 20L2.5 20C1.7 20 1 19.3 1 18.5L1 16.5C1 16.4 1 16.3 1
+            16.3 1 16.2 1 16.1 1 16L1 14C1 13.3 1.2 12.6 1.5 12L1 12C0.4 12 0 11.6 0 11 0 10.4 0.4 10 1 10L2.8 10
+            3.7 7.8C4.6 5.4 6.8 4 9.3 4L14.7 4C17.2 4 19.4 5.4 20.3 7.8L21.2 10 23 10C23.6 10 24 10.4 24 11 24 11.6
+            23.6 12 23 12L22.5 12C22.8 12.6 23 13.3 23 14L23 16C23 16.1 23 16.2 23 16.3 23 16.3 23 16.4 23 16.5L23
+            18.5C23 19.3 22.3 20 21.5 20L19.5 20C18.7 20 18 19.3 18 18.5L18 18 6 18ZM6 15C6.6 15 7 14.6 7 14 7 13.4
+            6.6 13 6 13L4 13C3.4 13 3 13.4 3 14 3 14.6 3.4 15 4 15L6 15ZM20 13L18 13C17.4 13 17 13.4 17 14 17 14.6
+            17.4 15 18 15L20 15C20.6 15 21 14.6 21 14 21 13.4 20.6 13 20 13ZM19.4 11L18.5 8.6C17.9 7 16.4 6 14.7
+            6L9.3 6C7.6 6 6.1 7 5.5 8.6L4.6 11 19.4 11Z" />
+</vector>

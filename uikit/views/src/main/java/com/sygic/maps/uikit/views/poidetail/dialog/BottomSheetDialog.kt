@@ -191,10 +191,11 @@ class BottomSheetDialog @JvmOverloads constructor(
 
     private fun shouldWindowCloseOnTouchOutside(): Boolean {
         if (!canceledOnTouchOutsideSet) {
-            val typedArray = context.obtainStyledAttributes(intArrayOf(android.R.attr.windowCloseOnTouchOutside))
-            canceledOnTouchOutside = typedArray.getBoolean(0, true)
-            typedArray.recycle()
-            canceledOnTouchOutsideSet = true
+            context.obtainStyledAttributes(intArrayOf(android.R.attr.windowCloseOnTouchOutside)).apply {
+                canceledOnTouchOutside = getBoolean(0, true)
+                canceledOnTouchOutsideSet = true
+                recycle()
+            }
         }
 
         return canceledOnTouchOutside

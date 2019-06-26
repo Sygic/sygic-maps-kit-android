@@ -28,16 +28,20 @@ import android.os.Parcelable
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
-import com.sygic.sdk.places.LocationInfo
-import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
+import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
+import com.sygic.sdk.places.LocationInfo
+import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.MapObject
 import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
+import com.sygic.sdk.search.*
 import java.util.*
 
 @SelectionType
@@ -104,3 +108,30 @@ fun MapMarker.getCopyWithPayload(payload: Parcelable): MapMarker {
         .withPayload(payload)
         .build()
 }
+
+fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
+    return when (this) {
+        is MapSearchResult -> {
+            when (dataType) {
+                MapSearchResult.DataType.Country -> CountryResultItem(this)
+                MapSearchResult.DataType.Postal -> PostalResultItem(this)
+                MapSearchResult.DataType.City -> CityResultItem(this)
+                MapSearchResult.DataType.Street -> StreetResultItem(this)
+                MapSearchResult.DataType.AddressPoint -> AddressPointResultItem(this)
+                MapSearchResult.DataType.PostalAddress -> PostalAddressResultItem(this)
+                MapSearchResult.DataType.PoiCategoryGroup -> PoiCategoryGroupResultItem(this)
+                MapSearchResult.DataType.PoiCategory -> PoiCategoryResultItem(this)
+                MapSearchResult.DataType.Poi -> PoiResultItem(this)
+                else -> null
+            }
+        }
+        is CoordinateSearchResult -> CoordinateSearchResultItem(this)
+        else -> null
+    }
+}
+
+fun List<SearchResult>.toSearchResultList() : List<SearchResultItem<out SearchResult>> = mapNotNull { it.toSearchResultItem() }
+
+fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList() : List<SearchResult> = mapNotNull { it.dataPayload }
+
+fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) = Search().loadDetails(this, DetailRequest(), callback)

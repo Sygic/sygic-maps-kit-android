@@ -24,8 +24,10 @@
 
 package com.sygic.maps.uikit.viewmodels.common.data
 
-import android.text.TextUtils
 import com.sygic.maps.uikit.viewmodels.common.utils.appendOnNewLine
+import com.sygic.maps.uikit.viewmodels.common.utils.getCityWithPostal
+import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumber
+import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumberAndCityWithPostal
 import com.sygic.sdk.places.PoiInfo
 import kotlinx.android.parcel.Parcelize
 
@@ -91,35 +93,3 @@ private fun createBasicDescription(
 
     return BasicData.BasicDescription()
 }
-
-/**
- * Formatted example: Mlynské nivy 16, 821 09 Bratislava
- */
-private fun getStreetWithHouseNumberAndCityWithPostal(
-    street: String?,
-    houseNumber: String?,
-    city: String?,
-    postal: String?
-): String {
-    val builder = StringBuilder()
-    val streetWithHouseNumber = street?.let { getStreetWithHouseNumber(street, houseNumber) }
-
-    streetWithHouseNumber?.let { builder.append(it) }
-    getCityWithPostal(city, postal)?.let {
-        if (!TextUtils.isEmpty(streetWithHouseNumber)) builder.append(", ")
-        builder.append(it)
-    }
-    return builder.toString()
-}
-
-/**
- * Formatted example: Mlynské nivy 16
- */
-private fun getStreetWithHouseNumber(street: String?, houseNumber: String?): String? =
-    houseNumber?.let { if (it.isNotEmpty()) String.format("%s %s", street, it) else street } ?: street
-
-/**
- * Formatted example: 821 09 Bratislava
- */
-private fun getCityWithPostal(city: String?, postal: String?): String? =
-    postal?.let { if (it.isNotEmpty()) return String.format("%s %s", it, city) else city } ?: city

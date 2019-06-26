@@ -24,17 +24,21 @@
 
 package com.sygic.samples.search.viewmodels
 
-import android.util.Log
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.search.SearchFragment
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.sdk.search.SearchResult
 
 class SearchFromBrowseMapActivityViewModel : ViewModel(), ModuleConnectionProvider {
 
+    val showToastObservable: LiveData<String> = SingleLiveEvent()
+
     private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
-        searchResultList.forEach { Log.d("Test", it.type.toString()) } //todo: MS-5213 add it to the map?
+        showToastObservable.asSingleEvent().value = searchResultList.joinToString()
     }
 
     override val fragment: Fragment
