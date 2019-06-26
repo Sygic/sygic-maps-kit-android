@@ -29,6 +29,10 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
@@ -36,27 +40,53 @@ import com.sygic.maps.uikit.views.common.AdvancedInfoView
 import com.sygic.maps.uikit.views.common.EmptyRecyclerView
 import com.sygic.maps.uikit.views.databinding.LayoutSearchResultListInternalBinding
 import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
+import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 
 /**
  * A [SearchResultList] can be used as an visual presentation component for the search result items. It contains
  * [EmptyRecyclerView] and pre-customized [AdvancedInfoView] component.
  *
- * TODO: MS-5681
+ * The [SearchResultList] item layout can be completely changed with the custom _searchResultListStyle_
+ * (the _itemLayoutId_ attribute) or you can use the standard android attributes as _colorBackground_, _textColorPrimary_
+ * or _textColorSecondary_ definition. Note, the custom item layout provided by _itemLayoutId_ need to have the
+ * _searchItemIcon_ ([ImageView]), _searchItemIconRing_ ([ImageView]), _searchItemTitle_ ([TextView]) and _searchItemSubtitle_
+ * ([TextView]) identifiers. Or you can extend the [SearchResultListAdapter] and provide your custom [ResultListAdapter] with your
+ * custom ViewHolder logic (see [setAdapter] method and [SearchResultListAdapter] implementation).
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultList @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.searchResultListStyle,
-    defStyleRes: Int = R.style.SygicSearchResultListStyle // TODO: MS-5681
+    defStyleRes: Int = R.style.SygicSearchResultListStyle
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     private val binding: LayoutSearchResultListInternalBinding =
         LayoutSearchResultListInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
+    @LayoutRes
+    private var itemLayoutId: Int = R.layout.layout_search_item_result_internal
+
     init {
         binding.searchResultListRecyclerView.setHasFixedSize(true)
         binding.searchResultListRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.searchResultListRecyclerView.itemAnimator = DefaultItemAnimator()
+
+        attrs?.let { attributeSet ->
+            context.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.SearchResultList,
+                defStyleAttr,
+                defStyleRes
+            ).apply {
+                itemLayoutId = getResourceId(
+                    R.styleable.SearchResultList_itemLayoutId,
+                    R.layout.layout_search_item_result_internal
+                )
+
+                recycle()
+            }
+        }
     }
 
     /**
@@ -68,6 +98,7 @@ open class SearchResultList @JvmOverloads constructor(
      * @param adapter The new adapter to set, or null to set no adapter.
      */
     fun <T : Parcelable> setAdapter(adapter: ResultListAdapter<T, ResultListAdapter.ItemViewHolder<T>>) {
+        adapter.itemLayoutId = itemLayoutId
         binding.searchResultListRecyclerView.adapter = adapter
     }
 
@@ -102,5 +133,24 @@ open class SearchResultList @JvmOverloads constructor(
      */
     fun clearOnScrollListeners() {
         binding.searchResultListRecyclerView.clearOnScrollListeners()
+    }
+
+    /**
+     * Set an active error view of the ErrorViewSwitcher.
+     *
+     * @param index [SearchResultListErrorViewSwitcherIndex] No Results, Slow internet connection, No internet
+     * connection or General error.
+     */
+    fun setErrorViewSwitcherIndex(@SearchResultListErrorViewSwitcherIndex index: Int) {
+        binding.searchResultListErrorViewAnimator.displayedChild = index
+    }
+
+    /**
+     * Register a callback to be invoked when [SearchResultList] error view with action button is clicked.
+     *
+     * @param listener [OnClickListener] callback to invoke on [SearchResultList] error view with action button click.
+     */
+    fun setOnErrorViewWithActionListener(listener: OnClickListener) {
+        binding.searchResultListErrorViewWithAction.setOnClickListener(listener)
     }
 }

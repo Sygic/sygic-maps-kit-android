@@ -22,34 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.initialization
+package com.sygic.maps.uikit.viewmodels.common.utils
 
-import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.views.common.utils.logError
-import com.sygic.sdk.SygicEngine
+import com.sygic.maps.uikit.views.searchresultlist.SearchResultListErrorViewSwitcherIndex
+import com.sygic.sdk.search.SearchResult
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface SdkInitializationManager {
-
-    @InitializationState
-    var initializationState: Int
-
-    interface Callback {
-        fun onSdkInitialized()
-        fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
-            val errorType = when (error) {
-                SygicEngine.OnInitListener.InitError.InternalInit -> "Internal init"
-                SygicEngine.OnInitListener.InitError.Resources -> "Resources"
-                else -> "Unknown"
-            }
-            logError("SDK Initialization failed: $errorType error :(")
-        }
+@SearchResultListErrorViewSwitcherIndex
+internal fun searchResultStateToErrorViewSwitcherIndex(@SearchResult.ResultState state: Int): Int {
+    return when (state) {
+        SearchResult.ResultState.Success -> SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND
+        SearchResult.ResultState.NotAvailable -> SearchResultListErrorViewSwitcherIndex.NO_INTERNET_CONNECTION
+        SearchResult.ResultState.Timeout -> SearchResultListErrorViewSwitcherIndex.SLOW_INTERNET_CONNECTION
+        else -> SearchResultListErrorViewSwitcherIndex.GENERAL_ERROR
     }
-
-    fun initialize(callback: Callback)
-    fun initialize(callback: () -> Unit) { initialize(object : Callback { override fun onSdkInitialized() = callback() }) }
-
-    fun isInitialized() = initializationState == InitializationState.INITIALIZED
-
-    fun onReady(block: () -> Unit) = if (isInitialized()) block.invoke() else initialize { block.invoke() }
 }

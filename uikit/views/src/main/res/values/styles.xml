@@ -61,12 +61,13 @@
         <item name="android:backgroundTint">?android:attr/colorBackground</item>
     </style>
 
-    <!--TODO: MS-5681 -->
     <style name="SygicSearchToolbarStyle">
+        <item name="searchIcon">@drawable/ic_search_robust</item>
+        <item name="clearButtonIcon">@drawable/ic_close</item>
     </style>
 
-    <!--TODO: MS-5681 -->
     <style name="SygicSearchResultListStyle">
+        <item name="itemLayoutId">@layout/layout_search_item_result_internal</item>
     </style>
 
     <style name="SygicZoomControlsMenuStyle">

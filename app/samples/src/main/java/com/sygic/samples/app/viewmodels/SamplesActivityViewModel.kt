@@ -41,9 +41,11 @@ import com.sygic.samples.app.fragments.NavigationSampleListFragment
 import com.sygic.samples.app.fragments.SearchSampleListFragment
 
 private const val GITHUB_WIKI_COMPASS = "${BuildConfig.GITHUB_WIKI}UiKit-Compass"
-private const val GITHUB_WIKI_POI_DETAIL = "${BuildConfig.GITHUB_WIKI}UiKit-PoiDetail"
-private const val GITHUB_WIKI_POSITION_LOCK_FAB = "${BuildConfig.GITHUB_WIKI}UiKit-PositionLockFab"
-private const val GITHUB_WIKI_ZOOM_CONTROLS = "${BuildConfig.GITHUB_WIKI}UiKit-ZoomControls"
+private const val GITHUB_WIKI_POI_DETAIL = "${BuildConfig.GITHUB_WIKI}UiKit-Poi-Detail"
+private const val GITHUB_WIKI_POSITION_LOCK_FAB = "${BuildConfig.GITHUB_WIKI}UiKit-Position-Lock-Fab"
+private const val GITHUB_WIKI_ZOOM_CONTROLS = "${BuildConfig.GITHUB_WIKI}UiKit-Zoom-Controls"
+private const val GITHUB_WIKI_SEARCH_TOOLBAR = "${BuildConfig.GITHUB_WIKI}UiKit-Search-Toolbar"
+private const val GITHUB_WIKI_SEARCH_RESULT_LIST = "${BuildConfig.GITHUB_WIKI}UiKit-Search-Result-List"
 
 class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, NavigationView.OnNavigationItemSelectedListener {
 
@@ -67,6 +69,8 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
             R.id.nav_ui_kit_poi_detail -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_POI_DETAIL
             R.id.nav_ui_kit_position_lock_fab -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_POSITION_LOCK_FAB
             R.id.nav_ui_kit_zoom_controls -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_ZOOM_CONTROLS
+            R.id.nav_ui_kit_search_toolbar -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_SEARCH_TOOLBAR
+            R.id.nav_ui_kit_search_result_list -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_SEARCH_RESULT_LIST
             R.id.nav_source_code -> openLinkInBrowserObservable.asSingleEvent().value = BuildConfig.GITHUB_REPO
             R.id.nav_wiki -> openLinkInBrowserObservable.asSingleEvent().value = BuildConfig.GITHUB_WIKI
             R.id.nav_qa -> openLinkInBrowserObservable.asSingleEvent().value = BuildConfig.STACK_OVERFLOW

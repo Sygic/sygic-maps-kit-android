@@ -58,4 +58,13 @@
         <attr name="android:backgroundTint" />
     </declare-styleable>
 
+    <declare-styleable name="SearchToolbar">
+        <attr name="searchIcon" />
+        <attr name="clearButtonIcon" />
+    </declare-styleable>
+
+    <declare-styleable name="SearchResultList">
+        <attr name="itemLayoutId" />
+    </declare-styleable>
+
 </resources>
