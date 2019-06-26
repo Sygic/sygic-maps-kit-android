@@ -22,23 +22,28 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.views.common.utils
 
-import android.app.Application;
-import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+open class SingletonHolder<T> {
 
-import javax.inject.Singleton;
+    @Volatile
+    private var instance: T? = null
 
-@Module
-public class SdkInitializationManagerModule {
+    fun getInstance(creator: () -> T): T {
+        val i = instance
+        if (i != null) {
+            return i
+        }
 
-    @Singleton
-    @Provides
-    SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
-        return SdkInitializationManagerImpl.getInstance(application);
+        return synchronized(this) {
+            val i2 = instance
+            if (i2 != null) {
+                i2
+            } else {
+                val created = creator()
+                instance = created
+                created
+            }
+        }
     }
 }

@@ -24,9 +24,12 @@
 
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
+import android.app.Activity
+import android.app.Application
 import android.os.Parcelable
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
@@ -41,6 +44,9 @@ import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
+import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.RoutePlan
+import com.sygic.sdk.route.Router
 import com.sygic.sdk.search.*
 import java.util.*
 
@@ -130,8 +136,29 @@ fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
     }
 }
 
-fun List<SearchResult>.toSearchResultList() : List<SearchResultItem<out SearchResult>> = mapNotNull { it.toSearchResultItem() }
+fun List<SearchResult>.toSearchResultList(): List<SearchResultItem<out SearchResult>> = mapNotNull { it.toSearchResultItem() }
 
-fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList() : List<SearchResult> = mapNotNull { it.dataPayload }
+fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList(): List<SearchResult> = mapNotNull { it.dataPayload }
 
 fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) = Search().loadDetails(this, DetailRequest(), callback)
+
+@FunctionalInterface
+interface RouteInfoCallback {
+    fun onPrimaryComputeFinished(route: RouteInfo)
+}
+
+fun Activity.computePrimaryRoute(routePlan: RoutePlan, callback: (route: RouteInfo) -> Unit) =
+    application.computePrimaryRoute(routePlan,
+        object : RouteInfoCallback {
+            override fun onPrimaryComputeFinished(route: RouteInfo) = callback(route)
+        })
+
+fun Application.computePrimaryRoute(routePlan: RoutePlan, callback: RouteInfoCallback) {
+    //ToDo: Remove when MS-5678 is done
+    SdkInitializationManagerImpl.getInstance(this).onReady {
+        Router().computeRoute(routePlan, object : Router.RouteComputeAdapter() {
+            override fun onPrimaryComputeFinished(router: Router, route: RouteInfo) =
+                callback.onPrimaryComputeFinished(route)
+        })
+    }
+}

@@ -25,16 +25,15 @@
 package com.sygic.samples.navigation
 
 import android.os.Bundle
-import android.util.Log
 import com.sygic.maps.module.navigation.NavigationFragment
+import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.route.RouteInfo
 import com.sygic.sdk.route.RoutePlan
-import com.sygic.sdk.route.Router
+import com.sygic.sdk.route.RoutingOptions
 
-class NavigationDefaultActivity : CommonSampleActivity() { //todo
+class NavigationDefaultActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Navigation#navigation---default"
 
@@ -44,25 +43,16 @@ class NavigationDefaultActivity : CommonSampleActivity() { //todo
         setContentView(R.layout.activity_navigation_default)
 
         val routePlan = RoutePlan().apply {
-            //todo
-            //start = GeoCoordinates(48.146523, 17.123961)
-            //destination = GeoCoordinates(49.190767, 16.611238)
-
             setStart(GeoCoordinates(48.146523, 17.123961))
             setDestination(GeoCoordinates(49.190767, 16.611238))
+            routingOptions = RoutingOptions().apply {
+                transportMode = RoutingOptions.TransportMode.Car
+                routingType = RoutingOptions.RoutingType.Economic
+            }
         }
 
-        val router = Router()
-        router.computeRoute(routePlan, object : Router.RouteComputeAdapter() {
-            override fun onPrimaryComputeFinished(router: Router, routes: RouteInfo) {
-                Log.d("Tomas", "onPrimaryComputeFinished() called with: router = [$router], routes = [$routes]")
-
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = routes
-            }
-
-            override fun onComputeError(router: Router, @Router.RouteComputeError error: Int) {
-                Log.d("Tomas", "onComputeError() called with: router = [$router], error = [$error]")
-            }
-        })
+        computePrimaryRoute(routePlan) { route ->
+            (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
+        }
     }
 }
