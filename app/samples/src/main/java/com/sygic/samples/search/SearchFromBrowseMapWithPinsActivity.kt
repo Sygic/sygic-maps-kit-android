@@ -41,6 +41,8 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Search#search---from-browse-map-with-pins"
 
+    private lateinit var browseMapFragment: BrowseMapFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,6 +50,7 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
 
         val viewModel =
             ViewModelProviders.of(this).get(SearchFromBrowseMapWitchPinsActivityViewModel::class.java).apply {
+                //TODO: MS-5347
                 this.addMapMarkerObservable.observe(
                     this@SearchFromBrowseMapWithPinsActivity,
                     Observer<MapMarker> { addMapMarker(it) })
@@ -66,20 +69,17 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
             }
 
         if (savedInstanceState == null) {
-            setFragmentModuleConnection(placeBrowseMapFragment(2F), viewModel)
+            browseMapFragment = placeBrowseMapFragment().apply { cameraDataModel.zoomLevel = 2F }
         } else {
-            setFragmentModuleConnection(
-                supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment, viewModel
-            )
+            browseMapFragment = supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment
         }
+        setFragmentModuleConnection(browseMapFragment, viewModel)
     }
 
     // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
     // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
-    private fun placeBrowseMapFragment(zoomLevel: Float) =
-        BrowseMapFragment().apply {
-            cameraDataModel.zoomLevel = zoomLevel
-        }.also {
+    private fun placeBrowseMapFragment() =
+        BrowseMapFragment().also {
             supportFragmentManager
                 ?.beginTransaction()
                 ?.replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
@@ -91,22 +91,19 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
         moduleConnectionProvider: ModuleConnectionProvider
     ) = fragment.setSearchConnectionProvider(moduleConnectionProvider)
 
-    private fun addMapMarker(mapMarker: MapMarker) = findBrowseMapFragment()?.addMapMarker(mapMarker)
+    private fun addMapMarker(mapMarker: MapMarker) = browseMapFragment.addMapMarker(mapMarker)
 
-    private fun removeAllMapMarkers() = findBrowseMapFragment()?.removeAllMapMarkers()
+    private fun removeAllMapMarkers() = browseMapFragment.removeAllMapMarkers()
 
     private fun setCameraPosition(position: GeoCoordinates) {
-        findBrowseMapFragment()?.cameraDataModel?.position = position
+        browseMapFragment.cameraDataModel.position = position
     }
 
     private fun setCameraRectangle(mapRectangle: MapRectangle) {
-        findBrowseMapFragment()?.cameraDataModel?.mapRectangle = mapRectangle
+        browseMapFragment.cameraDataModel.mapRectangle = mapRectangle
     }
 
     private fun setCameraZoomLevel(zoomLevel: Float) {
-        findBrowseMapFragment()?.cameraDataModel?.zoomLevel = zoomLevel
+        browseMapFragment.cameraDataModel.zoomLevel = zoomLevel
     }
-
-    private fun findBrowseMapFragment(): BrowseMapFragment? =
-        supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG)?.let { it as BrowseMapFragment }
 }
