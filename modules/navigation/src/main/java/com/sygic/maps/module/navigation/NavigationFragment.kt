@@ -43,7 +43,9 @@ const val NAVIGATION_FRAGMENT_TAG = "navigation_map_fragment_tag"
 internal const val KEY_ROUTE_INFO = "route_info"
 
 /**
- * A *[NavigationFragment]* TODO
+ * A *[NavigationFragment]* is the core component for any navigation operation. It can be easily used for the navigation
+ * purposes. By setting the [routeInfo] object will start the navigation process. Any pre build-in element such as [DirectionInfo]
+ * [Signposts], [Infobar], [CurrentSpeed] or [SpeedLimit] may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
@@ -54,7 +56,11 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
 
     /**
-     * A *[routeInfo]* TODO
+     * If *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
+     *
+     * @param [RouteInfo] route info object to be processed.
+     *
+     * @return [RouteInfo] the current route info value.
      */
     var routeInfo: RouteInfo?
         get() = if (::fragmentViewModel.isInitialized) {
