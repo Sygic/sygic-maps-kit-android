@@ -24,6 +24,18 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragmentContainer"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent">
+
+    <!-- Note: All these values can also be entered programmatically -->
+    <fragment
+        android:id="@+id/searchFragment"
+        class="com.sygic.maps.module.search.SearchFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:sygic_initial_latitude="51.507320"
+        app:sygic_initial_longitude="-0.127786"
+        app:sygic_initial_search_input="London Eye" />
+
+</FrameLayout>
