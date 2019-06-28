@@ -86,7 +86,7 @@ object Samples {
 
     val navigationSampleList: List<Sample> = listOf(
         Sample(
-            NavigationDefaultActivity::class.java, R.drawable.preview_navigation_default, //todo
+            NavigationDefaultActivity::class.java, R.drawable.preview_navigation_default,
             R.string.navigation_default, R.string.navigation_default_summary
         )
     )
