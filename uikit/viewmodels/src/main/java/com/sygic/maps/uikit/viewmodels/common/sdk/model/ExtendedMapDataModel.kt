@@ -28,29 +28,44 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.map.`object`.MapObject
+import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.map.data.SimpleMapDataModel
 
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     private var currentOnClickMapMarker: MapMarker? = null
-    private val userMapMarkers: MutableSet<MapMarker> = HashSet()
+    private val userMapObjects: MutableSet<MapObject<*>> = HashSet()
 
     fun addMapMarker(marker: MapMarker) {
-        userMapMarkers.add(marker)
+        userMapObjects.add(marker)
         addMapObject(marker)
     }
 
     fun removeMapMarker(marker: MapMarker) {
-        userMapMarkers.remove(marker)
+        userMapObjects.remove(marker)
         removeMapObject(marker)
     }
 
-    fun removeAllMapMarkers() {
-        with(userMapMarkers) {
-            forEach { removeMapObject(it) }
-            clear()
-        }
+    fun removeAllMapMarkers() = removeAllMapObjects<MapMarker>()
+
+    fun setMapRoute(mapRoute: MapRoute) {
+        removeAllMapRoutes()
+        addMapRoute(mapRoute)
     }
+
+    fun addMapRoute(mapRoute: MapRoute) {
+        userMapObjects.add(mapRoute)
+        addMapObject(mapRoute)
+    }
+
+    fun removeMapRoute(mapRoute: MapRoute) {
+        userMapObjects.remove(mapRoute)
+        removeMapObject(mapRoute)
+    }
+
+    fun removeAllMapRoutes() = removeAllMapObjects<MapRoute>()
 
     fun addOnClickMapMarker(onClickMapMarker: MapMarker) {
         currentOnClickMapMarker = onClickMapMarker
@@ -59,6 +74,15 @@ object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     fun removeOnClickMapMarker() {
         currentOnClickMapMarker?.let { removeMapObject(it) }
+    }
+
+    private inline fun <reified T : MapObject<*>> removeAllMapObjects() = with(userMapObjects) {
+        forEach {
+            if (it is T) {
+                removeMapObject(it)
+                remove(it)
+            }
+        }
     }
 
     override fun onDestroy(owner: LifecycleOwner) {

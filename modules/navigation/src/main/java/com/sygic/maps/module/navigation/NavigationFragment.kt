@@ -29,12 +29,14 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.route.RouteInfo
 
 const val NAVIGATION_FRAGMENT_TAG = "navigation_map_fragment_tag"
@@ -69,7 +71,9 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
-            //todo: Observables here :)
+            this.setMapRouteObservable.observe(
+                this@NavigationFragment,
+                Observer<MapRoute> { mapDataModel.setMapRoute(it) })
         }
 
         lifecycle.addObserver(fragmentViewModel)
@@ -93,16 +97,10 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     }
 
     override fun resolveAttributes(attributes: AttributeSet) {
-        with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) { //ToDo: resolve attributes here
-            /*if (hasValue(R.styleable.BrowseMapFragment_sygic_map_selectionMode)) {
-                mapSelectionMode =
-                    getInt(
-                        R.styleable.BrowseMapFragment_sygic_map_selectionMode,
-                        MAP_SELECTION_MODE_DEFAULT_VALUE
-                    )
-            }*/
+        //TODO: MS-6021
+        /*with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
 
             recycle()
-        }
+        }*/
     }
 }

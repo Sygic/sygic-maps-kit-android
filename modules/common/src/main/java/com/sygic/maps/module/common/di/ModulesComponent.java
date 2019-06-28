@@ -35,6 +35,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel;
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
+import com.sygic.sdk.navigation.NavigationManager;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -49,7 +50,8 @@ import javax.inject.Singleton;
                 PermissionsModule.class,
                 LocationModule.class,
                 SearchModule.class,
-                ThemeModule.class
+                ThemeModule.class,
+                NavigationManagerModule.class
         }
 )
 public interface ModulesComponent {
@@ -63,4 +65,5 @@ public interface ModulesComponent {
     SearchManager getSearchManager();
     ThemeManager getThemeManager();
     Application getApplication();
+    NavigationManager getNavigationManager();
 }

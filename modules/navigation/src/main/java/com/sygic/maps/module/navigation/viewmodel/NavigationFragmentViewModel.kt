@@ -28,11 +28,16 @@ import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.sdk.map.`object`.MapRoute
+import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.route.RouteInfo
 
 @AutoFactory
@@ -40,14 +45,25 @@ import com.sygic.sdk.route.RouteInfo
 class NavigationFragmentViewModel internal constructor(
     app: Application,
     @Assisted arguments: Bundle?,
-    private val themeManager: ThemeManager
+    themeManager: ThemeManager,
+    private val navigationManager: NavigationManager
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver {
 
-    val routeInfo: MutableLiveData<RouteInfo?> = MutableLiveData()
+    val routeInfo: MutableLiveData<RouteInfo?> = object: MutableLiveData<RouteInfo?>() {
+        override fun setValue(value: RouteInfo?) {
+            value?.let {
+                super.setValue(it)
+                navigationManager.setRouteForNavigation(it)
+                setMapRouteObservable.asSingleEvent().value = MapRoute.from(it).build()
+            }
+        }
+    }
+
+    val setMapRouteObservable: LiveData<MapRoute> = SingleLiveEvent()
 
     init {
         with(arguments) {
-            //todo
+            //TODO: MS-6021
         }
     }
 }
