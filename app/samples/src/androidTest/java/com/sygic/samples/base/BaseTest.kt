@@ -24,19 +24,12 @@
 
 package com.sygic.samples.base
 
-import android.Manifest
-import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.IdlingResource
 import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.base.idling.MapReadyIdlingResource
 import com.sygic.samples.base.rules.DisableAnimationsRule
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 
-open class BaseMapTest(activityClass: Class<out CommonSampleActivity>) {
+abstract class BaseTest(activityClass: Class<out CommonSampleActivity>) {
 
     @get:Rule
     val disableAnimationsRule = DisableAnimationsRule()
@@ -44,24 +37,6 @@ open class BaseMapTest(activityClass: Class<out CommonSampleActivity>) {
     @get:Rule
     val activityRule = ActivityTestRule(activityClass)
 
-    @get:Rule
-    val grantLocationPermissionRule: GrantPermissionRule =
-        GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-
     protected val activity: CommonSampleActivity
         get() = activityRule.activity
-
-    private lateinit var mapReadyIdlingResource: IdlingResource
-
-    @Before
-    fun registerIdlingResource() {
-        mapReadyIdlingResource = MapReadyIdlingResource(activity)
-
-        IdlingRegistry.getInstance().register(mapReadyIdlingResource)
-    }
-
-    @After
-    fun unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(mapReadyIdlingResource)
-    }
 }

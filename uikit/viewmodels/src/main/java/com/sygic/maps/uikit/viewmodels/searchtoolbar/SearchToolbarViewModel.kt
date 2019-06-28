@@ -88,6 +88,7 @@ open class SearchToolbarViewModel internal constructor(
         iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
     }
 
+    private val scope = CoroutineScope(Job() + Dispatchers.Main)
     private var searchCoroutineJob: Job? = null
     private var lastSearchedString: String = EMPTY_STRING
 
@@ -107,20 +108,11 @@ open class SearchToolbarViewModel internal constructor(
     private fun search(input: String) {
         lastSearchedString = input
         searchCoroutineJob?.cancel()
-        searchCoroutineJob = GlobalScope.launch(Dispatchers.Main) {
-            delay(searchDelay)
-            searchTextInput(input)
+        searchCoroutineJob = scope.launch {
+            iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
+            if (input.isNotEmpty()) delay(searchDelay)
+            searchManager.searchText(input, searchLocation)
         }
-    }
-
-    private fun searchTextInput(input: String) {
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
-        searchManager.searchText(input, searchLocation)
-    }
-
-    private fun cancelSearch() {
-        searchCoroutineJob?.cancel()
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
     }
 
     open fun retrySearch() {
@@ -128,7 +120,6 @@ open class SearchToolbarViewModel internal constructor(
     }
 
     open fun onClearButtonClick() {
-        cancelSearch()
         inputText.value = EMPTY_STRING
     }
 
@@ -150,7 +141,8 @@ open class SearchToolbarViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
-        cancelSearch()
+        searchCoroutineJob?.cancel()
+        scope.cancel()
         searchToolbarFocused.value = false
         searchManager.removeSearchResultsListener(searchResultsListener)
     }

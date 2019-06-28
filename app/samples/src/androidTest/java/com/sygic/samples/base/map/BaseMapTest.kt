@@ -22,34 +22,36 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.browsemap
+package com.sygic.samples.base.map
 
-import androidx.test.espresso.action.GeneralLocation
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sygic.samples.R
-import com.sygic.samples.base.map.BaseMapTest
-import com.sygic.samples.browsemap.robot.browseMap
-import org.junit.Test
-import org.junit.runner.RunWith
+import android.Manifest
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
+import androidx.test.rule.GrantPermissionRule
+import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.base.BaseTest
+import com.sygic.samples.base.idling.MapReadyIdlingResource
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
 
-@RunWith(AndroidJUnit4::class)
-class BrowseMapFullEspressoTest : BaseMapTest(BrowseMapFullActivity::class.java) {
+abstract class BaseMapTest(activityClass: Class<out CommonSampleActivity>) : BaseTest(activityClass) {
 
-    @Test
-    fun browseMapDisplayed() {
-        browseMap(activity) {
-            isViewDisplayed(R.id.compassView)
-            isViewDisplayed(R.id.positionLockFab)
-            isViewDisplayed(R.id.zoomControlsMenu)
-        }
+    @get:Rule
+    val grantLocationPermissionRule: GrantPermissionRule =
+            GrantPermissionRule.grant(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+
+    private lateinit var mapReadyIdlingResource: IdlingResource
+
+    @Before
+    fun registerIdlingResource() {
+        mapReadyIdlingResource = MapReadyIdlingResource(activity)
+
+        IdlingRegistry.getInstance().register(mapReadyIdlingResource)
     }
 
-    @Test
-    fun clickOnMap_poiDetailVisible() {
-        browseMap(activity) {
-            isPoiDetailHidden()
-            clickOnMapToLocation(GeneralLocation.CENTER)
-            isPoiDetailVisible()
-        }
+    @After
+    fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(mapReadyIdlingResource)
     }
 }
