@@ -126,8 +126,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         getMapAsync(this)
     }
 
-    final override fun getMapDataModel(): MapView.MapDataModel = ExtendedMapDataModel
-    final override fun getCameraDataModel(): Camera.CameraModel = ExtendedCameraModel
+    override fun getMapDataModel(): MapView.MapDataModel = ExtendedMapDataModel //todo
+    override fun getCameraDataModel(): Camera.CameraModel = ExtendedCameraModel //todo
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         executeInjector()
@@ -261,7 +261,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to be added.
      */
     fun addMapMarker(marker: MapMarker) {
-        mapDataModel.addMapMarker(marker)
+        //mapDataModel.addMapMarker(marker) //todo
     }
 
     /**
@@ -271,7 +271,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to remove.
      */
     fun removeMapMarker(marker: MapMarker) {
-        mapDataModel.removeMapMarker(marker)
+        //mapDataModel.removeMapMarker(marker) //todo
     }
 
     /**
@@ -288,7 +288,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * Remove all [MapMarker]-s from the map at once. This is useful if you want to remove all objects from the map.
      */
     fun removeAllMapMarkers() {
-        mapDataModel.removeAllMapMarkers()
+        //mapDataModel.removeAllMapMarkers() //todo
     }
 
     /**
