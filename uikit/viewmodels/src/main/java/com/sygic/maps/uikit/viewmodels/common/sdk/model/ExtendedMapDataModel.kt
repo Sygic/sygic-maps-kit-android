@@ -50,26 +50,26 @@ object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
         removeMapObject(marker)
     }
 
-    fun removeAllMapMarkers() = removeAllMapObjects<MapMarker>()
+    fun addMapRoute(mapRoute: MapRoute) {
+        userMapObjects.add(mapRoute)
+        addMapObject(mapRoute)
+    }
 
     fun setMapRoute(mapRoute: MapRoute) {
         removeAllMapRoutes()
         addMapRoute(mapRoute)
     }
 
-    fun addMapRoute(mapRoute: MapRoute) {
-        userMapObjects.add(mapRoute)
-        addMapObject(mapRoute)
-    }
-
-    fun getUserMapObjects(): Set<MapObject<*>> = Collections.unmodifiableSet(userMapObjects)
-
     fun removeMapRoute(mapRoute: MapRoute) {
         userMapObjects.remove(mapRoute)
         removeMapObject(mapRoute)
     }
 
+    fun removeAllMapMarkers() = removeAllMapObjects<MapMarker>()
+
     fun removeAllMapRoutes() = removeAllMapObjects<MapRoute>()
+
+    fun getUserMapObjects(): Set<MapObject<*>> = Collections.unmodifiableSet(userMapObjects)
 
     fun addOnClickMapMarker(onClickMapMarker: MapMarker) {
         currentOnClickMapMarker = onClickMapMarker

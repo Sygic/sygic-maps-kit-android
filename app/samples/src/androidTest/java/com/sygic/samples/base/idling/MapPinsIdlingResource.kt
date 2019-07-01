@@ -33,7 +33,7 @@ class MapPinsIdlingResource(activity: CommonSampleActivity) : BaseIdlingResource
 
     override fun isIdle(): Boolean {
         activity.supportFragmentManager.fragments.forEach { fragment ->
-            if (fragment is MapFragmentWrapper<*>) return fragment.mapDataModel.getUserMapMarkers().isNotEmpty()
+            if (fragment is MapFragmentWrapper<*>) return fragment.mapDataModel.getUserMapObjects().isNotEmpty()
         }
 
         return false
