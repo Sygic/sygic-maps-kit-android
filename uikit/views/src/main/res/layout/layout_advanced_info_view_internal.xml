@@ -37,9 +37,9 @@
             android:id="@+id/icon"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:contentDescription="@string/none"
             android:tint="?android:attr/textColorSecondary"
             android:visibility="gone"
+            tools:ignore="ContentDescription"
             tools:src="@drawable/ic_cross"
             tools:visibility="visible" />
 

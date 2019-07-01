@@ -22,34 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.browsemap
+package com.sygic.samples.base.idling
 
-import androidx.test.espresso.action.GeneralLocation
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.samples.R
-import com.sygic.samples.base.map.BaseMapTest
-import com.sygic.samples.browsemap.robot.browseMap
-import org.junit.Test
-import org.junit.runner.RunWith
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-@RunWith(AndroidJUnit4::class)
-class BrowseMapFullEspressoTest : BaseMapTest(BrowseMapFullActivity::class.java) {
+class SearchResultListDataReceivedIdlingResource(activity: CommonSampleActivity) :
+    RecyclerViewDataReceivedIdlingResource(activity, R.id.searchResultListRecyclerView) {
 
-    @Test
-    fun browseMapDisplayed() {
-        browseMap(activity) {
-            isViewDisplayed(R.id.compassView)
-            isViewDisplayed(R.id.positionLockFab)
-            isViewDisplayed(R.id.zoomControlsMenu)
-        }
-    }
-
-    @Test
-    fun clickOnMap_poiDetailVisible() {
-        browseMap(activity) {
-            isPoiDetailHidden()
-            clickOnMapToLocation(GeneralLocation.CENTER)
-            isPoiDetailVisible()
-        }
-    }
+    override fun isIdle(): Boolean = super.isIdle() && recyclerViewAdapter is SearchResultListAdapter<*>
 }

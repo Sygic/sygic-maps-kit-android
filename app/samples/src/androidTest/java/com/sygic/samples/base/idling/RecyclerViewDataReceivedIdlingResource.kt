@@ -22,34 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.browsemap
+package com.sygic.samples.base.idling
 
-import androidx.test.espresso.action.GeneralLocation
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sygic.samples.R
-import com.sygic.samples.base.map.BaseMapTest
-import com.sygic.samples.browsemap.robot.browseMap
-import org.junit.Test
-import org.junit.runner.RunWith
+import androidx.annotation.IdRes
+import androidx.recyclerview.widget.RecyclerView
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-@RunWith(AndroidJUnit4::class)
-class BrowseMapFullEspressoTest : BaseMapTest(BrowseMapFullActivity::class.java) {
+open class RecyclerViewDataReceivedIdlingResource(
+    activity: CommonSampleActivity,
+    @IdRes private val recyclerViewId: Int
+) : BaseIdlingResource(activity) {
 
-    @Test
-    fun browseMapDisplayed() {
-        browseMap(activity) {
-            isViewDisplayed(R.id.compassView)
-            isViewDisplayed(R.id.positionLockFab)
-            isViewDisplayed(R.id.zoomControlsMenu)
-        }
-    }
+    protected val recyclerViewAdapter: RecyclerView.Adapter<*>?
+        get() = activity.findViewById<RecyclerView>(recyclerViewId)?.adapter
 
-    @Test
-    fun clickOnMap_poiDetailVisible() {
-        browseMap(activity) {
-            isPoiDetailHidden()
-            clickOnMapToLocation(GeneralLocation.CENTER)
-            isPoiDetailVisible()
-        }
-    }
+    override fun getName(): String = "RecyclerViewDataReceivedIdlingResource"
+
+    override fun isIdle(): Boolean = recyclerViewAdapter?.let { it.itemCount > 0 } ?: false
 }

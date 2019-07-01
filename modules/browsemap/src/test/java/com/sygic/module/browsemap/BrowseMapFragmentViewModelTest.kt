@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.modules.browsemap
+package com.sygic.module.browsemap
 
 import android.app.Application
 import android.os.Bundle
@@ -67,19 +67,19 @@ class BrowseMapFragmentViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    internal lateinit var app: Application
+    private lateinit var app: Application
     @Mock
-    internal lateinit var poiDataManager: PoiDataManager
+    private lateinit var poiDataManager: PoiDataManager
     @Mock
-    internal lateinit var extendedMapDataModel: ExtendedMapDataModel
+    private lateinit var extendedMapDataModel: ExtendedMapDataModel
     @Mock
-    internal lateinit var mapInteractionManager: MapInteractionManager
+    private lateinit var mapInteractionManager: MapInteractionManager
     @Mock
     private lateinit var locationManager: LocationManager
     @Mock
-    internal lateinit var permissionsManager: PermissionsManager
+    private lateinit var permissionsManager: PermissionsManager
     @Mock
-    internal lateinit var themeManager: ThemeManager
+    private lateinit var themeManager: ThemeManager
 
     private lateinit var browseMapFragmentViewModel: BrowseMapFragmentViewModel
 
@@ -100,12 +100,12 @@ class BrowseMapFragmentViewModelTest {
         whenever(locationManager.positionOnMapEnabled).thenReturn(true)
 
         val arguments = mock<Bundle>()
-        whenever(arguments.getInt(eq(KEY_MAP_SELECTION_MODE), any<Int>())).thenReturn(MapSelectionMode.FULL)
-        whenever(arguments.getBoolean(eq(KEY_POSITION_ON_MAP), any<Boolean>())).thenReturn(true)
-        whenever(arguments.getBoolean(eq(KEY_COMPASS_ENABLED), any<Boolean>())).thenReturn(true)
-        whenever(arguments.getBoolean(eq(KEY_COMPASS_HIDE_IF_NORTH), any<Boolean>())).thenReturn(true)
-        whenever(arguments.getBoolean(eq(KEY_POSITION_LOCK_FAB), any<Boolean>())).thenReturn(true)
-        whenever(arguments.getBoolean(eq(KEY_ZOOM_CONTROLS), any<Boolean>())).thenReturn(true)
+        whenever(arguments.getInt(eq(KEY_MAP_SELECTION_MODE), any())).thenReturn(MapSelectionMode.FULL)
+        whenever(arguments.getBoolean(eq(KEY_POSITION_ON_MAP), any())).thenReturn(true)
+        whenever(arguments.getBoolean(eq(KEY_COMPASS_ENABLED), any())).thenReturn(true)
+        whenever(arguments.getBoolean(eq(KEY_COMPASS_HIDE_IF_NORTH), any())).thenReturn(true)
+        whenever(arguments.getBoolean(eq(KEY_POSITION_LOCK_FAB), any())).thenReturn(true)
+        whenever(arguments.getBoolean(eq(KEY_ZOOM_CONTROLS), any())).thenReturn(true)
 
         browseMapFragmentViewModel = BrowseMapFragmentViewModel(
             app,

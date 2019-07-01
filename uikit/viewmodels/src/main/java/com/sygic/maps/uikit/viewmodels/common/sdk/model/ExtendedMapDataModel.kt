@@ -31,6 +31,8 @@ import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.MapObject
 import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.map.data.SimpleMapDataModel
+import java.util.*
+import kotlin.collections.HashSet
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
@@ -59,6 +61,8 @@ object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
         userMapObjects.add(mapRoute)
         addMapObject(mapRoute)
     }
+
+    fun getUserMapObjects(): Set<MapObject<*>> = Collections.unmodifiableSet(userMapObjects)
 
     fun removeMapRoute(mapRoute: MapRoute) {
         userMapObjects.remove(mapRoute)

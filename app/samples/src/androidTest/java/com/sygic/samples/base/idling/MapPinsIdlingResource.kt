@@ -22,34 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.browsemap
+package com.sygic.samples.base.idling
 
-import androidx.test.espresso.action.GeneralLocation
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sygic.samples.R
-import com.sygic.samples.base.map.BaseMapTest
-import com.sygic.samples.browsemap.robot.browseMap
-import org.junit.Test
-import org.junit.runner.RunWith
+import com.sygic.maps.module.common.MapFragmentWrapper
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-@RunWith(AndroidJUnit4::class)
-class BrowseMapFullEspressoTest : BaseMapTest(BrowseMapFullActivity::class.java) {
+class MapPinsIdlingResource(activity: CommonSampleActivity) : BaseIdlingResource(activity) {
 
-    @Test
-    fun browseMapDisplayed() {
-        browseMap(activity) {
-            isViewDisplayed(R.id.compassView)
-            isViewDisplayed(R.id.positionLockFab)
-            isViewDisplayed(R.id.zoomControlsMenu)
+    override fun getName(): String = "MapPinsIdlingResource"
+
+    override fun isIdle(): Boolean {
+        activity.supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment is MapFragmentWrapper<*>) return fragment.mapDataModel.getUserMapMarkers().isNotEmpty()
         }
-    }
 
-    @Test
-    fun clickOnMap_poiDetailVisible() {
-        browseMap(activity) {
-            isPoiDetailHidden()
-            clickOnMapToLocation(GeneralLocation.CENTER)
-            isPoiDetailVisible()
-        }
+        return false
     }
 }

@@ -22,34 +22,32 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.browsemap
+package com.sygic.samples.search
 
-import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sygic.samples.R
-import com.sygic.samples.base.map.BaseMapTest
-import com.sygic.samples.browsemap.robot.browseMap
+import com.sygic.samples.base.BaseTest
+import com.sygic.samples.search.robot.search
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class BrowseMapFullEspressoTest : BaseMapTest(BrowseMapFullActivity::class.java) {
+class SearchFromBrowseMapPinsEspressoTest : BaseTest(SearchFromBrowseMapWithPinsActivity::class.java) {
 
     @Test
-    fun browseMapDisplayed() {
-        browseMap(activity) {
-            isViewDisplayed(R.id.compassView)
-            isViewDisplayed(R.id.positionLockFab)
-            isViewDisplayed(R.id.zoomControlsMenu)
-        }
-    }
+    fun searchWithCallback() {
+        search(activity) {
+            clickOnView(R.id.searchFab)
 
-    @Test
-    fun clickOnMap_poiDetailVisible() {
-        browseMap(activity) {
-            isPoiDetailHidden()
-            clickOnMapToLocation(GeneralLocation.CENTER)
-            isPoiDetailVisible()
+            isViewDisplayed(R.id.searchToolbar)
+            isViewDisplayed(R.id.searchResultList)
+
+            enterText( "London Eye")
+            containsSearchResultListItemWithText("Coca‑Cola London Eye")
+
+            pressSearchImeActionButton()
+
+            containsMapPins()
         }
     }
 }

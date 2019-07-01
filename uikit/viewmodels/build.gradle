@@ -81,4 +81,13 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // test libraries
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test:core:$robolectricVersion"
+    testImplementation "androidx.arch.core:core-testing:$lifecycleVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation "com.jraska.livedata:testing-ktx:$livedataTestingVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinCoroutinesVersion"
 }
