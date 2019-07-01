@@ -53,27 +53,28 @@ open class PositionLockFab @JvmOverloads constructor(
         isClickable = true
 
         attrs?.let { attributeSet ->
-            val typedArray = context.obtainStyledAttributes(attributeSet,
+            context.obtainStyledAttributes(
+                attributeSet,
                 R.styleable.PositionLockFab,
                 defStyleAttr,
                 defStyleRes
-            )
-
-            imageTintList = ColorStateList.valueOf(
-                typedArray.getColor(
-                    R.styleable.PositionLockFab_android_tint,
-                    context.getColorFromAttr(android.R.attr.colorAccent)
+            ).apply {
+                imageTintList = ColorStateList.valueOf(
+                    getColor(
+                        R.styleable.PositionLockFab_android_tint,
+                        context.getColorFromAttr(android.R.attr.colorAccent)
+                    )
                 )
-            )
 
-            backgroundTintList = ColorStateList.valueOf(
-                typedArray.getColor(
-                    R.styleable.PositionLockFab_android_backgroundTint,
-                    context.getColorFromAttr(android.R.attr.colorBackground)
+                backgroundTintList = ColorStateList.valueOf(
+                    getColor(
+                        R.styleable.PositionLockFab_android_backgroundTint,
+                        context.getColorFromAttr(android.R.attr.colorBackground)
+                    )
                 )
-            )
 
-            typedArray.recycle()
+                recycle()
+            }
         }
 
         setState(LockState.UNLOCKED)

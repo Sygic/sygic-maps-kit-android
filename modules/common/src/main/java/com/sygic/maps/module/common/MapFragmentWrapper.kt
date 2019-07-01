@@ -24,7 +24,6 @@
 
 package com.sygic.maps.module.common
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -47,15 +46,14 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.maps.module.common.component.MapFragmentInitComponent
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
 import com.sygic.maps.module.common.di.util.ModuleBuilder
-import com.sygic.maps.module.common.initialization.manager.SdkInitializationManager
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.location.SETTING_ACTIVITY_REQUEST_CODE
@@ -80,8 +78,8 @@ import javax.inject.Inject
 abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected abstract fun executeInjector()
+    protected abstract fun resolveAttributes(attributes: AttributeSet)
 
-    protected val mapFragmentInitComponent = MapFragmentInitComponent()
     protected val modulesComponent = ModulesComponentDelegate()
 
     @Inject
@@ -122,23 +120,26 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     ) = ViewModelProviders.of(this, viewModelFactory.with(*assistedParams))[viewModelClass]
 
     init {
+        if (arguments == null) {
+            arguments = Bundle.EMPTY
+        }
         getMapAsync(this)
     }
 
     final override fun getMapDataModel(): MapView.MapDataModel = ExtendedMapDataModel
     final override fun getCameraDataModel(): Camera.CameraModel = ExtendedCameraModel
 
-    override fun onInflate(context: Context, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         executeInjector()
         super.onInflate(context, attrs, savedInstanceState)
-        mapFragmentInitComponent.attributes = attrs
+        resolveAttributes(attrs)
     }
 
     override fun onAttach(context: Context) {
         executeInjector()
         super.onAttach(context)
 
-        sdkInitializationManager.initialize((context as Activity).application, this)
+        sdkInitializationManager.initialize(this)
         permissionManager.observe(this, Observer {
             permissionsRequesterCallback = it.callback
             requestPermissions(it.permissions, PERMISSIONS_REQUEST_CODE)
@@ -260,7 +261,17 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to be added.
      */
     fun addMapMarker(marker: MapMarker) {
-        mapDataModel.addMapObject(marker)
+        mapDataModel.addMapMarker(marker)
+    }
+
+    /**
+     * Remove a single [MapMarker] from the map. This is useful if you want remove only one specific object from the map,
+     * otherwise you can use [removeAllMapMarkers] method.
+     *
+     * @param marker [MapMarker] object to remove.
+     */
+    fun removeMapMarker(marker: MapMarker) {
+        mapDataModel.removeMapMarker(marker)
     }
 
     /**
@@ -274,16 +285,22 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     }
 
     /**
+     * Remove all [MapMarker]-s from the map at once. This is useful if you want to remove all objects from the map.
+     */
+    fun removeAllMapMarkers() {
+        mapDataModel.removeAllMapMarkers()
+    }
+
+    /**
      * Allows you to change the look of the map. The default value is [MapSkin.DAY].
      *
      * @param mapSkin [MapSkin] to be applied to the map.
      */
     fun setMapSkin(@MapSkin mapSkin: String) {
+        arguments = Bundle(arguments).apply { putString(ThemeManager.SkinLayer.DayNight.toString(), mapSkin) }
         try {
             fragmentViewModel.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, mapSkin)
-        } catch (e: UninitializedPropertyAccessException) {
-            mapFragmentInitComponent.skins[ThemeManager.SkinLayer.DayNight] = mapSkin
-        }
+        } catch (ignored: UninitializedPropertyAccessException) { }
     }
 
     /**
@@ -292,11 +309,10 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param vehicleSkin [VehicleSkin] to be applied to the vehicle indicator.
      */
     fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
+        arguments = Bundle(arguments).apply { putString(ThemeManager.SkinLayer.Vehicle.toString(), vehicleSkin) }
         try {
             fragmentViewModel.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, vehicleSkin)
-        } catch (e: UninitializedPropertyAccessException) {
-            mapFragmentInitComponent.skins[ThemeManager.SkinLayer.Vehicle] = vehicleSkin
-        }
+        } catch (ignored: UninitializedPropertyAccessException) { }
     }
 
     override fun onDestroy() {

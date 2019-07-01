@@ -24,14 +24,27 @@
 
 package com.sygic.maps.module.common.di.util;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory;
-import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
+
+import javax.inject.Provider;
+import java.util.Map;
 
 @Module
-public abstract class ViewModelModuleBase {
+public class ViewModelModuleBase {
 
-    @Binds
-    protected abstract ViewModelProvider.Factory bindViewModelFactory(ViewModelFactory factory);
+    @Provides
+    ViewModelFactory providesViewModelFactory(@NonNull final Map<Class<? extends ViewModel>, Provider<ViewModelCreatorFactory>> viewModels) {
+        return new ViewModelFactory(viewModels);
+    }
+
+    @Provides
+    ViewModelProvider.Factory bindViewModelFactory(final ViewModelFactory factory) {
+        return factory;
+    }
 }

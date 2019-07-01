@@ -83,6 +83,18 @@
             app:state="@{safeUnbox(positionLockFabViewModel.currentState)}"
             tools:visibility="visible" />
 
+        <com.sygic.maps.uikit.views.searchfab.SearchFab
+            android:id="@+id/searchFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="@{() -> browseMapFragmentViewModel.onSearchFabClick()}"
+            android:visibility="@{safeUnbox(browseMapFragmentViewModel.searchEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible" />
+
         <com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
             android:id="@+id/zoomControlsMenu"
             android:layout_width="wrap_content"

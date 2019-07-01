@@ -25,13 +25,13 @@
 package com.sygic.maps.uikit.views.common.extensions
 
 import android.content.*
-import android.content.Context.CLIPBOARD_SERVICE
-import android.content.Context.LOCATION_SERVICE
+import android.content.Context.*
 import android.location.LocationManager
 import android.net.Uri
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -39,6 +39,15 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import com.sygic.maps.uikit.views.R
+
+inline val Context.locationManager: LocationManager?
+    get() = getSystemService(LOCATION_SERVICE) as? LocationManager
+
+inline val Context.clipboardManager: ClipboardManager?
+    get() = getSystemService(CLIPBOARD_SERVICE) as? ClipboardManager
+
+inline val Context.inputMethodManager: InputMethodManager?
+    get() = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
 
 fun Context.applyStyle(@StyleRes resId: Int, force: Boolean = false) {
     theme.applyStyle(resId, force)
@@ -128,16 +137,11 @@ fun Context.copyToClipboard(text: String) {
     }
 }
 
-fun Context.shortToast(@StringRes text: Int) {
-    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-}
+fun Context.shortToast(@StringRes text: Int) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+fun Context.shortToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+fun Context.longToast(@StringRes text: Int) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+fun Context.longToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 
-fun Context.longToast(@StringRes text: Int) {
-    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-}
-
-inline val Context.locationManager: LocationManager?
-    get() = getSystemService(LOCATION_SERVICE) as? LocationManager
-
-inline val Context.clipboardManager: ClipboardManager?
-    get() = getSystemService(CLIPBOARD_SERVICE) as? ClipboardManager
+fun Context.showKeyboard(view: View) = inputMethodManager?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+fun Context.toggleKeyboard() = inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
+fun Context.hideKeyboard(view: View) = inputMethodManager?.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)

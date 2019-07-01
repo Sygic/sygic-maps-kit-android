@@ -27,6 +27,7 @@
     <string name="browse_map">Browse Map</string>
     <string name="browse_map_samples">Browse Map samples</string>
     <string name="search">Search</string>
+    <string name="search_samples">Search samples</string>
     <string name="navigation">Navigation</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -34,11 +35,13 @@
     <string name="nav_header_subtitle">http://www.sygic.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="modules">Modules</string>
-    <string name="ui_kit">Ui Kit</string>
+    <string name="ui_kit_components">Ui Kit components</string>
     <string name="compass">Compass</string>
     <string name="position_lock_fab">Position Lock Fab</string>
     <string name="zoom_controls">Zoom Controls</string>
     <string name="poi_detail">Poi Detail</string>
+    <string name="search_toolbar">Search Toolbar</string>
+    <string name="search_result_list">Search Result List</string>
     <string name="get_started">Get started!</string>
     <string name="source_code">Source code</string>
     <string name="wiki">Wiki</string>
@@ -68,6 +71,14 @@
     <string name="full">Full</string>
     <string name="browse_map_themes">Browse Map - Themes</string>
     <string name="browse_map_themes_summary">Browse Map module with custom theme</string>
+    <string name="search_default">Search - Default</string>
+    <string name="search_default_summary">Search module with no configuration</string>
+    <string name="search_from_browse_map">Search - From Browse Map</string>
+    <string name="search_from_browse_map_summary">Search module integrated into the Browse Map module</string>
+    <string name="search_from_browse_map_pins">Search - From Browse Map (Pins)</string>
+    <string name="search_from_browse_map_pins_summary">Search module integrated into the Browse Map module with pins</string>
+    <string name="search_pre_filled_input">Search - Pre-filled input</string>
+    <string name="search_pre_filled_input_summary">Search module with a pre-filled input</string>
     <string name="browse_map_split">Browse Map - Split</string>
     <string name="browse_map_split_summary">Browse Map module with map split</string>
 </resources>

@@ -32,13 +32,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.samples.R
 import com.sygic.samples.databinding.ActivitySamplesBinding
 import com.sygic.samples.app.viewmodels.SamplesActivityViewModel
 import com.sygic.maps.uikit.views.common.extensions.openUrl
+import com.sygic.samples.app.fragments.BaseSamplesListFragment
 
 class SamplesActivity : AppCompatActivity() {
 
@@ -56,9 +56,12 @@ class SamplesActivity : AppCompatActivity() {
             this.closeDrawerLayoutObservable.observe(
                 this@SamplesActivity,
                 Observer<Any> { binding.drawerLayout.closeDrawer(GravityCompat.START) })
+            this.drawerItemCheckObservable.observe(
+                this@SamplesActivity,
+                Observer<Int> { binding.navigationView.setCheckedItem(it) })
             this.samplesListFragmentsObservable.observe(
                 this@SamplesActivity,
-                Observer<Fragment> {
+                Observer<BaseSamplesListFragment> {
                     supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commit()
                 })
             this.openLinkInBrowserObservable.observe(
