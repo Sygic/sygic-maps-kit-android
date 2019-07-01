@@ -29,10 +29,32 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.data.SimpleMapDataModel
+import java.util.*
+import kotlin.collections.HashSet
 
 object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     private var currentOnClickMapMarker: MapMarker? = null
+    private val userMapMarkers: MutableSet<MapMarker> = HashSet()
+
+    fun addMapMarker(marker: MapMarker) {
+        userMapMarkers.add(marker)
+        addMapObject(marker)
+    }
+
+    fun removeMapMarker(marker: MapMarker) {
+        userMapMarkers.remove(marker)
+        removeMapObject(marker)
+    }
+
+    fun removeAllMapMarkers() {
+        with(userMapMarkers) {
+            forEach { removeMapObject(it) }
+            clear()
+        }
+    }
+
+    fun getUserMapMarkers(): Set<MapMarker> = Collections.unmodifiableSet(userMapMarkers)
 
     fun addOnClickMapMarker(onClickMapMarker: MapMarker) {
         currentOnClickMapMarker = onClickMapMarker

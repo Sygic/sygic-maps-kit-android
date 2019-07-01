@@ -35,6 +35,7 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.positionlockfab.LockState
 import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 
 private const val NORTH_UP = 0f
@@ -87,7 +88,7 @@ open class PositionLockFabViewModel internal constructor(
         }
     }
 
-    fun onClick() {
+    open fun onClick() {
         requestLocationAccess(permissionsManager, locationManager) {
             when (currentState.value) {
                 LockState.UNLOCKED -> {

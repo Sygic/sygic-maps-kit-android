@@ -123,6 +123,7 @@ dependencies {
 
     // modules
     implementation project(':module-browsemap')
+    implementation project(':module-search')
 
     // test libraries
     androidTestImplementation "com.google.android.material:material:$materialVersion"
@@ -131,5 +132,6 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$testRunnerVersion"
     androidTestImplementation "androidx.test.ext:junit:$extJUnitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiAutomatorVersion"
 }

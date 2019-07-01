@@ -26,7 +26,7 @@ package com.sygic.samples.browsemap
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sygic.samples.R
-import com.sygic.samples.base.BaseMapTest
+import com.sygic.samples.base.map.BaseMapTest
 import com.sygic.samples.browsemap.robot.browseMap
 import org.junit.Test
 import org.junit.runner.RunWith

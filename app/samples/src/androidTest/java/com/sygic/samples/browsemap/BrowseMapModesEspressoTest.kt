@@ -39,7 +39,7 @@ import org.hamcrest.CoreMatchers
 import androidx.test.espresso.matcher.RootMatchers
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.samples.R
-import com.sygic.samples.base.BaseMapTest
+import com.sygic.samples.base.map.BaseMapTest
 import com.sygic.samples.browsemap.robot.browseMap
 import com.sygic.samples.utils.MapMarkers
 

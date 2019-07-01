@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<resources>
+    <color name="all_places">@color/iconBackground</color>
+    <color name="food_and_drink">#ffff8833</color>
+    <color name="accommodation">#ff8fbf00</color>
+    <color name="shopping">#fff2ce18</color>
+    <color name="transportation">#ff45bde6</color>
+    <color name="tourism">#ffe62e7a</color>
+    <color name="social_life">#ffbf0040</color>
+    <color name="services_and_education">#fff2ce18</color>
+    <color name="sport">#ff47991f</color>
+    <color name="vehicle_services">#ff404040</color>
+    <color name="emergency">#fff23041</color>
+    <color name="guides">#ffb3b3b3</color>
+    <color name="parking">#ff1677d9</color>
+    <color name="petrol_station">#ff404040</color>
+    <color name="bank_atm">#ff005580</color>
+</resources>

@@ -1,0 +1,65 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M2.03742,19.5141 L1.00167,18.0308
+            C1.00167,18.0308,3.00167,16.0616,6.00167,16.0616
+            C9.00167,16.0616,10.0017,18.0308,12.0017,18.0308
+            C14.0017,18.0308,15.0017,16.0616,18.0017,16.0616
+            C21.0017,16.0616,23.0017,18.0308,23.0017,18.0308 L21.9659,19.5141
+            C21.0912,18.8274,19.7082,18.0308,18.0017,18.0308
+            C16.0017,18.0308,15.0017,20,12.0017,20
+            C9.00167,20,8.00167,18.0308,6.00167,18.0308
+            C4.29517,18.0308,2.91217,18.8274,2.03742,19.5141 Z M2.03742,15.5757
+            L1.00167,14.0924 C1.00167,14.0924,3.00167,12.1232,6.00167,12.1232
+            C9.00167,12.1232,10.0017,14.0924,12.0017,14.0924
+            C14.0017,14.0924,15.0017,12.1232,18.0017,12.1232
+            C21.0017,12.1232,23.0017,14.0924,23.0017,14.0924 L21.9659,15.5757
+            C21.0912,14.8889,19.7082,14.0924,18.0017,14.0924
+            C16.0017,14.0924,15.0017,16.0616,12.0017,16.0616
+            C9.00167,16.0616,8.00167,14.0924,6.00167,14.0924
+            C4.29517,14.0924,2.91217,14.8889,2.03742,15.5757 Z M15.2517,9.29246
+            L15.2517,10.9838 C15.1687,11.032,15.0852,11.0838,15.0017,11.1386
+            C13.9457,11.8318,13.0017,12.1232,12.0017,12.1232
+            C11.0017,12.1232,10.2084,11.9307,9.00167,11.1386
+            C8.71555,10.9508,8.4293,10.7988,8.15367,10.676 L10.8263,8.44534 L9.5803,8.06393
+            L7.45967,9.80704 C7.0693,10.1921,6.4363,10.1921,6.04592,9.80704
+            C5.65542,9.42194,5.65542,8.79758,6.04592,8.4126
+            C6.07492,8.38392,6.10529,8.35734,6.13692,8.33334 L9.05017,5.79787
+            L14.1752,7.3667 L14.1983,7.37963
+            C14.3032,7.43993,14.7352,7.70812,14.9704,8.15106
+            C15.1187,8.43007,15.2617,8.89727,15.2509,9.29246 L15.2517,9.29246 Z
+            M13.3,9.29246 L13.3,9.29246 L13.1679,9.16213 L13.1679,9.16213 L13.3,9.29246 Z
+            M18.4165,4.57757 C19.1974,5.34778,19.1974,6.5965,18.4165,7.3667
+            C17.6358,8.13679,16.3698,8.13679,15.589,7.3667
+            C14.8082,6.5965,14.8082,5.34778,15.589,4.57757
+            C16.3698,3.80749,17.6358,3.80749,18.4165,4.57757 Z" />
+</vector>

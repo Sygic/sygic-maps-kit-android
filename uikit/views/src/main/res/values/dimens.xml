@@ -24,6 +24,17 @@
   -->
 
 <resources>
+    <!-- Font sizes -->
+    <dimen name="fontSizeTiny">11sp</dimen>
+    <dimen name="fontSizeExtraSmall">13sp</dimen>
+    <dimen name="fontSizeSmall">16sp</dimen>
+    <dimen name="fontSizeMedium">18sp</dimen>
+    <dimen name="fontSizeMediumLarge">20sp</dimen>
+    <dimen name="fontSizeLarge">24sp</dimen>
+    <dimen name="fontSizeExtraLarge">32sp</dimen>
+
+    <!-- Others -->
+    <dimen name="toolbarHeight">56dp</dimen>
     <dimen name="compassSize">48dp</dimen>
     <dimen name="defaultPeekHeight">100dp</dimen>
     <dimen name="zoomControlsButtonSize">48dp</dimen>

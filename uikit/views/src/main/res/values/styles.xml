@@ -56,6 +56,20 @@
         <item name="android:backgroundTint">?android:attr/colorBackground</item>
     </style>
 
+    <style name="SygicSearchFabStyle">
+        <item name="android:tint">?android:attr/colorAccent</item>
+        <item name="android:backgroundTint">?android:attr/colorBackground</item>
+    </style>
+
+    <style name="SygicSearchToolbarStyle">
+        <item name="searchIcon">@drawable/ic_search_robust</item>
+        <item name="clearButtonIcon">@drawable/ic_close</item>
+    </style>
+
+    <style name="SygicSearchResultListStyle">
+        <item name="itemLayoutId">@layout/layout_search_item_result_internal</item>
+    </style>
+
     <style name="SygicZoomControlsMenuStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>

@@ -26,4 +26,5 @@
 <resources>
     <color name="textColorPrimary">@color/zircon</color>
     <color name="textColorSecondary">@color/botticelli</color>
+    <color name="iconBackground">@color/gray_chateau</color>
 </resources>
