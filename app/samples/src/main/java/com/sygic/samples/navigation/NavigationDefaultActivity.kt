@@ -75,9 +75,9 @@ class NavigationDefaultActivity : CommonSampleActivity() {
     }
 
     private fun createRoutePlanAndComputeRoute() {
-        requestValidLocation { validLocation ->
+        requestLastValidLocation { lastValidLocation ->
             val routePlan = RoutePlan().apply {
-                setStart(validLocation)
+                setStart(lastValidLocation)
                 setDestination(GeoCoordinates(41.893056, 12.482778))
                 routingOptions = RoutingOptions().apply {
                     transportMode = RoutingOptions.TransportMode.Car
@@ -126,7 +126,7 @@ class NavigationDefaultActivity : CommonSampleActivity() {
         }
     }
 
-    private fun requestValidLocation(currentLocationCallback: (GeoCoordinates) -> Unit) {
+    private fun requestLastValidLocation(currentLocationCallback: (GeoCoordinates) -> Unit) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
