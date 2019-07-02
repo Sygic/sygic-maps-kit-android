@@ -82,4 +82,6 @@
     <string name="search_pre_filled_input_summary">Search module with a pre-filled input</string>
     <string name="navigation_default">Navigation - Default</string>
     <string name="navigation_default_summary">Navigation module with no configuration</string>
+    <string name="navigation_preview_enabled">Navigation - Preview enabled</string>
+    <string name="navigation_preview_enabled_summary">Navigation module with preview mode enabled</string>
 </resources>

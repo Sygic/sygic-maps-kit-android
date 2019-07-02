@@ -31,15 +31,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
+import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
+import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.route.RouteInfo
 
 const val NAVIGATION_FRAGMENT_TAG = "navigation_map_fragment_tag"
+internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_ROUTE_INFO = "route_info"
 
 /**
@@ -54,6 +57,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
+
+    /**
+     * A *[previewMode]* modifies whether the preview mode is on or off.
+     *
+     * @param [Boolean] true to enable the [previewMode], false otherwise.
+     *
+     * @return whether the [previewMode] is on or off.
+     */
+    var previewMode: Boolean
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.previewMode.value!!
+        } else arguments.getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_PREVIEW_MODE, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.previewMode.value = value
+            }
+        }
 
     /**
      * If *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
@@ -76,11 +97,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
-            this.setMapRouteObservable.observe(
-                this@NavigationFragment,
-                Observer<MapRoute> { mapDataModel.setMapRoute(it) })
-        }
+        fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments)
 
         lifecycle.addObserver(fragmentViewModel)
     }
@@ -103,10 +120,16 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     }
 
     override fun resolveAttributes(attributes: AttributeSet) {
-        //TODO: MS-6021
-        /*with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
+        with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
+            if (hasValue(R.styleable.NavigationFragment_sygic_navigation_previewMode)) {
+                previewMode =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_navigation_previewMode,
+                        PREVIEW_MODE_DEFAULT_VALUE
+                    )
+            }
 
             recycle()
-        }*/
+        }
     }
 }

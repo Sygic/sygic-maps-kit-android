@@ -22,16 +22,6 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.callback
+package com.sygic.maps.module.navigation.component
 
-/**
- * Interface definition for a callback to be invoked when a navigation process is done.
- */
-@FunctionalInterface
-interface NavigationResultCallback { //todo
-
-    /**
-     * Called when a search process is done.
-     */
-    //fun onNavigationFinished()
-}
+const val PREVIEW_MODE_DEFAULT_VALUE = false

@@ -100,6 +100,10 @@
             android:name=".navigation.NavigationDefaultActivity"
             android:label="@string/navigation_default"
             android:theme="@style/AppTheme.NoExitAnimation" />
+        <activity
+            android:name=".navigation.NavigationPreviewEnabledActivity"
+            android:label="@string/navigation_preview_enabled"
+            android:theme="@style/AppTheme.NoExitAnimation" />
 
         <meta-data
             android:name="@string/com_sygic_api_key"

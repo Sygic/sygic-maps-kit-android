@@ -26,16 +26,28 @@ package com.sygic.maps.module.navigation.viewmodel
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
+import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
+import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
+import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
+import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.common.extensions.getBoolean
+import com.sygic.sdk.map.Camera
+import com.sygic.sdk.map.MapAnimation
+import com.sygic.sdk.map.MapCenter
+import com.sygic.sdk.map.MapCenterSettings
 import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.route.RouteInfo
@@ -46,24 +58,75 @@ class NavigationFragmentViewModel internal constructor(
     app: Application,
     @Assisted arguments: Bundle?,
     themeManager: ThemeManager,
-    private val navigationManager: NavigationManager
+    private val cameraModel: ExtendedCameraModel,
+    private val mapDataModel: ExtendedMapDataModel,
+    private val navigationManager: NavigationManager,
+    private val locationManager: LocationManager,
+    private val permissionsManager: PermissionsManager
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver {
 
+    val previewMode: MutableLiveData<Boolean> = MutableLiveData()
     val routeInfo: MutableLiveData<RouteInfo?> = object: MutableLiveData<RouteInfo?>() {
         override fun setValue(value: RouteInfo?) {
             value?.let {
-                super.setValue(it)
-                navigationManager.setRouteForNavigation(it)
-                setMapRouteObservable.asSingleEvent().value = MapRoute.from(it).build()
+                if (value != this.value) {
+                    super.setValue(it)
+
+                    setCameraNavigationState()
+                    if (previewMode.value!!) {
+                        startPreviewMode(it)
+                    } else {
+                        startNavigation(it)
+                    }
+                }
             }
         }
     }
 
-    val setMapRouteObservable: LiveData<MapRoute> = SingleLiveEvent()
-
     init {
         with(arguments) {
-            //TODO: MS-6021
+            previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
         }
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        previewMode.observe(owner, Observer { enabled ->
+            Log.d("Tomas", "onCreate() called with: enabled = [$enabled]")
+        })
+    }
+
+    override fun onStart(owner: LifecycleOwner) {
+        locationManager.positionOnMapEnabled = !previewMode.value!!
+    }
+
+    private fun setCameraNavigationState() {
+        cameraModel.mapCenterSettings = MapCenterSettings(MapCenter(0.5f, 0.5f), MapCenter(0.5f, 0.5f), MapAnimation.NONE, MapAnimation.NONE) //todo
+        cameraModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
+        cameraModel.rotationMode = Camera.RotationMode.Vehicle
+        cameraModel.tilt = 60f //todo: ZoomControlsViewModel DEFAULT_TILT_3D
+    }
+
+    private fun startPreviewMode(routeInfo: RouteInfo) {
+        locationManager.positionOnMapEnabled = false
+        mapDataModel.addMapRoute(MapRoute.from(routeInfo).build())
+        // navigationManager.setRouteForNavigation(it) //todo: required for demonstrate ???
+    }
+
+    private fun startNavigation(routeInfo: RouteInfo) {
+        requestLocationAccess(permissionsManager, locationManager) {
+            locationManager.positionOnMapEnabled = true
+            Log.d("Tomas", "startNavigation() called")
+
+            navigationManager.setRouteForNavigation(routeInfo) //todo: register listener first
+            //mapDataModel.addMapRoute(MapRoute.from(it).build()) //todo: wait for new routeInfo from listener
+        }
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        locationManager.positionOnMapEnabled = false
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        //todo: restore camera state?
     }
 }

@@ -72,13 +72,9 @@ open class PositionLockFabViewModel internal constructor(
         }
     }
 
-    override fun onRotationModeChanged(@Camera.RotationMode mode: Int) {
-        modeChanged()
-    }
+    override fun onRotationModeChanged(@Camera.RotationMode mode: Int) = modeChanged()
 
-    override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
-        modeChanged()
-    }
+    override fun onMovementModeChanged(@Camera.MovementMode mode: Int) = modeChanged()
 
     private fun modeChanged() {
         when {

@@ -144,7 +144,6 @@ class BrowseMapFragmentViewModel internal constructor(
             owner.moduleConnectionProvider.observe(owner, Observer { provider ->
                 searchConnectionProvider = provider
             })
-
         }
         poiDetailListenerObservable.asSingleEvent().value = dialogFragmentListener
     }
