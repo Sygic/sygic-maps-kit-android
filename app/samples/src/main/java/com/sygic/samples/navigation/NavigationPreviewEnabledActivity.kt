@@ -43,8 +43,8 @@ class NavigationPreviewEnabledActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_navigation_preview_enabled)
 
         val routePlan = RoutePlan().apply {
-            setStart(GeoCoordinates(48.146523, 17.123961))
-            setDestination(GeoCoordinates(49.190767, 16.611238))
+            setStart(GeoCoordinates(48.144722, 17.112778))
+            setDestination(GeoCoordinates(41.893056, 12.482778))
             routingOptions = RoutingOptions().apply {
                 transportMode = RoutingOptions.TransportMode.Car
                 routingType = RoutingOptions.RoutingType.Economic

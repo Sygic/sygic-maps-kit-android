@@ -147,7 +147,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
             if (isGooglePlayServicesAvailable()) {
                 createGoogleApiLocationRequest()
             } else {
-                showNoGoogleApiDialog()
+                showGenericNoGpsDialog()
             }
         })
 
@@ -220,8 +220,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         }
     }
 
-    private fun showNoGoogleApiDialog() {
-        context.let {
+    private fun showGenericNoGpsDialog() {
+        context?.let {
             AlertDialog.Builder(it)
                 .setTitle(R.string.enable_gps_dialog_title)
                 .setMessage(R.string.enable_gps_dialog_text)

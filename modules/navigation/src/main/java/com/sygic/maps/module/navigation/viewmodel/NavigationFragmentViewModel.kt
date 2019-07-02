@@ -63,16 +63,18 @@ class NavigationFragmentViewModel internal constructor(
     private val navigationManager: NavigationManager,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager
-) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver {
+) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData()
-    val routeInfo: MutableLiveData<RouteInfo?> = object: MutableLiveData<RouteInfo?>() {
+    val routeInfo: MutableLiveData<RouteInfo?> = object : MutableLiveData<RouteInfo?>() {
         override fun setValue(value: RouteInfo?) {
             value?.let {
                 if (value != this.value) {
                     super.setValue(it)
 
+                    //todo
                     setCameraNavigationState()
+                    navigationManager.setRouteForNavigation(it)
                     if (previewMode.value!!) {
                         startPreviewMode(it)
                     } else {
@@ -97,6 +99,12 @@ class NavigationFragmentViewModel internal constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = !previewMode.value!!
+        navigationManager.addOnRouteChangedListener(this)
+    }
+
+    override fun onRouteChanged(routeInfo: RouteInfo?) {
+        mapDataModel.removeAllMapRoutes()
+        routeInfo?.let { mapDataModel.addMapRoute(MapRoute.from(it).build()) }
     }
 
     private fun setCameraNavigationState() {
@@ -108,25 +116,19 @@ class NavigationFragmentViewModel internal constructor(
 
     private fun startPreviewMode(routeInfo: RouteInfo) {
         locationManager.positionOnMapEnabled = false
-        mapDataModel.addMapRoute(MapRoute.from(routeInfo).build())
-        // navigationManager.setRouteForNavigation(it) //todo: required for demonstrate ???
+        //todo
     }
 
     private fun startNavigation(routeInfo: RouteInfo) {
         requestLocationAccess(permissionsManager, locationManager) {
             locationManager.positionOnMapEnabled = true
             Log.d("Tomas", "startNavigation() called")
-
-            navigationManager.setRouteForNavigation(routeInfo) //todo: register listener first
-            //mapDataModel.addMapRoute(MapRoute.from(it).build()) //todo: wait for new routeInfo from listener
+            //todo
         }
     }
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
-        //todo: restore camera state?
+        navigationManager.removeOnRouteChangedListener(this)
     }
 }
