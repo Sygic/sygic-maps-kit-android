@@ -80,11 +80,11 @@ object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
         currentOnClickMapMarker?.let { removeMapObject(it) }
     }
 
-    private inline fun <reified T : MapObject<*>> removeAllMapObjects() = with(userMapObjects) {
-        forEach {
-            if (it is T) {
-                removeMapObject(it)
-                remove(it)
+    private inline fun <reified T : MapObject<*>> removeAllMapObjects() = with(userMapObjects.iterator()) {
+        forEach { mapObject ->
+            if (mapObject is T) {
+                removeMapObject(mapObject)
+                remove()
             }
         }
     }
