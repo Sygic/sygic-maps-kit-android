@@ -53,7 +53,7 @@ import com.sygic.sdk.search.SearchResult
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SearchResultListViewModel internal constructor(
+open class SearchResultListViewModel @JvmOverloads internal constructor(
     private val searchManager: SearchManager,
     @Assisted private val resultListAdapter: SearchResultListAdapter<SearchResult>,
     @Assisted private val defaultStateAdapter: DefaultStateAdapter<SearchResult> = DefaultStateAdapter()

@@ -53,7 +53,6 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATI
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
-import com.sygic.maps.uikit.views.searchresultlist.adapter.DefaultStateAdapter
 import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
@@ -188,7 +187,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
         }
         searchResultListViewModel = ViewModelProviders.of(
             this,
-            viewModelFactory.with(resultListAdapter, DefaultStateAdapter<SearchResult>())
+            viewModelFactory.with(resultListAdapter)
         )[SearchResultListViewModel::class.java].apply {
             this.onSearchResultItemClickObservable.observe(
                 this@SearchFragment,

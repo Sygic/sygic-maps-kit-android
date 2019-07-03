@@ -182,11 +182,14 @@ public class Processor extends AbstractProcessor {
                     nonAssistedParametersList.add(nonAssistedList);
                 }
 
+                final Set<List<ParameterSpec>> createdConstructors = new HashSet<>();
+
                 // add constructor
                 for (final Map<Integer, ? extends VariableElement> nonAssistedParameters : nonAssistedParametersList) {
                     final MethodSpec.Builder builder = MethodSpec.constructorBuilder();
                     builder.addAnnotation(Inject.class);
 
+                    final Set<FieldSpec> fields = new HashSet<>();
                     for (final VariableElement parameter : nonAssistedParameters.values()) {
                         final String parameterName = parameter.getSimpleName().toString();
                         final String parameterClassName = parameter.asType().toString();
@@ -195,19 +198,19 @@ public class Processor extends AbstractProcessor {
                         builder.addParameter(parameterType, parameterName, Modifier.FINAL);
                         builder.addStatement("this.$N = $N", parameterName, parameterName);
 
-                        classBuilder.addField(FieldSpec.builder(parameterType, parameterName, Modifier.FINAL, Modifier.PRIVATE).build());
+                        fields.add(FieldSpec.builder(parameterType, parameterName, Modifier.FINAL, Modifier.PRIVATE).build());
                     }
 
-                    classBuilder.addMethod(builder.build());
-
-                    if (nonAssistedParametersList.size() > 1) {
-                        messager.printMessage(Diagnostic.Kind.WARNING, "More than 1 constructor found. Factory method will be generated only for the first one!");
-                        break;
+                    final MethodSpec constructor = builder.build();
+                    if (createdConstructors.add(constructor.parameters)) {
+                        for (FieldSpec field : fields) {
+                            classBuilder.addField(field);
+                        }
+                        classBuilder.addMethod(constructor);
                     }
                 }
 
                 // add method that creates the target object
-                final Map<Integer, ? extends VariableElement> assistedParameters = assistedParametersList.get(0);
                 final MethodSpec.Builder createMethodBuilder = MethodSpec
                         .methodBuilder("create")
                         .addModifiers(Modifier.PUBLIC)
@@ -219,11 +222,48 @@ public class Processor extends AbstractProcessor {
                         .addAnnotation(NonNull.class)
                         .returns(className);
 
-                final Map<Integer, ? extends VariableElement> nonAssistedParameters = nonAssistedParametersList.get(0);
-                final int parametersSize = nonAssistedParameters.size() + assistedParameters.size();
-
                 final List<Object> args = new ArrayList<>();
                 final StringBuilder sb = new StringBuilder();
+
+                sb.append("int variant = -1;\n");
+                sb.append("final $T<Class[]> constructorAssistedParameters = new  $T<>();\n");
+                args.add(List.class);
+                args.add(ArrayList.class);
+
+                for (Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
+                    sb.append("constructorAssistedParameters.add(new Class[] {\n");
+                    for (Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
+                        VariableElement value = iterator.next();
+                        sb.append("$T.class");
+                        args.add(typeUtils.erasure(value.asType()));
+                        if (iterator.hasNext()) {
+                            sb.append(",\n");
+                        }
+                    }
+                    sb.append("});\n");
+                }
+
+                sb.append("for (int v = 0; v < constructorAssistedParameters.size(); v++) {\n");
+                sb.append("final Class[] entry = constructorAssistedParameters.get(v);\n");
+                sb.append("boolean found = true;\n");
+                sb.append("for (int i = 0; i < entry.length; i++) {\n");
+                sb.append("final Class cls = entry[i];\n");
+                sb.append("if (" + ASSISTED_PARAMETER_NAME + ".length <= i || " + ASSISTED_PARAMETER_NAME + "[i] == null || !cls.equals(" + ASSISTED_PARAMETER_NAME + "[i].getClass())) {\n");
+                sb.append("found = false;\n");
+                sb.append("break;\n");
+                sb.append("}\n");
+                sb.append("}\n");
+                sb.append("if (found) {\n");
+                sb.append("variant = v;\n");
+                sb.append("break;\n");
+                sb.append("}\n");
+                sb.append("}\n");
+
+                //sb.append("for (int i = 0; i < entry.length; i++) {\n");
+
+                /*final Map<Integer, ? extends VariableElement> assistedParameters = assistedParametersList.get(0);
+                final Map<Integer, ? extends VariableElement> nonAssistedParameters = nonAssistedParametersList.get(0);
+                final int parametersSize = nonAssistedParameters.size() + assistedParameters.size();
 
                 for (final Map.Entry<Integer, ? extends VariableElement> assistedParameter : assistedParameters.entrySet()) {
                     sb.append("$T $N = null;\n");
@@ -262,26 +302,42 @@ public class Processor extends AbstractProcessor {
                         args.add(parameter.getSimpleName().toString());
                         args.add(parameter.asType());
                     }
+                }*/
+
+
+                for (int i = 0; i < nonAssistedParametersList.size(); i++) {
+                    final Map<Integer, ? extends VariableElement> nonAssistedParameters = nonAssistedParametersList.get(i);
+                    final Map<Integer, ? extends VariableElement> assistedParameters = assistedParametersList.get(i);
+                    int parametersSize = nonAssistedParameters.size() + assistedParameters.size();
+
+                    sb.append("if (variant == $L) {\n");
+                    args.add(i);
+                    sb.append("return new $N(");
+                    args.add(className.simpleName());
+
+                    int a = 0;
+                    for (int j = 0; j < parametersSize; j++) {
+                        VariableElement parameter = nonAssistedParameters.get(j);
+                        if (parameter == null) {
+                            parameter = assistedParameters.get(j);
+                            sb.append("($T)$N[$L]");
+                            args.add(parameter.asType());
+                            args.add(ASSISTED_PARAMETER_NAME);
+                            args.add(a++);
+                        } else {
+                            sb.append("$N");
+                            args.add(parameter.getSimpleName().toString());
+                        }
+
+                        if (j + 1 < parametersSize) {
+                            sb.append(", ");
+                        }
+                    }
+                    sb.append(");\n");
+                    sb.append("}\n");
                 }
 
-                sb.append("return new $N(");
-                args.add(className.simpleName());
-                for (int j = 0; j < parametersSize; j++) {
-                    VariableElement parameter = nonAssistedParameters.get(j);
-                    if (parameter == null) {
-                        parameter = assistedParameters.get(j);
-                        sb.append("$N");
-                        args.add(parameter.getSimpleName().toString());
-                    } else {
-                        sb.append("$N");
-                        args.add(parameter.getSimpleName().toString());
-                    }
-
-                    if (j + 1 < parametersSize) {
-                        sb.append(", ");
-                    }
-                }
-                sb.append(")");
+                sb.append("throw new IllegalArgumentException(\"Provided assisted " + ASSISTED_PARAMETER_NAME + " values don't match any available constructor\")");
 
                 createMethodBuilder.addStatement(sb.toString(), args.toArray());
                 classBuilder.addMethod(createMethodBuilder.build());
