@@ -39,6 +39,7 @@ import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
@@ -60,9 +61,10 @@ class NavigationFragmentViewModel internal constructor(
     themeManager: ThemeManager,
     private val cameraModel: ExtendedCameraModel,
     private val mapDataModel: ExtendedMapDataModel,
-    private val navigationManager: NavigationManager,
     private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager
+    private val permissionsManager: PermissionsManager,
+    private val navigationManager: NavigationManager,
+    private val routeDemonstrationManager: RouteDemonstrationManager
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData()
@@ -92,8 +94,8 @@ class NavigationFragmentViewModel internal constructor(
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        previewMode.observe(owner, Observer { enabled ->
-            Log.d("Tomas", "onCreate() called with: enabled = [$enabled]")
+        previewMode.observe(owner, Observer { enabled -> //todo
+            Log.d("Tomas", "previewMode called with: enabled = [$enabled]")
         })
     }
 
@@ -116,19 +118,25 @@ class NavigationFragmentViewModel internal constructor(
 
     private fun startPreviewMode(routeInfo: RouteInfo) {
         locationManager.positionOnMapEnabled = false
-        //todo
+        routeDemonstrationManager.start(routeInfo)
     }
 
     private fun startNavigation(routeInfo: RouteInfo) {
         requestLocationAccess(permissionsManager, locationManager) {
             locationManager.positionOnMapEnabled = true
-            Log.d("Tomas", "startNavigation() called")
-            //todo
         }
     }
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false
         navigationManager.removeOnRouteChangedListener(this)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        mapDataModel.removeAllMapRoutes()
+        navigationManager.stopNavigation()
+        routeDemonstrationManager.destroy()
     }
 }

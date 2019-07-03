@@ -31,6 +31,7 @@ import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager;
 import com.sygic.maps.module.common.theme.ThemeManager;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
+import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManager;
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel;
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
@@ -51,7 +52,8 @@ import javax.inject.Singleton;
                 LocationModule.class,
                 SearchModule.class,
                 ThemeModule.class,
-                NavigationManagerModule.class
+                NavigationManagerModule.class,
+                RouteDemonstrationManagerModule.class
         }
 )
 public interface ModulesComponent {
@@ -66,4 +68,5 @@ public interface ModulesComponent {
     ThemeManager getThemeManager();
     Application getApplication();
     NavigationManager getNavigationManager();
+    RouteDemonstrationManager getRouteDemonstrationManager();
 }
