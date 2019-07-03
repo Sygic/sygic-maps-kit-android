@@ -30,6 +30,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
+import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
@@ -53,7 +54,9 @@ import com.sygic.sdk.search.SearchResult
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultListViewModel internal constructor(
-    private val searchManager: SearchManager
+    private val searchManager: SearchManager,
+    @Assisted private val resultListAdapter: SearchResultListAdapter<SearchResult>,
+    @Assisted private val defaultStateAdapter: DefaultStateAdapter<SearchResult> = DefaultStateAdapter()
 ) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener<SearchResult> {
 
     val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
@@ -62,8 +65,8 @@ open class SearchResultListViewModel internal constructor(
     val errorViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
     val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> = MutableLiveData()
 
-    private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
-    private val resultListAdapter = SearchResultListAdapter(this)
+    //private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
+    //private val resultListAdapter = SearchResultListAdapter(this)
 
     private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
 

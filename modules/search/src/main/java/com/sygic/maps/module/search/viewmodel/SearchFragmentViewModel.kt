@@ -30,24 +30,27 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
+import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSdkSearchResultList
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.search.SearchResult
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SearchFragmentViewModel internal constructor(
-    app: Application
+    app: Application,
+    @Assisted private val resultListAdapter: SearchResultListAdapter<SearchResult>
 ) : AndroidViewModel(app), DefaultLifecycleObserver {
 
     val onFinishObservable: LiveData<Any> = SingleLiveEvent()
 
     private var searchResultCallback: SearchResultCallback? = null
-    private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
+    //private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
 
     override fun onCreate(owner: LifecycleOwner) {
         if (owner is SearchResultCallbackWrapper) {
@@ -57,16 +60,16 @@ class SearchFragmentViewModel internal constructor(
         }
     }
 
-    fun searchResultListDataChanged(searchResultListItems: List<SearchResultItem<out SearchResult>>) {
+    /*fun searchResultListDataChanged(searchResultListItems: List<SearchResultItem<out SearchResult>>) {
         currentSearchResults = searchResultListItems
-    }
+    }*/
 
     fun onSearchResultItemClick(searchResultItem: SearchResultItem<out SearchResult>) =
         invokeCallbackAndFinish(listOf(searchResultItem))
 
     fun onActionSearchClick(view: TextView) {
         view.hideKeyboard()
-        invokeCallbackAndFinish(currentSearchResults)
+        invokeCallbackAndFinish(resultListAdapter.items)
     }
 
     private fun invokeCallbackAndFinish(searchResultList: List<SearchResultItem<out SearchResult>>) {
