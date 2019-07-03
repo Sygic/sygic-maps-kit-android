@@ -81,10 +81,10 @@ class PermissionsManagerImpl : PermissionsManager {
                         }
                     }
 
-                    if (!granted.isEmpty()) {
+                    if (granted.isNotEmpty()) {
                         callback.onPermissionsGranted(granted)
                     }
-                    if (!denied.isEmpty()) {
+                    if (denied.isNotEmpty()) {
                         callback.onPermissionsDenied(denied)
                     }
                 }

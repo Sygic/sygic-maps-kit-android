@@ -44,6 +44,8 @@ import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
+import com.sygic.sdk.position.GeoPosition
+import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.route.RouteInfo
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.Router
@@ -142,23 +144,33 @@ fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList(): List<Searc
 
 fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) = Search().loadDetails(this, DetailRequest(), callback)
 
-@FunctionalInterface
-interface RouteInfoCallback {
-    fun onPrimaryComputeFinished(route: RouteInfo)
+fun Activity.getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) =
+    application.getLastValidLocation(lastValidLocationCallback)
+
+fun Application.getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
+    SdkInitializationManagerImpl.getInstance(this).onReady {
+        with(PositionManager.getInstance()) {
+            addPositionChangeListener(object : PositionManager.PositionChangeListener {
+                override fun onPositionChanged(position: GeoPosition) {
+                    if (position.isValid) {
+                        removePositionChangeListener(this)
+                        lastValidLocationCallback.invoke(position.coordinates)
+                    }
+                }
+            })
+            startPositionUpdating()
+        }
+    }
 }
 
-fun Activity.computePrimaryRoute(routePlan: RoutePlan, callback: (route: RouteInfo) -> Unit) =
-    application.computePrimaryRoute(routePlan,
-        object : RouteInfoCallback {
-            override fun onPrimaryComputeFinished(route: RouteInfo) = callback(route)
-        })
+fun Activity.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: (route: RouteInfo) -> Unit) =
+    application.computePrimaryRoute(routePlan, routeComputeCallback)
 
-fun Application.computePrimaryRoute(routePlan: RoutePlan, callback: RouteInfoCallback) {
+fun Application.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: (route: RouteInfo) -> Unit) {
     //ToDo: Remove when MS-5678 is done
     SdkInitializationManagerImpl.getInstance(this).onReady {
         Router().computeRoute(routePlan, object : Router.RouteComputeAdapter() {
-            override fun onPrimaryComputeFinished(router: Router, route: RouteInfo) =
-                callback.onPrimaryComputeFinished(route)
+            override fun onPrimaryComputeFinished(router: Router, route: RouteInfo) = routeComputeCallback.invoke(route)
         })
     }
 }
