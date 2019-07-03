@@ -26,6 +26,7 @@ package com.sygic.samples.base.idling
 
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.sdk.map.`object`.MapMarker
 
 class MapPinsIdlingResource(activity: CommonSampleActivity) : BaseIdlingResource(activity) {
 
@@ -33,7 +34,8 @@ class MapPinsIdlingResource(activity: CommonSampleActivity) : BaseIdlingResource
 
     override fun isIdle(): Boolean {
         activity.supportFragmentManager.fragments.forEach { fragment ->
-            if (fragment is MapFragmentWrapper<*>) return fragment.mapDataModel.getUserMapObjects().isNotEmpty()
+            if (fragment is MapFragmentWrapper<*>) return fragment.mapDataModel.getUserMapObjects()
+                .filterIsInstance<MapMarker>().isNotEmpty()
         }
 
         return false
