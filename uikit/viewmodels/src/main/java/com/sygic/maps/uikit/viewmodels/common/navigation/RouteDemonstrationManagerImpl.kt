@@ -34,13 +34,8 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
     private var routeDemonstrateSimulator: RouteDemonstrateSimulator? = null
 
     override fun start(routeInfo: RouteInfo) {
-        routeDemonstrateSimulator?.let {
-            it.stop()
-            it.destroy()
-        }
-        routeDemonstrateSimulator = RouteDemonstrateSimulator(routeInfo).apply {
-            start()
-        }
+        destroySimulator()
+        routeDemonstrateSimulator = RouteDemonstrateSimulator(routeInfo).also { it.start() }
     }
 
     override fun pause() {
@@ -48,14 +43,14 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
     }
 
     override fun stop() {
-        routeDemonstrateSimulator?.stop()
+        destroySimulator()
     }
 
-    override fun destroy() {
+    private fun destroySimulator() {
         routeDemonstrateSimulator?.let {
             it.stop()
             it.destroy()
+            routeDemonstrateSimulator = null
         }
-        routeDemonstrateSimulator = null
     }
 }

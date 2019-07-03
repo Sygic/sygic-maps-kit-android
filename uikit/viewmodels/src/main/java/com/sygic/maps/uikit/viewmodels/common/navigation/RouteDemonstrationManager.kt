@@ -32,5 +32,4 @@ interface RouteDemonstrationManager {
     fun start(routeInfo: RouteInfo)
     fun pause()
     fun stop()
-    fun destroy()
 }
