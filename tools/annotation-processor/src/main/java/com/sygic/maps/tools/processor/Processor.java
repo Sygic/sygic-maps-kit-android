@@ -26,25 +26,50 @@ package com.sygic.maps.tools.processor;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import com.squareup.javapoet.*;
+
+import com.squareup.javapoet.ArrayTypeName;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeSpec;
 import com.sygic.maps.tools.annotations.Assisted;
 import com.sygic.maps.tools.annotations.AutoFactory;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.processing.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedSourceVersion;
 import javax.inject.Inject;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
-import java.io.IOException;
-import java.util.*;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class Processor extends AbstractProcessor {
 
     private static final String GENERATED_CLASS_SUFFIX = "Factory";
@@ -222,7 +247,7 @@ public class Processor extends AbstractProcessor {
                                 "$N = ($T)" + ASSISTED_PARAMETER_NAME + "[i];\n" +
                                 "i++;" +
                                 " }\n");
-                        args.add(parameter.asType());
+                        args.add(typeUtils.erasure(parameter.asType()));
                         args.add(typeName);
                         args.add(parameter.getSimpleName().toString());
                         args.add(parameter.getSimpleName().toString());
