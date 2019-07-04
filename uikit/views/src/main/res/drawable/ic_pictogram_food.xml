@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M0 4C0 1.8 1.8 0 4 0L20 0C22.2 0 24 1.8 24 4L24 20C24 22.2 22.2 24 20 24L4 24C1.8 24 0
+            22.2 0 20L0 4ZM15.5 12.1L18.9 8.7C19.2 8.4 19.4 8.1 19.6 7.7 19.7 7.3 19.8 6.9 19.8 6.5 19.8 6.1 19.7
+            5.7 19.6 5.3 19.4 4.9 19.2 4.6 18.9 4.2L13.3 9.9 15.5 12.1ZM9.9 13.2L4.3 18.9 5.4 20 11 14.4 9.9 13.2ZM20
+            18.9L11.2 10.1C11.3 9.8 11.3 9.4 11.3 9.1 11.3 8.7 11.3 8.3 11.2 7.9 11.1 7.4 11 7 10.8 6.6 10.6 6.2
+            10.3 5.8 9.9 5.4 9.5 5 9 4.6 8.6 4.4 8.1 4.2 7.6 4 7.2 4 6.8 4 6.3 4 5.9 4.1 5.5 4.3 5.2 4.5 4.8 4.8
+            4.5 5.1 4.3 5.5 4.2 5.9 4 6.3 4 6.7 4 7.2 4.1 7.6 4.2 8.1 4.4 8.5 4.7 9 5 9.5 5.4 9.9 5.8 10.3 6.2 10.5
+            6.6 10.7 7 10.9 7.5 11.1 7.9 11.2 8.3 11.3 8.7 11.3 9.1 11.3 9.5 11.3 9.8 11.2 10.1 11.2L18.9 20 20 18.9Z" />
+</vector>

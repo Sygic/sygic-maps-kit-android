@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+    <path
+        android:fillColor="?android:attr/colorAccent"
+        android:pathData="M0,3.99C0,1.786 1.784,0 3.99,0L20.01,0C22.214,0 24,1.784 24,3.99L24,20.01C24,22.214 22.216,24
+            20.01,24L3.99,24C1.786,24 0,22.216 0,20.01L0,3.99ZM18.4,8.8L20,7.2C19.767,7 19.5,6.9 19.2,6.9C18.9,6.9
+            18.633,7 18.4,7.2L16.8,5.6L16,6.4L18.4,8.8ZM18.4,9.6L18.4,18.4L17.2,18.4L17.2,12.8C17.2,12.367
+            17.042,11.992 16.725,11.675C16.408,11.358 16.033,11.2 15.6,11.2L14.4,11.2L14.4,5.6C14.4,5.167
+            14.242,4.792 13.925,4.475C13.608,4.158 13.233,4 12.8,4L5.6,4C5.167,4 4.792,4.158 4.475,4.475C4.158,4.792
+            4,5.167 4,5.6L4,20L14.4,20L14.4,12.8L15.6,12.8L15.6,18.4C15.6,18.833 15.758,19.208 16.075,
+            19.525C16.392,19.842 16.767,20 17.2,20L18.4,20C18.833,20 19.208,19.842 19.525,19.525C19.842,
+            19.208 20,18.833 20,18.4L20,8L18.4,9.6ZM12.8,5.6L12.8,10.4L5.6,10.4L5.6,5.6L12.8,5.6Z" />
+</vector>
