@@ -52,7 +52,7 @@
             android:fontFamily="sans-serif-medium"
             android:textSize="32sp"
             app:layout_constraintBottom_toTopOf="@+id/signpostInstructionTextView"
-            app:layout_constraintEnd_toStartOf="@+id/signpostRoadSignView"
+            app:layout_constraintEnd_toStartOf="@+id/signpostRoadSignsView"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@id/signpostPrimaryDirectionImageView"
             app:layout_constraintTop_toTopOf="parent"
@@ -84,7 +84,7 @@
             tools:textColor="@color/white" />
 
         <com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
-            android:id="@id/signpostRoadSignView"
+            android:id="@+id/signpostRoadSignsView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
