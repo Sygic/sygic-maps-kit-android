@@ -30,5 +30,5 @@
 
     <path
         android:fillColor="@color/directionForeground"
-        android:pathData="@string/straight" />
+        android:pathData="@string/straight_path_data" />
 </vector>

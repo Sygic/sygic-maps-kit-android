@@ -38,6 +38,6 @@
 
         <path
             android:fillColor="@color/directionForeground"
-            android:pathData="@string/round_270" />
+            android:pathData="@string/round_270_path_data" />
     </group>
 </vector>

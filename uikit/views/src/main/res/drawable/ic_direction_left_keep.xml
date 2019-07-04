@@ -30,8 +30,8 @@
 
     <path
         android:fillColor="@color/directionBackground"
-        android:pathData="@string/left_keep_sec" />
+        android:pathData="@string/left_keep_sec_path_data" />
     <path
         android:fillColor="@color/directionForeground"
-        android:pathData="@string/left_keep" />
+        android:pathData="@string/left_keep_path_data" />
 </vector>

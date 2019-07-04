@@ -41,6 +41,6 @@
 
         <path
             android:fillColor="@color/directionForeground"
-            android:pathData="@string/round_135" />
+            android:pathData="@string/round_135_path_data" />
     </group>
 </vector>

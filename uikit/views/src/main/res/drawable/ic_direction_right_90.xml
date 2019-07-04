@@ -37,6 +37,6 @@
             android:pathData="M0 46L0 2 6 2 6 46Z" />
         <path
             android:fillColor="@color/directionForeground"
-            android:pathData="@string/turn_90" />
+            android:pathData="@string/turn_90_path_data" />
     </group>
 </vector>
