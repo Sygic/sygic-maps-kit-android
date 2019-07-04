@@ -31,7 +31,7 @@
         android:id="@+id/searchToolbarContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbarHeight"
-        android:background="@drawable/search_toolbar_background"
+        android:background="@drawable/bg_search_toolbar"
         android:elevation="4dp"
         android:focusable="true"
         android:minHeight="@dimen/toolbarHeight">
