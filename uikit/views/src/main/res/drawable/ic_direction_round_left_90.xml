@@ -23,12 +23,24 @@
   -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24.0"
-    android:viewportHeight="24.0">
+    android:width="@dimen/directionSize"
+    android:height="@dimen/directionSize"
+    android:viewportWidth="48.0"
+    android:viewportHeight="48.0">
 
-    <path
-        android:fillColor="?android:attr/colorAccent"
-        android:pathData="@string/ic_pin_path_data" />
+    <group
+        android:scaleX="-1"
+        android:translateX="46"
+        android:translateY="3">
+
+        <path
+            android:fillColor="@color/directionBackground"
+            android:pathData="M14 28C6.2680135 28 0 21.731987 0 14 0 6.2680135 6.2680135 0 14 0c7.731987 0 14 6.2680135
+                14 14 0 7.731987 -6.268013 14 -14 14zm0 -6c4.418278 0 8 -3.581722 8 -8 0 -4.418278 -3.581722 -8 -8 -8
+                -4.418278 0 -8 3.581722 -8 8 0 4.418278 3.581722 8 8 8z" />
+
+        <path
+            android:fillColor="@color/directionForeground"
+            android:pathData="@string/round_90" />
+    </group>
 </vector>

@@ -23,12 +23,16 @@
   -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24.0"
-    android:viewportHeight="24.0">
+    android:width="@dimen/directionSize"
+    android:height="@dimen/directionSize"
+    android:viewportWidth="48.0"
+    android:viewportHeight="48.0">
 
     <path
-        android:fillColor="?android:attr/colorAccent"
-        android:pathData="@string/ic_pin_path_data" />
+        android:fillColor="@color/directionForeground"
+        android:pathData="M42 10c1.083339 0 2.020829 0.395829 2.8125 1.1875C45.604171 11.979171 46 12.916661 46 14l0 12c0
+            1.083339 -0.395829 2.020829 -1.1875 2.8125C44.020829 29.604171 43.083339 30 42 30l-2 0 0 12 -4 0 0 -12 -24 0
+            0 12 -4 0 0 -12 -2 0C4.9166612 30 3.9791706 29.604171 3.1875 28.8125 2.3958294 28.020829 2 27.083339 2 26L2
+            14C2 12.916661 2.3958294 11.979171 3.1875 11.1875 3.9791706 10.395829 4.9166612 10 6 10l36 0zm0 4l-12 12 -8
+            0 12 -12 -8 0 -12 12 -8 0 12 -12 -8 0 -4 4 0 8 36 0 -4 0 4 -4 0 -8z" />
 </vector>

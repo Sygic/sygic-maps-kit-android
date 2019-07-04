@@ -23,12 +23,12 @@
   -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24.0"
-    android:viewportHeight="24.0">
+    android:width="@dimen/directionSize"
+    android:height="@dimen/directionSize"
+    android:viewportWidth="48.0"
+    android:viewportHeight="48.0">
 
     <path
-        android:fillColor="?android:attr/colorAccent"
-        android:pathData="@string/ic_pin_path_data" />
+        android:fillColor="@color/directionForeground"
+        android:pathData="@string/straight" />
 </vector>

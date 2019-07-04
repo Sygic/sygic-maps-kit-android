@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/directionSize"
+    android:height="@dimen/directionSize"
+    android:viewportWidth="48.0"
+    android:viewportHeight="48.0">
+
+    <group
+        android:translateX="4"
+        android:translateY="2">
+
+        <path
+            android:fillColor="@color/directionBackground"
+            android:pathData="M37 18l0 24 -3 0 -6 -16 0 -8C28 16.874994 27.791669 15.833338 27.375 14.875 26.958331
+                13.916662 26.38542 13.07292 25.65625 12.34375 24.92708 11.61458 24.083338 11.041669 23.125 10.625 22.166662
+                10.208331 21.125006 10 20 10c-1.125006 0 -2.166662 0.208331 -3.125 0.625 -0.958338 0.416669 -1.80208
+                0.98958 -2.53125 1.71875C13.61458 13.07292 13.041669 13.916662 12.625 14.875 12.208331 15.833338 12
+                16.874994 12 18l0 8 -6 16 -3 0 0 -24 0.125 0C3.3750013 15.874989 3.9895784 13.906259 4.96875 12.09375
+                5.9479216 10.281241 7.1874925 8.6979234 8.6875 7.34375 10.187508 5.9895766 11.90624 4.9270872 13.84375
+                4.15625 15.78126 3.3854128 17.833323 3 20 3c2.166677 0 4.21874 0.3854128 6.15625 1.15625 1.93751
+                0.7708372 3.656242 1.8333266 5.15625 3.1875 1.500008 1.3541734 2.739578 2.937491 3.71875
+                4.75C36.010422 13.906259 36.624999 15.874989 36.875 18L37 18Z" />
+
+        <path
+            android:fillColor="@color/directionForeground"
+            android:pathData="M38.4375 12.1875c0.500002 1.250006 0.885415 2.531243 1.15625 3.84375C39.864585 17.343757
+                40 18.66666 40 20l0 22 -6 0 0 -22C34 18.124991 33.645837 16.343758 32.9375 14.65625 32.229163 12.968742
+                31.20834 11.45834 29.875 10.125 28.54166 8.79166 27.031258 7.7708369 25.34375 7.0625 23.656242 6.3541631
+                21.875009 6 20 6 18.124991 6 16.343758 6.3541631 14.65625 7.0625 12.968742 7.7708369 11.45834 8.79166
+                10.125 10.125 8.79166 11.45834 7.7708369 12.968742 7.0625 14.65625 6.3541631 16.343758 6 18.124991 6 20L6
+                42 0 42 0 20C0 17.249986 0.52082812 14.645846 1.5625 12.1875 2.562505 9.7708212 3.9999906 7.6666756 5.875
+                5.875 7.6666756 3.9999906 9.7708212 2.562505 12.1875 1.5625 14.770846 0.52082812 17.374987 0 20 0c1.33334
+                0 2.656243 0.13541531 3.96875 0.40625 1.312507 0.27083469 2.593744 0.6562475 3.84375 1.15625 2.416679
+                1.000005 4.520824 2.4374906 6.3125 4.3125 1.875009 1.7916756 3.312495 3.8958212 4.3125 6.3125zM22 20l6
+                22 -16 0 6 -22 -4 0 6 -6 6 6 -4 0z" />
+    </group>
+</vector>
