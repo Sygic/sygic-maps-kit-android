@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
   ~
@@ -23,15 +22,17 @@
   ~ SOFTWARE.
   -->
 
-<resources>
-    <color name="directionForeground">@color/white</color>
-    <color name="directionBackground">@color/white_a25</color>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="64.0"
+    android:viewportHeight="64.0">
 
-    <color name="roadSignGreen">#009966</color>
-    <color name="roadSignBlue">#0080FF</color>
-    <color name="roadSignRed">#CC0000</color>
-    <color name="roadSignYellow">#EFEF00</color>
-    <color name="roadSignOrange">#FFCC00</color>
-    <color name="roadSignBrown">#990000</color>
-    <color name="roadSignStroke">#171C26</color>
-</resources>
+    <path
+        android:fillColor="@color/roadSignGreen"
+        android:pathData="@string/rhombus_border_path_data" />
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="@string/rhombus_path_data" />
+</vector>
