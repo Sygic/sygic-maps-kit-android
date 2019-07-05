@@ -206,7 +206,7 @@ public class Processor extends AbstractProcessor {
 
                     final MethodSpec constructor = builder.build();
                     if (createdConstructors.add(constructor.parameters)) {
-                        for (FieldSpec field : fields) {
+                        for (final FieldSpec field : fields) {
                             classBuilder.addField(field);
                         }
                         classBuilder.addMethod(constructor);
@@ -232,9 +232,9 @@ public class Processor extends AbstractProcessor {
                 cb.addStatement("final $T<$T[]> constructorAssistedParametersNullability = new  $T<>()", List.class, Boolean.class, ArrayList.class);
                 cb.add("\n");
 
-                for (Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
+                for (final Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
                     cb.add("constructorAssistedParameters.add(new $T[] {$W", Class.class);
-                    for (Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
+                    for (final Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
                         VariableElement parameter = iterator.next();
                         cb.add("$T.class", typeUtils.erasure(parameter.asType()));
 
@@ -245,9 +245,9 @@ public class Processor extends AbstractProcessor {
                     cb.addStatement("$W})");
                 }
 
-                for (Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
+                for (final Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
                     cb.add("constructorAssistedParametersNullability.add(new $T[] {$W", Boolean.class);
-                    for (Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
+                    for (final Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
                         VariableElement parameter = iterator.next();
                         cb.add("$L", parameter.getAnnotation(NotNull.class) == null && parameter.getAnnotation(NonNull.class) == null);
 
