@@ -50,7 +50,6 @@ class SearchFragmentViewModel internal constructor(
     val onFinishObservable: LiveData<Any> = SingleLiveEvent()
 
     private var searchResultCallback: SearchResultCallback? = null
-    //private var currentSearchResults: List<SearchResultItem<out SearchResult>> = listOf()
 
     override fun onCreate(owner: LifecycleOwner) {
         if (owner is SearchResultCallbackWrapper) {
@@ -59,10 +58,6 @@ class SearchFragmentViewModel internal constructor(
             })
         }
     }
-
-    /*fun searchResultListDataChanged(searchResultListItems: List<SearchResultItem<out SearchResult>>) {
-        currentSearchResults = searchResultListItems
-    }*/
 
     fun onSearchResultItemClick(searchResultItem: SearchResultItem<out SearchResult>) =
         invokeCallbackAndFinish(listOf(searchResultItem))
