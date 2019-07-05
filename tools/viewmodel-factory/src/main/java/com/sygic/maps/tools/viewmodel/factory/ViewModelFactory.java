@@ -28,13 +28,16 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import javax.inject.Provider;
 import java.util.Map;
+
+import javax.inject.Provider;
 
 @SuppressWarnings("unchecked")
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private Object[] assistedValues = new Object[0];
+    private static final Object[] EMPTY_ARRAY = new Object[0];
+
+    private Object[] assistedValues = EMPTY_ARRAY;
     private final Map<Class<? extends ViewModel>, Provider<ViewModelCreatorFactory>> viewModels;
 
     public ViewModelFactory(@NonNull final Map<Class<? extends ViewModel>, Provider<ViewModelCreatorFactory>> viewModels) {
@@ -55,6 +58,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             throw new IllegalStateException("ViewModel factory provider for class " + modelClass.getSimpleName() + " not found. Make sure you have bind it to the ViewModel map!");
         }
 
-        return (T) viewModelCreatorFactoryProvider.get().create(assistedValues);
+        final T viewModel = (T) viewModelCreatorFactoryProvider.get().create(assistedValues);
+        assistedValues = EMPTY_ARRAY;
+        return viewModel;
     }
 }

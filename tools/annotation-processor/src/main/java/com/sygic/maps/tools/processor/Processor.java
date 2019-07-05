@@ -37,6 +37,8 @@ import com.squareup.javapoet.TypeSpec;
 import com.sygic.maps.tools.annotations.Assisted;
 import com.sygic.maps.tools.annotations.AutoFactory;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -226,16 +228,23 @@ public class Processor extends AbstractProcessor {
                 final StringBuilder sb = new StringBuilder();
 
                 sb.append("int variant = -1;\n");
-                sb.append("final $T<Class[]> constructorAssistedParameters = new  $T<>();\n");
+                sb.append("final $T<$T[]> constructorAssistedParameters = new  $T<>();\n");
                 args.add(List.class);
+                args.add(Class.class);
+                args.add(ArrayList.class);
+                sb.append("final $T<$T[]> constructorAssistedParametersNullability = new  $T<>();\n");
+                args.add(List.class);
+                args.add(Boolean.class);
                 args.add(ArrayList.class);
 
                 for (Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
-                    sb.append("constructorAssistedParameters.add(new Class[] {\n");
+                    sb.append("constructorAssistedParameters.add(new $T[] {\n");
+                    args.add(Class.class);
                     for (Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
-                        VariableElement value = iterator.next();
+                        VariableElement parameter = iterator.next();
                         sb.append("$T.class");
-                        args.add(typeUtils.erasure(value.asType()));
+                        args.add(typeUtils.erasure(parameter.asType()));
+
                         if (iterator.hasNext()) {
                             sb.append(",\n");
                         }
@@ -243,67 +252,46 @@ public class Processor extends AbstractProcessor {
                     sb.append("});\n");
                 }
 
+                for (Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
+                    sb.append("constructorAssistedParametersNullability.add(new $T[] {\n");
+                    args.add(Boolean.class);
+                    for (Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
+                        VariableElement parameter = iterator.next();
+                        sb.append("$L");
+                        args.add(parameter.getAnnotation(NotNull.class) == null && parameter.getAnnotation(NonNull.class) == null);
+
+                        if (iterator.hasNext()) {
+                            sb.append(",\n");
+                        }
+                    }
+                    sb.append("});\n");
+                }
+
+                sb.append("final Object[] parameters = new Object[constructorAssistedParameters.size()];\n");
                 sb.append("for (int v = 0; v < constructorAssistedParameters.size(); v++) {\n");
                 sb.append("final Class[] entry = constructorAssistedParameters.get(v);\n");
+                sb.append("final Boolean[] nullableInfo = constructorAssistedParametersNullability.get(v);\n");
                 sb.append("boolean found = true;\n");
+                sb.append("int k = 0;\n");
                 sb.append("for (int i = 0; i < entry.length; i++) {\n");
                 sb.append("final Class cls = entry[i];\n");
-                sb.append("if (" + ASSISTED_PARAMETER_NAME + ".length <= i || " + ASSISTED_PARAMETER_NAME + "[i] == null || !cls.equals(" + ASSISTED_PARAMETER_NAME + "[i].getClass())) {\n");
+                sb.append("final boolean nullable = nullableInfo[i];\n");
+                sb.append("if (nullable && (" + ASSISTED_PARAMETER_NAME + ".length <= i || " + ASSISTED_PARAMETER_NAME + "[k] == null)) {\n");
+                sb.append("parameters[i] = null;\n");
+                sb.append("continue;\n");
+                sb.append("}\n");
+                sb.append("if (" + ASSISTED_PARAMETER_NAME + ".length <= i || !cls.isInstance(" + ASSISTED_PARAMETER_NAME + "[k])) {\n");
                 sb.append("found = false;\n");
                 sb.append("break;\n");
                 sb.append("}\n");
+                sb.append("parameters[i] = assistedValues[k];\n");
+                sb.append("k++;\n");
                 sb.append("}\n");
                 sb.append("if (found) {\n");
                 sb.append("variant = v;\n");
                 sb.append("break;\n");
                 sb.append("}\n");
                 sb.append("}\n");
-
-                //sb.append("for (int i = 0; i < entry.length; i++) {\n");
-
-                /*final Map<Integer, ? extends VariableElement> assistedParameters = assistedParametersList.get(0);
-                final Map<Integer, ? extends VariableElement> nonAssistedParameters = nonAssistedParametersList.get(0);
-                final int parametersSize = nonAssistedParameters.size() + assistedParameters.size();
-
-                for (final Map.Entry<Integer, ? extends VariableElement> assistedParameter : assistedParameters.entrySet()) {
-                    sb.append("$T $N = null;\n");
-                    args.add(assistedParameter.getValue().asType());
-                    args.add(assistedParameter.getValue().getSimpleName().toString());
-                }
-
-                if (assistedParameters.size() > 0) {
-                    sb.append("int i = 0;\n");
-                }
-
-                for (final Map.Entry<Integer, ? extends VariableElement> entry : assistedParameters.entrySet()) {
-                    final VariableElement parameter = entry.getValue();
-
-                    if (parameter.getAnnotation(NotNull.class) != null || parameter.getAnnotation(NonNull.class) != null) {
-                        //check for null in @NonNull
-                        sb.append("if (i >= " + ASSISTED_PARAMETER_NAME + ".length || " + ASSISTED_PARAMETER_NAME + "[i] == null || !(" + ASSISTED_PARAMETER_NAME + "[i] instanceof $T)) { " +
-                                "throw new IllegalArgumentException(\"$N: null value provided for @NonNull parameter $N\");" +
-                                " } " +
-                                "else { " +
-                                "$N = ($T)" + ASSISTED_PARAMETER_NAME + "[i];\n" +
-                                "i++;" +
-                                " }\n");
-                        args.add(typeUtils.erasure(parameter.asType()));
-                        args.add(typeName);
-                        args.add(parameter.getSimpleName().toString());
-                        args.add(parameter.getSimpleName().toString());
-                        args.add(parameter.asType());
-                    } else {
-                        //can be null so replace with null if not provided
-                        sb.append("if (i < " + ASSISTED_PARAMETER_NAME + ".length && " + ASSISTED_PARAMETER_NAME + "[i] != null && (" + ASSISTED_PARAMETER_NAME + "[i] instanceof $T)) { " +
-                                "$N = ($T)" + ASSISTED_PARAMETER_NAME + "[i];\n" +
-                                "i++;" +
-                                " }\n");
-                        args.add(parameter.asType());
-                        args.add(parameter.getSimpleName().toString());
-                        args.add(parameter.asType());
-                    }
-                }*/
-
 
                 for (int i = 0; i < nonAssistedParametersList.size(); i++) {
                     final Map<Integer, ? extends VariableElement> nonAssistedParameters = nonAssistedParametersList.get(i);
@@ -320,9 +308,8 @@ public class Processor extends AbstractProcessor {
                         VariableElement parameter = nonAssistedParameters.get(j);
                         if (parameter == null) {
                             parameter = assistedParameters.get(j);
-                            sb.append("($T)$N[$L]");
+                            sb.append("($T)parameters[$L]");
                             args.add(parameter.asType());
-                            args.add(ASSISTED_PARAMETER_NAME);
                             args.add(a++);
                         } else {
                             sb.append("$N");
