@@ -42,7 +42,7 @@ buildscript {
         moduleCommonVersion = '1.1.2'
         uikitViewsVersion = '2.3.0'
         uikitViewmodelsVersion = '2.2.3'
-        toolsViewmodelFactoryVersion = '1.0.1'
+        toolsViewmodelFactoryVersion = '1.1.0'
 
         kotlinVersion = '1.3.40'
         kotlinCoroutinesVersion = '1.2.2'
