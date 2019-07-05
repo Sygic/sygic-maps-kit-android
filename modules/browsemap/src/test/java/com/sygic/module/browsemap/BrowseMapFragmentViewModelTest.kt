@@ -198,11 +198,7 @@ class BrowseMapFragmentViewModelTest {
 
     @Test
     fun onMapObjectsReceivedSelectionModeFullMapRouteTest() {
-        val routeInfo = mock<RouteInfo>()
-        val routeManeuver = mock<RouteManeuver>()
-        whenever(routeManeuver.position).thenReturn(GeoCoordinates(48.143489, 17.150560))
-        whenever(routeInfo.maneuvers).thenReturn(listOf(routeManeuver))
-        val tesViewObject = MapRoute.from(routeInfo).build()
+        val tesViewObject = MapRoute.from(mock()).build()
 
         argumentCaptor<PoiDataManager.Callback>().let { callback ->
             whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
