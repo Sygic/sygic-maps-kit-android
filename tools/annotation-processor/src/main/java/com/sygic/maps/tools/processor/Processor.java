@@ -29,6 +29,7 @@ import androidx.annotation.NonNull;
 
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -224,109 +225,99 @@ public class Processor extends AbstractProcessor {
                         .addAnnotation(NonNull.class)
                         .returns(className);
 
-                final List<Object> args = new ArrayList<>();
-                final StringBuilder sb = new StringBuilder();
+                final CodeBlock.Builder cb = CodeBlock.builder();
 
-                sb.append("int variant = -1;\n");
-                sb.append("final $T<$T[]> constructorAssistedParameters = new  $T<>();\n");
-                args.add(List.class);
-                args.add(Class.class);
-                args.add(ArrayList.class);
-                sb.append("final $T<$T[]> constructorAssistedParametersNullability = new  $T<>();\n");
-                args.add(List.class);
-                args.add(Boolean.class);
-                args.add(ArrayList.class);
+                cb.addStatement("int variant = -1");
+                cb.addStatement("final $T<$T[]> constructorAssistedParameters = new  $T<>()", List.class, Class.class, ArrayList.class);
+                cb.addStatement("final $T<$T[]> constructorAssistedParametersNullability = new  $T<>()", List.class, Boolean.class, ArrayList.class);
+                cb.add("\n");
 
                 for (Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
-                    sb.append("constructorAssistedParameters.add(new $T[] {\n");
-                    args.add(Class.class);
+                    cb.add("constructorAssistedParameters.add(new $T[] {$W", Class.class);
                     for (Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
                         VariableElement parameter = iterator.next();
-                        sb.append("$T.class");
-                        args.add(typeUtils.erasure(parameter.asType()));
+                        cb.add("$T.class", typeUtils.erasure(parameter.asType()));
 
                         if (iterator.hasNext()) {
-                            sb.append(",\n");
+                            cb.add(",$W");
                         }
                     }
-                    sb.append("});\n");
+                    cb.addStatement("$W})");
                 }
 
                 for (Map<Integer, ? extends VariableElement> parameterMap : assistedParametersList) {
-                    sb.append("constructorAssistedParametersNullability.add(new $T[] {\n");
-                    args.add(Boolean.class);
+                    cb.add("constructorAssistedParametersNullability.add(new $T[] {$W", Boolean.class);
                     for (Iterator<? extends VariableElement> iterator = parameterMap.values().iterator(); iterator.hasNext(); ) {
                         VariableElement parameter = iterator.next();
-                        sb.append("$L");
-                        args.add(parameter.getAnnotation(NotNull.class) == null && parameter.getAnnotation(NonNull.class) == null);
+                        cb.add("$L", parameter.getAnnotation(NotNull.class) == null && parameter.getAnnotation(NonNull.class) == null);
 
                         if (iterator.hasNext()) {
-                            sb.append(",\n");
+                            cb.add(",$W");
                         }
                     }
-                    sb.append("});\n");
+                    cb.addStatement("$W})");
                 }
 
-                sb.append("final Object[] parameters = new Object[constructorAssistedParameters.size()];\n");
-                sb.append("for (int v = 0; v < constructorAssistedParameters.size(); v++) {\n");
-                sb.append("final Class[] entry = constructorAssistedParameters.get(v);\n");
-                sb.append("final Boolean[] nullableInfo = constructorAssistedParametersNullability.get(v);\n");
-                sb.append("boolean found = true;\n");
-                sb.append("int k = 0;\n");
-                sb.append("for (int i = 0; i < entry.length; i++) {\n");
-                sb.append("final Class cls = entry[i];\n");
-                sb.append("final boolean nullable = nullableInfo[i];\n");
-                sb.append("if (nullable && (" + ASSISTED_PARAMETER_NAME + ".length <= i || " + ASSISTED_PARAMETER_NAME + "[k] == null)) {\n");
-                sb.append("parameters[i] = null;\n");
-                sb.append("continue;\n");
-                sb.append("}\n");
-                sb.append("if (" + ASSISTED_PARAMETER_NAME + ".length <= i || !cls.isInstance(" + ASSISTED_PARAMETER_NAME + "[k])) {\n");
-                sb.append("found = false;\n");
-                sb.append("break;\n");
-                sb.append("}\n");
-                sb.append("parameters[i] = assistedValues[k];\n");
-                sb.append("k++;\n");
-                sb.append("}\n");
-                sb.append("if (found) {\n");
-                sb.append("variant = v;\n");
-                sb.append("break;\n");
-                sb.append("}\n");
-                sb.append("}\n");
+                cb.add("\n");
+
+                cb.addStatement("final $1T[] parameters = new $1T[constructorAssistedParameters.size()]", Object.class);
+                cb.beginControlFlow("for ($T v = 0; v < constructorAssistedParameters.size(); v++)", int.class);
+                cb.addStatement("final $T[] entry = constructorAssistedParameters.get(v)", Class.class);
+                cb.addStatement("final $T[] nullableInfo = constructorAssistedParametersNullability.get(v)", Boolean.class);
+                cb.addStatement("boolean found = true");
+                cb.addStatement("$T k = 0", int.class);
+                cb.beginControlFlow("for ($T i = 0; i < entry.length; i++)", int.class);
+                cb.addStatement("final $T cls = entry[i]", Class.class);
+                cb.addStatement("final $T nullable = nullableInfo[i]", boolean.class);
+                cb.beginControlFlow("if (nullable && (" + ASSISTED_PARAMETER_NAME + ".length <= i || " + ASSISTED_PARAMETER_NAME + "[k] == null))");
+                cb.addStatement("continue");
+                cb.endControlFlow();
+                cb.beginControlFlow("if (" + ASSISTED_PARAMETER_NAME + ".length <= i || !cls.isInstance(" + ASSISTED_PARAMETER_NAME + "[k]))");
+                cb.addStatement("found = false");
+                cb.addStatement("break");
+                cb.endControlFlow();
+                cb.addStatement("parameters[i] = assistedValues[k]");
+                cb.addStatement("k++");
+                cb.endControlFlow();
+                cb.beginControlFlow("if (found)");
+                cb.addStatement("variant = v");
+                cb.addStatement("break");
+                cb.endControlFlow();
+                cb.endControlFlow();
+
+                cb.add("\n");
 
                 for (int i = 0; i < nonAssistedParametersList.size(); i++) {
                     final Map<Integer, ? extends VariableElement> nonAssistedParameters = nonAssistedParametersList.get(i);
                     final Map<Integer, ? extends VariableElement> assistedParameters = assistedParametersList.get(i);
                     int parametersSize = nonAssistedParameters.size() + assistedParameters.size();
 
-                    sb.append("if (variant == $L) {\n");
-                    args.add(i);
-                    sb.append("return new $N(");
-                    args.add(className.simpleName());
+                    cb.beginControlFlow("if (variant == $L)", i);
+                    cb.add("return new $N(", className.simpleName());
 
                     int a = 0;
                     for (int j = 0; j < parametersSize; j++) {
                         VariableElement parameter = nonAssistedParameters.get(j);
                         if (parameter == null) {
                             parameter = assistedParameters.get(j);
-                            sb.append("($T)parameters[$L]");
-                            args.add(parameter.asType());
-                            args.add(a++);
+                            cb.add("($T)parameters[$L]", parameter.asType(), a++);
                         } else {
-                            sb.append("$N");
-                            args.add(parameter.getSimpleName().toString());
+                            cb.add("$N", parameter.getSimpleName());
                         }
 
                         if (j + 1 < parametersSize) {
-                            sb.append(", ");
+                            cb.add(",$W");
                         }
                     }
-                    sb.append(");\n");
-                    sb.append("}\n");
+                    cb.addStatement(")");
+                    cb.endControlFlow();
                 }
 
-                sb.append("throw new IllegalArgumentException(\"Provided assisted " + ASSISTED_PARAMETER_NAME + " values don't match any available constructor\")");
+                cb.add("\n");
+                cb.addStatement("throw new IllegalArgumentException($S)",
+                        "Provided assisted " + ASSISTED_PARAMETER_NAME + " values don't match any available constructor");
 
-                createMethodBuilder.addStatement(sb.toString(), args.toArray());
+                createMethodBuilder.addCode(cb.build());
                 classBuilder.addMethod(createMethodBuilder.build());
 
                 // write the defines class to a java file

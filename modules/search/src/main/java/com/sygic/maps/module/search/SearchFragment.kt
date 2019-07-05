@@ -192,9 +192,6 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
             this.onSearchResultItemClickObservable.observe(
                 this@SearchFragment,
                 Observer<SearchResultItem<out SearchResult>> { fragmentViewModel.onSearchResultItemClick(it) })
-            /*this.searchResultListDataChangedObservable.observe(
-                this@SearchFragment,
-                Observer<List<SearchResultItem<out SearchResult>>> { fragmentViewModel.searchResultListDataChanged(it) })*/
         }
 
         lifecycle.addObserver(fragmentViewModel)
