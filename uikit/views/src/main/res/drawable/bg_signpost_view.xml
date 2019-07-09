@@ -23,35 +23,7 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="navigationFragmentViewModel"
-            type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
-
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:clipChildren="false"
-        android:focusable="true">
-
-        <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:background="@drawable/bg_signpost_view"
-            tools:layout_height="152dp"
-            tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/black" />
+    <corners android:radius="8dp" />
+</shape>
