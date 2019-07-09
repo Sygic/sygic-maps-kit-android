@@ -60,7 +60,6 @@ open class SearchResultListViewModel @JvmOverloads internal constructor(
 ) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener<SearchResult> {
 
     val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
-    val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<out SearchResult>>> = SingleLiveEvent()
 
     val errorViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
     val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> = MutableLiveData()
@@ -70,7 +69,6 @@ open class SearchResultListViewModel @JvmOverloads internal constructor(
     private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
         results.toSearchResultList().let {
             resultListAdapter.items = it
-            searchResultListDataChangedObservable.asSingleEvent().value = it
         }
 
         errorViewSwitcherIndex.value = searchResultStateToErrorViewSwitcherIndex(state)

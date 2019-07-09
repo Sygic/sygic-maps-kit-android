@@ -35,9 +35,7 @@ import javax.inject.Provider;
 @SuppressWarnings("unchecked")
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private static final Object[] EMPTY_ARRAY = new Object[0];
-
-    private Object[] assistedValues = EMPTY_ARRAY;
+    private Object[] assistedValues = new Object[0];
     private final Map<Class<? extends ViewModel>, Provider<ViewModelCreatorFactory>> viewModels;
 
     public ViewModelFactory(@NonNull final Map<Class<? extends ViewModel>, Provider<ViewModelCreatorFactory>> viewModels) {
@@ -58,8 +56,6 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             throw new IllegalStateException("ViewModel factory provider for class " + modelClass.getSimpleName() + " not found. Make sure you have bind it to the ViewModel map!");
         }
 
-        final T viewModel = (T) viewModelCreatorFactoryProvider.get().create(assistedValues);
-        assistedValues = EMPTY_ARRAY;
-        return viewModel;
+        return (T) viewModelCreatorFactoryProvider.get().create(assistedValues);
     }
 }
