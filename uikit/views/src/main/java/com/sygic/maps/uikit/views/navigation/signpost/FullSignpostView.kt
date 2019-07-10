@@ -41,21 +41,34 @@ open class FullSignpostView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.signpostViewStyle,
     defStyleRes: Int = R.style.SygicSignpostViewStyle
-) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) { //TODO
+) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) {
 
     private val binding: LayoutFullSignpostViewInternalBinding =
         LayoutFullSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    fun setDistance(distance: String) {
-        binding.signpostDistanceTextView.text = distance
+    fun setDistance(distanceText: String) {
+        binding.signpostDistanceTextView.text = distanceText
     }
 
-    fun setPrimaryDirection(@DrawableRes drawableRes: Int) {
-        binding.signpostPrimaryDirectionImageView.setImageResource(drawableRes)
+    fun setPrimaryDirection(@DrawableRes primaryDirectionDrawableRes: Int) {
+        binding.signpostPrimaryDirectionImageView.setImageResource(primaryDirectionDrawableRes)
     }
 
-    fun setOnPrimaryDirectionClickListener(listener: OnClickListener) {
-        binding.signpostPrimaryDirectionImageView.setOnClickListener(listener)
+    fun setOnPrimaryDirectionClickListener(primaryDirectionListener: OnClickListener) {
+        binding.signpostPrimaryDirectionImageView.setOnClickListener(primaryDirectionListener)
+    }
+
+    fun setSecondaryDirection(@DrawableRes secondaryDirectionDrawableRes: Int) {
+        if (secondaryDirectionDrawableRes != 0) {
+            binding.signpostSecondaryDirectionContainer.visibility = VISIBLE
+            binding.signpostSecondaryDirectionImageView.setImageResource(secondaryDirectionDrawableRes)
+        } else {
+            binding.signpostSecondaryDirectionContainer.visibility = GONE
+        }
+    }
+
+    fun setSecondaryDirectionText(secondaryDirectionText: String) {
+        binding.signpostSecondaryDirectionTextView.text = secondaryDirectionText
     }
 
     fun setInstructionText(instructionText: String) {
@@ -66,54 +79,17 @@ open class FullSignpostView @JvmOverloads constructor(
         binding.signpostRoadSignsView.data = roadSigns
     }
 
-    /*
-    fun setSecondaryDirection(@DrawableRes drawableRes: Int) {
-        if (drawableRes != 0) { //todo
-            binding.signpostSecondaryDirectionWrapper.visibility = View.VISIBLE
-            binding.signpostSecondaryDirectionImageView.setImageResource(drawableRes)
-        } else {
-            binding.signpostSecondaryDirectionWrapper.visibility = View.GONE
-        }
-    }
-
-    fun setInstructionText(text: FormattedString) { //todo
-        setInstructionText(if (TextUtils.isEmpty(text)) null else text.getFormattedString(context))
-    }
-
-    fun setInstructionTextColor(@ColorInt color: Int) { //todo
-        binding.signpostInstructionTextView.setTextColor(color)
-        binding.signpostDistanceTextView.setTextColor(color)
-        binding.signpostSecondaryDirectionTextView.setTextColor(color)
-
-        setImageViewTint(binding.signpostPrimaryDirectionImageView, color)
-        setImageViewTint(binding.signpostSecondaryDirectionImageView, color)
-        setImageViewTint(binding.signpostPictogramImageView, color)
-    }
-
-    fun setRoadSigns(info: List<RoadSignInfo.Data>) { //todo
-        binding.signpostRoadSignsView.setData(info)
-    }
-
-    fun setPictogram(@DrawableRes pictogramDrawableRes: Int) { //todo
+    fun setPictogram(@DrawableRes pictogramDrawableRes: Int) {
         if (pictogramDrawableRes != 0) {
-            binding.signpostPictogramImageView.visibility = View.VISIBLE
-            binding.signpostPictogramImageView.setImageResource(pictogramDrawableRes)
+            with(binding.signpostPictogramImageView) {
+                visibility = VISIBLE
+                setImageResource(pictogramDrawableRes)
+            }
         } else {
-            binding.signpostPictogramImageView.visibility = View.GONE
-            binding.signpostPictogramImageView.setImageDrawable(null)
+            with(binding.signpostPictogramImageView) {
+                visibility = GONE
+                setImageDrawable(null)
+            }
         }
     }
-
-    companion object { //todo
-
-        @BindingAdapter("primaryDirection", "secondaryDirection", "instructionTextColor")
-        fun setDirectionsWithColor(
-            view: SignpostView, @DrawableRes primary: Int,
-            @DrawableRes secondary: Int, @ColorInt color: Int
-        ) {
-            view.setPrimaryDirection(primary)
-            view.setSecondaryDirection(secondary)
-            view.setInstructionTextColor(color)
-        }
-    }*/
 }

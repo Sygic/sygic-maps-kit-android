@@ -40,20 +40,33 @@ open class SimplifiedSignpostView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.signpostViewStyle,
     defStyleRes: Int = R.style.SygicSignpostViewStyle
-) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) { //TODO
+) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) {
 
     private val binding: LayoutSimplifiedSignpostViewInternalBinding =
         LayoutSimplifiedSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    fun setDistance(distance: String) {
-        binding.signpostDistanceTextView.text = distance
+    fun setDistance(distanceText: String) {
+        binding.signpostDistanceTextView.text = distanceText
     }
 
-    fun setPrimaryDirection(@DrawableRes drawableRes: Int) {
-        binding.signpostPrimaryDirectionImageView.setImageResource(drawableRes)
+    fun setPrimaryDirection(@DrawableRes primaryDirectionDrawableRes: Int) {
+        binding.signpostPrimaryDirectionImageView.setImageResource(primaryDirectionDrawableRes)
     }
 
-    fun setOnPrimaryDirectionClickListener(listener: OnClickListener) {
-        binding.signpostPrimaryDirectionImageView.setOnClickListener(listener)
+    fun setOnPrimaryDirectionClickListener(primaryDirectionListener: OnClickListener) {
+        binding.signpostPrimaryDirectionImageView.setOnClickListener(primaryDirectionListener)
+    }
+
+    fun setSecondaryDirection(@DrawableRes secondaryDirectionDrawableRes: Int) {
+        if (secondaryDirectionDrawableRes != 0) {
+            binding.signpostSecondaryDirectionContainer.visibility = VISIBLE
+            binding.signpostSecondaryDirectionImageView.setImageResource(secondaryDirectionDrawableRes)
+        } else {
+            binding.signpostSecondaryDirectionContainer.visibility = GONE
+        }
+    }
+
+    fun setSecondaryDirectionText(secondaryDirectionText: String) {
+        binding.signpostSecondaryDirectionTextView.text = secondaryDirectionText
     }
 }
