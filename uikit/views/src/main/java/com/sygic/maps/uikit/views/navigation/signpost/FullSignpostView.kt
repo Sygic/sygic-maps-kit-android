@@ -27,9 +27,10 @@ package com.sygic.maps.uikit.views.navigation.signpost
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.databinding.LayoutFullSignpostViewInternalBinding
+import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 
 /**
  * A [FullSignpostView] TODO
@@ -40,72 +41,12 @@ open class FullSignpostView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.signpostViewStyle,
     defStyleRes: Int = R.style.SygicSignpostViewStyle
-) : ConstraintLayout(context, attrs, defStyleAttr) { //TODO
+) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) { //TODO
 
     private val binding: LayoutFullSignpostViewInternalBinding =
         LayoutFullSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private var layoutMargin: Int = 0
-    private var layoutMarginTop: Int = 0
-    private var layoutMarginBottom: Int = 0
-    private var layoutMarginStart: Int = 0
-    private var layoutMarginEnd: Int = 0
-
-    init {
-        attrs?.let { attributeSet ->
-            context.obtainStyledAttributes(
-                attributeSet,
-                R.styleable.SignpostView,
-                defStyleAttr,
-                defStyleRes
-            ).apply {
-                with(getResourceId(R.styleable.SignpostView_android_background, R.drawable.bg_signpost_view)) {
-                    setBackgroundResource(this)
-                }
-
-                layoutMargin = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_margin,
-                    0
-                )
-
-                layoutMarginTop = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_marginTop,
-                    R.dimen.defaultSignpostViewLayoutMargin
-                )
-
-                layoutMarginBottom = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_marginBottom,
-                    0
-                )
-
-                layoutMarginStart = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_marginStart,
-                    R.dimen.defaultSignpostViewLayoutMargin
-                )
-
-                layoutMarginEnd = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_marginEnd,
-                    R.dimen.defaultSignpostViewLayoutMargin
-                )
-
-                recycle()
-            }
-        }
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-
-        with((layoutParams as MarginLayoutParams)) {
-            if (layoutMargin != 0) {
-                setMargins(layoutMargin, layoutMargin, layoutMargin, layoutMargin)
-            } else {
-                setMargins(layoutMarginStart, layoutMarginTop, layoutMarginEnd, layoutMarginBottom)
-            }
-        }
-    }
-
-    /*fun setDistance(distance: SpannableString) {
+    fun setDistance(distance: String) {
         binding.signpostDistanceTextView.text = distance
     }
 
@@ -113,6 +54,19 @@ open class FullSignpostView @JvmOverloads constructor(
         binding.signpostPrimaryDirectionImageView.setImageResource(drawableRes)
     }
 
+    fun setOnPrimaryDirectionClickListener(listener: OnClickListener) {
+        binding.signpostPrimaryDirectionImageView.setOnClickListener(listener)
+    }
+
+    fun setInstructionText(instructionText: String) {
+        binding.signpostInstructionTextView.text = instructionText
+    }
+
+    fun setRoadSigns(roadSigns: List<RoadSignData>) {
+        binding.signpostRoadSignsView.data = roadSigns
+    }
+
+    /*
     fun setSecondaryDirection(@DrawableRes drawableRes: Int) {
         if (drawableRes != 0) { //todo
             binding.signpostSecondaryDirectionWrapper.visibility = View.VISIBLE
@@ -120,15 +74,6 @@ open class FullSignpostView @JvmOverloads constructor(
         } else {
             binding.signpostSecondaryDirectionWrapper.visibility = View.GONE
         }
-    }
-
-    fun setOnInstructionClickListener(listener: OnClickListener) {
-        binding.signpostPrimaryDirectionImageView.setOnClickListener(listener)
-    }
-
-    fun setInstructionText(text: String) {
-        binding.signpostInstructionTextView.text = text
-        binding.signpostInstructionTextView.requestLayout()
     }
 
     fun setInstructionText(text: FormattedString) { //todo
