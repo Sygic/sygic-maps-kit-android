@@ -22,34 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.di;
+package com.sygic.maps.module.common.di;
 
-import com.sygic.maps.module.common.di.FragmentModulesComponent;
-import com.sygic.maps.module.navigation.NavigationFragment;
-import com.sygic.maps.module.navigation.di.module.ViewModelModule;
-import com.sygic.maps.module.common.di.util.ModuleBuilder;
+import com.sygic.maps.module.common.di.module.RegionalModule;
+import com.sygic.maps.module.common.di.scope.FragmentScope;
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager;
 import dagger.Component;
 
-import javax.inject.Scope;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-@interface Navigation { }
-
-@Navigation
+@FragmentScope
 @Component(
-        modules = {
-                ViewModelModule.class
-        },
         dependencies = {
-                FragmentModulesComponent.class
+                ApplicationModulesComponent.class
+        },
+        modules = {
+                RegionalModule.class
         }
 )
-public interface NavigationComponent {
-    @Component.Builder
-    abstract class Builder implements ModuleBuilder<NavigationComponent> {}
-
-    void inject(NavigationFragment fragment);
+public interface FragmentModulesComponent extends ApplicationModulesComponent {
+    RegionalManager getRegionalManager();
 }

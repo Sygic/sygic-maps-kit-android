@@ -38,6 +38,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
+import com.sygic.maps.module.common.di.DaggerFragmentModulesComponent
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
@@ -86,7 +87,16 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     private var injected = false
     private fun inject() {
         if (!injected) {
-            DaggerSearchComponent.builder().plus(modulesComponent.getInstance(this)).build().inject(this)
+            DaggerSearchComponent
+                .builder()
+                .plus(
+                    DaggerFragmentModulesComponent
+                        .builder()
+                        .applicationModulesComponent(modulesComponent.getInstance(this))
+                        .build()
+                )
+                .build()
+                .inject(this)
             injected = true
         }
     }

@@ -43,10 +43,9 @@ open class FullSignpostView @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicSignpostViewStyle
 ) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: LayoutFullSignpostViewInternalBinding =
-        LayoutFullSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutFullSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    fun setDistance(distanceText: String) {
+    fun setDistance(distanceText: String?) {
         binding.signpostDistanceTextView.text = distanceText
     }
 
@@ -54,7 +53,7 @@ open class FullSignpostView @JvmOverloads constructor(
         binding.signpostPrimaryDirectionImageView.setImageResource(primaryDirectionDrawableRes)
     }
 
-    fun setOnPrimaryDirectionClickListener(primaryDirectionListener: OnClickListener) {
+    fun setOnPrimaryDirectionClickListener(primaryDirectionListener: OnClickListener?) {
         binding.signpostPrimaryDirectionImageView.setOnClickListener(primaryDirectionListener)
     }
 
@@ -67,11 +66,11 @@ open class FullSignpostView @JvmOverloads constructor(
         }
     }
 
-    fun setSecondaryDirectionText(secondaryDirectionText: String) {
+    fun setSecondaryDirectionText(secondaryDirectionText: String?) {
         binding.signpostSecondaryDirectionTextView.text = secondaryDirectionText
     }
 
-    fun setInstructionText(instructionText: String) {
+    fun setInstructionText(instructionText: String?) {
         binding.signpostInstructionTextView.text = instructionText
     }
 

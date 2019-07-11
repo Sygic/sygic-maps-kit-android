@@ -22,13 +22,18 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.scope;
+package com.sygic.maps.uikit.viewmodels.common.regional
 
-import javax.inject.Scope;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.MutableLiveData
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ActivityScope {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class RegionalManagerImpl : RegionalManager {
+
+    override val distanceUnits: MutableLiveData<Int> = MutableLiveData()
+
+    init {
+        distanceUnits.value = DistanceUnits.KILOMETERS //todo
+    }
 }

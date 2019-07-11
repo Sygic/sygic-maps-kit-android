@@ -22,34 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.di;
+package com.sygic.maps.uikit.viewmodels.common.regional
 
-import com.sygic.maps.module.common.di.FragmentModulesComponent;
-import com.sygic.maps.module.navigation.NavigationFragment;
-import com.sygic.maps.module.navigation.di.module.ViewModelModule;
-import com.sygic.maps.module.common.di.util.ModuleBuilder;
-import dagger.Component;
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.MutableLiveData
 
-import javax.inject.Scope;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-@interface Navigation { }
-
-@Navigation
-@Component(
-        modules = {
-                ViewModelModule.class
-        },
-        dependencies = {
-                FragmentModulesComponent.class
-        }
-)
-public interface NavigationComponent {
-    @Component.Builder
-    abstract class Builder implements ModuleBuilder<NavigationComponent> {}
-
-    void inject(NavigationFragment fragment);
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface RegionalManager {
+    val distanceUnits: MutableLiveData<Int>
 }

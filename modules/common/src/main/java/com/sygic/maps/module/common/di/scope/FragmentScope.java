@@ -22,13 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.di;
-
-import com.sygic.maps.module.common.di.FragmentModulesComponent;
-import com.sygic.maps.module.navigation.NavigationFragment;
-import com.sygic.maps.module.navigation.di.module.ViewModelModule;
-import com.sygic.maps.module.common.di.util.ModuleBuilder;
-import dagger.Component;
+package com.sygic.maps.module.common.di.scope;
 
 import javax.inject.Scope;
 import java.lang.annotation.Retention;
@@ -36,20 +30,4 @@ import java.lang.annotation.RetentionPolicy;
 
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-@interface Navigation { }
-
-@Navigation
-@Component(
-        modules = {
-                ViewModelModule.class
-        },
-        dependencies = {
-                FragmentModulesComponent.class
-        }
-)
-public interface NavigationComponent {
-    @Component.Builder
-    abstract class Builder implements ModuleBuilder<NavigationComponent> {}
-
-    void inject(NavigationFragment fragment);
-}
+public @interface FragmentScope { }

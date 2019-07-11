@@ -33,7 +33,7 @@
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
 
-        <item name="navigationTintColor">@color/white</item> <!-- todo: where is the default, if not declared here? -->
+        <item name="navigationTintColor">@color/white</item> <!-- todo: note as required in the wiki (app will crash instead :( ) -->
     </style>
 
     <style name="Theme.Sygic.Colored" parent="Theme.AppCompat.DayNight">

@@ -34,6 +34,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
+import com.sygic.maps.module.common.di.DaggerFragmentModulesComponent
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest
 import com.sygic.maps.module.common.extensions.isGooglePlayServicesAvailable
@@ -91,12 +92,16 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
     protected var injected = false
-
     protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
         if (!injected) {
             block(
                 builder
-                    .plus(modulesComponent.getInstance(this))
+                    .plus(
+                        DaggerFragmentModulesComponent
+                            .builder()
+                            .applicationModulesComponent(modulesComponent.getInstance(this))
+                            .build()
+                    )
                     .build()
             )
         }

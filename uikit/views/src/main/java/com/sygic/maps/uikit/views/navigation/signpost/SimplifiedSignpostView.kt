@@ -32,7 +32,7 @@ import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.databinding.LayoutSimplifiedSignpostViewInternalBinding
 
 /**
- * A [SimplifiedSignpostView] is the simplified alternative to the FullSignpostView. TODO
+ * A [SimplifiedSignpostView] is the simplified alternative to the [FullSignpostView]. TODO
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate", "CustomViewStyleable")
 open class SimplifiedSignpostView @JvmOverloads constructor(
@@ -42,10 +42,9 @@ open class SimplifiedSignpostView @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicSignpostViewStyle
 ) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: LayoutSimplifiedSignpostViewInternalBinding =
-        LayoutSimplifiedSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutSimplifiedSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
-    fun setDistance(distanceText: String) {
+    fun setDistance(distanceText: String?) {
         binding.signpostDistanceTextView.text = distanceText
     }
 
@@ -53,7 +52,7 @@ open class SimplifiedSignpostView @JvmOverloads constructor(
         binding.signpostPrimaryDirectionImageView.setImageResource(primaryDirectionDrawableRes)
     }
 
-    fun setOnPrimaryDirectionClickListener(primaryDirectionListener: OnClickListener) {
+    fun setOnPrimaryDirectionClickListener(primaryDirectionListener: OnClickListener?) {
         binding.signpostPrimaryDirectionImageView.setOnClickListener(primaryDirectionListener)
     }
 

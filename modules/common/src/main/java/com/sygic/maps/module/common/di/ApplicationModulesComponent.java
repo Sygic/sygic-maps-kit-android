@@ -56,7 +56,7 @@ import javax.inject.Singleton;
                 RouteDemonstrationManagerModule.class
         }
 )
-public interface ModulesComponent {
+public interface ApplicationModulesComponent {
     ExtendedMapDataModel getMapDataModel();
     ExtendedCameraModel getCameraModel();
     MapInteractionManager getMapInteractionManager();
