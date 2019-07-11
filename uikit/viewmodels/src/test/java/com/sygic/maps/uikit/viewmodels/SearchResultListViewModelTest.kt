@@ -59,7 +59,7 @@ class SearchResultListViewModelTest {
 
     @Before
     fun setup() {
-        searchResultListViewModel = SearchResultListViewModel(searchManager)
+        searchResultListViewModel = SearchResultListViewModel(searchManager, mock())
     }
 
     @Test
