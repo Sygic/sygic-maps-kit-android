@@ -54,6 +54,7 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATI
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
+import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
@@ -171,9 +172,11 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val resultListAdapter = SearchResultListAdapter<SearchResult>()
+
         fragmentViewModel = ViewModelProviders.of(
             this,
-            viewModelFactory
+            viewModelFactory.with(resultListAdapter)
         )[SearchFragmentViewModel::class.java].apply {
             this.onFinishObservable.observe(
                 this@SearchFragment,
@@ -189,14 +192,11 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
         }
         searchResultListViewModel = ViewModelProviders.of(
             this,
-            viewModelFactory
+            viewModelFactory.with(resultListAdapter)
         )[SearchResultListViewModel::class.java].apply {
             this.onSearchResultItemClickObservable.observe(
                 this@SearchFragment,
                 Observer<SearchResultItem<out SearchResult>> { fragmentViewModel.onSearchResultItemClick(it) })
-            this.searchResultListDataChangedObservable.observe(
-                this@SearchFragment,
-                Observer<List<SearchResultItem<out SearchResult>>> { fragmentViewModel.searchResultListDataChanged(it) })
         }
 
         lifecycle.addObserver(fragmentViewModel)
