@@ -22,9 +22,19 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.component
+package com.sygic.maps.uikit.viewmodels.common.regional.units;
 
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import androidx.annotation.IntDef;
+import androidx.annotation.RestrictTo;
 
-const val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnits.KILOMETERS
-const val PREVIEW_MODE_DEFAULT_VALUE = false
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@IntDef({DistanceUnits.KILOMETERS, DistanceUnits.MILES_YARDS, DistanceUnits.MILES_FEETS})
+@Retention(RetentionPolicy.SOURCE)
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+public @interface DistanceUnits {
+    int KILOMETERS = 0;
+    int MILES_YARDS = 1;
+    int MILES_FEETS = 2;
+}

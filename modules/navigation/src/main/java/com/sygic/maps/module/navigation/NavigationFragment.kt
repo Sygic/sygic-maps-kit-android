@@ -29,26 +29,30 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
+import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
+import com.sygic.maps.uikit.views.common.extensions.getInt
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
-import com.sygic.sdk.map.`object`.MapRoute
+import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
+import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.sdk.route.RouteInfo
 
 const val NAVIGATION_FRAGMENT_TAG = "navigation_map_fragment_tag"
+internal const val KEY_DISTANCE_UNITS = "distance_units"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_ROUTE_INFO = "route_info"
 
 /**
  * A *[NavigationFragment]* is the core component for any navigation operation. It can be easily used for the navigation
- * purposes. By setting the [routeInfo] object will start the navigation process. Any pre build-in element such as [DirectionInfo]
- * [Signposts], [Infobar], [CurrentSpeed] or [SpeedLimit] may be activated or deactivated and styled.
+ * purposes. By setting the [routeInfo] object will start the navigation process. Any pre build-in element such as
+ * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [CurrentSpeed] or [SpeedLimit] may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
@@ -57,6 +61,27 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
+
+    /**
+     * A *[distanceUnits]* defines all available [DistanceUnits].
+     *
+     * [DistanceUnits.KILOMETERS] (default) -> Kilometers/meters are used as the distance unit.
+     *
+     * [DistanceUnits.MILES_YARDS] -> Miles/yards are used as the distance unit.
+     *
+     * [DistanceUnits.MILES_FEETS] -> Miles/feets are used as the distance unit.
+     */
+    @DistanceUnits
+    var distanceUnits: Int
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.distanceUnits
+        } else arguments.getInt(KEY_DISTANCE_UNITS, DISTANCE_UNITS_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putInt(KEY_DISTANCE_UNITS, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.distanceUnits = value
+            }
+        }
 
     /**
      * A *[previewMode]* modifies whether the preview mode is on or off.
@@ -121,6 +146,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
 
     override fun resolveAttributes(attributes: AttributeSet) {
         with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
+            if (hasValue(R.styleable.NavigationFragment_sygic_navigation_distanceUnits)) {
+                distanceUnits =
+                    getInt(
+                        R.styleable.NavigationFragment_sygic_navigation_distanceUnits,
+                        DISTANCE_UNITS_DEFAULT_VALUE
+                    )
+            }
             if (hasValue(R.styleable.NavigationFragment_sygic_navigation_previewMode)) {
                 previewMode =
                     getBoolean(

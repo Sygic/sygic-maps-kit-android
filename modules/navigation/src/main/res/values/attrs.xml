@@ -26,6 +26,11 @@
 <resources>
 
     <declare-styleable name="NavigationFragment">
+        <attr name="sygic_navigation_distanceUnits" format="enum">
+            <enum name="kilometers" value="0" />
+            <enum name="miles_yards" value="1" />
+            <enum name="miles_feets" value="2" />
+        </attr>
         <attr name="sygic_navigation_previewMode" format="boolean" />
     </declare-styleable>
 
