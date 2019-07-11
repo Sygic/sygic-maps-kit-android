@@ -22,19 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.regional.units;
+package com.sygic.maps.uikit.viewmodels.common.regional.units
 
-import androidx.annotation.IntDef;
-import androidx.annotation.RestrictTo;
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+@Parcelize
+enum class DistanceUnits : Parcelable {
+    KILOMETERS, MILES_YARDS, MILES_FEETS;
 
-@IntDef({DistanceUnits.KILOMETERS, DistanceUnits.MILES_YARDS, DistanceUnits.MILES_FEETS})
-@Retention(RetentionPolicy.SOURCE)
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-public @interface DistanceUnits {
-    int KILOMETERS = 0;
-    int MILES_YARDS = 1;
-    int MILES_FEETS = 2;
+    companion object {
+        fun atIndex(index: Int) = values()[index]
+    }
 }

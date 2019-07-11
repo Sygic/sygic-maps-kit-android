@@ -39,7 +39,6 @@ import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
-import com.sygic.maps.uikit.views.common.extensions.getInt
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
@@ -68,7 +67,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
 
     /**
-     * A *[distanceUnits]* defines all available [DistanceUnits].
+     * A *[distanceUnits]* defines all available [DistanceUnits] type.
      *
      * [DistanceUnits.KILOMETERS] (default) -> Kilometers/meters are used as the distance unit.
      *
@@ -76,15 +75,14 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
      *
      * [DistanceUnits.MILES_FEETS] -> Miles/feets are used as the distance unit.
      */
-    @DistanceUnits
-    var distanceUnits: Int
+    var distanceUnits: DistanceUnits
         get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.distanceUnits
-        } else arguments.getInt(KEY_DISTANCE_UNITS, DISTANCE_UNITS_DEFAULT_VALUE)
+            regionalManager.distanceUnits.value!!
+        } else arguments.getParcelableValue(KEY_DISTANCE_UNITS) ?: DISTANCE_UNITS_DEFAULT_VALUE
         set(value) {
-            arguments = Bundle(arguments).apply { putInt(KEY_DISTANCE_UNITS, value) }
+            arguments = Bundle(arguments).apply { putParcelable(KEY_DISTANCE_UNITS, value) }
             if (::fragmentViewModel.isInitialized) {
-                fragmentViewModel.distanceUnits = value
+                regionalManager.distanceUnits.value = value
             }
         }
 
@@ -152,11 +150,12 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     override fun resolveAttributes(attributes: AttributeSet) {
         with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
             if (hasValue(R.styleable.NavigationFragment_sygic_navigation_distanceUnits)) {
-                distanceUnits =
+                distanceUnits = DistanceUnits.atIndex(
                     getInt(
                         R.styleable.NavigationFragment_sygic_navigation_distanceUnits,
-                        DISTANCE_UNITS_DEFAULT_VALUE
+                        DISTANCE_UNITS_DEFAULT_VALUE.ordinal
                     )
+                )
             }
             if (hasValue(R.styleable.NavigationFragment_sygic_navigation_previewMode)) {
                 previewMode =

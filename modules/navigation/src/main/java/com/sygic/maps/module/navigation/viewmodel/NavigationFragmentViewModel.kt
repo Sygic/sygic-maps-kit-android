@@ -39,10 +39,8 @@ import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.sdk.map.Camera
@@ -72,17 +70,9 @@ class NavigationFragmentViewModel internal constructor(
     private val mapDataModel: ExtendedMapDataModel,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
-    private val regionalManager: RegionalManager,
     private val navigationManager: NavigationManager,
     private val routeDemonstrationManager: RouteDemonstrationManager
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
-
-    @DistanceUnits
-    var distanceUnits: Int
-        get() = regionalManager.distanceUnits.value!!
-        set(value) {
-            regionalManager.distanceUnits.value = value
-        }
 
     val previewMode: MutableLiveData<Boolean> = object : MutableLiveData<Boolean>() {
         override fun setValue(value: Boolean) {
