@@ -33,8 +33,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
-import com.sygic.maps.module.common.di.DaggerFragmentModulesComponent
+import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
+import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest
 import com.sygic.maps.module.common.extensions.isGooglePlayServicesAvailable
@@ -70,8 +70,6 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     protected abstract fun executeInjector()
     protected abstract fun resolveAttributes(attributes: AttributeSet)
 
-    protected val modulesComponent = ModulesComponentDelegate()
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
@@ -97,10 +95,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
             block(
                 builder
                     .plus(
-                        DaggerFragmentModulesComponent
-                            .builder()
-                            .applicationModulesComponent(modulesComponent.getInstance(this))
-                            .build()
+                        FragmentsComponentDelegate.getComponent(this, ApplicationComponentDelegate)
                     )
                     .build()
             )

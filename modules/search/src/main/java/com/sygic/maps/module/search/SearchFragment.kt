@@ -37,8 +37,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
-import com.sygic.maps.module.common.di.DaggerFragmentModulesComponent
+import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
+import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
@@ -71,8 +71,6 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
 
-    private val modulesComponent = ModulesComponentDelegate()
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
@@ -90,10 +88,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
             DaggerSearchComponent
                 .builder()
                 .plus(
-                    DaggerFragmentModulesComponent
-                        .builder()
-                        .applicationModulesComponent(modulesComponent.getInstance(this))
-                        .build()
+                    FragmentsComponentDelegate.getComponent(this, ApplicationComponentDelegate)
                 )
                 .build()
                 .inject(this)

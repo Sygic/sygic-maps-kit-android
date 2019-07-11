@@ -31,9 +31,9 @@ import com.sygic.maps.module.common.di.module.AppModule
 
 private var applicationModulesComponent: ApplicationModulesComponent? = null
 
-class ModulesComponentDelegate {
+object ApplicationComponentDelegate {
 
-    fun getInstance(fragment: Fragment): ApplicationModulesComponent = applicationModulesComponent?.let { it }
+    fun getComponent(fragment: Fragment): ApplicationModulesComponent = applicationModulesComponent?.let { it }
         ?: DaggerApplicationModulesComponent
             .builder()
             .appModule(AppModule(fragment))
