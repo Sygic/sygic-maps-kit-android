@@ -59,11 +59,7 @@ open class PositionLockFabViewModel internal constructor(
     Camera.ModeChangedListener,
     DefaultLifecycleObserver {
 
-    val currentState: MutableLiveData<Int> = MutableLiveData()
-
-    init {
-        setState(LockState.UNLOCKED)
-    }
+    val currentState: MutableLiveData<Int> = MutableLiveData(LockState.UNLOCKED)
 
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)

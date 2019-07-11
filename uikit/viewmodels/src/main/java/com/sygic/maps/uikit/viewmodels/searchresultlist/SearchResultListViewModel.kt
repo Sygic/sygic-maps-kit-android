@@ -59,11 +59,12 @@ open class SearchResultListViewModel internal constructor(
     val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
     val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<out SearchResult>>> = SingleLiveEvent()
 
-    val errorViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
-    val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> = MutableLiveData()
+    val errorViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND)
 
     private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
     private val resultListAdapter = SearchResultListAdapter(this)
+    val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> =
+        MutableLiveData(defaultStateAdapter)
 
     private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
 
@@ -78,8 +79,6 @@ open class SearchResultListViewModel internal constructor(
     }
 
     init {
-        activeAdapter.value = defaultStateAdapter
-        errorViewSwitcherIndex.value = SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND
         searchManager.addSearchResultsListener(searchResultsListener)
     }
 

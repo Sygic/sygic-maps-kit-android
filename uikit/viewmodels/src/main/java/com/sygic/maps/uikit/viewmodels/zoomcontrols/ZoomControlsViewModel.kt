@@ -68,7 +68,7 @@ open class ZoomControlsViewModel internal constructor(
     private val cameraModel: ExtendedCameraModel
 ) : ViewModel(), ZoomControlsMenu.InteractionListener, Camera.PositionChangedListener, DefaultLifecycleObserver {
 
-    val tiltType: MutableLiveData<Int> = MutableLiveData()
+    val tiltType: MutableLiveData<Int> = MutableLiveData(getTiltType(cameraModel.tilt))
 
     /**
      * A *[zoomBaseLine]* defines the zoom base line value. The default value is [DEFAULT_ZOOM_BASE_LINE].
@@ -122,10 +122,6 @@ open class ZoomControlsViewModel internal constructor(
         protected set
 
     private var zoomFlowJob: Job? = null
-
-    init {
-        tiltType.value = getTiltType(cameraModel.tilt)
-    }
 
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addPositionChangedListener(this)

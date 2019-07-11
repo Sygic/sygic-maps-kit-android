@@ -63,10 +63,10 @@ open class SearchToolbarViewModel internal constructor(
     private val searchManager: SearchManager
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
+    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData(true)
     val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
 
-    val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
+    val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
     val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>() {
         override fun setValue(value: CharSequence) {
             if (value != this.value) {
@@ -98,9 +98,6 @@ open class SearchToolbarViewModel internal constructor(
             searchLocation = getParcelableValue(KEY_SEARCH_LOCATION)
             maxResultsCount = getInt(KEY_SEARCH_MAX_RESULTS_COUNT, MAX_RESULTS_COUNT_DEFAULT_VALUE)
         }
-
-        searchToolbarFocused.value = true
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
 
         searchManager.addSearchResultsListener(searchResultsListener)
     }
