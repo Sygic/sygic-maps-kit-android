@@ -28,8 +28,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import javax.inject.Provider;
 import java.util.Map;
+
+import javax.inject.Provider;
 
 @SuppressWarnings("unchecked")
 public class ViewModelFactory implements ViewModelProvider.Factory {

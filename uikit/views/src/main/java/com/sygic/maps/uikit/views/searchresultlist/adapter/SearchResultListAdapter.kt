@@ -38,8 +38,8 @@ import com.sygic.maps.uikit.views.common.extensions.visible
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import kotlinx.android.synthetic.main.layout_search_item_result_internal.view.*
 
-open class SearchResultListAdapter<P : Parcelable>(clickListener: ClickListener<P>? = null) :
-    ResultListAdapter<P, ResultListAdapter.ItemViewHolder<P>>(clickListener) {
+open class SearchResultListAdapter<P : Parcelable> :
+    ResultListAdapter<P, ResultListAdapter.ItemViewHolder<P>>() {
 
     var items: List<SearchResultItem<out P>> = mutableListOf()
         set(value) {

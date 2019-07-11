@@ -55,7 +55,7 @@ class SearchFragmentViewModelTest {
 
     @Before
     fun setup() {
-        searchFragmentViewModel = SearchFragmentViewModel(app)
+        searchFragmentViewModel = SearchFragmentViewModel(app, mock())
     }
 
     @Test
