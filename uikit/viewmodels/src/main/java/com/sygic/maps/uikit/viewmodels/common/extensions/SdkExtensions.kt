@@ -27,6 +27,7 @@ package com.sygic.maps.uikit.viewmodels.common.extensions
 import android.app.Activity
 import android.app.Application
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
@@ -34,7 +35,9 @@ import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
+import com.sygic.maps.uikit.viewmodels.common.utils.DirectionUtils
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
+import com.sygic.maps.uikit.viewmodels.navigation.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
@@ -185,8 +188,19 @@ fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
             return null
         }
 
-        return isOnRouteList.firstOrNull { it.backgroundColor != 0 }?.let { it } ?: run { isOnRouteList[0] }
+        return isOnRouteList.firstOrNull { it.backgroundColor != 0 }?.let { it } ?: isOnRouteList[0]
     }
 }
 
-fun DirectionInfo.getDistanceWithUnits(distanceUnits: DistanceUnits): String = Distance.getFormattedDistance(distanceUnits, distance)
+fun DirectionInfo.getDistanceWithUnits(distanceUnits: DistanceUnits): String =
+    Distance.getFormattedDistance(distanceUnits, distance)
+
+@DrawableRes
+fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverType): Int {
+    val routeManeuver = when (directionManeuverType) {
+        DirectionManeuverType.PRIMARY -> primary
+        DirectionManeuverType.SECONDARY -> secondary
+    }
+
+    return if (routeManeuver.isValid) DirectionUtils.getDirectionDrawable(routeManeuver.type) else 0
+}

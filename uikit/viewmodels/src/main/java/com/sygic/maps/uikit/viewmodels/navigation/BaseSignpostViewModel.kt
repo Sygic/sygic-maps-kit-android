@@ -29,10 +29,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
 import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.uikit.viewmodels.navigation.direction.DirectionManeuverType
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.DirectionInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
@@ -43,6 +45,7 @@ abstract class BaseSignpostViewModel(
 ) : ViewModel(), DefaultLifecycleObserver, NavigationManager.OnDirectionListener, NavigationManager.OnNaviSignListener {
 
     val distance: MutableLiveData<String> = MutableLiveData()
+    val primaryDirection: MutableLiveData<Int> = MutableLiveData()
 
     private var distanceUnits: DistanceUnits = DistanceUnits.KILOMETERS
     private var directionInfo: DirectionInfo? = null
@@ -51,6 +54,7 @@ abstract class BaseSignpostViewModel(
                 if (field != it) {
                     field = it
                     distance.value = it.getDistanceWithUnits(distanceUnits)
+                    primaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.PRIMARY)
                 }
             }
         }

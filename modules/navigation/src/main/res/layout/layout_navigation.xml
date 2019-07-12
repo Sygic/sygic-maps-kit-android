@@ -53,6 +53,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:distance="@{fullSignpostViewModel.distance}"
+            app:primaryDirection="@{fullSignpostViewModel.primaryDirection}"
             tools:background="@drawable/bg_signpost_view"
             tools:layout_height="152dp"
             tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin" />
