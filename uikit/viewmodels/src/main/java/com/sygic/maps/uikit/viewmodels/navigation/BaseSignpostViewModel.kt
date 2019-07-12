@@ -46,6 +46,8 @@ abstract class BaseSignpostViewModel(
 
     val distance: MutableLiveData<String> = MutableLiveData()
     val primaryDirection: MutableLiveData<Int> = MutableLiveData()
+    val secondaryDirection: MutableLiveData<Int> = MutableLiveData()
+    val secondaryDirectionContainerVisible: MutableLiveData<Boolean> = MutableLiveData(false)
 
     private var distanceUnits: DistanceUnits = DistanceUnits.KILOMETERS
     private var directionInfo: DirectionInfo? = null
@@ -55,6 +57,8 @@ abstract class BaseSignpostViewModel(
                     field = it
                     distance.value = it.getDistanceWithUnits(distanceUnits)
                     primaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.PRIMARY)
+                    secondaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.SECONDARY)
+                    secondaryDirectionContainerVisible.value = it.secondary.isValid
                 }
             }
         }

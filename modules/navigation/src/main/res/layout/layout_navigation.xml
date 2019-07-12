@@ -54,6 +54,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:distance="@{fullSignpostViewModel.distance}"
             app:primaryDirection="@{fullSignpostViewModel.primaryDirection}"
+            app:secondaryDirection="@{fullSignpostViewModel.secondaryDirection}"
+            app:secondaryDirectionContainerVisible="@{safeUnbox(fullSignpostViewModel.secondaryDirectionContainerVisible)}"
             tools:background="@drawable/bg_signpost_view"
             tools:layout_height="152dp"
             tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin" />
