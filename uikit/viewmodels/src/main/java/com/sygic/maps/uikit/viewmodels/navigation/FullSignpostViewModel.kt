@@ -22,7 +22,27 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.common.extensions
+package com.sygic.maps.uikit.viewmodels.navigation
 
-const val EMPTY_STRING = ""
-const val SPACE = " "
+import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
+import com.sygic.sdk.navigation.NavigationManager
+
+/**
+ * A [FullSignpostViewModel] TODO
+ */
+@AutoFactory
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+open class FullSignpostViewModel internal constructor(
+    regionalManager: RegionalManager,
+    navigationManager: NavigationManager
+) : BaseSignpostViewModel(regionalManager, navigationManager) {
+
+    init {
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+    }
+}

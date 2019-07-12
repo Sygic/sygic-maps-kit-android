@@ -30,9 +30,11 @@ import android.os.Parcelable
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
+import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
@@ -44,6 +46,8 @@ import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
+import com.sygic.sdk.navigation.warnings.DirectionInfo
+import com.sygic.sdk.navigation.warnings.NaviSignInfo
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.route.RouteInfo
@@ -174,3 +178,15 @@ fun Application.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: 
         })
     }
 }
+
+fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
+    this.filter { it.isOnRoute }.let { isOnRouteList ->
+        if (isOnRouteList.isEmpty()) {
+            return null
+        }
+
+        return isOnRouteList.firstOrNull { it.backgroundColor != 0 }?.let { it } ?: run { isOnRouteList[0] }
+    }
+}
+
+fun DirectionInfo.getDistanceWithUnits(distanceUnits: DistanceUnits): String = Distance.getFormattedDistance(distanceUnits, distance)

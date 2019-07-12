@@ -33,6 +33,10 @@
             name="navigationFragmentViewModel"
             type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
 
+        <variable
+            name="fullSignpostViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.FullSignpostViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,6 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:distance="@{fullSignpostViewModel.distance}"
             tools:background="@drawable/bg_signpost_view"
             tools:layout_height="152dp"
             tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin" />
