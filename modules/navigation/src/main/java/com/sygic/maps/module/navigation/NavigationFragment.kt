@@ -141,7 +141,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = LayoutNavigationBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        binding.navigationFragmentViewModel = fragmentViewModel
         binding.fullSignpostViewModel = fullSignpostViewModel
         //binding.simplifiedSignpostViewModel = simplifiedSignpostViewModel //todo
         val root = binding.root as ViewGroup

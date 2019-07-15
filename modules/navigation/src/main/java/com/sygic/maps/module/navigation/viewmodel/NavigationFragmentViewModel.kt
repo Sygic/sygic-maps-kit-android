@@ -30,6 +30,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
@@ -74,13 +75,7 @@ class NavigationFragmentViewModel internal constructor(
     private val routeDemonstrationManager: RouteDemonstrationManager
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
 
-    val previewMode: MutableLiveData<Boolean> = object : MutableLiveData<Boolean>() {
-        override fun setValue(value: Boolean) {
-            super.setValue(value)
-            routeInfo.value?.let { processRouteInfo(it) }
-        }
-    }
-
+    val previewMode: MutableLiveData<Boolean> = MutableLiveData()
     val routeInfo: MutableLiveData<RouteInfo?> = object : MutableLiveData<RouteInfo?>() {
         override fun setValue(value: RouteInfo?) {
             value?.let {
@@ -96,6 +91,10 @@ class NavigationFragmentViewModel internal constructor(
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
         }
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        previewMode.observe(owner, Observer { routeInfo.value?.let { processRouteInfo(it) } })
     }
 
     override fun onStart(owner: LifecycleOwner) {
