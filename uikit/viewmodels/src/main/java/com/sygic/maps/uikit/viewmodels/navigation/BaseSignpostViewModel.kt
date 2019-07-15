@@ -86,11 +86,7 @@ abstract class BaseSignpostViewModel(
 
     @CallSuper
     protected open fun onNaviSignInfoOnRouteChanged(naviSignInfo: NaviSignInfo?) {
-        naviSignInfo?.let {
-            //todo
-        } ?: run {
-            //todo hide something?
-        }
+        naviSignInfo?.let { /* todo: waiting for final specification */ } ?: run { /* todo: waiting for final specification */ }
     }
 
     override fun onCleared() {

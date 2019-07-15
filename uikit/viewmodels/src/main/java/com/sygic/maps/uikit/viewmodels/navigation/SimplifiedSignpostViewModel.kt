@@ -29,7 +29,7 @@ import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.sdk.navigation.NavigationManager
 
 /**
- * A [SimplifiedSignpostViewModel] TODO
+ * A [SimplifiedSignpostViewModel] /* todo: waiting for final specification */
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")

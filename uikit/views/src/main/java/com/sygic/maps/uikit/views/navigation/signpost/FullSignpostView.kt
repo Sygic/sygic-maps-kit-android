@@ -34,7 +34,7 @@ import com.sygic.maps.uikit.views.databinding.LayoutFullSignpostViewInternalBind
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 
 /**
- * A [FullSignpostView] TODO
+ * A [FullSignpostView] /* todo: waiting for final specification */
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate", "CustomViewStyleable")
 open class FullSignpostView @JvmOverloads constructor(

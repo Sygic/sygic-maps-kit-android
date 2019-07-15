@@ -33,7 +33,7 @@ import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.databinding.LayoutSimplifiedSignpostViewInternalBinding
 
 /**
- * A [SimplifiedSignpostView] is the simplified alternative to the [FullSignpostView]. TODO
+ * A [SimplifiedSignpostView] is the simplified alternative to the [FullSignpostView]. /* todo: waiting for final specification */
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate", "CustomViewStyleable")
 open class SimplifiedSignpostView @JvmOverloads constructor(

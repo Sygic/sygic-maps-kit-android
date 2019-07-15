@@ -34,7 +34,7 @@ import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
 /**
- * A [FullSignpostViewModel] TODO
+ * A [FullSignpostViewModel] /* todo: waiting for final specification */
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
