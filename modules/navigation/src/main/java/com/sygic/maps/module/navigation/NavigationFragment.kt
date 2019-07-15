@@ -105,7 +105,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = LayoutNavigationBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        binding.navigationFragmentViewModel = fragmentViewModel
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {
             root.addView(it, 0)

@@ -23,16 +23,7 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-        <variable
-            name="navigationFragmentViewModel"
-            type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
-
-    </data>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
