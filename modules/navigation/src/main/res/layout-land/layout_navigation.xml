@@ -29,6 +29,12 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="navigationFragmentViewModel"
+            type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
+
         <variable
             name="fullSignpostViewModel"
             type="com.sygic.maps.uikit.viewmodels.navigation.FullSignpostViewModel" />
@@ -45,6 +51,7 @@
         <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
             android:layout_width="232dp"
             android:layout_height="wrap_content"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
             app:distance="@{fullSignpostViewModel.distance}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

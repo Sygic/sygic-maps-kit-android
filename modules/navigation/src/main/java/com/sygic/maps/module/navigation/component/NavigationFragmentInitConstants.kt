@@ -28,3 +28,4 @@ import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 
 val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnits.KILOMETERS
 const val PREVIEW_MODE_DEFAULT_VALUE = false
+const val SIGNPOST_ENABLED_DEFAULT_VALUE = true
