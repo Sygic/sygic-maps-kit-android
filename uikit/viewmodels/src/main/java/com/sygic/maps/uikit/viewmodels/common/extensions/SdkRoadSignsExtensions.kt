@@ -27,14 +27,13 @@ package com.sygic.maps.uikit.viewmodels.common.extensions
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.R
-import com.sygic.maps.uikit.views.common.extensions.NO_ID
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
 @DrawableRes
 internal fun NaviSignInfo.pictogramDrawableRes(): Int {
-    val pictogramType =
-        signElements.firstOrNull { signElement -> signElement.elementType == NaviSignInfo.SignElement.SignElementType.Pictogram }?.pictogramType
-            ?: return NO_ID
+    val pictogramType = signElements.firstOrNull { signElement ->
+        signElement.elementType == NaviSignInfo.SignElement.SignElementType.Pictogram
+    }?.pictogramType ?: 0
 
     return when (pictogramType) {
         NaviSignInfo.SignElement.PictogramType.Airport -> R.drawable.ic_pictogram_airport
@@ -53,7 +52,7 @@ internal fun NaviSignInfo.pictogramDrawableRes(): Int {
         NaviSignInfo.SignElement.PictogramType.RestArea -> R.drawable.ic_pictogram_rest
         NaviSignInfo.SignElement.PictogramType.Restaurant -> R.drawable.ic_pictogram_food
         NaviSignInfo.SignElement.PictogramType.Toilet -> R.drawable.ic_pictogram_wc
-        else -> NO_ID
+        else -> 0
     }
 }
 

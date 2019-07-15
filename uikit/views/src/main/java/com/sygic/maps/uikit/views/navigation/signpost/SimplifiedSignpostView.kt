@@ -57,12 +57,11 @@ open class SimplifiedSignpostView @JvmOverloads constructor(
     }
 
     fun setSecondaryDirection(@DrawableRes secondaryDirectionDrawableRes: Int) {
-        if (secondaryDirectionDrawableRes != 0) {
-            binding.signpostSecondaryDirectionContainer.visibility = VISIBLE
-            binding.signpostSecondaryDirectionImageView.setImageResource(secondaryDirectionDrawableRes)
-        } else {
-            binding.signpostSecondaryDirectionContainer.visibility = GONE
-        }
+        binding.signpostSecondaryDirectionImageView.setImageResource(secondaryDirectionDrawableRes)
+    }
+
+    fun setSecondaryDirectionContainerVisible(visible: Boolean) {
+        binding.signpostSecondaryDirectionContainer.visibility = if (visible) VISIBLE else GONE
     }
 
     fun setSecondaryDirectionText(secondaryDirectionText: String) {

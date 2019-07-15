@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation
 
+import androidx.annotation.CallSuper
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -78,9 +79,15 @@ abstract class BaseSignpostViewModel(
         this.directionInfo = directionInfo
     }
 
-    override fun onNaviSignChanged(naviSignInfoList: List<NaviSignInfo>) {
-        naviSignInfoList.getNaviSignInfoOnRoute()?.let {
+    override fun onNaviSignChanged(naviSignInfoList: List<NaviSignInfo>) =
+        onNaviSignInfoOnRouteChanged(naviSignInfoList.getNaviSignInfoOnRoute())
+
+    @CallSuper
+    protected open fun onNaviSignInfoOnRouteChanged(naviSignInfo: NaviSignInfo?) {
+        naviSignInfo?.let {
             //todo
+        } ?: run {
+            //todo hide something?
         }
     }
 

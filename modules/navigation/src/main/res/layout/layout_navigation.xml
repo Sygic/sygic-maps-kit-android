@@ -45,10 +45,11 @@
         <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:distance="@{fullSignpostViewModel.distance}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:distance="@{fullSignpostViewModel.distance}"
+            app:pictogram="@{fullSignpostViewModel.pictogram}"
             app:primaryDirection="@{fullSignpostViewModel.primaryDirection}"
             app:secondaryDirection="@{fullSignpostViewModel.secondaryDirection}"
             app:secondaryDirectionContainerVisible="@{safeUnbox(fullSignpostViewModel.secondaryDirectionContainerVisible)}"

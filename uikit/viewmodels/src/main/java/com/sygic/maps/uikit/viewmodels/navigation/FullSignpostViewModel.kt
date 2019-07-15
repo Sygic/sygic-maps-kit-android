@@ -24,9 +24,12 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation
 
+import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.pictogramDrawableRes
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.sdk.navigation.NavigationManager
+import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
 /**
  * A [FullSignpostViewModel] TODO
@@ -38,11 +41,11 @@ open class FullSignpostViewModel internal constructor(
     navigationManager: NavigationManager
 ) : BaseSignpostViewModel(regionalManager, navigationManager) {
 
-    init {
-    }
+    val pictogram: MutableLiveData<Int> = MutableLiveData(0)
 
-    override fun onCleared() {
-        super.onCleared()
+    override fun onNaviSignInfoOnRouteChanged(naviSignInfo: NaviSignInfo?) {
+        super.onNaviSignInfoOnRouteChanged(naviSignInfo)
 
+        pictogram.value = naviSignInfo?.pictogramDrawableRes() ?: 0
     }
 }
