@@ -82,7 +82,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
     private lateinit var searchResultListViewModel: SearchResultListViewModel
 
-    override val searchResultCallbackProvider: LiveData<SearchResultCallback> = MutableLiveData<SearchResultCallback>()
+    override val searchResultCallbackProvider: LiveData<SearchResultCallback> = MutableLiveData()
 
     private var injected = false
     private fun inject() {
@@ -205,7 +205,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: LayoutSearchBinding = LayoutSearchBinding.inflate(inflater, container, false)
+        val binding = LayoutSearchBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.searchFragmentViewModel = fragmentViewModel
         binding.searchToolbarViewModel = searchToolbarViewModel

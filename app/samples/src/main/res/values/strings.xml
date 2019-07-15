@@ -29,6 +29,7 @@
     <string name="search">Search</string>
     <string name="search_samples">Search samples</string>
     <string name="navigation">Navigation</string>
+    <string name="navigation_samples">Navigation samples</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Bringing life to maps</string>
@@ -79,4 +80,8 @@
     <string name="search_from_browse_map_pins_summary">Search module integrated into the Browse Map module with pins</string>
     <string name="search_pre_filled_input">Search - Pre-filled input</string>
     <string name="search_pre_filled_input_summary">Search module with a pre-filled input</string>
+    <string name="navigation_default">Navigation - Default</string>
+    <string name="navigation_default_summary">Navigation module with no configuration</string>
+    <string name="navigation_preview_enabled">Navigation - Preview enabled</string>
+    <string name="navigation_preview_enabled_summary">Navigation module with preview mode enabled</string>
 </resources>

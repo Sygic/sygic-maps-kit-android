@@ -66,6 +66,9 @@ jobs:
     name: module-browsemap
     script: ./gradlew :module-browsemap:check
   - stage: compile and test modules
+    name: module-navigation
+    script: ./gradlew :module-navigation:check
+  - stage: compile and test modules
     name: module-search
     script: ./gradlew :module-search:check
 
@@ -103,6 +106,7 @@ jobs:
       - $TRAVIS_BUILD_DIR/app/samples/build/outputs/apk/release/*.apk
       - $TRAVIS_BUILD_DIR/modules/common/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/modules/browsemap/build/outputs/aar/*.aar
+      - $TRAVIS_BUILD_DIR/modules/navigation/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/modules/search/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/uikit/views/build/outputs/aar/*.aar
       - $TRAVIS_BUILD_DIR/uikit/viewmodels/build/outputs/aar/*.aar

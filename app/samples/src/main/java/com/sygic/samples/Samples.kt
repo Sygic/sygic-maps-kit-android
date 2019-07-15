@@ -26,6 +26,8 @@ package com.sygic.samples
 
 import com.sygic.samples.browsemap.*
 import com.sygic.samples.app.models.Sample
+import com.sygic.samples.navigation.NavigationDefaultActivity
+import com.sygic.samples.navigation.NavigationPreviewEnabledActivity
 import com.sygic.samples.search.SearchDefaultActivity
 import com.sygic.samples.search.SearchFromBrowseMapActivity
 import com.sygic.samples.search.SearchFromBrowseMapWithPinsActivity
@@ -80,6 +82,17 @@ object Samples {
         Sample(
             SearchPreFilledInputActivity::class.java, R.drawable.preview_search_pre_filled_input,
             R.string.search_pre_filled_input, R.string.search_pre_filled_input_summary
+        )
+    )
+
+    val navigationSampleList: List<Sample> = listOf(
+        Sample(
+            NavigationDefaultActivity::class.java, R.drawable.preview_navigation_default,
+            R.string.navigation_default, R.string.navigation_default_summary
+        ),
+        Sample(
+            NavigationPreviewEnabledActivity::class.java, R.drawable.preview_navigation_preview_enabled,
+            R.string.navigation_preview_enabled, R.string.navigation_preview_enabled_summary
         )
     )
 }

@@ -85,8 +85,8 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
-    override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData<ModuleConnectionProvider>()
-    override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData<OnMapClickListener>()
+    override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData()
+    override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
 
     override fun executeInjector() =
         injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
@@ -231,7 +231,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: LayoutBrowseMapBinding = LayoutBrowseMapBinding.inflate(inflater, container, false)
+        val binding = LayoutBrowseMapBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.browseMapFragmentViewModel = fragmentViewModel
         binding.compassViewModel = compassViewModel

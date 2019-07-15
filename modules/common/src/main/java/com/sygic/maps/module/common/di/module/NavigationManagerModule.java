@@ -22,8 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.theme
+package com.sygic.maps.module.common.di.module;
 
-interface ThemeSupportedViewModel {
-    fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String)
+import com.sygic.sdk.navigation.NavigationManager;
+import dagger.Module;
+import dagger.Provides;
+
+import javax.inject.Singleton;
+
+@Module
+public class NavigationManagerModule {
+
+    @Singleton
+    @Provides
+    NavigationManager provideNavigationManager() {
+        return NavigationManager.getInstance();
+    }
 }
