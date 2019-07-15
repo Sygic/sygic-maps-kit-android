@@ -80,33 +80,38 @@
             android:textColor="?attr/navigationTintColor"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/signpostSecondaryDirectionContainer"
-            app:layout_constraintEnd_toStartOf="@+id/signpostRoadSignsView"
+            app:layout_constraintEnd_toStartOf="@+id/signpostPictogramContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/signpostDistanceTextView"
             tools:text="Trnava, Trenčín, Žilina"
             tools:textColor="@color/white" />
 
-        <com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
-            android:id="@+id/signpostRoadSignsView"
+        <LinearLayout
+            android:id="@+id/signpostPictogramContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@id/signpostInstructionTextView"
-            app:layout_constraintEnd_toStartOf="@+id/signpostPictogramImageView"
-            app:layout_constraintStart_toEndOf="@id/signpostInstructionTextView"
-            app:layout_constraintTop_toTopOf="@id/signpostInstructionTextView" />
-
-        <ImageView
-            android:id="@+id/signpostPictogramImageView"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
             android:layout_marginEnd="16dp"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/signpostRoadSignsView"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/signpostInstructionTextView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/signpostRoadSignsView"
-            app:layout_constraintTop_toTopOf="@id/signpostRoadSignsView"
-            tools:src="@drawable/ic_pictogram_airport" />
+            app:layout_constraintStart_toEndOf="@+id/signpostInstructionTextView"
+            app:layout_constraintTop_toTopOf="@id/signpostInstructionTextView">
+
+            <com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
+                android:id="@+id/signpostRoadSignsView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp" />
+
+            <ImageView
+                android:id="@+id/signpostPictogramImageView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:tint="@color/white"
+                tools:src="@drawable/ic_pictogram_airport" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/signpostSecondaryDirectionContainer"
@@ -132,7 +137,7 @@
                 android:fontFamily="sans-serif"
                 android:textColor="?attr/navigationTintColor"
                 android:textSize="14sp"
-                tools:text="Then turn left"
+                tools:text="Then"
                 tools:textColor="@color/white" />
 
             <ImageView

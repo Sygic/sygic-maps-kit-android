@@ -28,6 +28,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.databinding.LayoutSimplifiedSignpostViewInternalBinding
 
@@ -62,6 +63,10 @@ open class SimplifiedSignpostView @JvmOverloads constructor(
 
     fun setSecondaryDirectionContainerVisible(visible: Boolean) {
         binding.signpostSecondaryDirectionContainer.visibility = if (visible) VISIBLE else GONE
+    }
+
+    fun setSecondaryDirectionText(@StringRes secondaryDirectionText: Int) {
+        setSecondaryDirectionText(resources.getString(secondaryDirectionText))
     }
 
     fun setSecondaryDirectionText(secondaryDirectionText: String) {

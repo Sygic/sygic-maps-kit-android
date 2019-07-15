@@ -28,6 +28,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.databinding.LayoutFullSignpostViewInternalBinding
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
@@ -65,8 +66,16 @@ open class FullSignpostView @JvmOverloads constructor(
         binding.signpostSecondaryDirectionContainer.visibility = if (visible) VISIBLE else GONE
     }
 
+    fun setSecondaryDirectionText(@StringRes secondaryDirectionText: Int) {
+        setSecondaryDirectionText(resources.getString(secondaryDirectionText))
+    }
+
     fun setSecondaryDirectionText(secondaryDirectionText: String?) {
         binding.signpostSecondaryDirectionTextView.text = secondaryDirectionText
+    }
+
+    fun setInstructionText(@StringRes instructionText: Int) {
+        setInstructionText(resources.getString(instructionText))
     }
 
     fun setInstructionText(instructionText: String?) {

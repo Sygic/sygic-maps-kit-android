@@ -51,8 +51,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:pictogram="@{fullSignpostViewModel.pictogram}"
             app:primaryDirection="@{fullSignpostViewModel.primaryDirection}"
+            app:roadSigns="@{fullSignpostViewModel.roadSigns}"
             app:secondaryDirection="@{fullSignpostViewModel.secondaryDirection}"
             app:secondaryDirectionContainerVisible="@{safeUnbox(fullSignpostViewModel.secondaryDirectionContainerVisible)}"
+            app:secondaryDirectionText="@{fullSignpostViewModel.secondaryDirectionText}"
             tools:background="@drawable/bg_signpost_view"
             tools:layout_height="152dp"
             tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin" />

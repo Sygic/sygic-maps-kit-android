@@ -22,7 +22,6 @@
   ~ SOFTWARE.
   -->
 
-<!--28/9/2018-->
 <resources>
     <string name="direction_start">Start</string>
     <string name="direction_end">Finish</string>

@@ -30,6 +30,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
 import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
@@ -48,6 +49,7 @@ abstract class BaseSignpostViewModel(
     val distance: MutableLiveData<String> = MutableLiveData()
     val primaryDirection: MutableLiveData<Int> = MutableLiveData()
     val secondaryDirection: MutableLiveData<Int> = MutableLiveData()
+    val secondaryDirectionText: Int = R.string.then
     val secondaryDirectionContainerVisible: MutableLiveData<Boolean> = MutableLiveData(false)
 
     private var distanceUnits: DistanceUnits = DistanceUnits.KILOMETERS

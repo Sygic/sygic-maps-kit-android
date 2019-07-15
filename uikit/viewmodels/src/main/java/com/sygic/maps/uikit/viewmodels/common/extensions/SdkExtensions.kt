@@ -39,6 +39,7 @@ import com.sygic.maps.uikit.viewmodels.common.utils.DirectionUtils
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.navigation.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.places.LocationInfo
@@ -203,4 +204,29 @@ fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverT
     }
 
     return if (routeManeuver.isValid) DirectionUtils.getDirectionDrawable(routeManeuver.type) else 0
+}
+
+fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
+    val roadSigns = mutableListOf<RoadSignData>()
+    val hasPic = signElements.find { it.elementType == NaviSignInfo.SignElement.SignElementType.Pictogram } != null
+    signElements
+        .asSequence()
+        .filter { it.elementType == NaviSignInfo.SignElement.SignElementType.RouteNumber }
+        .take(if (hasPic) maxRoadSignsCount - 1 else maxRoadSignsCount)
+        .toList()
+        .forEach { signElement ->
+            with(signElement.routeNumberFormat) {
+                if (insideNumber.isNotEmpty()) {
+                    roadSigns.add(
+                        RoadSignData(
+                            roadSignBackgroundDrawableRes(),
+                            insideNumber,
+                            roadSignForegroundColorRes()
+                        )
+                    )
+                }
+            }
+        }
+
+    return roadSigns
 }

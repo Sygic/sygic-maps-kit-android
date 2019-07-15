@@ -57,7 +57,7 @@ internal fun NaviSignInfo.pictogramDrawableRes(): Int {
 }
 
 @DrawableRes
-internal fun NaviSignInfo.RouteNumberFormat.backgroundDrawableRes(): Int = when (shape) {
+internal fun NaviSignInfo.RouteNumberFormat.roadSignBackgroundDrawableRes(): Int = when (shape) {
     NaviSignInfo.RouteNumberFormat.NumberShape.BlueShape1 -> R.drawable.ic_roadsign_are_blue
     NaviSignInfo.RouteNumberFormat.NumberShape.GreenEShape3 -> R.drawable.ic_roadsign_are_green
     NaviSignInfo.RouteNumberFormat.NumberShape.BlueNavyShape2 -> R.drawable.ic_roadsign_hun_blue
@@ -114,7 +114,7 @@ internal fun NaviSignInfo.RouteNumberFormat.backgroundDrawableRes(): Int = when 
 }
 
 @ColorRes
-internal fun NaviSignInfo.RouteNumberFormat.foregroundColorRes(): Int = when (numberColor) {
+internal fun NaviSignInfo.RouteNumberFormat.roadSignForegroundColorRes(): Int = when (numberColor) {
     NaviSignInfo.RouteNumberFormat.SignColor.Black -> R.color.roadSignStroke
     NaviSignInfo.RouteNumberFormat.SignColor.GreenE, NaviSignInfo.RouteNumberFormat.SignColor.GreenA -> R.color.roadSignGreen
     NaviSignInfo.RouteNumberFormat.SignColor.Blue, NaviSignInfo.RouteNumberFormat.SignColor.BlueNavy, NaviSignInfo.RouteNumberFormat.SignColor.BlueMex -> R.color.roadSignBlue
