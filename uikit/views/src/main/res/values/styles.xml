@@ -58,6 +58,11 @@
         <item name="android:backgroundTint">?android:attr/colorBackground</item>
     </style>
 
+    <style name="SygicRoutePreviewControlsStyle">
+        <item name="android:background">@drawable/bg_navigation_dark_rounded</item>
+        <item name="android:layout_margin">@dimen/defaultRoutePreviewControlsLayoutMargin</item>
+    </style>
+
     <style name="SygicSearchFabStyle">
         <item name="android:tint">?android:attr/colorAccent</item>
         <item name="android:backgroundTint">?android:attr/colorBackground</item>
@@ -73,7 +78,7 @@
     </style>
 
     <style name="SygicSignpostViewStyle">
-        <item name="android:background">@drawable/bg_signpost_view</item>
+        <item name="android:background">@drawable/bg_navigation_dark_rounded</item>
         <item name="android:layout_margin">@dimen/defaultSignpostViewLayoutMargin</item>
     </style>
 

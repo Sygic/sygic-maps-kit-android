@@ -22,28 +22,23 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation
+package com.sygic.maps.uikit.viewmodels.common.navigation.preview
 
-import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.sdk.navigation.NavigationManager
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.MutableLiveData
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
+import com.sygic.sdk.route.RouteInfo
 
-/**
- * A [SimplifiedSignpostViewModel] /* todo: waiting for final specification */
- */
-@AutoFactory
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SimplifiedSignpostViewModel internal constructor(
-    regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface RouteDemonstrationManager {
 
-    init {
+    val speedMultiplier: MutableLiveData<Float>
+    val demonstrationState: MutableLiveData<DemonstrationState>
 
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-    }
+    fun start(routeInfo: RouteInfo)
+    fun restart()
+    fun pause()
+    fun unPause()
+    fun stop()
+    fun destroy()
 }

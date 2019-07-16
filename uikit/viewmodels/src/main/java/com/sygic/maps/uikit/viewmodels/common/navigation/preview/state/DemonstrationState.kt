@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.direction
+package com.sygic.maps.uikit.viewmodels.common.navigation.preview.state
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-enum class DirectionManeuverType : Parcelable {
-    PRIMARY, SECONDARY
+enum class DemonstrationState : Parcelable {
+    INACTIVE, ACTIVE, PAUSED
 }

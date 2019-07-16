@@ -37,7 +37,11 @@
 
         <variable
             name="fullSignpostViewModel"
-            type="com.sygic.maps.uikit.viewmodels.navigation.FullSignpostViewModel" />
+            type="com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel" />
+
+        <variable
+            name="routePreviewControlsViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel" />
 
     </data>
 
@@ -62,9 +66,25 @@
             app:secondaryDirection="@{fullSignpostViewModel.secondaryDirection}"
             app:secondaryDirectionContainerVisible="@{safeUnbox(fullSignpostViewModel.secondaryDirectionContainerVisible)}"
             app:secondaryDirectionText="@{fullSignpostViewModel.secondaryDirectionText}"
-            tools:background="@drawable/bg_signpost_view"
+            tools:background="@drawable/bg_navigation_dark_rounded"
             tools:layout_height="152dp"
             tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin" />
+
+        <com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.previewMode) &amp;&amp; safeUnbox(navigationFragmentViewModel.previewControlsEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:onPlayPauseButtonStateChangedListener="@{routePreviewControlsViewModel}"
+            app:onSpeedButtonClickListener="@{() -> routePreviewControlsViewModel.onSpeedButtonClick()}"
+            app:onStopButtonClickListener="@{() -> routePreviewControlsViewModel.onStopButtonClick()}"
+            app:playPauseButtonState="@{routePreviewControlsViewModel.playPauseButtonState}"
+            tools:background="@drawable/bg_navigation_dark_rounded"
+            tools:layout_height="32dp"
+            tools:layout_margin="@dimen/defaultRoutePreviewControlsLayoutMargin"
+            tools:layout_width="164dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

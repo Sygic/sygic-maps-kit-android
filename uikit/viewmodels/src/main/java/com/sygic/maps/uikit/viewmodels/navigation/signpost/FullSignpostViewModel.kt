@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation
+package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.tools.annotations.AutoFactory

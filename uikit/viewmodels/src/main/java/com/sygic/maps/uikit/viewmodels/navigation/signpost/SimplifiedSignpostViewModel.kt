@@ -22,35 +22,28 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.navigation
+package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
-import androidx.annotation.RestrictTo
-import com.sygic.sdk.route.RouteInfo
-import com.sygic.sdk.route.simulator.RouteDemonstrateSimulator
+import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
+import com.sygic.sdk.navigation.NavigationManager
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
+/**
+ * A [SimplifiedSignpostViewModel] /* todo: waiting for final specification */
+ */
+@AutoFactory
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+open class SimplifiedSignpostViewModel internal constructor(
+    regionalManager: RegionalManager,
+    navigationManager: NavigationManager
+) : BaseSignpostViewModel(regionalManager, navigationManager) {
 
-    private var routeDemonstrateSimulator: RouteDemonstrateSimulator? = null
+    init {
 
-    override fun start(routeInfo: RouteInfo) {
-        destroySimulator()
-        routeDemonstrateSimulator = RouteDemonstrateSimulator(routeInfo).also { it.start() }
     }
 
-    override fun pause() {
-        routeDemonstrateSimulator?.pause()
-    }
+    override fun onCleared() {
+        super.onCleared()
 
-    override fun stop() {
-        destroySimulator()
-    }
-
-    private fun destroySimulator() {
-        routeDemonstrateSimulator?.let {
-            it.stop()
-            it.destroy()
-            routeDemonstrateSimulator = null
-        }
     }
 }

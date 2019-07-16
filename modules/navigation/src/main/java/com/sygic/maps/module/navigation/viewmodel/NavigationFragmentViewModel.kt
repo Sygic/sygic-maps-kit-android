@@ -33,14 +33,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
+import com.sygic.maps.module.navigation.KEY_PREVIEW_CONTROLS_ENABLED
 import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
+import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
-import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
@@ -78,6 +80,7 @@ class NavigationFragmentViewModel internal constructor(
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
 
     val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
+    val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData()
     val routeInfo: MutableLiveData<RouteInfo?> = object : MutableLiveData<RouteInfo?>() {
@@ -95,6 +98,7 @@ class NavigationFragmentViewModel internal constructor(
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
+            previewControlsEnabled.value = getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
         }
     }
 
@@ -149,7 +153,7 @@ class NavigationFragmentViewModel internal constructor(
         super.onCleared()
 
         mapDataModel.removeAllMapRoutes()
-        routeDemonstrationManager.stop()
+        routeDemonstrationManager.destroy()
         navigationManager.stopNavigation()
     }
 }

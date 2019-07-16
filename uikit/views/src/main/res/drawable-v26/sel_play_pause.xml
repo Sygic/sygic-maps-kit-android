@@ -23,30 +23,29 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:constantSize="true">
 
-    <!-- Font sizes -->
-    <dimen name="fontSizeTiny">11sp</dimen>
-    <dimen name="fontSizeExtraSmall">13sp</dimen>
-    <dimen name="fontSizeSmall">16sp</dimen>
-    <dimen name="fontSizeMedium">18sp</dimen>
-    <dimen name="fontSizeMediumLarge">20sp</dimen>
-    <dimen name="fontSizeLarge">24sp</dimen>
-    <dimen name="fontSizeExtraLarge">32sp</dimen>
+    <item
+        android:id="@+id/pauseState"
+        android:drawable="@drawable/ic_pause"
+        android:state_checked="true" />
+    <item
+        android:id="@+id/playState"
+        android:drawable="@drawable/ic_play" />
 
-    <!-- Navigation -->
-    <dimen name="directionSize">48dp</dimen>
-    <dimen name="roadSignSpacing">6dp</dimen>
-    <dimen name="roadSignTextSize">12sp</dimen>
-    <dimen name="roadSignTextPadding">4dp</dimen>
-    <dimen name="defaultSignpostViewLayoutMargin">16dp</dimen>
-    <dimen name="defaultRoutePreviewControlsLayoutMargin">16dp</dimen>
+    <transition
+        android:fromId="@id/playState"
+        android:reversible="true"
+        android:toId="@id/pauseState">
 
-    <!-- Others -->
-    <dimen name="toolbarHeight">56dp</dimen>
-    <dimen name="compassSize">48dp</dimen>
-    <dimen name="defaultPeekHeight">100dp</dimen>
-    <dimen name="zoomControlsButtonSize">48dp</dimen>
-    <dimen name="zoomControlsButtonMargin">6dp</dimen>
+        <animated-vector android:drawable="@drawable/ic_play">
 
-</resources>
+            <target
+                android:name="play_to_pause"
+                android:animation="@anim/play_to_pause" />
+        </animated-vector>
+
+    </transition>
+
+</animated-selector>

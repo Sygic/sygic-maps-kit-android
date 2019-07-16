@@ -37,7 +37,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultI
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.viewmodels.common.utils.DirectionUtils
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
-import com.sygic.maps.uikit.viewmodels.navigation.direction.DirectionManeuverType
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData

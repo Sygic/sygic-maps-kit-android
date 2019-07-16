@@ -22,14 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.navigation
+package com.sygic.maps.uikit.views.navigation.preview.state
 
-import androidx.annotation.RestrictTo
-import com.sygic.sdk.route.RouteInfo
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface RouteDemonstrationManager {
-    fun start(routeInfo: RouteInfo)
-    fun pause()
-    fun stop()
+@Parcelize
+enum class PlayPauseButtonState : Parcelable {
+    PLAY, PAUSE
 }

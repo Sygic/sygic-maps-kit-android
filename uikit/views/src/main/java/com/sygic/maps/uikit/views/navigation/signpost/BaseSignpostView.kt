@@ -46,6 +46,7 @@ abstract class BaseSignpostView (
     private var layoutMarginEnd: Int = 0
 
     init {
+        isClickable = true
         layoutTransition = LayoutTransition()
 
         attrs?.let { attributeSet ->
@@ -55,7 +56,7 @@ abstract class BaseSignpostView (
                 defStyleAttr,
                 defStyleRes
             ).apply {
-                with(getResourceId(R.styleable.SignpostView_android_background, R.drawable.bg_signpost_view)) {
+                with(getResourceId(R.styleable.SignpostView_android_background, R.drawable.bg_navigation_dark_rounded)) {
                     setBackgroundResource(this)
                 }
 
@@ -66,22 +67,22 @@ abstract class BaseSignpostView (
 
                 layoutMarginTop = getDimensionPixelSize(
                     R.styleable.SignpostView_android_layout_marginTop,
-                    R.dimen.defaultSignpostViewLayoutMargin
+                    resources.getDimensionPixelSize(R.dimen.defaultSignpostViewLayoutMargin)
                 )
 
                 layoutMarginBottom = getDimensionPixelSize(
                     R.styleable.SignpostView_android_layout_marginBottom,
-                    0
+                    resources.getDimensionPixelSize(R.dimen.defaultSignpostViewLayoutMargin)
                 )
 
                 layoutMarginStart = getDimensionPixelSize(
                     R.styleable.SignpostView_android_layout_marginStart,
-                    R.dimen.defaultSignpostViewLayoutMargin
+                    resources.getDimensionPixelSize(R.dimen.defaultSignpostViewLayoutMargin)
                 )
 
                 layoutMarginEnd = getDimensionPixelSize(
                     R.styleable.SignpostView_android_layout_marginEnd,
-                    R.dimen.defaultSignpostViewLayoutMargin
+                    resources.getDimensionPixelSize(R.dimen.defaultSignpostViewLayoutMargin)
                 )
 
                 recycle()

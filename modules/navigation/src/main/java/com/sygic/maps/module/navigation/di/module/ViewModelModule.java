@@ -29,10 +29,12 @@ import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel;
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModelFactory;
 import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
-import com.sygic.maps.uikit.viewmodels.navigation.FullSignpostViewModel;
-import com.sygic.maps.uikit.viewmodels.navigation.FullSignpostViewModelFactory;
-import com.sygic.maps.uikit.viewmodels.navigation.SimplifiedSignpostViewModel;
-import com.sygic.maps.uikit.viewmodels.navigation.SimplifiedSignpostViewModelFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModelFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModelFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModelFactory;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
@@ -58,4 +60,9 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SimplifiedSignpostViewModel.class)
     abstract ViewModelCreatorFactory putSimplifiedSignpostViewModelFactory(SimplifiedSignpostViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RoutePreviewControlsViewModel.class)
+    abstract ViewModelCreatorFactory putRoutePreviewControlsViewModelFactory(RoutePreviewControlsViewModelFactory factory);
 }

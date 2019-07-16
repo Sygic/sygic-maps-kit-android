@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation
+package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.annotation.CallSuper
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -36,7 +36,7 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
 import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
-import com.sygic.maps.uikit.viewmodels.navigation.direction.DirectionManeuverType
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.DirectionInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo

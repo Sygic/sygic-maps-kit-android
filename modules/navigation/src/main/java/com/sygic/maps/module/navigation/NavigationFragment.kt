@@ -31,6 +31,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
@@ -39,10 +40,12 @@ import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
-import com.sygic.maps.uikit.viewmodels.navigation.FullSignpostViewModel
-import com.sygic.maps.uikit.viewmodels.navigation.SimplifiedSignpostViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.sdk.route.RouteInfo
@@ -51,6 +54,7 @@ import javax.inject.Inject
 const val NAVIGATION_FRAGMENT_TAG = "navigation_map_fragment_tag"
 internal const val KEY_DISTANCE_UNITS = "distance_units"
 internal const val KEY_SIGNPOST_ENABLED = "signpost_enabled"
+internal const val KEY_PREVIEW_CONTROLS_ENABLED = "preview_controls_enabled"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_ROUTE_INFO = "route_info"
 
@@ -65,6 +69,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var fullSignpostViewModel: FullSignpostViewModel
     private lateinit var simplifiedSignpostViewModel: SimplifiedSignpostViewModel
+    private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
 
     @Inject
     internal lateinit var regionalManager: RegionalManager
@@ -129,6 +134,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         }
 
     /**
+     * A *[previewControlsEnabled]* modifies the [RoutePreviewControls] visibility.
+     *
+     * @param [Boolean] true to enable the [RoutePreviewControls], false otherwise.
+     *
+     * @return whether the [RoutePreviewControls] is on or off.
+     */
+    var previewControlsEnabled: Boolean
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.previewControlsEnabled.value!!
+        } else arguments.getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_PREVIEW_CONTROLS_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.previewControlsEnabled.value = value
+            }
+        }
+
+    /**
      * If *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
      *
      * @param [RouteInfo] route info object to be processed.
@@ -152,10 +175,12 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments)
         fullSignpostViewModel = viewModelOf(FullSignpostViewModel::class.java)
         simplifiedSignpostViewModel = viewModelOf(SimplifiedSignpostViewModel::class.java)
+        routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(fullSignpostViewModel)
         lifecycle.addObserver(simplifiedSignpostViewModel)
+        lifecycle.addObserver(routePreviewControlsViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -163,6 +188,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         binding.lifecycleOwner = this
         binding.navigationFragmentViewModel = fragmentViewModel
         binding.fullSignpostViewModel = fullSignpostViewModel
+        binding.routePreviewControlsViewModel = routePreviewControlsViewModel
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {
             root.addView(it, 0)
@@ -176,6 +202,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         lifecycle.removeObserver(fragmentViewModel)
         lifecycle.removeObserver(fullSignpostViewModel)
         lifecycle.removeObserver(simplifiedSignpostViewModel)
+        lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 
     override fun resolveAttributes(attributes: AttributeSet) {
@@ -200,6 +227,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                     getBoolean(
                         R.styleable.NavigationFragment_sygic_navigation_previewMode,
                         PREVIEW_MODE_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_previewControls_enabled)) {
+                previewControlsEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_previewControls_enabled,
+                        PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
                     )
             }
 
