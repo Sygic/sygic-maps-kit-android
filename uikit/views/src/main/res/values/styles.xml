@@ -33,7 +33,8 @@
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
 
-        <item name="navigationTintColor">@color/white</item> <!-- todo: note as required in the wiki (app will crash instead :( ) -->
+        <item name="navigationDarkTintColor">@color/black</item>
+        <item name="navigationLightTintColor">@color/white</item>
     </style>
 
     <style name="Theme.Sygic.Colored" parent="Theme.AppCompat.DayNight">
@@ -73,7 +74,7 @@
     </style>
 
     <style name="SygicSignpostViewStyle">
-        <item name="android:background">@drawable/bg_signpost_view</item>
+        <item name="android:background">@drawable/bg_navigation_dark_rounded</item>
         <item name="android:layout_margin">@dimen/defaultSignpostViewLayoutMargin</item>
     </style>
 

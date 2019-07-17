@@ -30,10 +30,13 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
+import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
@@ -74,13 +77,10 @@ class NavigationFragmentViewModel internal constructor(
     private val routeDemonstrationManager: RouteDemonstrationManager
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
 
-    val previewMode: MutableLiveData<Boolean> = object : MutableLiveData<Boolean>() {
-        override fun setValue(value: Boolean) {
-            super.setValue(value)
-            routeInfo.value?.let { processRouteInfo(it) }
-        }
-    }
+    val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
 
+    private val previewModeObserver = Observer<Boolean> { routeInfo.value?.let { processRouteInfo(it) } }
+    val previewMode: MutableLiveData<Boolean> = MutableLiveData()
     val routeInfo: MutableLiveData<RouteInfo?> = object : MutableLiveData<RouteInfo?>() {
         override fun setValue(value: RouteInfo?) {
             value?.let {
@@ -95,7 +95,10 @@ class NavigationFragmentViewModel internal constructor(
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
+            signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
         }
+
+        previewMode.observeForever(previewModeObserver)
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -147,5 +150,6 @@ class NavigationFragmentViewModel internal constructor(
         mapDataModel.removeAllMapRoutes()
         routeDemonstrationManager.stop()
         navigationManager.stopNavigation()
+        previewMode.removeObserver(previewModeObserver)
     }
 }

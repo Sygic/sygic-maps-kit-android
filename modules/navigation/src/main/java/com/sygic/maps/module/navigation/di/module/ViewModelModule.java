@@ -29,6 +29,10 @@ import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel;
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModelFactory;
 import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModelFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModelFactory;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
@@ -44,4 +48,14 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NavigationFragmentViewModel.class)
     abstract ViewModelCreatorFactory putNavigationFragmentViewModelFactory(NavigationFragmentViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FullSignpostViewModel.class)
+    abstract ViewModelCreatorFactory putFullSignpostViewModelFactory(FullSignpostViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SimplifiedSignpostViewModel.class)
+    abstract ViewModelCreatorFactory putSimplifiedSignpostViewModelFactory(SimplifiedSignpostViewModelFactory factory);
 }

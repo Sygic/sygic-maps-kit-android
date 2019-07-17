@@ -32,55 +32,105 @@
         tools:ignore="ContentDescription"
         tools:layout_height="wrap_content"
         tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin"
-        tools:layout_width="match_parent"
+        tools:layout_width="232dp"
         tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
-
-        <ImageView
-            android:id="@+id/signpostPrimaryDirectionImageView"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/signpostDistanceTextView"
-            app:layout_constraintEnd_toStartOf="@+id/signpostDistanceTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/signpostDistanceTextView"
-            tools:src="@drawable/ic_direction_left_45" />
 
         <TextView
             android:id="@+id/signpostDistanceTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:textColor="?attr/navigationLightTintColor"
             android:textSize="36sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"
-            app:layout_constraintStart_toEndOf="@id/signpostPrimaryDirectionImageView"
+            app:layout_constraintBottom_toTopOf="@+id/signpostInstructionTextView"
+            app:layout_constraintEnd_toStartOf="@+id/signpostPrimaryDirectionImageView"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="200m"
             tools:textColor="@color/white" />
 
+        <ImageView
+            android:id="@+id/signpostPrimaryDirectionImageView"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/signpostDistanceTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/signpostDistanceTextView"
+            app:layout_constraintTop_toTopOf="@id/signpostDistanceTextView"
+            tools:src="@drawable/ic_direction_left_45" />
+
+        <TextView
+            android:id="@+id/signpostInstructionTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:minHeight="48dp"
+            android:textColor="?attr/navigationLightTintColor"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/signpostSecondaryDirectionContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signpostDistanceTextView"
+            tools:text="Trnava, Trenčín, Žilina"
+            tools:textColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/signpostPictogramContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/signpostSecondaryDirectionContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signpostInstructionTextView">
+
+            <com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
+                android:id="@+id/signpostRoadSignsView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp" />
+
+            <ImageView
+                android:id="@+id/signpostPictogramImageView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:tint="@color/white"
+                tools:src="@drawable/ic_pictogram_airport" />
+
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/signpostSecondaryDirectionContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
             android:background="@color/white_a10"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/signpostDistanceTextView"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/signpostInstructionTextView">
 
             <TextView
                 android:id="@+id/signpostSecondaryDirectionTextView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="24dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"

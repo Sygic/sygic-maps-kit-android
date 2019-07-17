@@ -49,11 +49,10 @@
         android:focusable="true">
 
         <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
-            android:layout_width="0dp"
+            android:layout_width="232dp"
             android:layout_height="wrap_content"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
             app:distance="@{fullSignpostViewModel.distance}"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:pictogram="@{fullSignpostViewModel.pictogram}"

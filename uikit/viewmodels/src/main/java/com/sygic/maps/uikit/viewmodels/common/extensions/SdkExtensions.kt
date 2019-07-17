@@ -27,13 +27,19 @@ package com.sygic.maps.uikit.viewmodels.common.extensions
 import android.app.Activity
 import android.app.Application
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
+import com.sygic.maps.uikit.viewmodels.common.utils.DirectionUtils
+import com.sygic.maps.uikit.viewmodels.common.utils.Distance
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.places.LocationInfo
@@ -44,6 +50,8 @@ import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
+import com.sygic.sdk.navigation.warnings.DirectionInfo
+import com.sygic.sdk.navigation.warnings.NaviSignInfo
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.route.RouteInfo
@@ -173,4 +181,52 @@ fun Application.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: 
             override fun onPrimaryComputeFinished(router: Router, route: RouteInfo) = routeComputeCallback.invoke(route)
         })
     }
+}
+
+fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
+    this.filter { it.isOnRoute }.let { isOnRouteList ->
+        if (isOnRouteList.isEmpty()) {
+            return null
+        }
+
+        return isOnRouteList.firstOrNull { it.backgroundColor != 0 }?.let { it } ?: isOnRouteList[0]
+    }
+}
+
+fun DirectionInfo.getDistanceWithUnits(distanceUnits: DistanceUnits): String =
+    Distance.getFormattedDistance(distanceUnits, distance)
+
+@DrawableRes
+fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverType): Int {
+    val routeManeuver = when (directionManeuverType) {
+        DirectionManeuverType.PRIMARY -> primary
+        DirectionManeuverType.SECONDARY -> secondary
+    }
+
+    return if (routeManeuver.isValid) DirectionUtils.getDirectionDrawable(routeManeuver.type) else 0
+}
+
+fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
+    val roadSigns = mutableListOf<RoadSignData>()
+    val hasPic = signElements.find { it.elementType == NaviSignInfo.SignElement.SignElementType.Pictogram } != null
+    signElements
+        .asSequence()
+        .filter { it.elementType == NaviSignInfo.SignElement.SignElementType.RouteNumber }
+        .take(if (hasPic) maxRoadSignsCount - 1 else maxRoadSignsCount)
+        .toList()
+        .forEach { signElement ->
+            with(signElement.routeNumberFormat) {
+                if (insideNumber.isNotEmpty()) {
+                    roadSigns.add(
+                        RoadSignData(
+                            roadSignBackgroundDrawableRes(),
+                            insideNumber,
+                            roadSignForegroundColorRes()
+                        )
+                    )
+                }
+            }
+        }
+
+    return roadSigns
 }

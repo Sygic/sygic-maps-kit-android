@@ -28,11 +28,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.databinding.LayoutSimplifiedSignpostViewInternalBinding
 
 /**
- * A [SimplifiedSignpostView] is the simplified alternative to the [FullSignpostView]. TODO
+ * A [SimplifiedSignpostView] is the simplified alternative to the [FullSignpostView]. /* todo: waiting for final specification */
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate", "CustomViewStyleable")
 open class SimplifiedSignpostView @JvmOverloads constructor(
@@ -57,12 +58,15 @@ open class SimplifiedSignpostView @JvmOverloads constructor(
     }
 
     fun setSecondaryDirection(@DrawableRes secondaryDirectionDrawableRes: Int) {
-        if (secondaryDirectionDrawableRes != 0) {
-            binding.signpostSecondaryDirectionContainer.visibility = VISIBLE
-            binding.signpostSecondaryDirectionImageView.setImageResource(secondaryDirectionDrawableRes)
-        } else {
-            binding.signpostSecondaryDirectionContainer.visibility = GONE
-        }
+        binding.signpostSecondaryDirectionImageView.setImageResource(secondaryDirectionDrawableRes)
+    }
+
+    fun setSecondaryDirectionContainerVisible(visible: Boolean) {
+        binding.signpostSecondaryDirectionContainer.visibility = if (visible) VISIBLE else GONE
+    }
+
+    fun setSecondaryDirectionText(@StringRes secondaryDirectionText: Int) {
+        setSecondaryDirectionText(resources.getString(secondaryDirectionText))
     }
 
     fun setSecondaryDirectionText(secondaryDirectionText: String) {

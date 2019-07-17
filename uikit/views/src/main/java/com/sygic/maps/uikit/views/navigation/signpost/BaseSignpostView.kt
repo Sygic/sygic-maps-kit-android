@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.views.navigation.signpost
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.CallSuper
@@ -45,6 +46,8 @@ abstract class BaseSignpostView (
     private var layoutMarginEnd: Int = 0
 
     init {
+        layoutTransition = LayoutTransition()
+
         attrs?.let { attributeSet ->
             context.obtainStyledAttributes(
                 attributeSet,
@@ -52,7 +55,7 @@ abstract class BaseSignpostView (
                 defStyleAttr,
                 defStyleRes
             ).apply {
-                with(getResourceId(R.styleable.SignpostView_android_background, R.drawable.bg_signpost_view)) {
+                with(getResourceId(R.styleable.SignpostView_android_background, R.drawable.bg_navigation_dark_rounded)) {
                     setBackgroundResource(this)
                 }
 

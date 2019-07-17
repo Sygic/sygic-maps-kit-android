@@ -22,10 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.component
+package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
+import com.sygic.sdk.navigation.NavigationManager
 
-val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnits.KILOMETERS
-const val PREVIEW_MODE_DEFAULT_VALUE = false
-const val SIGNPOST_ENABLED_DEFAULT_VALUE = true
+/**
+ * A [SimplifiedSignpostViewModel] /* todo: waiting for final specification */
+ */
+@AutoFactory
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+open class SimplifiedSignpostViewModel internal constructor(
+    regionalManager: RegionalManager,
+    navigationManager: NavigationManager
+) : BaseSignpostViewModel(regionalManager, navigationManager) {
+    /* todo: waiting for final specification */
+}

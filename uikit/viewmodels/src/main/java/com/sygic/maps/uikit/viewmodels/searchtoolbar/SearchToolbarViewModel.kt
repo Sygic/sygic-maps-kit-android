@@ -67,7 +67,7 @@ open class SearchToolbarViewModel internal constructor(
     val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
 
     val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
-    val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>() {
+    val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>(EMPTY_STRING) {
         override fun setValue(value: CharSequence) {
             if (value != this.value) {
                 super.setValue(value)

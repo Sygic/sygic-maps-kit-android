@@ -155,7 +155,7 @@ class SearchToolbarViewModelTest {
 
             searchToolbarViewModel.onClearButtonClick()
             assertEquals(EMPTY_STRING, searchToolbarViewModel.inputText.value)
-            verify(searchManager, times(2)).searchText(eq(EMPTY_STRING), anyOrNull())
+            verify(searchManager).searchText(eq(EMPTY_STRING), anyOrNull())
         }
     }
 

@@ -38,7 +38,7 @@
     <dimen name="directionSize">48dp</dimen>
     <dimen name="roadSignSpacing">6dp</dimen>
     <dimen name="roadSignTextSize">12sp</dimen>
-    <dimen name="roadSignTextPadding">5dp</dimen>
+    <dimen name="roadSignTextPadding">4dp</dimen>
     <dimen name="defaultSignpostViewLayoutMargin">16dp</dimen>
 
     <!-- Others -->
