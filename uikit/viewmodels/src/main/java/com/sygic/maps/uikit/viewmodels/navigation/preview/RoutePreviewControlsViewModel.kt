@@ -38,15 +38,17 @@ import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class RoutePreviewControlsViewModel internal constructor(
     private val routeDemonstrationManager: RouteDemonstrationManager
-) : ViewModel(), DefaultLifecycleObserver, RoutePreviewControls.OnPlayPauseStateChangedListener {
+) : ViewModel(), RoutePreviewControls.OnPlayPauseStateChangedListener {
 
     val playPauseButtonState: MutableLiveData<PlayPauseButtonState> = MutableLiveData(PlayPauseButtonState.PLAY)
 
-    override fun onCreate(owner: LifecycleOwner) {
-        routeDemonstrationManager.demonstrationState.observe(owner, Observer { state ->
-            playPauseButtonState.value =
-                if (state == DemonstrationState.ACTIVE) PlayPauseButtonState.PAUSE else PlayPauseButtonState.PLAY
-        })
+    private val demonstrationStateObserver = Observer<DemonstrationState> { state ->
+        playPauseButtonState.value =
+            if (state == DemonstrationState.ACTIVE) PlayPauseButtonState.PAUSE else PlayPauseButtonState.PLAY
+    }
+
+    init {
+        routeDemonstrationManager.demonstrationState.observeForever(demonstrationStateObserver)
     }
 
     override fun onPlayPauseButtonStateChanged(state: PlayPauseButtonState) {
@@ -73,6 +75,7 @@ open class RoutePreviewControlsViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
+        routeDemonstrationManager.demonstrationState.removeObserver(demonstrationStateObserver)
         routeDemonstrationManager.destroy()
     }
 }

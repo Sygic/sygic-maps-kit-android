@@ -42,17 +42,19 @@ class NavigationPreviewEnabledActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_navigation_preview_enabled)
 
-        val routePlan = RoutePlan().apply {
-            setStart(GeoCoordinates(48.144722, 17.112778))
-            setDestination(GeoCoordinates(41.893056, 12.482778))
-            routingOptions = RoutingOptions().apply {
-                transportMode = RoutingOptions.TransportMode.Car
-                routingType = RoutingOptions.RoutingType.Economic
+        if (savedInstanceState == null) {
+            val routePlan = RoutePlan().apply {
+                setStart(GeoCoordinates(48.144722, 17.112778))
+                setDestination(GeoCoordinates(41.893056, 12.482778))
+                routingOptions = RoutingOptions().apply {
+                    transportMode = RoutingOptions.TransportMode.Car
+                    routingType = RoutingOptions.RoutingType.Economic
+                }
             }
-        }
 
-        computePrimaryRoute(routePlan) { route ->
-            (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
+            computePrimaryRoute(routePlan) { route ->
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
+            }
         }
     }
 }

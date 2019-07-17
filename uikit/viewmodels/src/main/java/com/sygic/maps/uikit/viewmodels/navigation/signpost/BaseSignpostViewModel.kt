@@ -44,7 +44,7 @@ import com.sygic.sdk.navigation.warnings.NaviSignInfo
 abstract class BaseSignpostViewModel(
     private val regionalManager: RegionalManager,
     private val navigationManager: NavigationManager
-) : ViewModel(), DefaultLifecycleObserver, NavigationManager.OnDirectionListener, NavigationManager.OnNaviSignListener {
+) : ViewModel(), NavigationManager.OnDirectionListener, NavigationManager.OnNaviSignListener {
 
     val distance: MutableLiveData<String> = MutableLiveData()
     val primaryDirection: MutableLiveData<Int> = MutableLiveData()
@@ -66,15 +66,12 @@ abstract class BaseSignpostViewModel(
             }
         }
 
+    private val distanceUnitsObserver = Observer<DistanceUnits> { distanceUnits -> this.distanceUnits = distanceUnits }
+
     init {
         navigationManager.addOnNaviSignListener(this)
         navigationManager.addOnDirectionListener(this)
-    }
-
-    override fun onCreate(owner: LifecycleOwner) {
-        regionalManager.distanceUnits.observe(owner, Observer { distanceUnits ->
-            this.distanceUnits = distanceUnits
-        })
+        regionalManager.distanceUnits.observeForever(distanceUnitsObserver)
     }
 
     override fun onDirectionInfoChanged(directionInfo: DirectionInfo) {
@@ -94,5 +91,6 @@ abstract class BaseSignpostViewModel(
 
         navigationManager.removeOnNaviSignListener(this)
         navigationManager.removeOnDirectionListener(this)
+        regionalManager.distanceUnits.removeObserver(distanceUnitsObserver)
     }
 }

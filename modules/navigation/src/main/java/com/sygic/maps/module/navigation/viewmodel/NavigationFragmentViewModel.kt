@@ -82,6 +82,7 @@ class NavigationFragmentViewModel internal constructor(
     val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
+    private val previewModeObserver = Observer<Boolean> { routeInfo.value?.let { processRouteInfo(it) } }
     val previewMode: MutableLiveData<Boolean> = MutableLiveData()
     val routeInfo: MutableLiveData<RouteInfo?> = object : MutableLiveData<RouteInfo?>() {
         override fun setValue(value: RouteInfo?) {
@@ -100,10 +101,8 @@ class NavigationFragmentViewModel internal constructor(
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
             previewControlsEnabled.value = getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
         }
-    }
 
-    override fun onCreate(owner: LifecycleOwner) {
-        previewMode.observe(owner, Observer { routeInfo.value?.let { processRouteInfo(it) } })
+        previewMode.observeForever(previewModeObserver)
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -155,5 +154,6 @@ class NavigationFragmentViewModel internal constructor(
         mapDataModel.removeAllMapRoutes()
         routeDemonstrationManager.destroy()
         navigationManager.stopNavigation()
+        previewMode.removeObserver(previewModeObserver)
     }
 }
