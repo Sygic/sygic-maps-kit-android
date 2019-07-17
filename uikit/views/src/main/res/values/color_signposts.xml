@@ -24,7 +24,7 @@
   -->
 
 <resources>
-    <color name="directionForeground">?attr/navigationTintColor</color>
+    <color name="directionForeground">?attr/navigationLightTintColor</color>
     <color name="directionBackground">@color/white_a40</color>
 
     <color name="roadSignGreen">#009966</color>
