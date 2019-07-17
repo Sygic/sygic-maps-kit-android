@@ -39,8 +39,8 @@ import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
-import com.sygic.maps.uikit.viewmodels.navigation.FullSignpostViewModel
-import com.sygic.maps.uikit.viewmodels.navigation.SimplifiedSignpostViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
@@ -154,8 +154,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         simplifiedSignpostViewModel = viewModelOf(SimplifiedSignpostViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
-        lifecycle.addObserver(fullSignpostViewModel)
-        lifecycle.addObserver(simplifiedSignpostViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -174,8 +172,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         super.onDestroy()
 
         lifecycle.removeObserver(fragmentViewModel)
-        lifecycle.removeObserver(fullSignpostViewModel)
-        lifecycle.removeObserver(simplifiedSignpostViewModel)
     }
 
     override fun resolveAttributes(attributes: AttributeSet) {

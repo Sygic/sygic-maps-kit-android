@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation
+package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.annotation.CallSuper
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -36,7 +35,7 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
 import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
-import com.sygic.maps.uikit.viewmodels.navigation.direction.DirectionManeuverType
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.DirectionInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
@@ -44,7 +43,7 @@ import com.sygic.sdk.navigation.warnings.NaviSignInfo
 abstract class BaseSignpostViewModel(
     private val regionalManager: RegionalManager,
     private val navigationManager: NavigationManager
-) : ViewModel(), DefaultLifecycleObserver, NavigationManager.OnDirectionListener, NavigationManager.OnNaviSignListener {
+) : ViewModel(), NavigationManager.OnDirectionListener, NavigationManager.OnNaviSignListener {
 
     val distance: MutableLiveData<String> = MutableLiveData()
     val primaryDirection: MutableLiveData<Int> = MutableLiveData()
@@ -66,15 +65,12 @@ abstract class BaseSignpostViewModel(
             }
         }
 
+    private val distanceUnitsObserver = Observer<DistanceUnits> { distanceUnits -> this.distanceUnits = distanceUnits }
+
     init {
         navigationManager.addOnNaviSignListener(this)
         navigationManager.addOnDirectionListener(this)
-    }
-
-    override fun onCreate(owner: LifecycleOwner) {
-        regionalManager.distanceUnits.observe(owner, Observer { distanceUnits ->
-            this.distanceUnits = distanceUnits
-        })
+        regionalManager.distanceUnits.observeForever(distanceUnitsObserver)
     }
 
     override fun onDirectionInfoChanged(directionInfo: DirectionInfo) {
@@ -94,5 +90,6 @@ abstract class BaseSignpostViewModel(
 
         navigationManager.removeOnNaviSignListener(this)
         navigationManager.removeOnDirectionListener(this)
+        regionalManager.distanceUnits.removeObserver(distanceUnitsObserver)
     }
 }

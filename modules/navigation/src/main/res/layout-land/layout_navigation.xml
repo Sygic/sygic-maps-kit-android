@@ -37,7 +37,7 @@
 
         <variable
             name="fullSignpostViewModel"
-            type="com.sygic.maps.uikit.viewmodels.navigation.FullSignpostViewModel" />
+            type="com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel" />
 
     </data>
 

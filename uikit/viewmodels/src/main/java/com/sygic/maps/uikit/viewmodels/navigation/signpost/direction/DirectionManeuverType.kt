@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.direction
+package com.sygic.maps.uikit.viewmodels.navigation.signpost.direction
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

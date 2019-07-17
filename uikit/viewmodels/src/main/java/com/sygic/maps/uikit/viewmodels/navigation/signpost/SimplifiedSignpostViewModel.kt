@@ -22,34 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation
+package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
-import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.extensions.pictogramDrawableRes
-import com.sygic.maps.uikit.viewmodels.common.extensions.roadSigns
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
 /**
- * A [FullSignpostViewModel] /* todo: waiting for final specification */
+ * A [SimplifiedSignpostViewModel] /* todo: waiting for final specification */
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-open class FullSignpostViewModel internal constructor(
+open class SimplifiedSignpostViewModel internal constructor(
     regionalManager: RegionalManager,
     navigationManager: NavigationManager
 ) : BaseSignpostViewModel(regionalManager, navigationManager) {
-
-    val pictogram: MutableLiveData<Int> = MutableLiveData(0)
-    val roadSigns: MutableLiveData<List<RoadSignData>> = MutableLiveData(listOf())
-
-    override fun onNaviSignInfoOnRouteChanged(naviSignInfo: NaviSignInfo?) {
-        super.onNaviSignInfoOnRouteChanged(naviSignInfo)
-
-        roadSigns.value = naviSignInfo?.roadSigns() ?: listOf()
-        pictogram.value = naviSignInfo?.pictogramDrawableRes() ?: 0
-    }
+    /* todo: waiting for final specification */
 }
