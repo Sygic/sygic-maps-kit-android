@@ -59,8 +59,9 @@
     </style>
 
     <style name="SygicRoutePreviewControlsStyle">
-        <item name="android:background">@drawable/bg_navigation_dark_rounded</item>
+        <item name="android:background">@drawable/bg_navigation_light_rounded</item>
         <item name="android:layout_margin">@dimen/defaultRoutePreviewControlsLayoutMargin</item>
+        <item name="android:elevation">@dimen/defaultNavigationElevation</item>
     </style>
 
     <style name="SygicSearchFabStyle">

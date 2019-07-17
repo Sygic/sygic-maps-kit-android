@@ -27,7 +27,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <merge
-        tools:background="@drawable/bg_navigation_dark_rounded"
+        tools:background="@drawable/bg_navigation_light_rounded"
+        tools:elevation="@dimen/defaultNavigationElevation"
         tools:gravity="center"
         tools:layout_gravity="center"
         tools:layout_height="wrap_content"
