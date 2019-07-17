@@ -25,7 +25,6 @@
 package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.annotation.CallSuper
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer

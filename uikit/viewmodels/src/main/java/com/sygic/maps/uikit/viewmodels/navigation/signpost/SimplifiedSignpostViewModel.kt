@@ -37,13 +37,5 @@ open class SimplifiedSignpostViewModel internal constructor(
     regionalManager: RegionalManager,
     navigationManager: NavigationManager
 ) : BaseSignpostViewModel(regionalManager, navigationManager) {
-
-    init {
-
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-    }
+    /* todo: waiting for final specification */
 }
