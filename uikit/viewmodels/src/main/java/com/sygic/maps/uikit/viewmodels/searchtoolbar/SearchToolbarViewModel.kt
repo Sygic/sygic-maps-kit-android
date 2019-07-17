@@ -75,8 +75,6 @@ open class SearchToolbarViewModel internal constructor(
         }
     }
 
-    private val inputTextObserver = this::search
-
     var searchLocation: GeoCoordinates? = null
     var searchDelay: Long = DEFAULT_SEARCH_DELAY
     var maxResultsCount: Int
@@ -101,7 +99,7 @@ open class SearchToolbarViewModel internal constructor(
         }
 
         searchManager.addSearchResultsListener(searchResultsListener)
-        inputText.observeForever(inputTextObserver)
+        inputText.observeForever(::search)
     }
 
     private fun search(input: CharSequence) {
@@ -140,7 +138,6 @@ open class SearchToolbarViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
-        inputText.removeObserver(inputTextObserver)
         searchCoroutineJob?.cancel()
         scope.cancel()
         searchToolbarFocused.value = false

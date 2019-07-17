@@ -30,7 +30,6 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
@@ -46,6 +45,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
+import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.map.MapCenter
@@ -75,19 +75,16 @@ class NavigationFragmentViewModel internal constructor(
     private val permissionsManager: PermissionsManager,
     private val navigationManager: NavigationManager,
     private val routeDemonstrationManager: RouteDemonstrationManager
-) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
+) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver,
+    NavigationManager.OnRouteChangedListener {
 
     val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
 
-    private val previewModeObserver = Observer<Boolean> { routeInfo.value?.let { processRouteInfo(it) } }
-    val previewMode: MutableLiveData<Boolean> = MutableLiveData()
-    val routeInfo: MutableLiveData<RouteInfo?> = object : MutableLiveData<RouteInfo?>() {
-        override fun setValue(value: RouteInfo?) {
-            value?.let {
-                if (value != this.value) {
-                    super.setValue(it)
-                    processRouteInfo(it)
-                }
+    val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
+    val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
+        override fun setValue(value: RouteInfo) {
+            if (value != this.value) {
+                super.setValue(value)
             }
         }
     }
@@ -98,7 +95,9 @@ class NavigationFragmentViewModel internal constructor(
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
         }
 
-        previewMode.observeForever(previewModeObserver)
+        routeInfo.observeForever(::setRouteInfo)
+        previewMode.withLatestFrom(routeInfo)
+            .observeForever { processRoutePreview(it.first, it.second) }
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -111,12 +110,8 @@ class NavigationFragmentViewModel internal constructor(
         routeInfo?.let { mapDataModel.addMapRoute(MapRoute.from(it).build()) }
     }
 
-    private fun processRouteInfo(routeInfo: RouteInfo) {
-        // stop the previous navigation/demonstration first
-        navigationManager.stopNavigation()
-        routeDemonstrationManager.stop()
-
-        // set the default navigation camera state
+    private fun setRouteInfo(routeInfo: RouteInfo) {
+        // set the default navigation camera state //TODO: do it once in init? on every route? onCreate?
         cameraModel.apply {
             tilt = DEFAULT_NAVIGATION_TILT
             mapCenterSettings = DEFAULT_NAVIGATION_MAP_CENTER_SETTING
@@ -126,18 +121,23 @@ class NavigationFragmentViewModel internal constructor(
 
         // set the new RouteInfo for navigation
         navigationManager.setRouteForNavigation(routeInfo)
+    }
 
-        if (isPreviewModeActive()) {
+    private fun processRoutePreview(previewActive: Boolean, routeInfo: RouteInfo) {
+        if (previewActive) {
             // start preview mode
             locationManager.positionOnMapEnabled = false
             routeDemonstrationManager.start(routeInfo)
         } else {
+            // stop the previous demonstration first
+            routeDemonstrationManager.stop()
+
             // start navigation mode
-            requestLocationAccess(permissionsManager, locationManager) { locationManager.positionOnMapEnabled = true }
+            requestLocationAccess(permissionsManager, locationManager) {
+                locationManager.positionOnMapEnabled = true
+            }
         }
     }
-
-    private fun isPreviewModeActive() = previewMode.value!!
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false
@@ -150,6 +150,5 @@ class NavigationFragmentViewModel internal constructor(
         mapDataModel.removeAllMapRoutes()
         routeDemonstrationManager.stop()
         navigationManager.stopNavigation()
-        previewMode.removeObserver(previewModeObserver)
     }
 }
