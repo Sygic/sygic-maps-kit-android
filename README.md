@@ -36,6 +36,8 @@ To get familiar with all the features available, you can first try out our Sampl
 
 3. Min API **21** (Android 5.0 Lollipop)
 
+4. Some Views and Modules requires global theme attributes to be specified. Don't forget to define them or use/extend our predefined theme! (otherwise, application crashes :( ))
+
 ### Implementation
 
 1. Gradle **project file**:
