@@ -32,7 +32,9 @@ import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 
 /**
- * A [RoutePreviewControlsViewModel] //todo
+ * A [RoutePreviewControlsViewModel] is a basic ViewModel implementation for the [RoutePreviewControls] class. It listens
+ * to the [RouteDemonstrationManager.demonstrationState] and set appropriate state to the [RoutePreviewControls] view.
+ * It also listens to the [RoutePreviewControls] user interaction callbacks and control the [RouteDemonstrationManager].
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -64,11 +66,11 @@ open class RoutePreviewControlsViewModel internal constructor(
         }
     }
 
-    fun onSpeedButtonClick() {
+    open fun onSpeedButtonClick() {
         routeDemonstrationManager.speedMultiplier.value = routeDemonstrationManager.speedMultiplier.value!! * 2 % 15
     }
 
-    fun onStopButtonClick() {
+    open fun onStopButtonClick() {
         routeDemonstrationManager.stop()
     }
 
