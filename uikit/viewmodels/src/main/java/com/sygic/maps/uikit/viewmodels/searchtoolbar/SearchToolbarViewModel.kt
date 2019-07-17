@@ -71,10 +71,11 @@ open class SearchToolbarViewModel internal constructor(
         override fun setValue(value: CharSequence) {
             if (value != this.value) {
                 super.setValue(value)
-                search(value.toString())
             }
         }
     }
+
+    private val inputTextObserver = this::search
 
     var searchLocation: GeoCoordinates? = null
     var searchDelay: Long = DEFAULT_SEARCH_DELAY
@@ -90,7 +91,7 @@ open class SearchToolbarViewModel internal constructor(
 
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
     private var searchCoroutineJob: Job? = null
-    private var lastSearchedString: String = EMPTY_STRING
+    private var lastSearchedString: CharSequence = EMPTY_STRING
 
     init {
         with(arguments) {
@@ -100,15 +101,16 @@ open class SearchToolbarViewModel internal constructor(
         }
 
         searchManager.addSearchResultsListener(searchResultsListener)
+        inputText.observeForever(inputTextObserver)
     }
 
-    private fun search(input: String) {
+    private fun search(input: CharSequence) {
         lastSearchedString = input
         searchCoroutineJob?.cancel()
         searchCoroutineJob = scope.launch {
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
             if (input.isNotEmpty()) delay(searchDelay)
-            searchManager.searchText(input, searchLocation)
+            searchManager.searchText(input.toString(), searchLocation)
         }
     }
 
@@ -138,6 +140,7 @@ open class SearchToolbarViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
+        inputText.removeObserver(inputTextObserver)
         searchCoroutineJob?.cancel()
         scope.cancel()
         searchToolbarFocused.value = false
