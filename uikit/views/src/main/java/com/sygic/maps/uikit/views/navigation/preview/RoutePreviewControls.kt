@@ -28,6 +28,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import com.sygic.maps.uikit.views.R
@@ -36,7 +37,11 @@ import com.sygic.maps.uikit.views.databinding.LayoutRoutePreviewControlsBinding
 import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 
 /**
- * A [RoutePreviewControls] TODO
+ * A [RoutePreviewControls] can be used to control the route preview process. The [View] has three predefined control
+ * buttons of which one (play/pause) is multi-state. Speed and stop button have common [View.OnClickListener] callback.
+ *
+ * Play/pause button state can be controlled with the [setPlayPauseButtonState] method and observed with the
+ * [OnPlayPauseStateChangedListener].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class RoutePreviewControls @JvmOverloads constructor(
@@ -56,9 +61,13 @@ open class RoutePreviewControls @JvmOverloads constructor(
     private var layoutMarginEnd: Int = 0
 
     /**
-     * TODO
+     * Interface definition for a callback to be invoked when a play/pause button state changed.
      */
     interface OnPlayPauseStateChangedListener {
+
+        /**
+         * Called when a [PlayPauseButtonState] changed.
+         */
         fun onPlayPauseButtonStateChanged(state: PlayPauseButtonState)
     }
 
@@ -143,7 +152,7 @@ open class RoutePreviewControls @JvmOverloads constructor(
     /**
      * Register a callback to be invoked when [RoutePreviewControls] speed action button is clicked.
      *
-     * @param listener [OnClickListener] callback to invoke on [RoutePreviewControls] speed button click.
+     * @param listener [View.OnClickListener] callback to invoke on [RoutePreviewControls] speed button click.
      */
     fun setOnSpeedButtonClickListener(listener: OnClickListener) {
         binding.routePreviewControlsSpeedButton.setOnClickListener(listener)
@@ -152,7 +161,7 @@ open class RoutePreviewControls @JvmOverloads constructor(
     /**
      * Register a callback to be invoked when [RoutePreviewControls] stop action button is clicked.
      *
-     * @param listener [OnClickListener] callback to invoke on [RoutePreviewControls] stop button click.
+     * @param listener [View.OnClickListener] callback to invoke on [RoutePreviewControls] stop button click.
      */
     fun setOnStopButtonClickListener(listener: OnClickListener) {
         binding.routePreviewControlsStopButton.setOnClickListener(listener)
