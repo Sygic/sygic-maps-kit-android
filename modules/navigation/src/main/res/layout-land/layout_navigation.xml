@@ -61,7 +61,7 @@
             app:secondaryDirection="@{fullSignpostViewModel.secondaryDirection}"
             app:secondaryDirectionContainerVisible="@{safeUnbox(fullSignpostViewModel.secondaryDirectionContainerVisible)}"
             app:secondaryDirectionText="@{fullSignpostViewModel.secondaryDirectionText}"
-            tools:background="@drawable/bg_signpost_view"
+            tools:background="@drawable/bg_navigation_dark_rounded"
             tools:layout_height="152dp"
             tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin" />
 

@@ -73,7 +73,7 @@
     </style>
 
     <style name="SygicSignpostViewStyle">
-        <item name="android:background">@drawable/bg_signpost_view</item>
+        <item name="android:background">@drawable/bg_navigation_dark_rounded</item>
         <item name="android:layout_margin">@dimen/defaultSignpostViewLayoutMargin</item>
     </style>
 

@@ -55,7 +55,7 @@ abstract class BaseSignpostView (
                 defStyleAttr,
                 defStyleRes
             ).apply {
-                with(getResourceId(R.styleable.SignpostView_android_background, R.drawable.bg_signpost_view)) {
+                with(getResourceId(R.styleable.SignpostView_android_background, R.drawable.bg_navigation_dark_rounded)) {
                     setBackgroundResource(this)
                 }
 
