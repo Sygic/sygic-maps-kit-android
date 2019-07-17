@@ -47,7 +47,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="8dp"
             android:src="@drawable/sel_play_pause"
-            android:tint="?attr/navigationTintColor" />
+            android:tint="?attr/navigationDarkTintColor" />
 
         <ImageView
             android:id="@+id/routePreviewControlsSpeedButton"
@@ -61,7 +61,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="8dp"
             android:src="@drawable/ic_fast_forward"
-            android:tint="?attr/navigationTintColor" />
+            android:tint="?attr/navigationDarkTintColor" />
 
         <ImageView
             android:id="@+id/routePreviewControlsStopButton"
@@ -75,7 +75,7 @@
             android:paddingEnd="12dp"
             android:paddingBottom="8dp"
             android:src="@drawable/ic_stop"
-            android:tint="?attr/navigationTintColor" />
+            android:tint="?attr/navigationDarkTintColor" />
     </merge>
 
 </layout>
