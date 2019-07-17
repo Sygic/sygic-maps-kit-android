@@ -129,11 +129,11 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         }
 
     /**
-     * If *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
+     * If not-null *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
      *
      * @param [RouteInfo] route info object to be processed.
      *
-     * @return [RouteInfo] the current route info value.
+     * @return [RouteInfo] the current route info value or <code>null</code> if not yet defined.
      */
     var routeInfo: RouteInfo?
         get() = if (::fragmentViewModel.isInitialized) {
@@ -141,7 +141,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         } else arguments.getParcelableValue(KEY_ROUTE_INFO)
         set(value) {
             arguments = Bundle(arguments).apply { putParcelable(KEY_ROUTE_INFO, value) }
-            if (::fragmentViewModel.isInitialized) {
+            if (::fragmentViewModel.isInitialized && value != null) {
                 fragmentViewModel.routeInfo.value = value
             }
         }

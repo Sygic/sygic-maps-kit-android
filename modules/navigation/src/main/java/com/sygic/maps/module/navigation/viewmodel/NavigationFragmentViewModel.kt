@@ -33,6 +33,7 @@ import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
+import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
@@ -45,6 +46,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
+import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
@@ -93,6 +95,7 @@ class NavigationFragmentViewModel internal constructor(
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
+            getParcelableValue<RouteInfo>(KEY_ROUTE_INFO)?.let { routeInfo.value = it }
         }
 
         routeInfo.observeForever(::setRouteInfo)
