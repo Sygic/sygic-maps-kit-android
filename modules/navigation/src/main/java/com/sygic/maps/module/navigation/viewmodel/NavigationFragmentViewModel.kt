@@ -77,17 +77,14 @@ class NavigationFragmentViewModel internal constructor(
     private val permissionsManager: PermissionsManager,
     private val navigationManager: NavigationManager,
     private val routeDemonstrationManager: RouteDemonstrationManager
-) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver,
-    NavigationManager.OnRouteChangedListener {
+) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
 
     val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
         override fun setValue(value: RouteInfo) {
-            if (value != this.value) {
-                super.setValue(value)
-            }
+            if (value != this.value) super.setValue(value)
         }
     }
 
@@ -99,8 +96,7 @@ class NavigationFragmentViewModel internal constructor(
         }
 
         routeInfo.observeForever(::setRouteInfo)
-        previewMode.withLatestFrom(routeInfo)
-            .observeForever { processRoutePreview(it.first, it.second) }
+        previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -110,11 +106,14 @@ class NavigationFragmentViewModel internal constructor(
 
     override fun onRouteChanged(routeInfo: RouteInfo?) {
         mapDataModel.removeAllMapRoutes()
-        routeInfo?.let { mapDataModel.addMapRoute(MapRoute.from(it).build()) }
+        routeInfo?.let {
+            this.routeInfo.value = it
+            mapDataModel.addMapRoute(MapRoute.from(it).build())
+        }
     }
 
     private fun setRouteInfo(routeInfo: RouteInfo) {
-        // set the default navigation camera state //TODO: do it once in init? on every route? onCreate?
+        // set the default navigation camera state
         cameraModel.apply {
             tilt = DEFAULT_NAVIGATION_TILT
             mapCenterSettings = DEFAULT_NAVIGATION_MAP_CENTER_SETTING

@@ -133,7 +133,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
      *
      * @param [RouteInfo] route info object to be processed.
      *
-     * @return [RouteInfo] the current route info value or <code>null</code> if not yet defined.
+     * @return [RouteInfo] the current route info value or `null` if not yet defined.
      */
     var routeInfo: RouteInfo?
         get() = if (::fragmentViewModel.isInitialized) {
