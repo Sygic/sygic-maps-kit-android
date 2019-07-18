@@ -41,6 +41,8 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.search.Search
+import com.sygic.sdk.search.SearchResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -82,12 +84,26 @@ class SearchToolbarViewModelTest {
 
         searchToolbarViewModel = SearchToolbarViewModel(arguments, searchManager)
         searchToolbarViewModel.searchDelay = CUSTOM_SEARCH_DELAY
+
+        val searchText = argumentCaptor<String>()
+        val searchResultsListenerCaptor = argumentCaptor<Search.SearchResultsListener>()
+        verify(searchManager).addSearchResultsListener(searchResultsListenerCaptor.capture())
+        whenever(searchManager.searchText(searchText.capture(), anyOrNull())).then {
+            searchResultsListenerCaptor.firstValue.onSearchResults(
+                searchText.firstValue,
+                SearchResult.ResultState.Success,
+                emptyList<SearchResult>()
+            )
+        }
     }
 
     @Test
     fun initTest() {
         assertEquals(true, searchToolbarViewModel.searchToolbarFocused.value)
-        assertEquals(SearchToolbarIconStateSwitcherIndex.MAGNIFIER, searchToolbarViewModel.iconStateSwitcherIndex.value)
+        assertEquals(
+            SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
+            searchToolbarViewModel.iconStateSwitcherIndex.value
+        )
         assertEquals(null, searchToolbarViewModel.searchLocation)
         assertEquals(EMPTY_STRING, searchToolbarViewModel.inputText.value)
         verify(searchManager).addSearchResultsListener(any())
@@ -96,10 +112,6 @@ class SearchToolbarViewModelTest {
     @Test
     fun searchTest() {
         runBlockingTest(testDispatcher) {
-            assertEquals(
-                SearchToolbarIconStateSwitcherIndex.MAGNIFIER,
-                searchToolbarViewModel.iconStateSwitcherIndex.value
-            )
             searchToolbarViewModel.inputText.value = "London Eye"
             assertEquals(
                 SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
@@ -107,6 +119,11 @@ class SearchToolbarViewModelTest {
             )
             advanceTimeBy(CUSTOM_SEARCH_DELAY)
             verify(searchManager).searchText(eq("London Eye"), anyOrNull())
+
+            assertEquals(
+                SearchToolbarIconStateSwitcherIndex.MAGNIFIER,
+                searchToolbarViewModel.iconStateSwitcherIndex.value
+            )
         }
     }
 
@@ -117,10 +134,6 @@ class SearchToolbarViewModelTest {
             searchToolbarViewModel.searchLocation = testLocation
             searchToolbarViewModel.inputText.value = "London Eye"
             advanceTimeBy(CUSTOM_SEARCH_DELAY)
-            assertEquals(
-                SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
-                searchToolbarViewModel.iconStateSwitcherIndex.value
-            )
             verify(searchManager).searchText(eq("London Eye"), eq(testLocation))
         }
     }
@@ -130,10 +143,6 @@ class SearchToolbarViewModelTest {
         runBlockingTest(testDispatcher) {
             searchToolbarViewModel.inputText.value = "London Eye"
             advanceTimeBy(CUSTOM_SEARCH_DELAY)
-            assertEquals(
-                SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
-                searchToolbarViewModel.iconStateSwitcherIndex.value
-            )
             verify(searchManager).searchText(eq("London Eye"), anyOrNull())
 
             searchToolbarViewModel.retrySearch()
@@ -147,15 +156,11 @@ class SearchToolbarViewModelTest {
         runBlockingTest(testDispatcher) {
             searchToolbarViewModel.inputText.value = "London Eye"
             advanceTimeBy(CUSTOM_SEARCH_DELAY)
-            assertEquals(
-                SearchToolbarIconStateSwitcherIndex.PROGRESSBAR,
-                searchToolbarViewModel.iconStateSwitcherIndex.value
-            )
             verify(searchManager).searchText(eq("London Eye"), anyOrNull())
 
             searchToolbarViewModel.onClearButtonClick()
             assertEquals(EMPTY_STRING, searchToolbarViewModel.inputText.value)
-            verify(searchManager).searchText(eq(EMPTY_STRING), anyOrNull())
+            verify(searchManager, times(2)).searchText(eq(EMPTY_STRING), anyOrNull())
         }
     }
 

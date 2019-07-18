@@ -67,11 +67,9 @@ open class SearchToolbarViewModel internal constructor(
     val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
 
     val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
-    val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>(EMPTY_STRING) {
+    val inputText: MutableLiveData<CharSequence> = object : MutableLiveData<CharSequence>() {
         override fun setValue(value: CharSequence) {
-            if (value != this.value) {
-                super.setValue(value)
-            }
+            if (value != this.value) super.setValue(value)
         }
     }
 
@@ -98,8 +96,8 @@ open class SearchToolbarViewModel internal constructor(
             maxResultsCount = getInt(KEY_SEARCH_MAX_RESULTS_COUNT, MAX_RESULTS_COUNT_DEFAULT_VALUE)
         }
 
-        searchManager.addSearchResultsListener(searchResultsListener)
         inputText.observeForever(::search)
+        searchManager.addSearchResultsListener(searchResultsListener)
     }
 
     private fun search(input: CharSequence) {
