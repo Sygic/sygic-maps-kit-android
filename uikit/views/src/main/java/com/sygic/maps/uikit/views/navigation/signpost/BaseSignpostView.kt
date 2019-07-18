@@ -32,7 +32,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.sygic.maps.uikit.views.R
 
 @Suppress("CustomViewStyleable")
-abstract class BaseSignpostView (
+abstract class BaseSignpostView(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,
@@ -46,6 +46,7 @@ abstract class BaseSignpostView (
     private var layoutMarginEnd: Int = 0
 
     init {
+        isClickable = true
         layoutTransition = LayoutTransition()
 
         attrs?.let { attributeSet ->
@@ -55,34 +56,20 @@ abstract class BaseSignpostView (
                 defStyleAttr,
                 defStyleRes
             ).apply {
-                with(getResourceId(R.styleable.SignpostView_android_background, R.drawable.bg_navigation_dark_rounded)) {
+                with(
+                    getResourceId(
+                        R.styleable.SignpostView_android_background,
+                        R.drawable.bg_navigation_dark_rounded
+                    )
+                ) {
                     setBackgroundResource(this)
                 }
 
-                layoutMargin = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_margin,
-                    0
-                )
-
-                layoutMarginTop = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_marginTop,
-                    R.dimen.defaultSignpostViewLayoutMargin
-                )
-
-                layoutMarginBottom = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_marginBottom,
-                    0
-                )
-
-                layoutMarginStart = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_marginStart,
-                    R.dimen.defaultSignpostViewLayoutMargin
-                )
-
-                layoutMarginEnd = getDimensionPixelSize(
-                    R.styleable.SignpostView_android_layout_marginEnd,
-                    R.dimen.defaultSignpostViewLayoutMargin
-                )
+                layoutMargin = getDimensionPixelSize(R.styleable.SignpostView_android_layout_margin, 0)
+                layoutMarginTop = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginTop, 0)
+                layoutMarginBottom = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginBottom, 0)
+                layoutMarginStart = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginStart, 0)
+                layoutMarginEnd = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginEnd, 0)
 
                 recycle()
             }
