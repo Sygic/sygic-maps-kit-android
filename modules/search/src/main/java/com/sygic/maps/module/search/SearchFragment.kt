@@ -100,16 +100,16 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     /**
      * If *[searchInput]* is defined, then it will be used as input text.
      *
-     * @param [String] text input to be processed.
+     * @param [CharSequence] text input to be processed.
      *
-     * @return [String] the text input value.
+     * @return [CharSequence] the text input value.
      */
-    var searchInput: String
+    var searchInput: CharSequence
         get() = if (::searchToolbarViewModel.isInitialized) {
-            searchToolbarViewModel.inputText.value.toString()
-        } else arguments.getString(KEY_SEARCH_INPUT, EMPTY_STRING)
+            searchToolbarViewModel.inputText.value!!
+        } else arguments.getCharSequence(KEY_SEARCH_INPUT, EMPTY_STRING)
         set(value) {
-            arguments = Bundle(arguments).apply { putString(KEY_SEARCH_INPUT, value) }
+            arguments = Bundle(arguments).apply { putCharSequence(KEY_SEARCH_INPUT, value) }
             if (::searchToolbarViewModel.isInitialized) {
                 searchToolbarViewModel.inputText.value = value
             }
