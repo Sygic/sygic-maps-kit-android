@@ -82,30 +82,11 @@ open class RoutePreviewControls @JvmOverloads constructor(
                 defStyleAttr,
                 defStyleRes
             ).apply {
-                layoutMargin = getDimensionPixelSize(
-                    R.styleable.RoutePreviewControls_android_layout_margin,
-                    0
-                )
-
-                layoutMarginTop = getDimensionPixelSize(
-                    R.styleable.RoutePreviewControls_android_layout_marginTop,
-                    resources.getDimensionPixelSize(R.dimen.defaultRoutePreviewControlsLayoutMargin)
-                )
-
-                layoutMarginBottom = getDimensionPixelSize(
-                    R.styleable.RoutePreviewControls_android_layout_marginBottom,
-                    resources.getDimensionPixelSize(R.dimen.defaultRoutePreviewControlsLayoutMargin)
-                )
-
-                layoutMarginStart = getDimensionPixelSize(
-                    R.styleable.RoutePreviewControls_android_layout_marginStart,
-                    resources.getDimensionPixelSize(R.dimen.defaultRoutePreviewControlsLayoutMargin)
-                )
-
-                layoutMarginEnd = getDimensionPixelSize(
-                    R.styleable.RoutePreviewControls_android_layout_marginEnd,
-                    resources.getDimensionPixelSize(R.dimen.defaultRoutePreviewControlsLayoutMargin)
-                )
+                layoutMargin = getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_margin, 0)
+                layoutMarginTop = getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginTop, 0)
+                layoutMarginBottom = getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginBottom, 0)
+                layoutMarginStart = getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginStart, 0)
+                layoutMarginEnd = getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginEnd, 0)
 
                 recycle()
             }
