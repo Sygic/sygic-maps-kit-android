@@ -37,10 +37,10 @@
 
         <ImageView
             android:id="@+id/signpostPrimaryDirectionImageView"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/signpostDistanceTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/signpostInstructionTextView"
             app:layout_constraintEnd_toStartOf="@+id/signpostDistanceTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/signpostDistanceTextView"
@@ -51,18 +51,35 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:textColor="?attr/navigationLightTintColor"
-            android:textSize="36sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/signpostInstructionTextView"
             app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"
             app:layout_constraintStart_toEndOf="@id/signpostPrimaryDirectionImageView"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="200m"
+            tools:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/signpostInstructionTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif"
+            android:maxLines="1"
+            android:textColor="?attr/navigationLightTintColor"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"
+            app:layout_constraintStart_toEndOf="@id/signpostPrimaryDirectionImageView"
+            app:layout_constraintTop_toBottomOf="@id/signpostDistanceTextView"
+            tools:text="Karadzicova"
             tools:textColor="@color/white" />
 
         <LinearLayout
@@ -70,36 +87,33 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:background="@color/white_a10"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:gravity="center"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/signpostDistanceTextView"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/signpostSecondaryDirectionTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:textColor="?attr/navigationLightTintColor"
-                android:textSize="14sp"
-                tools:text="Then"
-                tools:textColor="@color/white" />
-
             <ImageView
                 android:id="@+id/signpostSecondaryDirectionImageView"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="6dp"
                 tools:src="@drawable/ic_direction_left_45" />
+
+            <TextView
+                android:id="@+id/signpostSecondaryDirectionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="sans-serif"
+                android:textColor="?attr/navigationLightTintColor"
+                android:textSize="12sp"
+                tools:text="Then"
+                tools:textColor="@color/white" />
 
         </LinearLayout>
 

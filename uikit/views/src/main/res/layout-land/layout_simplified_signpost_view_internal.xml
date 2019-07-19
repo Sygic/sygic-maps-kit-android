@@ -65,6 +65,15 @@
             tools:text="200m"
             tools:textColor="@color/white" />
 
+        <TextView
+            android:id="@+id/signpostInstructionTextView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"
+            app:layout_constraintStart_toEndOf="@id/signpostPrimaryDirectionImageView"
+            app:layout_constraintTop_toBottomOf="@id/signpostDistanceTextView" />
+
         <LinearLayout
             android:id="@+id/signpostSecondaryDirectionContainer"
             android:layout_width="wrap_content"
