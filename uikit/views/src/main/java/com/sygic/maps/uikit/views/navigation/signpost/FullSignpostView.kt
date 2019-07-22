@@ -31,6 +31,7 @@ import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.databinding.LayoutFullSignpostViewInternalBinding
 import com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
@@ -49,6 +50,15 @@ open class FullSignpostView @JvmOverloads constructor(
 ) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) {
 
     private val binding = LayoutFullSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
+
+    /**
+     * Sets the text to be displayed as the distance.
+     *
+     * @param distanceTextHolder [TextHolder] text to be displayed
+     */
+    fun setDistance(distanceTextHolder: TextHolder) {
+        setDistance(distanceTextHolder.getText(context))
+    }
 
     /**
      * Sets the text to be displayed as the distance.
@@ -107,6 +117,15 @@ open class FullSignpostView @JvmOverloads constructor(
     /**
      * Sets the text to be displayed as the secondary direction text.
      *
+     * @param secondaryDirectionTextHolder [TextHolder] text to be displayed
+     */
+    fun setSecondaryDirectionText(secondaryDirectionTextHolder: TextHolder) {
+        setSecondaryDirectionText(secondaryDirectionTextHolder.getText(context))
+    }
+
+    /**
+     * Sets the text to be displayed as the secondary direction text.
+     *
      * @param secondaryDirectionText [String] text to be displayed
      */
     fun setSecondaryDirectionText(secondaryDirectionText: String?) {
@@ -120,6 +139,15 @@ open class FullSignpostView @JvmOverloads constructor(
      */
     fun setInstructionText(@StringRes instructionText: Int) {
         setInstructionText(resources.getString(instructionText))
+    }
+
+    /**
+     * Sets the text to be displayed as the instruction text.
+     *
+     * @param instructionTextHolder [TextHolder] text to be displayed
+     */
+    fun setInstructionText(instructionTextHolder: TextHolder) {
+        setInstructionText(instructionTextHolder.getText(context))
     }
 
     /**
