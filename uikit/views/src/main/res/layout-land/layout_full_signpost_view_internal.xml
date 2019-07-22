@@ -31,7 +31,7 @@
         tools:background="@drawable/bg_navigation_dark_rounded"
         tools:ignore="ContentDescription"
         tools:layout_height="wrap_content"
-        tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin"
+        tools:layout_margin="@dimen/signpostViewLayoutMargin"
         tools:layout_width="232dp"
         tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 

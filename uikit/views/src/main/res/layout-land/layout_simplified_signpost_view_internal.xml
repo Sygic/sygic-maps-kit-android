@@ -31,7 +31,7 @@
         tools:background="@drawable/bg_navigation_dark_rounded"
         tools:ignore="ContentDescription"
         tools:layout_height="wrap_content"
-        tools:layout_margin="@dimen/defaultSignpostViewLayoutMargin"
+        tools:layout_margin="@dimen/signpostViewLayoutMargin"
         tools:layout_width="232dp"
         tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
@@ -64,6 +64,15 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="200m"
             tools:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/signpostInstructionTextView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"
+            app:layout_constraintStart_toEndOf="@id/signpostPrimaryDirectionImageView"
+            app:layout_constraintTop_toBottomOf="@id/signpostDistanceTextView" />
 
         <LinearLayout
             android:id="@+id/signpostSecondaryDirectionContainer"

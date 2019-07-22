@@ -98,11 +98,11 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         }
 
     /**
-     * A *[signpostEnabled]* modifies the [FullSignpostView] visibility.
+     * A *[signpostEnabled]* modifies the SignpostView ([FullSignpostView] or [SimplifiedSignpostView]) visibility.
      *
-     * @param [Boolean] true to enable the [FullSignpostView], false otherwise.
+     * @param [Boolean] true to enable the SignpostView, false otherwise.
      *
-     * @return whether the [FullSignpostView] is on or off.
+     * @return whether the SignpostView is on or off.
      */
     var signpostEnabled: Boolean
         get() = if (::fragmentViewModel.isInitialized) {

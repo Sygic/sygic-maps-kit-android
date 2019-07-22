@@ -40,7 +40,7 @@
     <dimen name="roadSignTextSize">12sp</dimen>
     <dimen name="roadSignTextPadding">4dp</dimen>
     <dimen name="defaultNavigationElevation">6dp</dimen>
-    <dimen name="defaultSignpostViewLayoutMargin">16dp</dimen>
+    <dimen name="signpostViewLayoutMargin">16dp</dimen>
     <dimen name="defaultRoutePreviewControlsLayoutMargin">16dp</dimen>
 
     <!-- Others -->

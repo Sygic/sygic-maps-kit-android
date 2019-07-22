@@ -90,7 +90,7 @@ object Distance {
                 val rest = miles % 1
 
                 if (rest < 0.3f) {
-                    if (roundedMiles == 0) "¼$IMPERIALS_MI_DISTANCE_UNIT" else roundedMiles.toString() + IMPERIALS_MI_DISTANCE_UNIT
+                    if (roundedMiles == 0) "¼$IMPERIALS_MI_DISTANCE_UNIT" else "$roundedMiles$IMPERIALS_MI_DISTANCE_UNIT"
                 } else if (rest < 0.6f) {
                     if (roundedMiles == 0) "½$IMPERIALS_MI_DISTANCE_UNIT" else "$roundedMiles½$IMPERIALS_MI_DISTANCE_UNIT"
                 } else {

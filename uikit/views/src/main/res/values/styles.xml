@@ -81,7 +81,7 @@
 
     <style name="SygicSignpostViewStyle">
         <item name="android:background">@drawable/bg_navigation_dark_rounded</item>
-        <item name="android:layout_margin">@dimen/defaultSignpostViewLayoutMargin</item>
+        <item name="android:layout_margin">@dimen/signpostViewLayoutMargin</item>
     </style>
 
     <style name="SygicZoomControlsMenuStyle">

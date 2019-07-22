@@ -41,4 +41,24 @@
     <string name="sorry_something_went_wrong">Sorry, something went wrong</string>
     <string name="try_again_later">Try again later</string>
     <string name="then">Then</string>
+    <string name="start">Start</string>
+    <string name="finish">Finish</string>
+    <string name="entry_into">Entry into</string>
+    <string name="turn_slightly_left">Turn slightly left</string>
+    <string name="turn_slightly_right">Turn slightly right</string>
+    <string name="keep_left">Keep left</string>
+    <string name="keep_right">Keep right</string>
+    <string name="turn_left">Turn left</string>
+    <string name="turn_right">Turn right</string>
+    <string name="sharp_left">Sharp left</string>
+    <string name="sharp_right">Sharp right</string>
+    <string name="follow_the_route">Follow the route</string>
+    <string name="make_u_turn">Make a U-turn</string>
+    <string name="take_the_ferry">Take the ferry</string>
+    <string name="exit_right">Exit right</string>
+    <string name="exit_left">Exit left</string>
+    <string name="take_the_motorway">Take the motorway</string>
+    <string name="tunnel">Tunnel</string>
+    <string name="via">Via</string>
+    <string name="roundabout_exit">Exit %1$d</string>
 </resources>
