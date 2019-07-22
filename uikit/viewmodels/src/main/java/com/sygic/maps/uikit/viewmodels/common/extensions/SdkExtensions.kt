@@ -35,7 +35,6 @@ import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
-import com.sygic.maps.uikit.viewmodels.common.utils.DirectionUtils
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
@@ -193,19 +192,6 @@ fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
     }
 }
 
-fun DirectionInfo.getDistanceWithUnits(distanceUnits: DistanceUnits): String =
-    Distance.getFormattedDistance(distanceUnits, distance)
-
-@DrawableRes
-fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverType): Int {
-    val routeManeuver = when (directionManeuverType) {
-        DirectionManeuverType.PRIMARY -> primary
-        DirectionManeuverType.SECONDARY -> secondary
-    }
-
-    return if (routeManeuver.isValid) DirectionUtils.getDirectionDrawable(routeManeuver.type) else 0
-}
-
 fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
     val roadSigns = mutableListOf<RoadSignData>()
     val hasPic = signElements.find { it.elementType == NaviSignInfo.SignElement.SignElementType.Pictogram } != null
@@ -229,4 +215,17 @@ fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
         }
 
     return roadSigns
+}
+
+fun DirectionInfo.getDistanceWithUnits(distanceUnits: DistanceUnits): String =
+    Distance.getFormattedDistance(distanceUnits, distance)
+
+@DrawableRes
+fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverType): Int {
+    val routeManeuver = when (directionManeuverType) {
+        DirectionManeuverType.PRIMARY -> primary
+        DirectionManeuverType.SECONDARY -> secondary
+    }
+
+    return if (routeManeuver.isValid) routeManeuver.type.getDirectionDrawable() else 0
 }
