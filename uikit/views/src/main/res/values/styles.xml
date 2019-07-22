@@ -61,8 +61,8 @@
 
     <style name="SygicRoutePreviewControlsStyle">
         <item name="android:background">@drawable/bg_navigation_light_rounded</item>
-        <item name="android:layout_margin">@dimen/defaultRoutePreviewControlsLayoutMargin</item>
-        <item name="android:elevation">@dimen/defaultNavigationElevation</item>
+        <item name="android:layout_margin">@dimen/routePreviewControlsLayoutMargin</item>
+        <item name="android:elevation">@dimen/navigationComponentElevation</item>
     </style>
 
     <style name="SygicSearchFabStyle">

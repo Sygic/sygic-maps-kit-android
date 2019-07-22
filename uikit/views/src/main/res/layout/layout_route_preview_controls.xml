@@ -28,7 +28,7 @@
 
     <merge
         tools:background="@drawable/bg_navigation_light_rounded"
-        tools:elevation="@dimen/defaultNavigationElevation"
+        tools:elevation="@dimen/navigationComponentElevation"
         tools:gravity="center"
         tools:layout_gravity="center"
         tools:layout_height="wrap_content"
