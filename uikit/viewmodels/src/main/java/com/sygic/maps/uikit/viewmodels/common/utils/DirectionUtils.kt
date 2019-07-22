@@ -97,27 +97,27 @@ object DirectionUtils {
 
     @StringRes
     fun getDirectionInstruction(@RouteManeuver.Type direction: Int): Int = when (direction) {
-        RouteManeuver.Type.KeepRight -> R.string.direction_keep_right
-        RouteManeuver.Type.KeepLeft -> R.string.direction_keep_left
-        RouteManeuver.Type.EasyRight -> R.string.direction_easy_right
-        RouteManeuver.Type.EasyLeft -> R.string.direction_easy_Left
-        RouteManeuver.Type.Right -> R.string.direction_turn_right
-        RouteManeuver.Type.Left -> R.string.direction_turn_left
-        RouteManeuver.Type.SharpRight -> R.string.direction_sharp_right
-        RouteManeuver.Type.SharpLeft -> R.string.direction_sharp_left
-        RouteManeuver.Type.Via -> R.string.direction_via
-        RouteManeuver.Type.Straight -> R.string.direction_straight
-        RouteManeuver.Type.UTurnRight -> R.string.direction_uturn_right
-        RouteManeuver.Type.UTurnLeft -> R.string.direction_uturn_left
-        RouteManeuver.Type.End -> R.string.direction_end
-        RouteManeuver.Type.Start -> R.string.direction_start
-        RouteManeuver.Type.Ferry -> R.string.direction_ferry
-        RouteManeuver.Type.StateBoundary -> R.string.direction_border_crossing
-        RouteManeuver.Type.Follow -> R.string.direction_straight
-        RouteManeuver.Type.ExitRight -> R.string.direction_exit_right
-        RouteManeuver.Type.ExitLeft -> R.string.direction_exit_left
-        RouteManeuver.Type.Motorway -> R.string.direction_highway
-        RouteManeuver.Type.Tunnel -> R.string.direction_tunnel
+        RouteManeuver.Type.KeepRight -> R.string.keep_right
+        RouteManeuver.Type.KeepLeft -> R.string.keep_left
+        RouteManeuver.Type.EasyRight -> R.string.turn_slightly_right
+        RouteManeuver.Type.EasyLeft -> R.string.turn_slightly_left
+        RouteManeuver.Type.Right -> R.string.turn_right
+        RouteManeuver.Type.Left -> R.string.turn_left
+        RouteManeuver.Type.SharpRight -> R.string.sharp_right
+        RouteManeuver.Type.SharpLeft -> R.string.sharp_left
+        RouteManeuver.Type.Via -> R.string.via
+        RouteManeuver.Type.Straight -> R.string.follow_the_route
+        RouteManeuver.Type.UTurnRight -> R.string.make_u_turn
+        RouteManeuver.Type.UTurnLeft -> R.string.make_u_turn
+        RouteManeuver.Type.End -> R.string.finish
+        RouteManeuver.Type.Start -> R.string.start
+        RouteManeuver.Type.Ferry -> R.string.take_the_ferry
+        RouteManeuver.Type.StateBoundary -> R.string.entry_into
+        RouteManeuver.Type.Follow -> R.string.follow_the_route
+        RouteManeuver.Type.ExitRight -> R.string.exit_right
+        RouteManeuver.Type.ExitLeft -> R.string.exit_left
+        RouteManeuver.Type.Motorway -> R.string.take_the_motorway
+        RouteManeuver.Type.Tunnel -> R.string.tunnel
         RouteManeuver.Type.RoundaboutE,
         RouteManeuver.Type.RoundaboutN,
         RouteManeuver.Type.RoundaboutNE,
@@ -133,7 +133,7 @@ object DirectionUtils {
         RouteManeuver.Type.RoundaboutLeftS,
         RouteManeuver.Type.RoundaboutLeftSE,
         RouteManeuver.Type.RoundaboutLeftSW,
-        RouteManeuver.Type.RoundaboutLeftW -> R.string.direction_roundabout
+        RouteManeuver.Type.RoundaboutLeftW -> R.string.roundabout_exit
         else -> 0
     }
 }
