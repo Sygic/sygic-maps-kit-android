@@ -25,70 +25,59 @@
 package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.annotation.CallSuper
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
-import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.DirectionInfo
-import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class BaseSignpostViewModel(
     private val regionalManager: RegionalManager,
     private val navigationManager: NavigationManager
-) : ViewModel(), NavigationManager.OnDirectionListener, NavigationManager.OnNaviSignListener {
+) : ViewModel(), NavigationManager.OnDirectionListener {
 
     val distance: MutableLiveData<String> = MutableLiveData()
     val primaryDirection: MutableLiveData<Int> = MutableLiveData()
     val secondaryDirection: MutableLiveData<Int> = MutableLiveData()
     val secondaryDirectionText: Int = R.string.then
     val secondaryDirectionContainerVisible: MutableLiveData<Boolean> = MutableLiveData(false)
+    val instructionText: MutableLiveData<TextHolder> = MutableLiveData(TextHolder.empty())
 
-    private var distanceUnits: DistanceUnits = DistanceUnits.KILOMETERS
-    private var directionInfo: DirectionInfo? = null
-        set(value) {
-            value?.let {
-                if (field != it) {
-                    field = it
-                    distance.value = it.getDistanceWithUnits(distanceUnits)
-                    primaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.PRIMARY)
-                    secondaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.SECONDARY)
-                    secondaryDirectionContainerVisible.value = it.secondary.isValid
-                }
-            }
-        }
+    protected var distanceUnits: DistanceUnits = DistanceUnits.KILOMETERS
+    protected val directionInfo: MutableLiveData<DirectionInfo?> = MutableLiveData()
 
     private val distanceUnitsObserver = Observer<DistanceUnits> { distanceUnits -> this.distanceUnits = distanceUnits }
+    private val directionInfoObserver = Observer<DirectionInfo?> { directionInfo ->
+        directionInfo?.let {
+            distance.value = it.getDistanceWithUnits(distanceUnits)
+            primaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.PRIMARY)
+            secondaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.SECONDARY)
+            secondaryDirectionContainerVisible.value = it.secondary.isValid
+        }
+    }
 
     init {
-        navigationManager.addOnNaviSignListener(this)
         navigationManager.addOnDirectionListener(this)
+        directionInfo.observeForever(directionInfoObserver)
         regionalManager.distanceUnits.observeForever(distanceUnitsObserver)
     }
 
-    override fun onDirectionInfoChanged(directionInfo: DirectionInfo) {
-        this.directionInfo = directionInfo
-    }
-
-    override fun onNaviSignChanged(naviSignInfoList: List<NaviSignInfo>) =
-        onNaviSignInfoOnRouteChanged(naviSignInfoList.getNaviSignInfoOnRoute())
-
     @CallSuper
-    protected open fun onNaviSignInfoOnRouteChanged(naviSignInfo: NaviSignInfo?) {
-        naviSignInfo?.let { /* todo: waiting for final specification */ } ?: run { /* todo: waiting for final specification */ }
+    override fun onDirectionInfoChanged(directionInfo: DirectionInfo) {
+        this.directionInfo.value = directionInfo
     }
 
     override fun onCleared() {
         super.onCleared()
 
-        navigationManager.removeOnNaviSignListener(this)
         navigationManager.removeOnDirectionListener(this)
         regionalManager.distanceUnits.removeObserver(distanceUnitsObserver)
     }

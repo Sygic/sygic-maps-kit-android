@@ -160,7 +160,9 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         val binding = LayoutNavigationBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.navigationFragmentViewModel = fragmentViewModel
+        //ToDO: ViewStub
         binding.fullSignpostViewModel = fullSignpostViewModel
+        binding.simplifiedSignpostViewModel = simplifiedSignpostViewModel
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {
             root.addView(it, 0)

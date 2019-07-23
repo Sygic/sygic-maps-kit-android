@@ -29,6 +29,8 @@ import androidx.annotation.StringRes
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.sdk.route.RouteManeuver
 
+internal fun RouteManeuver.nextRoadText(): String = if (nextRoadName.isNotEmpty()) nextRoadName else nextRoadNumber
+
 internal fun RouteManeuver.isRoundabout(): Boolean = when (type) {
     RouteManeuver.Type.RoundaboutE,
     RouteManeuver.Type.RoundaboutN,
@@ -50,7 +52,7 @@ internal fun RouteManeuver.isRoundabout(): Boolean = when (type) {
 }
 
 @DrawableRes
-internal fun Int.getDirectionDrawable(): Int = when (this) {
+internal fun RouteManeuver.getDirectionDrawable(): Int = when (type) {
     RouteManeuver.Type.KeepRight -> R.drawable.ic_direction_right_keep
     RouteManeuver.Type.KeepLeft -> R.drawable.ic_direction_left_keep
     RouteManeuver.Type.EasyRight -> R.drawable.ic_direction_right_45
@@ -92,7 +94,7 @@ internal fun Int.getDirectionDrawable(): Int = when (this) {
 }
 
 @StringRes
-internal fun Int.getDirectionInstruction(): Int = when (this) {
+internal fun RouteManeuver.getDirectionInstruction(): Int = when (type) {
     RouteManeuver.Type.KeepRight -> R.string.keep_right
     RouteManeuver.Type.KeepLeft -> R.string.keep_left
     RouteManeuver.Type.EasyRight -> R.string.turn_slightly_right
@@ -129,6 +131,6 @@ internal fun Int.getDirectionInstruction(): Int = when (this) {
     RouteManeuver.Type.RoundaboutLeftS,
     RouteManeuver.Type.RoundaboutLeftSE,
     RouteManeuver.Type.RoundaboutLeftSW,
-    RouteManeuver.Type.RoundaboutLeftW -> R.string.roundabout_exit
+    RouteManeuver.Type.RoundaboutLeftW -> R.string.exit_number
     else -> 0
 }

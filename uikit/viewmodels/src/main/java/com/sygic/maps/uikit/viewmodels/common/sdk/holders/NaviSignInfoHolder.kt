@@ -22,28 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.signpost
+package com.sygic.maps.uikit.viewmodels.common.sdk.holders
 
-import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.extensions.createInstructionText
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.sdk.navigation.NavigationManager
+import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
-/**
- * A [SimplifiedSignpostViewModel] TODO
- */
-@AutoFactory
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SimplifiedSignpostViewModel internal constructor(
-    regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
+data class NaviSignInfoHolder(val naviSignInfo: NaviSignInfo? = null) {
 
-    init {
-        directionInfo.observeForever { directionInfo ->
-            directionInfo?.let {
-                instructionText.value = it.createInstructionText()
-            }
+    companion object {
+
+        @JvmStatic
+        fun empty(): NaviSignInfoHolder {
+            return NaviSignInfoHolder()
+        }
+
+        @JvmStatic
+        fun from(naviSignInfo: NaviSignInfo?): NaviSignInfoHolder {
+            return NaviSignInfoHolder(naviSignInfo = naviSignInfo)
         }
     }
+
+    fun isEmpty() = naviSignInfo == null
+    fun isNotEmpty() = !isEmpty()
 }

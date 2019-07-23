@@ -54,7 +54,7 @@ buildscript {
         constraintLayoutVersion = '1.1.3'
         annotationsVersion = '1.0.0'
         playServicesLocationVersion = '16.0.0'
-        sygicSdkVersion = '13.2.0'
+        sygicSdkVersion = '14.0.0'
         daggerVersion = '2.19'
         javaxInjectVersion = '1'
         javaPoetVersion = '1.11.1'

@@ -28,6 +28,7 @@ import android.app.Activity
 import android.app.Application
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
@@ -38,6 +39,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
@@ -51,6 +53,7 @@ import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
 import com.sygic.sdk.navigation.warnings.DirectionInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
+import com.sygic.sdk.navigation.warnings.NaviSignInfo.SignElement.SignElementType
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.route.RouteInfo
@@ -145,11 +148,13 @@ fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
     }
 }
 
-fun List<SearchResult>.toSearchResultList(): List<SearchResultItem<out SearchResult>> = mapNotNull { it.toSearchResultItem() }
+fun List<SearchResult>.toSearchResultList(): List<SearchResultItem<out SearchResult>> =
+    mapNotNull { it.toSearchResultItem() }
 
 fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList(): List<SearchResult> = mapNotNull { it.dataPayload }
 
-fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) = Search().loadDetails(this, DetailRequest(), callback)
+fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) =
+    Search().loadDetails(this, DetailRequest(), callback)
 
 fun Activity.getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) =
     application.getLastValidLocation(lastValidLocationCallback)
@@ -182,6 +187,13 @@ fun Application.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: 
     }
 }
 
+fun List<NaviSignInfo.SignElement>.concat(): String = StringBuilder().apply {
+    this@concat.forEach {
+        if (isNotEmpty()) append(", ")
+        append(it.text)
+    }
+}.toString()
+
 fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
     this.filter { it.isOnRoute }.let { isOnRouteList ->
         if (isOnRouteList.isEmpty()) {
@@ -194,10 +206,10 @@ fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
 
 fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
     val roadSigns = mutableListOf<RoadSignData>()
-    val hasPic = signElements.find { it.elementType == NaviSignInfo.SignElement.SignElementType.Pictogram } != null
+    val hasPic = signElements.find { it.elementType == SignElementType.Pictogram } != null
     signElements
         .asSequence()
-        .filter { it.elementType == NaviSignInfo.SignElement.SignElementType.RouteNumber }
+        .filter { it.elementType == SignElementType.RouteNumber }
         .take(if (hasPic) maxRoadSignsCount - 1 else maxRoadSignsCount)
         .toList()
         .forEach { signElement ->
@@ -217,6 +229,44 @@ fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
     return roadSigns
 }
 
+fun NaviSignInfo.createInstructionText(): TextHolder {
+    val acceptedSignElements = signElements
+        .filter { element -> element.elementType.let { it == SignElementType.ExitNumber || it == SignElementType.PlaceName || it == SignElementType.OtherDestination } }
+        .sortedByDescending { it.elementType == SignElementType.ExitNumber }
+
+    return if (acceptedSignElements.any { it.elementType == SignElementType.ExitNumber }) {
+        TextHolder.from(R.string.exit_number, acceptedSignElements.concat())
+    } else {
+        TextHolder.from(acceptedSignElements.concat())
+    }
+}
+
+fun DirectionInfo.createInstructionText(naviSignInfo: NaviSignInfo? = null): TextHolder { //ToDo: Continue along (Follow the route)
+    naviSignInfo?.let {
+        return it.createInstructionText()
+    }
+
+    with(primary) {
+        if (!isValid) {
+            return TextHolder.empty()
+        }
+
+        if (isRoundabout()) {
+            getDirectionInstruction().let {
+                return if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty()
+            }
+        }
+
+        with(nextRoadText()) {
+            if (isNotEmpty()) return TextHolder.from(this)
+        }
+
+        getDirectionInstruction().let {
+            return if (it != 0) TextHolder.from(it) else TextHolder.empty()
+        }
+    }
+}
+
 fun DirectionInfo.getDistanceWithUnits(distanceUnits: DistanceUnits): String =
     Distance.getFormattedDistance(distanceUnits, distance)
 
@@ -227,5 +277,5 @@ fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverT
         DirectionManeuverType.SECONDARY -> secondary
     }
 
-    return if (routeManeuver.isValid) routeManeuver.type.getDirectionDrawable() else 0
+    return if (routeManeuver.isValid) routeManeuver.getDirectionDrawable() else 0
 }

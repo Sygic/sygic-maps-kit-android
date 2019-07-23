@@ -39,6 +39,10 @@
             name="fullSignpostViewModel"
             type="com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel" />
 
+        <variable
+            name="simplifiedSignpostViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,11 +52,15 @@
         android:clipChildren="false"
         android:focusable="true">
 
+        <!--TODO: ViewStub-->
+
         <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
+            android:id="@+id/fullSignpostView"
             android:layout_width="232dp"
             android:layout_height="wrap_content"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
             app:distance="@{fullSignpostViewModel.distance}"
+            app:instructionText="@{fullSignpostViewModel.instructionText}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:pictogram="@{fullSignpostViewModel.pictogram}"
@@ -63,6 +71,22 @@
             app:secondaryDirectionText="@{fullSignpostViewModel.secondaryDirectionText}"
             tools:background="@drawable/bg_navigation_dark_rounded"
             tools:layout_height="152dp"
+            tools:layout_margin="@dimen/signpostViewLayoutMargin" />
+
+        <com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
+            android:layout_width="232dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
+            app:distance="@{simplifiedSignpostViewModel.distance}"
+            app:instructionText="@{simplifiedSignpostViewModel.instructionText}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fullSignpostView"
+            app:primaryDirection="@{simplifiedSignpostViewModel.primaryDirection}"
+            app:secondaryDirection="@{simplifiedSignpostViewModel.secondaryDirection}"
+            app:secondaryDirectionContainerVisible="@{safeUnbox(simplifiedSignpostViewModel.secondaryDirectionContainerVisible)}"
+            app:secondaryDirectionText="@{simplifiedSignpostViewModel.secondaryDirectionText}"
+            tools:background="@drawable/bg_navigation_dark_rounded"
+            tools:layout_height="92dp"
             tools:layout_margin="@dimen/signpostViewLayoutMargin" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
