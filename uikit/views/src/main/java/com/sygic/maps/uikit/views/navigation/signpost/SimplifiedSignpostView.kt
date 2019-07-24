@@ -126,7 +126,7 @@ open class SimplifiedSignpostView @JvmOverloads constructor(
      * @param secondaryDirectionText [String] text to be displayed
      */
     fun setSecondaryDirectionText(secondaryDirectionText: String?) {
-        binding.signpostSecondaryDirectionTextView.text = secondaryDirectionText
+        binding.signpostSecondaryDirectionTextView?.text = secondaryDirectionText
     }
 
     /**
@@ -153,6 +153,6 @@ open class SimplifiedSignpostView @JvmOverloads constructor(
      * @param instructionText [String] text to be displayed
      */
     fun setInstructionText(instructionText: String?) {
-        binding.signpostInstructionTextView.text = instructionText
+        binding.signpostInstructionTextView?.text = instructionText
     }
 }

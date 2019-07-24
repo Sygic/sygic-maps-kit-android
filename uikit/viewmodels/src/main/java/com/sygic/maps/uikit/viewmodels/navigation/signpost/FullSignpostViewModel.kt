@@ -26,30 +26,58 @@ package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.createInstructionText
+import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
 import com.sygic.maps.uikit.viewmodels.common.extensions.pictogramDrawableRes
 import com.sygic.maps.uikit.viewmodels.common.extensions.roadSigns
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
+import com.sygic.maps.uikit.viewmodels.common.sdk.holders.NaviSignInfoHolder
+import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
+import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
+private const val EMPTY_PICTOGRAM = 0
+
 /**
- * A [FullSignpostViewModel] /* todo: waiting for final specification */
+ * A [FullSignpostViewModel] is a basic ViewModel implementation for the [FullSignpostView] class. It listens to
+ * the Sygic SDK [NavigationManager.OnDirectionListener] and [NavigationManager.OnNaviSignListener] and updates the
+ * distance, primaryDirection, secondaryDirection, secondaryDirectionText, instructionText, pictogram and roadSigns
+ * in the [FullSignpostView].
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class FullSignpostViewModel internal constructor(
     regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
+    private val navigationManager: NavigationManager
+) : BaseSignpostViewModel(regionalManager, navigationManager), NavigationManager.OnNaviSignListener {
 
-    val pictogram: MutableLiveData<Int> = MutableLiveData(0)
+    val pictogram: MutableLiveData<Int> = MutableLiveData(EMPTY_PICTOGRAM)
     val roadSigns: MutableLiveData<List<RoadSignData>> = MutableLiveData(listOf())
 
-    override fun onNaviSignInfoOnRouteChanged(naviSignInfo: NaviSignInfo?) {
-        super.onNaviSignInfoOnRouteChanged(naviSignInfo)
+    private val naviSignInfoHolder: MutableLiveData<NaviSignInfoHolder> = MutableLiveData(NaviSignInfoHolder.empty())
 
-        roadSigns.value = naviSignInfo?.roadSigns() ?: listOf()
-        pictogram.value = naviSignInfo?.pictogramDrawableRes() ?: 0
+    init {
+        navigationManager.addOnNaviSignListener(this)
+        directionInfo.combineLatest(naviSignInfoHolder).observeForever {
+            it.first?.let { directionInfo ->
+                instructionText.value = directionInfo.createInstructionText(it.second.naviSignInfo)
+            }
+        }
+    }
+
+    override fun onNaviSignChanged(naviSignInfoList: List<NaviSignInfo>) {
+        naviSignInfoList.getNaviSignInfoOnRoute().let {
+            naviSignInfoHolder.value = NaviSignInfoHolder.from(it)
+            roadSigns.value = it?.roadSigns() ?: listOf()
+            pictogram.value = it?.pictogramDrawableRes() ?: EMPTY_PICTOGRAM
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        navigationManager.removeOnNaviSignListener(this)
     }
 }

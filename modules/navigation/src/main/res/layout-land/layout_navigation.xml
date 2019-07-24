@@ -36,10 +36,6 @@
             type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
 
         <variable
-            name="fullSignpostViewModel"
-            type="com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel" />
-
-        <variable
             name="routePreviewControlsViewModel"
             type="com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel" />
 
@@ -52,22 +48,14 @@
         android:clipChildren="false"
         android:focusable="true">
 
-        <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
+        <ViewStub
+            android:id="@+id/signpostViewViewStub"
             android:layout_width="232dp"
             android:layout_height="wrap_content"
+            android:layout="@{navigationFragmentViewModel.signpostLayout}"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
-            app:distance="@{fullSignpostViewModel.distance}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:pictogram="@{fullSignpostViewModel.pictogram}"
-            app:primaryDirection="@{fullSignpostViewModel.primaryDirection}"
-            app:roadSigns="@{fullSignpostViewModel.roadSigns}"
-            app:secondaryDirection="@{fullSignpostViewModel.secondaryDirection}"
-            app:secondaryDirectionContainerVisible="@{safeUnbox(fullSignpostViewModel.secondaryDirectionContainerVisible)}"
-            app:secondaryDirectionText="@{fullSignpostViewModel.secondaryDirectionText}"
-            tools:background="@drawable/bg_navigation_dark_rounded"
-            tools:layout_height="152dp"
-            tools:layout_margin="@dimen/signpostViewLayoutMargin" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
             android:layout_width="wrap_content"

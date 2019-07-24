@@ -23,21 +23,25 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <declare-styleable name="NavigationFragment">
-        <attr name="sygic_navigation_distanceUnits" format="enum">
-            <enum name="kilometers" value="0" />
-            <enum name="miles_yards" value="1" />
-            <enum name="miles_feets" value="2" />
-        </attr>
-        <attr name="sygic_navigation_previewMode" format="boolean" />
-        <attr name="sygic_previewControls_enabled" format="boolean" />
-        <attr name="sygic_signpost_enabled" format="boolean" />
-        <attr name="sygic_signpost_type" format="enum">
-            <enum name="full" value="0" />
-            <enum name="simplified" value="1" />
-        </attr>
-    </declare-styleable>
+    <data>
 
-</resources>
+        <variable
+            name="signpostViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel" />
+
+    </data>
+
+    <com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:distance="@{signpostViewModel.distance}"
+        app:instructionText="@{signpostViewModel.instructionText}"
+        app:primaryDirection="@{signpostViewModel.primaryDirection}"
+        app:secondaryDirection="@{signpostViewModel.secondaryDirection}"
+        app:secondaryDirectionContainerVisible="@{safeUnbox(signpostViewModel.secondaryDirectionContainerVisible)}"
+        app:secondaryDirectionText="@{signpostViewModel.secondaryDirectionText}" />
+
+</layout>

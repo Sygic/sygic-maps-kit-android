@@ -29,14 +29,18 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
+import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
@@ -54,6 +58,7 @@ import javax.inject.Inject
 const val NAVIGATION_FRAGMENT_TAG = "navigation_map_fragment_tag"
 internal const val KEY_DISTANCE_UNITS = "distance_units"
 internal const val KEY_SIGNPOST_ENABLED = "signpost_enabled"
+internal const val KEY_SIGNPOST_TYPE = "signpost_type"
 internal const val KEY_PREVIEW_CONTROLS_ENABLED = "preview_controls_enabled"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_ROUTE_INFO = "route_info"
@@ -67,8 +72,6 @@ internal const val KEY_ROUTE_INFO = "route_info"
 class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
-    private lateinit var fullSignpostViewModel: FullSignpostViewModel
-    private lateinit var simplifiedSignpostViewModel: SimplifiedSignpostViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
 
     @Inject
@@ -99,6 +102,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
 
     /**
      * A *[signpostEnabled]* modifies the SignpostView ([FullSignpostView] or [SimplifiedSignpostView]) visibility.
+     * Note, this need to be set before the [NavigationFragment] commit transaction.
      *
      * @param [Boolean] true to enable the SignpostView, false otherwise.
      *
@@ -106,13 +110,26 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
      */
     var signpostEnabled: Boolean
         get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.signpostEnabled.value!!
+            fragmentViewModel.signpostEnabled
         } else arguments.getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
         set(value) {
             arguments = Bundle(arguments).apply { putBoolean(KEY_SIGNPOST_ENABLED, value) }
-            if (::fragmentViewModel.isInitialized) {
-                fragmentViewModel.signpostEnabled.value = value
-            }
+        }
+
+    /**
+     * A *[signpostType]* defines the SignpostView ([FullSignpostView] or [SimplifiedSignpostView]) type to be used.
+     * Note, this need to be set before the [NavigationFragment] commit transaction.
+     *
+     * @param [SignpostType] FULL -> [FullSignpostView], SIMPLIFIED -> [SimplifiedSignpostView].
+     *
+     * @return the current signpostView type value.
+     */
+    var signpostType: SignpostType
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.signpostType
+        } else arguments.getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE
+        set(value) {
+            arguments = Bundle(arguments).apply { putParcelable(KEY_SIGNPOST_TYPE, value) }
         }
 
     /**
@@ -173,8 +190,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments)
-        fullSignpostViewModel = viewModelOf(FullSignpostViewModel::class.java)
-        simplifiedSignpostViewModel = viewModelOf(SimplifiedSignpostViewModel::class.java)
         routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
@@ -184,8 +199,21 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         val binding = LayoutNavigationBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.navigationFragmentViewModel = fragmentViewModel
-        binding.fullSignpostViewModel = fullSignpostViewModel
         binding.routePreviewControlsViewModel = routePreviewControlsViewModel
+
+        binding.signpostViewViewStub.setOnInflateListener { _, view ->
+            DataBindingUtil.bind<ViewDataBinding>(view)?.let {
+                it.lifecycleOwner = this
+                it.setVariable(
+                    BR.signpostViewModel, when (view) {
+                        is FullSignpostView -> viewModelOf(FullSignpostViewModel::class.java)
+                        is SimplifiedSignpostView -> viewModelOf(SimplifiedSignpostViewModel::class.java)
+                        else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
+                    }
+                )
+            }
+        }
+
         val root = binding.root as ViewGroup
         super.onCreateView(inflater, root, savedInstanceState)?.let {
             root.addView(it, 0)
@@ -215,6 +243,14 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                         R.styleable.NavigationFragment_sygic_signpost_enabled,
                         SIGNPOST_ENABLED_DEFAULT_VALUE
                     )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_signpost_type)) {
+                signpostType = SignpostType.atIndex(
+                    getInt(
+                        R.styleable.NavigationFragment_sygic_signpost_type,
+                        SIGNPOST_TYPE_DEFAULT_VALUE.ordinal
+                    )
+                )
             }
             if (hasValue(R.styleable.NavigationFragment_sygic_navigation_previewMode)) {
                 previewMode =

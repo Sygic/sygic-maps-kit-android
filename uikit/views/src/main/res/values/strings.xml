@@ -60,5 +60,5 @@
     <string name="take_the_motorway">Take the motorway</string>
     <string name="tunnel">Tunnel</string>
     <string name="via">Via</string>
-    <string name="roundabout_exit">Exit %1$d</string>
+    <string name="exit_number">Exit %s</string>
 </resources>

@@ -50,9 +50,23 @@ open class TextHolder private constructor(
         fun from(text: String): TextHolder {
             return TextHolder(textString = text)
         }
+
+        @JvmStatic
+        fun from(@StringRes resId: Int, text: String): TextHolder {
+            return TextHolder(textResource = resId, textString = text)
+        }
+
+        @JvmStatic
+        fun from(@StringRes resId: Int, number: Int): TextHolder {
+            return TextHolder(textResource = resId, textString = number.toString())
+        }
     }
 
     open fun getText(context: Context): String {
+        if (textResource != NO_ID && textString.isNotEmpty()) {
+            return String.format(context.getString(textResource), textString)
+        }
+
         if (textResource != NO_ID) {
             return context.getString(textResource)
         }

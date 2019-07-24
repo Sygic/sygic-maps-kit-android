@@ -25,11 +25,15 @@
 package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.createInstructionText
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
+import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.sdk.navigation.NavigationManager
 
 /**
- * A [SimplifiedSignpostViewModel] /* todo: waiting for final specification */
+ * A [SimplifiedSignpostViewModel] is a basic ViewModel implementation for the [SimplifiedSignpostView] class. It listens to
+ * the Sygic SDK [NavigationManager.OnDirectionListener] and updates the distance, primaryDirection, secondaryDirection,
+ * secondaryDirectionText and instructionText in the [SimplifiedSignpostView].
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -37,5 +41,8 @@ open class SimplifiedSignpostViewModel internal constructor(
     regionalManager: RegionalManager,
     navigationManager: NavigationManager
 ) : BaseSignpostViewModel(regionalManager, navigationManager) {
-    /* todo: waiting for final specification */
+
+    init {
+        directionInfo.observeForever { it?.let { instructionText.value = it.createInstructionText() } }
+    }
 }
