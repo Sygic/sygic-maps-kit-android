@@ -28,31 +28,23 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
-            name="navigationFragmentViewModel"
-            type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
+            name="signpostViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel" />
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:clipChildren="false"
-        android:focusable="true">
-
-        <ViewStub
-            android:id="@+id/signpostViewViewStub"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout="@{navigationFragmentViewModel.signpostLayout}"
-            android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
+        android:id="@+id/fullSignpostView"
+        android:layout_width="232dp"
+        android:layout_height="wrap_content"
+        app:distance="@{signpostViewModel.distance}"
+        app:instructionText="@{signpostViewModel.instructionText}"
+        app:pictogram="@{signpostViewModel.pictogram}"
+        app:primaryDirection="@{signpostViewModel.primaryDirection}"
+        app:roadSigns="@{signpostViewModel.roadSigns}"
+        app:secondaryDirection="@{signpostViewModel.secondaryDirection}"
+        app:secondaryDirectionContainerVisible="@{safeUnbox(signpostViewModel.secondaryDirectionContainerVisible)}"
+        app:secondaryDirectionText="@{signpostViewModel.secondaryDirectionText}" />
 
 </layout>

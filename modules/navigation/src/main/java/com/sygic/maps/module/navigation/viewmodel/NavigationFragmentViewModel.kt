@@ -26,17 +26,22 @@ package com.sygic.maps.module.navigation.viewmodel
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.LayoutRes
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
+import com.sygic.maps.module.navigation.*
 import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
 import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
+import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
@@ -79,7 +84,10 @@ class NavigationFragmentViewModel internal constructor(
     private val routeDemonstrationManager: RouteDemonstrationManager
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
 
-    val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
+    @LayoutRes
+    val signpostLayout: Int
+    val signpostType: SignpostType
+    val signpostEnabled: Boolean
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
@@ -91,8 +99,14 @@ class NavigationFragmentViewModel internal constructor(
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
-            signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
+            signpostEnabled = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
+            signpostType = getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE
             getParcelableValue<RouteInfo>(KEY_ROUTE_INFO)?.let { routeInfo.value = it }
+        }
+
+        signpostLayout = when (signpostType) {
+            SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
+            SignpostType.SIMPLIFIED -> R.layout.layout_signpost_simplified_view_stub
         }
 
         routeInfo.observeForever(::setRouteInfo)

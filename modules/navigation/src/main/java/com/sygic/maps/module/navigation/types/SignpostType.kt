@@ -22,24 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.signpost
+package com.sygic.maps.module.navigation.types
 
-import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.extensions.createInstructionText
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.sdk.navigation.NavigationManager
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-/**
- * A [SimplifiedSignpostViewModel] TODO
- */
-@AutoFactory
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SimplifiedSignpostViewModel internal constructor(
-    regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
+@Parcelize
+enum class SignpostType : Parcelable {
+    FULL, SIMPLIFIED;
 
-    init {
-        directionInfo.observeForever { it?.let { instructionText.value = it.createInstructionText() } }
+    companion object {
+        fun atIndex(index: Int) = values()[index]
     }
 }
