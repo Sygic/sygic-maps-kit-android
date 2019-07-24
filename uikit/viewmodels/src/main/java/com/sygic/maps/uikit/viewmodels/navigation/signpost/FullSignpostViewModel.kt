@@ -34,13 +34,17 @@ import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.holders.NaviSignInfoHolder
 import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
+import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
 private const val EMPTY_PICTOGRAM = 0
 
 /**
- * A [FullSignpostViewModel] TODO
+ * A [FullSignpostViewModel] is a basic ViewModel implementation for the [FullSignpostView] class. It listens to
+ * the Sygic SDK [NavigationManager.OnDirectionListener] and [NavigationManager.OnNaviSignListener] and updates the
+ * distance, primaryDirection, secondaryDirection, secondaryDirectionText, instructionText, pictogram and roadSigns
+ * in the [FullSignpostView].
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
