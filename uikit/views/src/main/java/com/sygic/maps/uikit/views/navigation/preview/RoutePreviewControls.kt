@@ -33,7 +33,7 @@ import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.ToggleImageButton
-import com.sygic.maps.uikit.views.databinding.LayoutRoutePreviewControlsBinding
+import com.sygic.maps.uikit.views.databinding.LayoutRoutePreviewControlsInternalBinding
 import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 
 /**
@@ -51,8 +51,8 @@ open class RoutePreviewControls @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicRoutePreviewControlsStyle
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: LayoutRoutePreviewControlsBinding =
-        LayoutRoutePreviewControlsBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding: LayoutRoutePreviewControlsInternalBinding =
+        LayoutRoutePreviewControlsInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     private var layoutMargin: Int = 0
     private var layoutMarginTop: Int = 0
