@@ -62,6 +62,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
+            android:id="@+id/routePreviewControls"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.previewMode) &amp;&amp; safeUnbox(navigationFragmentViewModel.previewControlsEnabled) ? View.VISIBLE : View.GONE}"
