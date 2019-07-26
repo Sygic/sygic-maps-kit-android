@@ -22,14 +22,26 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.component
+package com.sygic.maps.uikit.views.navigation.infobar.items
 
-import com.sygic.maps.module.navigation.types.SignpostType
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+private const val DEFAULT_DIVIDER = " | "
 
-val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnits.KILOMETERS
-val SIGNPOST_TYPE_DEFAULT_VALUE = SignpostType.FULL
-const val PREVIEW_MODE_DEFAULT_VALUE = false
-const val PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE = true
-const val SIGNPOST_ENABLED_DEFAULT_VALUE = true
-const val INFOBAR_ENABLED_DEFAULT_VALUE = true
+class InfobarItemsHolder(
+    vararg val items: String = emptyArray(),
+    val divider: String = DEFAULT_DIVIDER,
+    val prefix: String = "",
+    val postfix: String = "",
+    val limit: Int = -1
+) {
+
+    companion object {
+
+        @JvmStatic
+        fun empty(): InfobarItemsHolder {
+            return InfobarItemsHolder()
+        }
+    }
+
+    fun isEmpty() = items.isEmpty()
+    fun isNotEmpty() = !isEmpty()
+}

@@ -25,9 +25,11 @@
 package com.sygic.maps.uikit.viewmodels.common.utils
 
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 object Distance {
@@ -111,4 +113,30 @@ object Distance {
             else -> (distance + 500).let { it - it % 1000 }
         }
     }
+}
+
+object Time {
+
+    fun getFormattedTime(seconds: Int): String {
+
+        val totalHours = TimeUnit.SECONDS.toHours(seconds.toLong())
+        val totalMinutes = TimeUnit.SECONDS.toMinutes(seconds.toLong())
+
+        val days = TimeUnit.SECONDS.toDays(seconds.toLong())
+        val hours = totalHours - days * 24
+        val minutes = totalMinutes - totalHours * 60
+
+        return when {
+            days > 0 -> "${days}d:${hours}h"
+            hours > 0 -> "${hours}h:${minutes}min"
+            minutes > 0 -> "${minutes}min"
+            seconds > 0 -> "1min"
+            else -> EMPTY_STRING
+        }
+    }
+}
+
+object Elevation {
+
+    fun getFormattedElevation(meters: Int): String = "${meters}mnm"
 }

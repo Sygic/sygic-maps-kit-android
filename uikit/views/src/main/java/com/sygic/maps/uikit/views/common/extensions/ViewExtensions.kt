@@ -43,9 +43,9 @@ fun TextView.text(textHolder: TextHolder) {
 }
 
 fun ImageView.tint(@ColorRes color: Int) {
-    imageTintList = AppCompatResources.getColorStateList(context, color)
+    if (color != 0) imageTintList = AppCompatResources.getColorStateList(context, color)
 }
 
 fun ImageView.backgroundTint(@ColorRes color: Int) {
-    backgroundTintList = AppCompatResources.getColorStateList(context, color)
+    if (color != 0) backgroundTintList = AppCompatResources.getColorStateList(context, color)
 }

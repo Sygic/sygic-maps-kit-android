@@ -39,10 +39,7 @@ import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
 import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
-import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -90,6 +87,7 @@ class NavigationFragmentViewModel internal constructor(
     val signpostLayout: Int
     val signpostType: SignpostType
     val signpostEnabled: Boolean
+    val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -102,6 +100,7 @@ class NavigationFragmentViewModel internal constructor(
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
+            infobarEnabled.value = getBoolean(KEY_INFOBAR_ENABLED, INFOBAR_ENABLED_DEFAULT_VALUE)
             previewControlsEnabled.value = getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
             signpostEnabled = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
             signpostType = getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE

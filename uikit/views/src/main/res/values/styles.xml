@@ -54,6 +54,20 @@
         <item name="android:background">@drawable/bg_compass</item>
     </style>
 
+    <style name="SygicInfobarStyle">
+        <item name="android:background">@drawable/bg_infobar_light_rounded</item>
+        <item name="android:layout_margin">@dimen/infobarLayoutMargin</item>
+        <item name="android:elevation">@dimen/navigationComponentElevation</item>
+        <item name="leftButtonIcon">@drawable/ic_more</item>
+        <item name="leftButtonIconTint">?attr/navigationLightTintColor</item>
+        <item name="leftButtonBackground">@drawable/bg_infobar_button_rounded</item>
+        <item name="leftButtonBackgroundTint">?android:attr/colorAccent</item>
+        <item name="rightButtonIcon">@drawable/ic_close</item>
+        <item name="rightButtonIconTint">?attr/navigationLightTintColor</item>
+        <item name="rightButtonBackground">@drawable/bg_infobar_button_rounded</item>
+        <item name="rightButtonBackgroundTint">@color/brick_red</item>
+    </style>
+
     <style name="SygicPositionLockFabStyle">
         <item name="android:tint">?android:attr/colorAccent</item>
         <item name="android:backgroundTint">?android:attr/colorBackground</item>

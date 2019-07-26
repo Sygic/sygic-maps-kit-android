@@ -22,14 +22,23 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.component
+package com.sygic.maps.module.common.di.module;
 
-import com.sygic.maps.module.navigation.types.SignpostType
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import android.app.Application;
+import androidx.annotation.NonNull;
+import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
+import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManagerImpl;
+import dagger.Module;
+import dagger.Provides;
 
-val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnits.KILOMETERS
-val SIGNPOST_TYPE_DEFAULT_VALUE = SignpostType.FULL
-const val PREVIEW_MODE_DEFAULT_VALUE = false
-const val PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE = true
-const val SIGNPOST_ENABLED_DEFAULT_VALUE = true
-const val INFOBAR_ENABLED_DEFAULT_VALUE = true
+import javax.inject.Singleton;
+
+@Module
+public class DateTimeManagerModule {
+
+    @Singleton
+    @Provides
+    DateTimeManager provideDateTimeManager(@NonNull final Application application) {
+        return DateTimeManagerImpl.getInstance(application);
+    }
+}

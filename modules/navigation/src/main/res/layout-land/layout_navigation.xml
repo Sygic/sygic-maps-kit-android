@@ -39,6 +39,10 @@
             name="routePreviewControlsViewModel"
             type="com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel" />
 
+        <variable
+            name="infobarViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.previewMode) &amp;&amp; safeUnbox(navigationFragmentViewModel.previewControlsEnabled) ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/infobar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:onPlayPauseButtonStateChangedListener="@{routePreviewControlsViewModel}"
@@ -72,6 +76,23 @@
             tools:layout_height="32dp"
             tools:layout_margin="@dimen/routePreviewControlsLayoutMargin"
             tools:layout_width="164dp" />
+
+        <com.sygic.maps.uikit.views.navigation.infobar.Infobar
+            android:id="@+id/infobar"
+            android:layout_width="344dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.infobarEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:leftButtonVisible="@{infobarViewModel.leftButtonVisible}"
+            app:onLeftButtonClickListener="@{() -> infobarViewModel.onLeftButtonClick()}"
+            app:onRightButtonClickListener="@{() -> infobarViewModel.onRightButtonClick()}"
+            app:primaryItemsHolder="@{infobarViewModel.primaryItemsHolder}"
+            app:rightButtonVisible="@{infobarViewModel.rightButtonVisible}"
+            app:secondaryItemsHolder="@{infobarViewModel.secondaryItemsHolder}"
+            tools:background="@drawable/bg_infobar_light_rounded"
+            tools:layout_height="64dp"
+            tools:layout_margin="@dimen/routePreviewControlsLayoutMargin" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -26,6 +26,7 @@ package com.sygic.maps.module.common.di;
 
 import android.app.Application;
 import com.sygic.maps.module.common.di.module.*;
+import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager;
 import com.sygic.maps.module.common.poi.manager.PoiDataManager;
@@ -37,6 +38,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
 import com.sygic.sdk.navigation.NavigationManager;
+import com.sygic.sdk.position.PositionManager;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -53,7 +55,9 @@ import javax.inject.Singleton;
                 SearchModule.class,
                 ThemeModule.class,
                 NavigationManagerModule.class,
-                RouteDemonstrationManagerModule.class
+                PositionManagerModule.class,
+                RouteDemonstrationManagerModule.class,
+                DateTimeManagerModule.class
         }
 )
 public interface ApplicationModulesComponent {
@@ -68,5 +72,7 @@ public interface ApplicationModulesComponent {
     ThemeManager getThemeManager();
     Application getApplication();
     NavigationManager getNavigationManager();
+    PositionManager getPositionManager();
     RouteDemonstrationManager getRouteDemonstrationManager();
+    DateTimeManager getDateTimeManager();
 }

@@ -22,14 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.component
+package com.sygic.maps.uikit.viewmodels.common.datetime
 
-import com.sygic.maps.module.navigation.types.SignpostType
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import androidx.annotation.RestrictTo
+import java.text.DateFormat
+import java.util.*
 
-val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnits.KILOMETERS
-val SIGNPOST_TYPE_DEFAULT_VALUE = SignpostType.FULL
-const val PREVIEW_MODE_DEFAULT_VALUE = false
-const val PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE = true
-const val SIGNPOST_ENABLED_DEFAULT_VALUE = true
-const val INFOBAR_ENABLED_DEFAULT_VALUE = true
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface DateTimeManager {
+    fun formatTime(date: Date): String = formatTime(date, DateFormat.SHORT)
+    fun formatTime(date: Date, style: Int): String
+    fun formatDate(date: Date): String = formatDate(date, DateFormat.SHORT)
+    fun formatDate(date: Date, style: Int): String
+    fun formatDuration(duration: Int): String
+}

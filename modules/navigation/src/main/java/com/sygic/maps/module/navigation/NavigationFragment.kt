@@ -31,12 +31,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
-import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
@@ -44,11 +41,13 @@ import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
@@ -61,6 +60,7 @@ internal const val KEY_SIGNPOST_ENABLED = "signpost_enabled"
 internal const val KEY_SIGNPOST_TYPE = "signpost_type"
 internal const val KEY_PREVIEW_CONTROLS_ENABLED = "preview_controls_enabled"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
+internal const val KEY_INFOBAR_ENABLED = "infobar_enabled"
 internal const val KEY_ROUTE_INFO = "route_info"
 
 /**
@@ -73,6 +73,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
+    private lateinit var infobarViewModel: InfobarViewModel
 
     @Inject
     internal lateinit var regionalManager: RegionalManager
@@ -169,6 +170,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         }
 
     /**
+     * A *[infobarEnabled]* modifies the [Infobar] view visibility.
+     *
+     * @param [Boolean] true to enable the [Infobar] view, false otherwise.
+     *
+     * @return whether the [Infobar] view is on or off.
+     */
+    var infobarEnabled: Boolean
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.infobarEnabled.value!!
+        } else arguments.getBoolean(KEY_INFOBAR_ENABLED, INFOBAR_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_INFOBAR_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.infobarEnabled.value = value
+            }
+        }
+
+    /**
      * If not-null *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
      *
      * @param [RouteInfo] route info object to be processed.
@@ -191,6 +210,11 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments)
         routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
+        infobarViewModel = viewModelOf(InfobarViewModel::class.java).apply {
+            this.activityFinishObservable.observe(
+                this@NavigationFragment,
+                Observer<Any> { requireActivity().finish() })
+        }
 
         lifecycle.addObserver(fragmentViewModel)
     }
@@ -200,6 +224,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         binding.lifecycleOwner = this
         binding.navigationFragmentViewModel = fragmentViewModel
         binding.routePreviewControlsViewModel = routePreviewControlsViewModel
+        binding.infobarViewModel = infobarViewModel
 
         binding.signpostViewViewStub.setOnInflateListener { _, view ->
             DataBindingUtil.bind<ViewDataBinding>(view)?.let {
@@ -264,6 +289,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                     getBoolean(
                         R.styleable.NavigationFragment_sygic_previewControls_enabled,
                         PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_infobar_enabled)) {
+                infobarEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_infobar_enabled,
+                        INFOBAR_ENABLED_DEFAULT_VALUE
                     )
             }
 
