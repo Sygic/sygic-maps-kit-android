@@ -29,6 +29,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -41,7 +43,14 @@ import com.sygic.maps.uikit.views.databinding.LayoutInfobarInternalBinding
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItemsHolder
 
 /**
- * A [Infobar] view  TODO
+ * A [Infobar] view can be used as an visual presentation component for the navigation info data (eta, distanceToEnd,
+ * altitude etc.) and as user interaction component. It contains two [ImageButton]'s (left/right) and pre-customized
+ * primary/secondary [TextView] which can be controlled with [InfobarItemsHolder] class.
+ *
+ * The [Infobar] design can be completely changed with the custom _infoBarStyle_ or the standard android
+ * attributes as _background_, _textColorPrimary_ or _textColorSecondary_ can be used. The [Infobar] view has also own
+ * attributes such as _leftButtonIcon_, _leftButtonIconTint_, _leftButtonBackground_, _leftButtonBackgroundTint_,
+ * _rightButtonIcon_, _rightButtonIconTint_, _rightButtonBackground_ and _rightButtonBackgroundTint_.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class Infobar @JvmOverloads constructor(

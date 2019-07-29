@@ -47,11 +47,10 @@ import com.sygic.sdk.position.PositionManager
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-/*TODO*/
 /**
  * A [InfobarViewModel] is a basic ViewModel implementation for the [Infobar] view class. It listens
- * to the [RouteDemonstrationManager.demonstrationState] and set appropriate state to the [RoutePreviewControls] view.
- * It also listens to the [RoutePreviewControls] user interaction callbacks and control the [RouteDemonstrationManager].
+ * to the [NavigationManager.OnNaviStatsListener] and set appropriate state to the [Infobar] view.
+ * It also listens to the [Infobar] left and right buttons actions.
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -98,13 +97,13 @@ open class InfobarViewModel internal constructor(
         )
     }
 
-    private fun formatRemainingTime(time: Int) = Time.getFormattedTime(time)
+    open fun formatRemainingTime(time: Int) = Time.getFormattedTime(time)
 
-    private fun formatRemainingDistance(distance: Int) = Distance.getFormattedDistance(distanceUnits, distance)
+    open fun formatRemainingDistance(distance: Int) = Distance.getFormattedDistance(distanceUnits, distance)
 
-    private fun formatCurrentElevation() = Elevation.getFormattedElevation(/*positionManager.lastKnownPosition.coordinates.altitude*/ 600) //TODO: Waiting from SDK PR
+    open fun formatCurrentElevation() = Elevation.getFormattedElevation(/*positionManager.lastKnownPosition.coordinates.altitude*/ 600) //TODO: Waiting from SDK PR
 
-    private fun formatEstimatedTime(estimatedTime: Int) =
+    open fun formatEstimatedTime(estimatedTime: Int) =
         dateTimeManager.formatTime(Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(estimatedTime.toLong())))
 
     open fun onLeftButtonClick() {
