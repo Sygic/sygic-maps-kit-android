@@ -242,6 +242,10 @@ fun NaviSignInfo.createInstructionText(): TextHolder {
 }
 
 fun DirectionInfo.createInstructionText(naviSignInfo: NaviSignInfo? = null): TextHolder {
+    if (this@createInstructionText.distance > 2000) { // 2km
+        return TextHolder.from(R.string.follow_the_route)
+    }
+
     naviSignInfo?.let {
         return it.createInstructionText()
     }
