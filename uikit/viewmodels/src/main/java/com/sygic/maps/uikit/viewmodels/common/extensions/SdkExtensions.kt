@@ -241,7 +241,7 @@ fun NaviSignInfo.createInstructionText(): TextHolder {
     }
 }
 
-fun DirectionInfo.createInstructionText(naviSignInfo: NaviSignInfo? = null): TextHolder { //ToDo: Continue along (Follow the route)
+fun DirectionInfo.createInstructionText(naviSignInfo: NaviSignInfo? = null): TextHolder {
     naviSignInfo?.let {
         return it.createInstructionText()
     }
