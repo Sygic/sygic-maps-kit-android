@@ -101,7 +101,8 @@ open class InfobarViewModel internal constructor(
 
     open fun formatRemainingDistance(distance: Int) = Distance.getFormattedDistance(distanceUnits, distance)
 
-    open fun formatCurrentElevation() = Elevation.getFormattedElevation(/*positionManager.lastKnownPosition.coordinates.altitude*/ 600) //TODO: Waiting from SDK PR
+    //TODO: Waiting from SDK PR (https://git.sygic.com/projects/NAVI/repos/sdk/pull-requests/3903/overview)
+    open fun formatCurrentElevation() = Elevation.getFormattedElevation(/*positionManager.lastKnownPosition.coordinates.altitude*/ 600)
 
     open fun formatEstimatedTime(estimatedTime: Int) =
         dateTimeManager.formatTime(Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(estimatedTime.toLong())))
