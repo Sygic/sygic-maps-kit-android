@@ -26,9 +26,9 @@ package com.sygic.maps.uikit.viewmodels.common.regional
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class RegionalManagerImpl : RegionalManager {
-    override val distanceUnits: MutableLiveData<DistanceUnits> = MutableLiveData(DistanceUnits.KILOMETERS)
+    override val distanceUnit: MutableLiveData<DistanceUnit> = MutableLiveData(DistanceUnit.KILOMETERS)
 }

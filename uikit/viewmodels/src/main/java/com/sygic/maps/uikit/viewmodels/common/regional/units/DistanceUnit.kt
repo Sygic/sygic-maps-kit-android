@@ -28,7 +28,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-enum class DistanceUnits : Parcelable {
+enum class DistanceUnit : Parcelable {
     KILOMETERS, MILES_YARDS, MILES_FEETS;
 
     companion object {

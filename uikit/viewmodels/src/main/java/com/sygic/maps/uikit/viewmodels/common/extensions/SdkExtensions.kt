@@ -32,7 +32,7 @@ import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
@@ -241,7 +241,11 @@ fun NaviSignInfo.createInstructionText(): TextHolder {
     }
 }
 
-fun DirectionInfo.createInstructionText(naviSignInfo: NaviSignInfo? = null): TextHolder { //ToDo: Continue along (Follow the route)
+fun DirectionInfo.createInstructionText(naviSignInfo: NaviSignInfo? = null): TextHolder {
+    if (this@createInstructionText.distance > 2000) { // 2km
+        return TextHolder.from(R.string.follow_the_route)
+    }
+
     naviSignInfo?.let {
         return it.createInstructionText()
     }
@@ -267,8 +271,8 @@ fun DirectionInfo.createInstructionText(naviSignInfo: NaviSignInfo? = null): Tex
     }
 }
 
-fun DirectionInfo.getDistanceWithUnits(distanceUnits: DistanceUnits): String =
-    Distance.getFormattedDistance(distanceUnits, distance)
+fun DirectionInfo.getDistanceWithUnits(distanceUnit: DistanceUnit): String =
+    Distance.getFormattedDistance(distanceUnit, distance)
 
 @DrawableRes
 fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverType): Int {

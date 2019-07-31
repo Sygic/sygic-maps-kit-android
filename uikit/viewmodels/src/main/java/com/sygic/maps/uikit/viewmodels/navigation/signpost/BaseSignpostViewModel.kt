@@ -32,7 +32,7 @@ import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.navigation.NavigationManager
@@ -51,13 +51,13 @@ abstract class BaseSignpostViewModel(
     val secondaryDirectionContainerVisible: MutableLiveData<Boolean> = MutableLiveData(false)
     val instructionText: MutableLiveData<TextHolder> = MutableLiveData(TextHolder.empty())
 
-    protected var distanceUnits: DistanceUnits = DistanceUnits.KILOMETERS
+    protected var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
     protected val directionInfo: MutableLiveData<DirectionInfo?> = MutableLiveData()
 
-    private val distanceUnitsObserver = Observer<DistanceUnits> { distanceUnits -> this.distanceUnits = distanceUnits }
+    private val distanceUnitObserver = Observer<DistanceUnit> { distanceUnit = it }
     private val directionInfoObserver = Observer<DirectionInfo?> { directionInfo ->
         directionInfo?.let {
-            distance.value = it.getDistanceWithUnits(distanceUnits)
+            distance.value = it.getDistanceWithUnits(distanceUnit)
             primaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.PRIMARY)
             secondaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.SECONDARY)
             secondaryDirectionContainerVisible.value = it.secondary.isValid
@@ -67,7 +67,7 @@ abstract class BaseSignpostViewModel(
     init {
         navigationManager.addOnDirectionListener(this)
         directionInfo.observeForever(directionInfoObserver)
-        regionalManager.distanceUnits.observeForever(distanceUnitsObserver)
+        regionalManager.distanceUnit.observeForever(distanceUnitObserver)
     }
 
     @CallSuper
@@ -79,6 +79,6 @@ abstract class BaseSignpostViewModel(
         super.onCleared()
 
         navigationManager.removeOnDirectionListener(this)
-        regionalManager.distanceUnits.removeObserver(distanceUnitsObserver)
+        regionalManager.distanceUnit.removeObserver(distanceUnitObserver)
     }
 }
