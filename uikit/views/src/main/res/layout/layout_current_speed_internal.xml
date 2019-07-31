@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:singleLine="true"
-            android:textColor="@color/mine_shaft"
+            android:textColor="?attr/navigationTextColorPrimary"
             android:textSize="22sp"
             android:textStyle="bold"
             tools:text="32" />
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:singleLine="true"
-            android:textColor="@color/mine_shaft"
+            android:textColor="?attr/navigationTextColorSecondary"
             android:textSize="11sp"
             tools:text="km/h" />
 

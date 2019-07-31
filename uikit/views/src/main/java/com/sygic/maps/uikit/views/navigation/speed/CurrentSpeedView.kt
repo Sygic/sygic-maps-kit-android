@@ -29,6 +29,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -37,7 +38,11 @@ import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.databinding.LayoutCurrentSpeedInternalBinding
 
 /**
- * A [CurrentSpeedView] TODO
+ * A [CurrentSpeedView] view is designed to be used as an visual presentation component for the actual speed value. It
+ * contains two [TextView]'s for speed value and unit.
+ *
+ * The [CurrentSpeedView] design can be completely changed with the custom _infoBarStyle_ or the standard android
+ * attributes as _background_, _navigationTextColorPrimary_ or _navigationTextColorSecondary_ can be used.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class CurrentSpeedView @JvmOverloads constructor(
@@ -111,20 +116,20 @@ open class CurrentSpeedView @JvmOverloads constructor(
     }
 
     /**
-     * Sets the current speed text color.
+     * Sets the current speed and unit text color.
      *
      * @param currentSpeedTextColor [Int] the current speed text color.
      */
-    fun setTextColorRes(@ColorRes currentSpeedTextColor: Int) {
-        setTextColorInt(ContextCompat.getColor(context, currentSpeedTextColor))
+    fun setForegroundTintColorRes(@ColorRes currentSpeedTextColor: Int) {
+        setForegroundTintColorInt(ContextCompat.getColor(context, currentSpeedTextColor))
     }
 
     /**
-     * Sets the current speed text color.
+     * Sets the current speed and unit text color.
      *
      * @param currentSpeedTextColor [Int] the current speed text color.
      */
-    fun setTextColorInt(@ColorInt currentSpeedTextColor: Int) {
+    fun setForegroundTintColorInt(@ColorInt currentSpeedTextColor: Int) {
         binding.currentSpeedValueTextView.setTextColor(currentSpeedTextColor)
         binding.currentSpeedUnitTextView.setTextColor(currentSpeedTextColor)
     }

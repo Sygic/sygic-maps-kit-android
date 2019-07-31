@@ -30,4 +30,4 @@ import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
 
 @BindingAdapter(value = ["android:foregroundTint"])
 fun setForegroundTint(currentSpeedView: CurrentSpeedView, @ColorInt colorRes: Int) =
-    currentSpeedView.setTextColorInt(colorRes)
+    currentSpeedView.setForegroundTintColorInt(colorRes)
