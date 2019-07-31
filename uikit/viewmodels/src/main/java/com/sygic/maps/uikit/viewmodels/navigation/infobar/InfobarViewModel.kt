@@ -30,9 +30,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.common.utils.Elevation
 import com.sygic.maps.uikit.viewmodels.common.utils.Time
@@ -41,7 +40,6 @@ import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItemsHolder
-import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.position.PositionManager
 import java.util.*
@@ -69,12 +67,12 @@ open class InfobarViewModel internal constructor(
 
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
-    private var distanceUnits: DistanceUnits = DistanceUnits.KILOMETERS
-    private val distanceUnitsObserver = Observer<DistanceUnits> { distanceUnits -> this.distanceUnits = distanceUnits }
+    private var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
+    private val distanceUnitObserver = Observer<DistanceUnit> { distanceUnit = it }
 
     init {
         navigationManager.addOnNaviStatsListener(this)
-        regionalManager.distanceUnits.observeForever(distanceUnitsObserver)
+        regionalManager.distanceUnit.observeForever(distanceUnitObserver)
     }
 
     override fun onNaviStatsChanged(
@@ -99,7 +97,7 @@ open class InfobarViewModel internal constructor(
 
     open fun formatRemainingTime(time: Int) = Time.getFormattedTime(time)
 
-    open fun formatRemainingDistance(distance: Int) = Distance.getFormattedDistance(distanceUnits, distance)
+    open fun formatRemainingDistance(distance: Int) = Distance.getFormattedDistance(distanceUnit, distance)
 
     //TODO: Waiting from SDK PR (https://git.sygic.com/projects/NAVI/repos/sdk/pull-requests/3903/overview)
     open fun formatCurrentElevation() = Elevation.getFormattedElevation(/*positionManager.lastKnownPosition.coordinates.altitude*/ 600)
@@ -117,6 +115,6 @@ open class InfobarViewModel internal constructor(
         super.onCleared()
 
         navigationManager.removeOnNaviStatsListener(this)
-        regionalManager.distanceUnits.removeObserver(distanceUnitsObserver)
+        regionalManager.distanceUnit.removeObserver(distanceUnitObserver)
     }
 }
