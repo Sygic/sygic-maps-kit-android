@@ -28,6 +28,8 @@
     <attr name="sygicMapSkin" format="string" />
     <attr name="navigationDarkTintColor" format="reference" />
     <attr name="navigationLightTintColor" format="reference" />
+    <attr name="navigationTextColorPrimary" format="reference" />
+    <attr name="navigationTextColorSecondary" format="reference" />
 
     <declare-styleable name="Theme">
         <attr name="compassStyle" format="reference"/>

@@ -48,8 +48,8 @@ import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItemsHolder
  * primary/secondary [TextView] which can be controlled with [InfobarItemsHolder] class.
  *
  * The [Infobar] design can be completely changed with the custom _infoBarStyle_ or the standard android
- * attributes as _background_, _textColorPrimary_ or _textColorSecondary_ can be used. The [Infobar] view has also own
- * attributes such as _leftButtonIcon_, _leftButtonIconTint_, _leftButtonBackground_, _leftButtonBackgroundTint_,
+ * attributes as _background_, _navigationTextColorPrimary_ or _navigationTextColorSecondary_ can be used. The [Infobar]
+ * view has also own attributes such as _leftButtonIcon_, _leftButtonIconTint_, _leftButtonBackground_, _leftButtonBackgroundTint_,
  * _rightButtonIcon_, _rightButtonIconTint_, _rightButtonBackground_ and _rightButtonBackgroundTint_.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
