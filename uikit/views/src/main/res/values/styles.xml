@@ -54,6 +54,12 @@
         <item name="android:background">@drawable/bg_compass</item>
     </style>
 
+    <style name="SygicCurrentSpeedViewStyle">
+        <item name="android:background">@drawable/bg_current_speed_view</item>
+        <item name="android:elevation">@dimen/navigationComponentElevation</item>
+        <item name="android:layout_margin">@dimen/currentSpeedViewLayoutMargin</item>
+    </style>
+
     <style name="SygicInfobarStyle">
         <item name="android:background">@drawable/bg_infobar_light_rounded</item>
         <item name="android:layout_margin">@dimen/infobarLayoutMargin</item>

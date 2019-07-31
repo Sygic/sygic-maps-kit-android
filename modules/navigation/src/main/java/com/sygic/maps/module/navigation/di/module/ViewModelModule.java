@@ -37,6 +37,8 @@ import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModelFactory;
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel;
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModelFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModelFactory;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
@@ -72,4 +74,9 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(InfobarViewModel.class)
     abstract ViewModelCreatorFactory putInfobarViewModelFactory(InfobarViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CurrentSpeedViewModel.class)
+    abstract ViewModelCreatorFactory putCurrentSpeedViewModelFactory(CurrentSpeedViewModelFactory factory);
 }

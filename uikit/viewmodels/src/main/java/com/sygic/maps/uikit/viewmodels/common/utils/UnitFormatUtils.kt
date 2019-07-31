@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.viewmodels.common.utils
 
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -139,4 +140,43 @@ object Time {
 object Elevation {
 
     fun getFormattedElevation(meters: Int): String = "${meters}mnm"
+}
+
+object Speed {
+
+    private const val METRIC_SPEED_UNIT = "km/h"
+    private const val IMPERIALS_SPEED_UNIT = "mph"
+    private const val KMH_TO_MPH_CONVERSION_RATIO = 0.621371192f
+    private const val MPH_TO_KMH_CONVERSION_RATIO = 1.609344f
+    private const val SPEEDING_THRESHOLD_DIFFERENCE = 10
+
+    fun getUnitFromDistanceUnit(distanceUnit: DistanceUnit): String = when (distanceUnit) {
+        DistanceUnit.KILOMETERS -> METRIC_SPEED_UNIT
+        DistanceUnit.MILES_YARDS, DistanceUnit.MILES_FEETS -> IMPERIALS_SPEED_UNIT
+    }
+
+    fun convertValue(speedValue: Int, targetDistanceUnit: DistanceUnit) =
+        convertValue(speedValue, DistanceUnit.KILOMETERS, targetDistanceUnit)
+
+    fun convertValue(speedValue: Int, currentDistanceUnit: DistanceUnit, targetDistanceUnit: DistanceUnit): Int {
+        if (currentDistanceUnit == targetDistanceUnit) {
+            return speedValue
+        }
+
+        return when (targetDistanceUnit) {
+            DistanceUnit.KILOMETERS -> (speedValue * MPH_TO_KMH_CONVERSION_RATIO).roundToInt()
+            DistanceUnit.MILES_YARDS, DistanceUnit.MILES_FEETS -> (speedValue * KMH_TO_MPH_CONVERSION_RATIO).roundToInt()
+        }
+    }
+
+    fun isSpeeding(speedValue: Int, speedLimitInfo: SpeedLimitInfo?, distanceUnit: DistanceUnit): Boolean {
+        val speedLimitValue: Int = speedLimitInfo?.getSpeedLimit(
+            when (distanceUnit) {
+                DistanceUnit.KILOMETERS -> SpeedLimitInfo.SpeedUnits.Kilometers
+                DistanceUnit.MILES_YARDS, DistanceUnit.MILES_FEETS -> SpeedLimitInfo.SpeedUnits.Miles
+            }
+        ) ?: 0
+
+        return speedLimitValue > 0 && speedValue > speedLimitValue + SPEEDING_THRESHOLD_DIFFERENCE
+    }
 }

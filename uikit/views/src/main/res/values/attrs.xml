@@ -31,6 +31,7 @@
 
     <declare-styleable name="Theme">
         <attr name="compassStyle" format="reference"/>
+        <attr name="currentSpeedViewStyle" format="reference"/>
         <attr name="infoBarStyle" format="reference" />
         <attr name="positionLockFabStyle" format="reference" />
         <attr name="routePreviewControlsStyle" format="reference" />
@@ -47,6 +48,14 @@
         <attr name="titleText" />
         <attr name="suggestionText"/>
         <attr name="actionButtonText"/>
+    </declare-styleable>
+
+    <declare-styleable name="CurrentSpeedView">
+        <attr name="android:layout_margin" format="dimension" />
+        <attr name="android:layout_marginTop" format="dimension" />
+        <attr name="android:layout_marginBottom" format="dimension" />
+        <attr name="android:layout_marginStart" format="dimension" />
+        <attr name="android:layout_marginEnd" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="EmptyRecyclerView">
