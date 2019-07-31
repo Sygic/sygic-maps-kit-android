@@ -24,7 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.common.utils
 
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnits
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -45,28 +45,28 @@ object Distance {
     private val DECIMAL_FORMAT = DecimalFormat("#.#", DecimalFormatSymbols(Locale.ENGLISH))
 
     fun getFormattedDistance(
-        distanceUnits: DistanceUnits,
+        distanceUnit: DistanceUnit,
         distanceInMeters: Int,
         roundSmallUnits: Boolean = true
-    ): String = when (distanceUnits) {
-        DistanceUnits.KILOMETERS -> {
+    ): String = when (distanceUnit) {
+        DistanceUnit.KILOMETERS -> {
             val kilometers = distanceInMeters * M_TO_KM_CONVERSION_RATIO
             when {
                 kilometers >= 10 -> kilometers.roundToInt().toString() + METRIC_KM_DISTANCE_UNIT
                 kilometers >= 1 -> DECIMAL_FORMAT.format(kilometers.toDouble()) + METRIC_KM_DISTANCE_UNIT
-                roundSmallUnits -> getFormattedDistance(distanceUnits, roundDistance(distanceInMeters), false)
+                roundSmallUnits -> getFormattedDistance(distanceUnit, roundDistance(distanceInMeters), false)
                 else -> distanceInMeters.toString() + METRIC_M_DISTANCE_UNIT
             }
         }
 
-        DistanceUnits.MILES_YARDS -> getDistanceInMilesWithUnits(
+        DistanceUnit.MILES_YARDS -> getDistanceInMilesWithUnits(
             distanceInMeters,
             M_TO_YD_CONVERSION_RATIO,
             IMPERIALS_YARD_DISTANCE_UNIT,
             roundSmallUnits
         )
 
-        DistanceUnits.MILES_FEETS -> getDistanceInMilesWithUnits(
+        DistanceUnit.MILES_FEETS -> getDistanceInMilesWithUnits(
             distanceInMeters,
             M_TO_FT_CONVERSION_RATIO,
             IMPERIALS_FEET_DISTANCE_UNIT,
