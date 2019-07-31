@@ -30,6 +30,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
@@ -114,8 +115,17 @@ open class CurrentSpeedView @JvmOverloads constructor(
      *
      * @param currentSpeedTextColor [Int] the current speed text color.
      */
-    fun setTextColor(@ColorRes currentSpeedTextColor: Int) {
-        binding.currentSpeedValueTextView.setTextColor(ContextCompat.getColor(context, currentSpeedTextColor))
-        binding.currentSpeedUnitTextView.setTextColor(ContextCompat.getColor(context, currentSpeedTextColor))
+    fun setTextColorRes(@ColorRes currentSpeedTextColor: Int) {
+        setTextColorInt(ContextCompat.getColor(context, currentSpeedTextColor))
+    }
+
+    /**
+     * Sets the current speed text color.
+     *
+     * @param currentSpeedTextColor [Int] the current speed text color.
+     */
+    fun setTextColorInt(@ColorInt currentSpeedTextColor: Int) {
+        binding.currentSpeedValueTextView.setTextColor(currentSpeedTextColor)
+        binding.currentSpeedUnitTextView.setTextColor(currentSpeedTextColor)
     }
 }

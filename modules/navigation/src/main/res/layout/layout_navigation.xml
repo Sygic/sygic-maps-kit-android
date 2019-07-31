@@ -31,9 +31,6 @@
 
         <import type="android.view.View" />
 
-        <!--todo: override tint? (instead of custom textColor method?)-->
-        <import type="com.sygic.maps.module.navigation.R" />
-
         <variable
             name="navigationFragmentViewModel"
             type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
@@ -104,15 +101,14 @@
             tools:layout_height="64dp"
             tools:layout_margin="@dimen/routePreviewControlsLayoutMargin" />
 
-        <!--todo: override tint? (instead of custom textColor method?)-->
         <com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
             android:layout_width="@dimen/currentSpeedViewSize"
             android:layout_height="@dimen/currentSpeedViewSize"
             android:backgroundTint="@{safeUnbox(currentSpeedViewModel.speeding) ? @color/brick_red : @color/white}"
+            android:foregroundTint="@{safeUnbox(currentSpeedViewModel.speeding) ? @color/white : @color/mine_shaft}"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.currentSpeedEnabled) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/infobar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:textColor="@{safeUnbox(currentSpeedViewModel.speeding) ? R.color.white : R.color.mine_shaft}"
             app:speedUnit="@{currentSpeedViewModel.speedUnit}"
             app:speedValue="@{currentSpeedViewModel.speedValue}" />
 
