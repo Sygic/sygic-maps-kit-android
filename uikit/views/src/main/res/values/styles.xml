@@ -61,7 +61,10 @@
 
     <style name="SygicRoutePreviewControlsStyle">
         <item name="android:background">@drawable/bg_navigation_light_rounded</item>
-        <item name="android:layout_margin">@dimen/routePreviewControlsLayoutMargin</item>
+        <item name="android:layout_marginBottom">@dimen/routePreviewControlsLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/routePreviewControlsLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/routePreviewControlsLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/routePreviewControlsLayoutMargin</item>
         <item name="android:elevation">@dimen/navigationComponentElevation</item>
     </style>
 
