@@ -41,7 +41,7 @@ import com.sygic.maps.uikit.views.databinding.LayoutCurrentSpeedInternalBinding
  * A [CurrentSpeedView] view is designed to be used as an visual presentation component for the actual speed value. It
  * contains two [TextView]'s for speed value and unit.
  *
- * The [CurrentSpeedView] design can be completely changed with the custom _infoBarStyle_ or the standard android
+ * The [CurrentSpeedView] design can be completely changed with the custom _currentSpeedViewStyle_ or the standard android
  * attributes as _background_, _navigationTextColorPrimary_ or _navigationTextColorSecondary_ can be used.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")

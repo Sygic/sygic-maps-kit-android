@@ -52,7 +52,7 @@ open class CurrentSpeedViewModel internal constructor(
     private val positionManager: PositionManager
 ) : ViewModel(), NavigationManager.OnSpeedLimitListener, PositionManager.PositionChangeListener {
 
-    var speeding: MutableLiveData<Boolean> = MutableLiveData(false)
+    val speeding: MutableLiveData<Boolean> = MutableLiveData(false)
     val speedValue: MutableLiveData<Int> = MutableLiveData(0)
     val speedUnit: MutableLiveData<String> = MutableLiveData(Speed.getUnitFromDistanceUnit(DistanceUnit.KILOMETERS))
 

@@ -106,6 +106,7 @@
             tools:layout_margin="@dimen/routePreviewControlsLayoutMargin" />
 
         <com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
+            android:id="@+id/currentSpeedView"
             android:layout_width="@dimen/currentSpeedViewSize"
             android:layout_height="@dimen/currentSpeedViewSize"
             android:backgroundTint="@{safeUnbox(currentSpeedViewModel.speeding) ? @color/brick_red : @color/white}"
