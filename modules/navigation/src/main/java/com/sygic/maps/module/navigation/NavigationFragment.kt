@@ -55,7 +55,7 @@ import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.sdk.route.RouteInfo
 import javax.inject.Inject
 
-const val NAVIGATION_FRAGMENT_TAG = "navigation_map_fragment_tag"
+const val NAVIGATION_FRAGMENT_TAG = "navigation_fragment_tag"
 internal const val KEY_DISTANCE_UNITS = "distance_units"
 internal const val KEY_SIGNPOST_ENABLED = "signpost_enabled"
 internal const val KEY_SIGNPOST_TYPE = "signpost_type"
