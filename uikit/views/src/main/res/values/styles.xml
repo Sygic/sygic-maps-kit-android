@@ -111,6 +111,14 @@
         <item name="android:layout_margin">@dimen/signpostViewLayoutMargin</item>
     </style>
 
+    <style name="SygicSpeedLimitViewStyle">
+        <item name="android:elevation">4dp</item>
+        <item name="android:layout_marginBottom">@dimen/speedLimitViewLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/speedLimitViewLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/speedLimitViewLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/speedLimitViewLayoutMargin</item>
+    </style>
+
     <style name="SygicZoomControlsMenuStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>

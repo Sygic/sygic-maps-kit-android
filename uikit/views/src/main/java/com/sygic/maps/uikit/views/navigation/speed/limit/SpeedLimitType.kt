@@ -22,16 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.component
+package com.sygic.maps.uikit.views.navigation.speed.limit
 
-import com.sygic.maps.module.navigation.types.SignpostType
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnit.KILOMETERS
-val SIGNPOST_TYPE_DEFAULT_VALUE = SignpostType.FULL
-const val PREVIEW_MODE_DEFAULT_VALUE = false
-const val PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE = true
-const val SIGNPOST_ENABLED_DEFAULT_VALUE = true
-const val INFOBAR_ENABLED_DEFAULT_VALUE = true
-const val CURRENT_SPEED_ENABLED_DEFAULT_VALUE = true
-const val SPEED_LIMIT_ENABLED_DEFAULT_VALUE = true
+@Parcelize
+enum class SpeedLimitType : Parcelable {
+    EU, US
+}

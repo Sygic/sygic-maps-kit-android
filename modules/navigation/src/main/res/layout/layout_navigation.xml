@@ -47,6 +47,10 @@
             name="currentSpeedViewModel"
             type="com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel" />
 
+        <variable
+            name="speedLimitViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,6 +115,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:speedUnit="@{currentSpeedViewModel.speedUnit}"
             app:speedValue="@{currentSpeedViewModel.speedValue}" />
+
+        <com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
+            android:id="@+id/speedLimitView"
+            android:layout_width="@dimen/speedLimitViewSize"
+            android:layout_height="@dimen/speedLimitViewSize"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="46dp"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.speedLimitEnabled) &amp;&amp; safeUnbox(speedLimitViewModel.speedLimitVisible) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/currentSpeedView"
+            app:layout_constraintEnd_toEndOf="@id/currentSpeedView"
+            app:layout_constraintStart_toStartOf="@id/currentSpeedView"
+            app:type="@{speedLimitViewModel.speedLimitType}"
+            app:value="@{speedLimitViewModel.speedLimitValue}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

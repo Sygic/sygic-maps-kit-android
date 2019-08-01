@@ -24,23 +24,5 @@
   -->
 
 <resources>
-
-    <declare-styleable name="NavigationFragment">
-        <attr name="sygic_navigation_distanceUnit" format="enum">
-            <enum name="kilometers" value="0" />
-            <enum name="miles_yards" value="1" />
-            <enum name="miles_feets" value="2" />
-        </attr>
-        <attr name="sygic_navigation_previewMode" format="boolean" />
-        <attr name="sygic_previewControls_enabled" format="boolean" />
-        <attr name="sygic_infobar_enabled" format="boolean" />
-        <attr name="sygic_current_speed_enabled" format="boolean" />
-        <attr name="sygic_speed_limit_enabled" format="boolean" />
-        <attr name="sygic_signpost_enabled" format="boolean" />
-        <attr name="sygic_signpost_type" format="enum">
-            <enum name="full" value="0" />
-            <enum name="simplified" value="1" />
-        </attr>
-    </declare-styleable>
-
+    <string name="limit">LIMIT</string>
 </resources>

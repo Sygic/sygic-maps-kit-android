@@ -46,6 +46,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsVi
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
@@ -53,6 +54,7 @@ import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
+import com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
 import com.sygic.sdk.route.RouteInfo
 import javax.inject.Inject
 
@@ -64,12 +66,13 @@ internal const val KEY_PREVIEW_CONTROLS_ENABLED = "preview_controls_enabled"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_INFOBAR_ENABLED = "infobar_enabled"
 internal const val KEY_CURRENT_SPEED_ENABLED = "current_speed_enabled"
+internal const val KEY_SPEED_LIMIT_ENABLED = "speed_limit_enabled"
 internal const val KEY_ROUTE_INFO = "route_info"
 
 /**
  * A *[NavigationFragment]* is the core component for any navigation operation. It can be easily used for the navigation
  * purposes. By setting the [routeInfo] object will start the navigation process. Any pre build-in element such as
- * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [RoutePreviewControls], [CurrentSpeedView] or [SpeedLimit]
+ * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [RoutePreviewControls], [CurrentSpeedView] or [SpeedLimitView]
  * may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -79,6 +82,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
     private lateinit var infobarViewModel: InfobarViewModel
     private lateinit var currentSpeedViewModel: CurrentSpeedViewModel
+    private lateinit var speedLimitViewModel: SpeedLimitViewModel
 
     @Inject
     internal lateinit var regionalManager: RegionalManager
@@ -211,6 +215,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         }
 
     /**
+     * A *[speedLimitEnabled]* modifies the [SpeedLimitView] visibility.
+     *
+     * @param [Boolean] true to enable the [SpeedLimitView], false otherwise.
+     *
+     * @return whether the [SpeedLimitView] is on or off.
+     */
+    var speedLimitEnabled: Boolean
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.speedLimitEnabled.value!!
+        } else arguments.getBoolean(KEY_SPEED_LIMIT_ENABLED, SPEED_LIMIT_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_SPEED_LIMIT_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.speedLimitEnabled.value = value
+            }
+        }
+
+    /**
      * If not-null *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
      *
      * @param [RouteInfo] route info object to be processed.
@@ -239,6 +261,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                 Observer<Any> { requireActivity().finish() })
         }
         currentSpeedViewModel = viewModelOf(CurrentSpeedViewModel::class.java)
+        speedLimitViewModel = viewModelOf(SpeedLimitViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
     }
@@ -250,6 +273,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         binding.routePreviewControlsViewModel = routePreviewControlsViewModel
         binding.infobarViewModel = infobarViewModel
         binding.currentSpeedViewModel = currentSpeedViewModel
+        binding.speedLimitViewModel = speedLimitViewModel
 
         binding.signpostViewViewStub.setOnInflateListener { _, view ->
             DataBindingUtil.bind<ViewDataBinding>(view)?.let {
@@ -328,6 +352,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                     getBoolean(
                         R.styleable.NavigationFragment_sygic_current_speed_enabled,
                         CURRENT_SPEED_ENABLED_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_speed_limit_enabled)) {
+                speedLimitEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_speed_limit_enabled,
+                        SPEED_LIMIT_ENABLED_DEFAULT_VALUE
                     )
             }
 
