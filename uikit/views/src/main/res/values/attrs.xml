@@ -128,4 +128,12 @@
         <attr name="android:layout_marginEnd" format="dimension" />
     </declare-styleable>
 
+    <!-- todo -->
+    <declare-styleable name="SpeedProgressView">
+        <attr name="progressColor" format="color" />
+        <attr name="barColor" format="color" />
+        <attr name="progressWidth" format="dimension" />
+        <attr name="barWidth" format="dimension" />
+    </declare-styleable>
+
 </resources>

@@ -27,4 +27,9 @@
     <color name="textColorPrimary">@color/mine_shaft</color>
     <color name="textColorSecondary">@color/boulder</color>
     <color name="iconBackground">@color/shuttle_gray</color>
+
+    <!--todo-->
+    <color name="progress_color">#1DE9B6</color>
+    <color name="background_color">#B0BEC5</color>
+
 </resources>

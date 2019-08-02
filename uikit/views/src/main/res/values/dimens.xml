@@ -55,4 +55,8 @@
     <dimen name="zoomControlsButtonSize">48dp</dimen>
     <dimen name="zoomControlsButtonMargin">6dp</dimen>
 
+    <!-- todo -->
+    <dimen name="default_stroke_width">4dp</dimen>
+    <dimen name="default_background_stroke_width">3dp</dimen>
+
 </resources>

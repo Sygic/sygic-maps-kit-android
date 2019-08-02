@@ -131,6 +131,21 @@
             app:type="@{speedLimitViewModel.speedLimitType}"
             app:value="@{speedLimitViewModel.speedLimitValue}" />
 
+        <!--todo-->
+<!--        app:bar_width="6dp"
+        app:progress_color="#f77630"
+        app:progress_width="6dp"-->
+        <com.sygic.maps.uikit.views.common.progressviews.SpeedProgressView
+            android:id="@+id/segment_bar"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
+            android:elevation="8dp"
+            app:layout_constraintBottom_toTopOf="@id/infobar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <!--app:layout_constraintEnd_toEndOf="@id/currentSpeedView"
+        app:layout_constraintStart_toStartOf="@id/currentSpeedView"-->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
