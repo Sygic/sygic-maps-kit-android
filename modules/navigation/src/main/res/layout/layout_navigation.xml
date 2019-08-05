@@ -45,13 +45,15 @@
 
         <ViewStub
             android:id="@+id/signpostViewViewStub"
+            android:inflatedId="@+id/signpostView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout="@{navigationFragmentViewModel.signpostLayout}"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationFragmentViewModel="@{navigationFragmentViewModel}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
