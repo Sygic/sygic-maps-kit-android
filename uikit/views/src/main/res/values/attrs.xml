@@ -27,6 +27,9 @@
 
     <attr name="sygicMapSkin" format="string" />
     <attr name="signpostTintColor" format="reference" />
+    <attr name="navigationBackgroundColor" format="reference" />
+    <attr name="navigationTextColorPrimary" format="reference" />
+    <attr name="navigationTextColorSecondary" format="reference" />
 
     <declare-styleable name="Theme">
         <attr name="compassStyle" format="reference"/>
