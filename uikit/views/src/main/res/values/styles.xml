@@ -33,8 +33,7 @@
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
 
-        <item name="navigationDarkTintColor">@color/black</item>
-        <item name="navigationLightTintColor">@color/white</item>
+        <item name="signpostTintColor">@color/white</item>
     </style>
 
     <style name="Theme.Sygic.Colored" parent="Theme.AppCompat.DayNight">

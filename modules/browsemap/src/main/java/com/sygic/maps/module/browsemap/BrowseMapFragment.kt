@@ -230,19 +230,17 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
         lifecycle.addObserver(zoomControlsViewModel)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = LayoutBrowseMapBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.browseMapFragmentViewModel = fragmentViewModel
-        binding.compassViewModel = compassViewModel
-        binding.positionLockFabViewModel = positionLockFabViewModel
-        binding.zoomControlsViewModel = zoomControlsViewModel
-        val root = binding.root as ViewGroup
-        super.onCreateView(inflater, root, savedInstanceState)?.let {
-            root.addView(it, 0)
-        }
-        return root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        LayoutBrowseMapBinding.inflate(inflater, container, false).apply {
+            browseMapFragmentViewModel = fragmentViewModel
+            compassViewModel = this@BrowseMapFragment.compassViewModel
+            positionLockFabViewModel = this@BrowseMapFragment.positionLockFabViewModel
+            zoomControlsViewModel = this@BrowseMapFragment.zoomControlsViewModel
+            lifecycleOwner = this@BrowseMapFragment
+            with(root as ViewGroup) {
+                super.onCreateView(inflater, this, savedInstanceState)?.let { addView(it, 0) }
+            }
+        }.root
 
     /**
      * Register a custom callback to be invoked when a click to the map has been made. If null, default callback
