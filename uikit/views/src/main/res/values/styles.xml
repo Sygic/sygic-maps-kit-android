@@ -25,29 +25,6 @@
 
 <resources>
 
-    <style name="Theme.Sygic.Light.DarkActionBar" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/azure_radiance</item>
-        <item name="colorPrimaryDark">@color/science_blue</item>
-        <item name="colorAccent">@color/azure_radiance</item>
-
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/textColorSecondary</item>
-
-        <item name="signpostTintColor">@color/white</item>
-    </style>
-
-    <style name="Theme.Sygic.Colored" parent="Theme.AppCompat.DayNight">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryDark">@color/cinnabar</item>
-        <item name="colorAccent">@color/fruit_salad</item>
-
-        <item name="android:colorBackground">@color/mine_shaft</item>
-        <item name="android:textColorPrimary">@color/mystic</item>
-        <item name="android:textColorSecondary">@color/botticelli</item>
-
-        <item name="sygicMapSkin">"night"</item>
-    </style>
-
     <style name="SygicCompassStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:background">@drawable/bg_compass</item>
@@ -73,7 +50,7 @@
     </style>
 
     <style name="SygicSignpostViewStyle">
-        <item name="android:background">@drawable/bg_navigation_dark_rounded</item>
+        <item name="android:background">@drawable/bg_signpost_rounded</item>
         <item name="android:layout_marginBottom">@dimen/signpostViewLayoutMargin</item>
         <item name="android:layout_marginEnd">@dimen/signpostViewLayoutMargin</item>
         <item name="android:layout_marginStart">@dimen/signpostViewLayoutMargin</item>

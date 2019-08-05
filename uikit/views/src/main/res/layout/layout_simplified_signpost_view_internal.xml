@@ -28,7 +28,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <merge
-        tools:background="@drawable/bg_navigation_dark_rounded"
+        tools:background="@drawable/bg_signpost_rounded"
         tools:ignore="ContentDescription"
         tools:layout_height="wrap_content"
         tools:layout_margin="@dimen/signpostViewLayoutMargin"
