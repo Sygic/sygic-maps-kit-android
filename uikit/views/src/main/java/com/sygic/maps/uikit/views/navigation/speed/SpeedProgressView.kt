@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.common.progressviews
+package com.sygic.maps.uikit.views.navigation.speed
 
 import android.content.Context
 import android.graphics.*

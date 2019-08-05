@@ -135,7 +135,7 @@
 <!--        app:bar_width="6dp"
         app:progress_color="#f77630"
         app:progress_width="6dp"-->
-        <com.sygic.maps.uikit.views.common.progressviews.SpeedProgressView
+        <com.sygic.maps.uikit.views.navigation.speed.SpeedProgressView
             android:id="@+id/segment_bar"
             android:layout_width="256dp"
             android:layout_height="256dp"

@@ -51,7 +51,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
-import com.sygic.maps.uikit.views.common.progressviews.SpeedProgressView
+import com.sygic.maps.uikit.views.navigation.speed.SpeedProgressView
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
