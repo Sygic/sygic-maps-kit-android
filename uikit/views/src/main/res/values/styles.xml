@@ -25,37 +25,6 @@
 
 <resources>
 
-    <style name="Theme.Sygic.Light.DarkActionBar" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/azure_radiance</item>
-        <item name="colorPrimaryDark">@color/science_blue</item>
-        <item name="colorAccent">@color/azure_radiance</item>
-
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/textColorSecondary</item>
-
-        <item name="navigationDarkTintColor">@color/black</item>
-        <item name="navigationLightTintColor">@color/white</item>
-        <item name="navigationTextColorPrimary">@color/mine_shaft</item>
-        <item name="navigationTextColorSecondary">@color/boulder</item>
-    </style>
-
-    <style name="Theme.Sygic.Colored" parent="Theme.AppCompat.DayNight">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryDark">@color/cinnabar</item>
-        <item name="colorAccent">@color/fruit_salad</item>
-
-        <item name="android:colorBackground">@color/mine_shaft</item>
-        <item name="android:textColorPrimary">@color/mystic</item>
-        <item name="android:textColorSecondary">@color/botticelli</item>
-
-        <item name="navigationDarkTintColor">@color/black</item>
-        <item name="navigationLightTintColor">@color/white</item>
-        <item name="navigationTextColorPrimary">@color/mine_shaft</item>
-        <item name="navigationTextColorSecondary">@color/boulder</item>
-
-        <item name="sygicMapSkin">"night"</item>
-    </style>
-
     <style name="SygicCompassStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:background">@drawable/bg_compass</item>
@@ -71,18 +40,18 @@
     </style>
 
     <style name="SygicInfobarStyle">
-        <item name="android:background">@drawable/bg_infobar_light_rounded</item>
+        <item name="android:background">@drawable/bg_infobar_rounded</item>
         <item name="android:layout_marginBottom">@dimen/infobarLayoutMargin</item>
         <item name="android:layout_marginEnd">@dimen/infobarLayoutMargin</item>
         <item name="android:layout_marginStart">@dimen/infobarLayoutMargin</item>
         <item name="android:layout_marginTop">@dimen/infobarLayoutMargin</item>
         <item name="android:elevation">@dimen/navigationComponentElevation</item>
         <item name="leftButtonIcon">@drawable/ic_more</item>
-        <item name="leftButtonIconTint">?attr/navigationLightTintColor</item>
+        <item name="leftButtonIconTint">@color/white</item>
         <item name="leftButtonBackground">@drawable/bg_infobar_button_rounded</item>
         <item name="leftButtonBackgroundTint">?android:attr/colorAccent</item>
         <item name="rightButtonIcon">@drawable/ic_close</item>
-        <item name="rightButtonIconTint">?attr/navigationLightTintColor</item>
+        <item name="rightButtonIconTint">@color/white</item>
         <item name="rightButtonBackground">@drawable/bg_infobar_button_rounded</item>
         <item name="rightButtonBackgroundTint">@color/brick_red</item>
     </style>
@@ -93,7 +62,7 @@
     </style>
 
     <style name="SygicRoutePreviewControlsStyle">
-        <item name="android:background">@drawable/bg_navigation_light_rounded</item>
+        <item name="android:background">@drawable/bg_navigation_rounded</item>
         <item name="android:layout_marginBottom">@dimen/routePreviewControlsLayoutMargin</item>
         <item name="android:layout_marginEnd">@dimen/routePreviewControlsLayoutMargin</item>
         <item name="android:layout_marginStart">@dimen/routePreviewControlsLayoutMargin</item>
@@ -116,7 +85,7 @@
     </style>
 
     <style name="SygicSignpostViewStyle">
-        <item name="android:background">@drawable/bg_navigation_dark_rounded</item>
+        <item name="android:background">@drawable/bg_signpost_rounded</item>
         <item name="android:layout_marginBottom">@dimen/signpostViewLayoutMargin</item>
         <item name="android:layout_marginEnd">@dimen/signpostViewLayoutMargin</item>
         <item name="android:layout_marginStart">@dimen/signpostViewLayoutMargin</item>

@@ -139,7 +139,7 @@ object Time {
 
 object Elevation {
 
-    fun getFormattedElevation(meters: Int): String = "${meters}m a.s.l."
+    fun getFormattedElevation(meters: Int): String = "${meters}m asl"
 }
 
 object Speed {

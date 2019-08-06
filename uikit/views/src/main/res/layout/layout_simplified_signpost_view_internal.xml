@@ -28,7 +28,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <merge
-        tools:background="@drawable/bg_navigation_dark_rounded"
+        tools:background="@drawable/bg_signpost_rounded"
         tools:ignore="ContentDescription"
         tools:layout_height="wrap_content"
         tools:layout_margin="@dimen/signpostViewLayoutMargin"
@@ -55,7 +55,7 @@
             android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:textColor="?attr/navigationLightTintColor"
+            android:textColor="?attr/signpostTintColor"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/signpostInstructionTextView"
             app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"
@@ -73,7 +73,7 @@
             android:layout_marginStart="8dp"
             android:fontFamily="sans-serif"
             android:maxLines="1"
-            android:textColor="?attr/navigationLightTintColor"
+            android:textColor="?attr/signpostTintColor"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"
@@ -86,7 +86,7 @@
             android:id="@+id/signpostSecondaryDirectionContainer"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:background="@color/white_a10"
+            android:background="@drawable/bg_signpost_simpl_sub_container_rounded"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -110,7 +110,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:fontFamily="sans-serif"
-                android:textColor="?attr/navigationLightTintColor"
+                android:textColor="?attr/signpostTintColor"
                 android:textSize="12sp"
                 tools:text="Then"
                 tools:textColor="@color/white" />
