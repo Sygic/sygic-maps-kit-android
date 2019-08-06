@@ -25,7 +25,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="?attr/navigationBackgroundColor" />
             <corners android:radius="9dp" />
         </shape>
     </item>
@@ -35,7 +35,7 @@
         android:right="2dp"
         android:top="2dp">
         <shape>
-            <solid android:color="@android:color/black" />
+            <solid android:color="?attr/navigationTextColorPrimary" />
             <corners android:radius="7dp" />
         </shape>
     </item>
@@ -45,7 +45,7 @@
         android:right="4dp"
         android:top="4dp">
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="?attr/navigationBackgroundColor" />
             <corners android:radius="5dp" />
         </shape>
     </item>

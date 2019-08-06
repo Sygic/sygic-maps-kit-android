@@ -25,6 +25,7 @@
 package com.sygic.maps.uikit.views.navigation.speed
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -32,9 +33,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.getColorFromAttr
 import com.sygic.maps.uikit.views.databinding.LayoutCurrentSpeedInternalBinding
 
 /**
@@ -60,6 +61,11 @@ open class CurrentSpeedView @JvmOverloads constructor(
     private var layoutMarginBottom: Int = 0
     private var layoutMarginStart: Int = 0
     private var layoutMarginEnd: Int = 0
+
+    @ColorInt
+    private val whiteColor = ContextCompat.getColor(context, R.color.white)
+    @ColorInt
+    private val redColor = ContextCompat.getColor(context, R.color.brick_red)
 
     init {
         isClickable = true
@@ -116,21 +122,13 @@ open class CurrentSpeedView @JvmOverloads constructor(
     }
 
     /**
-     * Sets the current speed and unit text color.
+     * Sets the actual speeding state (if the current speed is higher than the current speed limit value or not).
      *
-     * @param currentSpeedTextColor [Int] the current speed text color.
+     * @param isSpeeding [Boolean] true to sets if currently speeding, false otherwise.
      */
-    fun setForegroundTintColorRes(@ColorRes currentSpeedTextColor: Int) {
-        setForegroundTintColorInt(ContextCompat.getColor(context, currentSpeedTextColor))
-    }
-
-    /**
-     * Sets the current speed and unit text color.
-     *
-     * @param currentSpeedTextColor [Int] the current speed text color.
-     */
-    fun setForegroundTintColorInt(@ColorInt currentSpeedTextColor: Int) {
-        binding.currentSpeedValueTextView.setTextColor(currentSpeedTextColor)
-        binding.currentSpeedUnitTextView.setTextColor(currentSpeedTextColor)
+    fun setIsSpeeding(isSpeeding: Boolean) {
+        binding.currentSpeedValueTextView.setTextColor(if (isSpeeding) whiteColor else getColorFromAttr(R.attr.navigationTextColorPrimary))
+        binding.currentSpeedUnitTextView.setTextColor(if (isSpeeding) whiteColor else getColorFromAttr(R.attr.navigationTextColorPrimary))
+        backgroundTintList = ColorStateList.valueOf(if (isSpeeding) redColor else getColorFromAttr(R.attr.navigationBackgroundColor))
     }
 }

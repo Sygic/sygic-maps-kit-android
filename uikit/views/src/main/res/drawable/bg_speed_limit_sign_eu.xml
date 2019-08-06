@@ -37,7 +37,7 @@
         android:top="5dp">
 
         <shape android:shape="oval">
-            <solid android:color="@color/white" />
+            <solid android:color="?attr/navigationBackgroundColor" />
         </shape>
     </item>
 
