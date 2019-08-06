@@ -113,7 +113,7 @@
             android:id="@+id/signpostSecondaryDirectionContainer"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:background="@color/white_a10"
+            android:background="@drawable/bg_signpost_full_sub_container_rounded"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"

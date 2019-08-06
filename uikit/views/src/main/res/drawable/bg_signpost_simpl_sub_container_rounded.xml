@@ -23,32 +23,9 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="navigationFragmentViewModel"
-            type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
-
-        <variable
-            name="signpostViewModel"
-            type="com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel" />
-
-    </data>
-
-    <com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
-        android:layout_width="344dp"
-        android:layout_height="wrap_content"
-        android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
-        app:distance="@{signpostViewModel.distance}"
-        app:instructionText="@{signpostViewModel.instructionText}"
-        app:primaryDirection="@{signpostViewModel.primaryDirection}"
-        app:secondaryDirection="@{signpostViewModel.secondaryDirection}"
-        app:secondaryDirectionContainerVisible="@{safeUnbox(signpostViewModel.secondaryDirectionContainerVisible)}"
-        app:secondaryDirectionText="@{signpostViewModel.secondaryDirectionText}" />
-
-</layout>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/white_a10" />
+    <corners
+        android:topRightRadius="8dp"
+        android:bottomRightRadius="8dp" />
+</shape>
