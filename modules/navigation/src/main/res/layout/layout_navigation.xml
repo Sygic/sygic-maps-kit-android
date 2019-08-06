@@ -54,13 +54,15 @@
 
         <ViewStub
             android:id="@+id/signpostViewViewStub"
+            android:inflatedId="@+id/signpostView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout="@{navigationFragmentViewModel.signpostLayout}"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationFragmentViewModel="@{navigationFragmentViewModel}" />
 
         <com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
             android:id="@+id/routePreviewControls"
@@ -74,7 +76,7 @@
             app:onSpeedButtonClickListener="@{() -> routePreviewControlsViewModel.onSpeedButtonClick()}"
             app:onStopButtonClickListener="@{() -> routePreviewControlsViewModel.onStopButtonClick()}"
             app:playPauseButtonState="@{routePreviewControlsViewModel.playPauseButtonState}"
-            tools:background="@drawable/bg_navigation_light_rounded"
+            tools:background="@drawable/bg_navigation_rounded"
             tools:layout_height="32dp"
             tools:layout_margin="@dimen/routePreviewControlsLayoutMargin"
             tools:layout_width="164dp" />

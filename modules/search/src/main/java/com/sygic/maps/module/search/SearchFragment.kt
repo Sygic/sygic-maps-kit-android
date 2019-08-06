@@ -209,14 +209,13 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
         OnlineManager.getInstance().enableOnlineMapStreaming(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = LayoutSearchBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.searchFragmentViewModel = fragmentViewModel
-        binding.searchToolbarViewModel = searchToolbarViewModel
-        binding.searchResultListViewModel = searchResultListViewModel
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        LayoutSearchBinding.inflate(inflater, container, false).apply {
+            searchFragmentViewModel = fragmentViewModel
+            searchToolbarViewModel = this@SearchFragment.searchToolbarViewModel
+            searchResultListViewModel = this@SearchFragment.searchResultListViewModel
+            lifecycleOwner = this@SearchFragment
+        }.root
 
     /**
      * Register a custom callback to be invoked when a search process is done.

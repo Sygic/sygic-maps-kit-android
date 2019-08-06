@@ -55,18 +55,18 @@ abstract class BaseSamplesListFragment : Fragment() {
 
         toolbar?.setTitle(title)
         samplesListViewModel =
-                ViewModelProviders.of(this, SamplesListViewModel.Factory(items)).get(SamplesListViewModel::class.java).apply {
+            ViewModelProviders.of(this, SamplesListViewModel.Factory(items)).get(SamplesListViewModel::class.java)
+                .apply {
                     this.startActivityObservable.observe(
                         this@BaseSamplesListFragment,
                         Observer<Class<out AppCompatActivity>> { requireContext().openActivity(it) })
                 }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: LayoutSamplesListBinding = LayoutSamplesListBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.samplesListViewModel = samplesListViewModel
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        LayoutSamplesListBinding.inflate(inflater, container, false).apply {
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            samplesListViewModel = this@BaseSamplesListFragment.samplesListViewModel
+            lifecycleOwner = this@BaseSamplesListFragment
+        }.root
 }

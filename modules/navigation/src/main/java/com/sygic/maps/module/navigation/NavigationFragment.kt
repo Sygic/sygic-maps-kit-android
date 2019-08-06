@@ -39,7 +39,6 @@ import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
@@ -52,7 +51,6 @@ import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.sdk.route.RouteInfo
-import javax.inject.Inject
 
 const val NAVIGATION_FRAGMENT_TAG = "navigation_fragment_tag"
 internal const val KEY_DISTANCE_UNITS = "distance_units"
@@ -75,9 +73,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
     private lateinit var infobarViewModel: InfobarViewModel
 
-    @Inject
-    internal lateinit var regionalManager: RegionalManager
-
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
 
@@ -92,18 +87,17 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
      */
     var distanceUnit: DistanceUnit
         get() = if (::fragmentViewModel.isInitialized) {
-            regionalManager.distanceUnit.value!!
+            fragmentViewModel.distanceUnit
         } else arguments.getParcelableValue(KEY_DISTANCE_UNITS) ?: DISTANCE_UNITS_DEFAULT_VALUE
         set(value) {
             arguments = Bundle(arguments).apply { putParcelable(KEY_DISTANCE_UNITS, value) }
             if (::fragmentViewModel.isInitialized) {
-                regionalManager.distanceUnit.value = value
+                fragmentViewModel.distanceUnit = value
             }
         }
 
     /**
      * A *[signpostEnabled]* modifies the SignpostView ([FullSignpostView] or [SimplifiedSignpostView]) visibility.
-     * Note, this need to be set before the [NavigationFragment] commit transaction.
      *
      * @param [Boolean] true to enable the SignpostView, false otherwise.
      *
@@ -111,26 +105,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
      */
     var signpostEnabled: Boolean
         get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.signpostEnabled
+            fragmentViewModel.signpostEnabled.value!!
         } else arguments.getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
         set(value) {
             arguments = Bundle(arguments).apply { putBoolean(KEY_SIGNPOST_ENABLED, value) }
-        }
-
-    /**
-     * A *[signpostType]* defines the SignpostView ([FullSignpostView] or [SimplifiedSignpostView]) type to be used.
-     * Note, this need to be set before the [NavigationFragment] commit transaction.
-     *
-     * @param [SignpostType] FULL -> [FullSignpostView], SIMPLIFIED -> [SimplifiedSignpostView].
-     *
-     * @return the current signpostView type value.
-     */
-    var signpostType: SignpostType
-        get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.signpostType
-        } else arguments.getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE
-        set(value) {
-            arguments = Bundle(arguments).apply { putParcelable(KEY_SIGNPOST_TYPE, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.signpostEnabled.value = value
+            }
         }
 
     /**
@@ -219,32 +200,30 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         lifecycle.addObserver(fragmentViewModel)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = LayoutNavigationBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.navigationFragmentViewModel = fragmentViewModel
-        binding.routePreviewControlsViewModel = routePreviewControlsViewModel
-        binding.infobarViewModel = infobarViewModel
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        LayoutNavigationBinding.inflate(inflater, container, false).apply {
+            navigationFragmentViewModel = fragmentViewModel
+            infobarViewModel = this@NavigationFragment.infobarViewModel
+            routePreviewControlsViewModel = this@NavigationFragment.routePreviewControlsViewModel
+            lifecycleOwner = this@NavigationFragment
 
-        binding.signpostViewViewStub.setOnInflateListener { _, view ->
-            DataBindingUtil.bind<ViewDataBinding>(view)?.let {
-                it.lifecycleOwner = this
-                it.setVariable(
-                    BR.signpostViewModel, when (view) {
-                        is FullSignpostView -> viewModelOf(FullSignpostViewModel::class.java)
-                        is SimplifiedSignpostView -> viewModelOf(SimplifiedSignpostViewModel::class.java)
-                        else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
-                    }
-                )
+            signpostViewViewStub.setOnInflateListener { _, view ->
+                DataBindingUtil.bind<ViewDataBinding>(view)?.let {
+                    it.setVariable(
+                        BR.signpostViewModel, when (view) {
+                            is FullSignpostView -> viewModelOf(FullSignpostViewModel::class.java)
+                            is SimplifiedSignpostView -> viewModelOf(SimplifiedSignpostViewModel::class.java)
+                            else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
+                        }
+                    )
+                    it.lifecycleOwner = this@NavigationFragment
+                }
             }
-        }
 
-        val root = binding.root as ViewGroup
-        super.onCreateView(inflater, root, savedInstanceState)?.let {
-            root.addView(it, 0)
-        }
-        return root
-    }
+            with(root as ViewGroup) {
+                super.onCreateView(inflater, this, savedInstanceState)?.let { addView(it, 0) }
+            }
+        }.root
 
     override fun onDestroy() {
         super.onDestroy()
@@ -270,12 +249,16 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                     )
             }
             if (hasValue(R.styleable.NavigationFragment_sygic_signpost_type)) {
-                signpostType = SignpostType.atIndex(
-                    getInt(
-                        R.styleable.NavigationFragment_sygic_signpost_type,
-                        SIGNPOST_TYPE_DEFAULT_VALUE.ordinal
+                arguments = Bundle(arguments).apply {
+                    putParcelable(
+                        KEY_SIGNPOST_TYPE, SignpostType.atIndex(
+                            getInt(
+                                R.styleable.NavigationFragment_sygic_signpost_type,
+                                SIGNPOST_TYPE_DEFAULT_VALUE.ordinal
+                            )
+                        )
                     )
-                )
+                }
             }
             if (hasValue(R.styleable.NavigationFragment_sygic_navigation_previewMode)) {
                 previewMode =

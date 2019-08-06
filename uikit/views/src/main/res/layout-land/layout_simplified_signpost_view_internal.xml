@@ -28,7 +28,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <merge
-        tools:background="@drawable/bg_navigation_dark_rounded"
+        tools:background="@drawable/bg_signpost_rounded"
         tools:ignore="ContentDescription"
         tools:layout_height="wrap_content"
         tools:layout_margin="@dimen/signpostViewLayoutMargin"
@@ -56,7 +56,7 @@
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:textColor="?attr/navigationLightTintColor"
+            android:textColor="?attr/signpostTintColor"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"

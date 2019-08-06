@@ -46,6 +46,8 @@ import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
@@ -77,6 +79,7 @@ class NavigationFragmentViewModel internal constructor(
     themeManager: ThemeManager,
     private val cameraModel: ExtendedCameraModel,
     private val mapDataModel: ExtendedMapDataModel,
+    private val regionalManager: RegionalManager,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
     private val navigationManager: NavigationManager,
@@ -85,8 +88,7 @@ class NavigationFragmentViewModel internal constructor(
 
     @LayoutRes
     val signpostLayout: Int
-    val signpostType: SignpostType
-    val signpostEnabled: Boolean
+    val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
     val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
@@ -97,19 +99,24 @@ class NavigationFragmentViewModel internal constructor(
         }
     }
 
+    var distanceUnit: DistanceUnit
+        get() = regionalManager.distanceUnit.value!!
+        set(value) {
+            regionalManager.distanceUnit.value = value
+        }
+
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
             infobarEnabled.value = getBoolean(KEY_INFOBAR_ENABLED, INFOBAR_ENABLED_DEFAULT_VALUE)
             previewControlsEnabled.value = getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
-            signpostEnabled = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
-            signpostType = getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE
+            signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
+            signpostLayout = when (getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE) {
+                SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
+                SignpostType.SIMPLIFIED -> R.layout.layout_signpost_simplified_view_stub
+            }
+            distanceUnit = getParcelableValue(KEY_DISTANCE_UNITS) ?: DISTANCE_UNITS_DEFAULT_VALUE
             getParcelableValue<RouteInfo>(KEY_ROUTE_INFO)?.let { routeInfo.value = it }
-        }
-
-        signpostLayout = when (signpostType) {
-            SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
-            SignpostType.SIMPLIFIED -> R.layout.layout_signpost_simplified_view_stub
         }
 
         routeInfo.observeForever(::setRouteInfo)
