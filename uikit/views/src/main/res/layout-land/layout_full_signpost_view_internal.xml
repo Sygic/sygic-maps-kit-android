@@ -32,7 +32,7 @@
         tools:ignore="ContentDescription"
         tools:layout_height="wrap_content"
         tools:layout_margin="@dimen/signpostViewLayoutMargin"
-        tools:layout_width="232dp"
+        tools:layout_width="344dp"
         tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
         <TextView
@@ -117,7 +117,7 @@
             android:id="@+id/signpostSecondaryDirectionContainer"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:background="@color/white_a10"
+            android:background="@drawable/bg_signpost_full_sub_container_rounded"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
