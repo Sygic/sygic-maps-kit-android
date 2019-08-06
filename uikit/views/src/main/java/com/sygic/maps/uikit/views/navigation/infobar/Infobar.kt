@@ -80,9 +80,7 @@ open class Infobar @JvmOverloads constructor(
                 defStyleAttr,
                 defStyleRes
             ).apply {
-                setBackgroundResource(
-                    getResourceId(R.styleable.Infobar_android_background, R.drawable.bg_infobar_light_rounded)
-                )
+                setBackgroundResource(getResourceId(R.styleable.Infobar_android_background, 0))
 
                 setLeftButtonImageResource(
                     getResourceId(R.styleable.Infobar_leftButtonIcon, 0),
