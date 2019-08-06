@@ -56,9 +56,7 @@ abstract class BaseSignpostView(
                 defStyleAttr,
                 defStyleRes
             ).apply {
-                with(getResourceId(R.styleable.SignpostView_android_background,0)) {
-                    setBackgroundResource(this)
-                }
+                setBackgroundResource(getResourceId(R.styleable.SignpostView_android_background,0))
 
                 layoutMargin = getDimensionPixelSize(R.styleable.SignpostView_android_layout_margin, 0)
                 layoutMarginTop = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginTop, 0)
