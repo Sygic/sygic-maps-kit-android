@@ -27,7 +27,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <merge
-        tools:background="@drawable/bg_navigation_light_rounded"
+        tools:background="@drawable/bg_navigation_rounded"
         tools:elevation="@dimen/navigationComponentElevation"
         tools:gravity="center"
         tools:layout_gravity="center"
@@ -47,7 +47,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="8dp"
             android:src="@drawable/sel_play_pause"
-            android:tint="?attr/navigationDarkTintColor" />
+            android:tint="?attr/navigationTextColorPrimary" />
 
         <ImageView
             android:id="@+id/routePreviewControlsSpeedButton"
@@ -61,7 +61,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="8dp"
             android:src="@drawable/ic_fast_forward"
-            android:tint="?attr/navigationDarkTintColor" />
+            android:tint="?attr/navigationTextColorPrimary" />
 
         <ImageView
             android:id="@+id/routePreviewControlsStopButton"
@@ -75,7 +75,7 @@
             android:paddingEnd="12dp"
             android:paddingBottom="8dp"
             android:src="@drawable/ic_stop"
-            android:tint="?attr/navigationDarkTintColor" />
+            android:tint="?attr/navigationTextColorPrimary" />
     </merge>
 
 </layout>
