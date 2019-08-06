@@ -128,22 +128,42 @@ open class Infobar @JvmOverloads constructor(
      * Sets the left button image resource and optionally an tint.
      *
      * @param imageResource [Int] to be used as left button image resource.
-     * @param tint [Int] optional parameter to be used as left button tint.
+     * @param tintColor [Int] optional parameter to be used as left button tint.
      */
-    fun setLeftButtonImageResource(@DrawableRes imageResource: Int, @ColorRes tint: Int = 0) {
+    @JvmOverloads
+    fun setLeftButtonImageResource(@DrawableRes imageResource: Int, @ColorRes tintColor: Int = 0) {
         if (imageResource != 0) binding.infobarLeftButton.setImageResource(imageResource)
-        if (tint != 0) binding.infobarLeftButton.tint(tint)
+        if (tintColor != 0) setLeftButtonImageTint(tintColor)
+    }
+
+    /**
+     * Sets the left button image tint.
+     *
+     * @param tintColor [Int] left button tint.
+     */
+    fun setLeftButtonImageTint(@ColorRes tintColor: Int) {
+        if (tintColor != 0) binding.infobarLeftButton.tint(tintColor)
     }
 
     /**
      * Sets the left button background resource and optionally an tint.
      *
      * @param backgroundResource [Int] to be used as left button background resource.
-     * @param tint [Int] optional parameter to be used as left button background tint.
+     * @param tintColor [Int] optional parameter to be used as left button background tint.
      */
-    fun setLeftButtonBackgroundResource(@DrawableRes backgroundResource: Int, @ColorRes tint: Int = 0) {
+    @JvmOverloads
+    fun setLeftButtonBackgroundResource(@DrawableRes backgroundResource: Int, @ColorRes tintColor: Int = 0) {
         if (backgroundResource != 0) binding.infobarLeftButton.setBackgroundResource(backgroundResource)
-        if (tint != 0) binding.infobarLeftButton.backgroundTint(tint)
+        if (tintColor != 0) setLeftButtonBackgroundTint(tintColor)
+    }
+
+    /**
+     * Sets the left button background tint.
+     *
+     * @param tintColor [Int] left button background tint.
+     */
+    fun setLeftButtonBackgroundTint(@ColorRes tintColor: Int) {
+        if (tintColor != 0) binding.infobarLeftButton.backgroundTint(tintColor)
     }
 
     /**
@@ -168,22 +188,42 @@ open class Infobar @JvmOverloads constructor(
      * Sets the right button image resource and optionally an tint.
      *
      * @param imageResource [Int] to be used as right button image resource.
-     * @param tint [Int] optional parameter to be used as right button tint.
+     * @param tintColor [Int] optional parameter to be used as right button tint.
      */
-    fun setRightButtonImageResource(@DrawableRes imageResource: Int, @ColorRes tint: Int = 0) {
+    @JvmOverloads
+    fun setRightButtonImageResource(@DrawableRes imageResource: Int, @ColorRes tintColor: Int = 0) {
         if (imageResource != 0) binding.infobarRightButton.setImageResource(imageResource)
-        if (tint != 0) binding.infobarRightButton.tint(tint)
+        if (tintColor != 0) setRightButtonImageTint(tintColor)
+    }
+
+    /**
+     * Sets the right button image tint.
+     *
+     * @param tintColor [Int] right button tint.
+     */
+    fun setRightButtonImageTint(@ColorRes tintColor: Int) {
+        if (tintColor != 0) binding.infobarRightButton.tint(tintColor)
     }
 
     /**
      * Sets the right button background resource and optionally an tint.
      *
      * @param backgroundResource [Int] to be used as right button background resource.
-     * @param tint [Int] optional parameter to be used as right button background tint.
+     * @param tintColor [Int] optional parameter to be used as right button background tint.
      */
-    fun setRightButtonBackgroundResource(@DrawableRes backgroundResource: Int, @ColorRes tint: Int = 0) {
+    @JvmOverloads
+    fun setRightButtonBackgroundResource(@DrawableRes backgroundResource: Int, @ColorRes tintColor: Int = 0) {
         if (backgroundResource != 0) binding.infobarRightButton.setBackgroundResource(backgroundResource)
-        if (tint != 0) binding.infobarRightButton.backgroundTint(tint)
+        if (tintColor != 0) setRightButtonBackgroundTint(tintColor)
+    }
+
+    /**
+     * Sets the right button background tint.
+     *
+     * @param tintColor [Int] right button background tint.
+     */
+    fun setRightButtonBackgroundTint(@ColorRes tintColor: Int) {
+        if (tintColor != 0) binding.infobarRightButton.backgroundTint(tintColor)
     }
 
     /**

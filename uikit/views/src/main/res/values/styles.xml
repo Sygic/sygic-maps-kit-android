@@ -37,14 +37,6 @@
         <item name="android:layout_marginStart">@dimen/infobarLayoutMargin</item>
         <item name="android:layout_marginTop">@dimen/infobarLayoutMargin</item>
         <item name="android:elevation">@dimen/navigationComponentElevation</item>
-        <item name="leftButtonIcon">@drawable/ic_more</item>
-        <item name="leftButtonIconTint">@color/white</item>
-        <item name="leftButtonBackground">@drawable/bg_infobar_button_rounded</item>
-        <item name="leftButtonBackgroundTint">?android:attr/colorAccent</item>
-        <item name="rightButtonIcon">@drawable/ic_close</item>
-        <item name="rightButtonIconTint">@color/white</item>
-        <item name="rightButtonBackground">@drawable/bg_infobar_button_rounded</item>
-        <item name="rightButtonBackgroundTint">@color/brick_red</item>
     </style>
 
     <style name="SygicPositionLockFabStyle">

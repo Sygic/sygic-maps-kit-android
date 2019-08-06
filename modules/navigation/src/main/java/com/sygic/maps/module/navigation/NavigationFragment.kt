@@ -31,12 +31,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.Observer
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
@@ -44,6 +47,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
@@ -67,11 +71,13 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [CurrentSpeed] or [SpeedLimit] may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
+class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), OnInfobarButtonClickListenerWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
     private lateinit var infobarViewModel: InfobarViewModel
+
+    override val infobarButtonsClickListenerProvider: LiveData<OnInfobarButtonClickListener> = MutableLiveData()
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
@@ -190,13 +196,8 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments)
+        infobarViewModel = viewModelOf(InfobarViewModel::class.java)
         routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
-        infobarViewModel = viewModelOf(InfobarViewModel::class.java).apply {
-            this.activityFinishObservable.observe(
-                this@NavigationFragment,
-                Observer<Any> { requireActivity().finish() })
-        }
-
         lifecycle.addObserver(fragmentViewModel)
     }
 
@@ -224,6 +225,15 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                 super.onCreateView(inflater, this, savedInstanceState)?.let { addView(it, 0) }
             }
         }.root
+
+    /**
+     * Register a custom callback to be invoked when a click to the infobar button has been made.
+     *
+     * @param onClickListener [OnInfobarButtonClickListener] callback to invoke on infobar button click.
+     */
+    fun setOnInfobarButtonClickListener(onClickListener: OnInfobarButtonClickListener?) {
+        infobarButtonsClickListenerProvider.asMutable().value = onClickListener
+    }
 
     override fun onDestroy() {
         super.onDestroy()
