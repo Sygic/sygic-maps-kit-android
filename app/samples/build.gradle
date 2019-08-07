@@ -127,7 +127,7 @@ dependencies {
     implementation project(':module-search')
 
     // test libraries
-    androidTestImplementation "androidx.test:rules:$testRunnerVersion"
+    androidTestImplementation "androidx.test:rules:$testRulesVersion"
     androidTestImplementation "androidx.test:runner:$testRunnerVersion"
     androidTestImplementation "androidx.test.ext:junit:$extJUnitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"

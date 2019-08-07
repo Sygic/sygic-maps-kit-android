@@ -28,7 +28,6 @@ import android.app.Activity
 import android.app.Application
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
-import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
@@ -39,7 +38,6 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
@@ -187,8 +185,8 @@ fun Application.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: 
     }
 }
 
-fun List<NaviSignInfo.SignElement>.concat(): String = StringBuilder().apply {
-    this@concat.forEach {
+fun List<NaviSignInfo.SignElement>.concatItems(): String = StringBuilder().apply {
+    this@concatItems.forEach {
         if (isNotEmpty()) append(", ")
         append(it.text)
     }
@@ -200,73 +198,25 @@ fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
             return null
         }
 
+        //ToDo: Use NaviSignInfo "priority" when ready
         return isOnRouteList.firstOrNull { it.backgroundColor != 0 }?.let { it } ?: isOnRouteList[0]
     }
 }
 
 fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
-    val roadSigns = mutableListOf<RoadSignData>()
-    val hasPic = signElements.find { it.elementType == SignElementType.Pictogram } != null
-    signElements
+    val hasPictogram = signElements.any { it.elementType == SignElementType.Pictogram }
+    return signElements
         .asSequence()
-        .filter { it.elementType == SignElementType.RouteNumber }
-        .take(if (hasPic) maxRoadSignsCount - 1 else maxRoadSignsCount)
+        .filter { it.elementType == SignElementType.RouteNumber && it.routeNumberFormat.insideNumber.isNotEmpty() }
+        .take(if (hasPictogram) maxRoadSignsCount - 1 else maxRoadSignsCount)
         .toList()
-        .forEach { signElement ->
-            with(signElement.routeNumberFormat) {
-                if (insideNumber.isNotEmpty()) {
-                    roadSigns.add(
-                        RoadSignData(
-                            roadSignBackgroundDrawableRes(),
-                            insideNumber,
-                            roadSignForegroundColorRes()
-                        )
-                    )
-                }
-            }
-        }
-
-    return roadSigns
+        .toRoadSignDataList()
 }
 
-fun NaviSignInfo.createInstructionText(): TextHolder {
-    val acceptedSignElements = signElements
-        .filter { element -> element.elementType.let { it == SignElementType.ExitNumber || it == SignElementType.PlaceName || it == SignElementType.OtherDestination } }
-        .sortedByDescending { it.elementType == SignElementType.ExitNumber }
-
-    return if (acceptedSignElements.any { it.elementType == SignElementType.ExitNumber }) {
-        TextHolder.from(R.string.exit_number, acceptedSignElements.concat())
-    } else {
-        TextHolder.from(acceptedSignElements.concat())
-    }
-}
-
-fun DirectionInfo.createInstructionText(naviSignInfo: NaviSignInfo? = null): TextHolder {
-    if (this@createInstructionText.distance > 2000) { // 2km
-        return TextHolder.from(R.string.follow_the_route)
-    }
-
-    naviSignInfo?.let {
-        return it.createInstructionText()
-    }
-
-    with(primary) {
-        if (!isValid) {
-            return TextHolder.empty()
-        }
-
-        if (isRoundabout()) {
-            getDirectionInstruction().let {
-                return if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty()
-            }
-        }
-
-        with(nextRoadText()) {
-            if (isNotEmpty()) return TextHolder.from(this)
-        }
-
-        getDirectionInstruction().let {
-            return if (it != 0) TextHolder.from(it) else TextHolder.empty()
+fun List<NaviSignInfo.SignElement>.toRoadSignDataList(): List<RoadSignData> {
+    return map {
+        with(it.routeNumberFormat) {
+            RoadSignData(roadSignBackgroundDrawableRes(), insideNumber, roadSignForegroundColorRes())
         }
     }
 }
