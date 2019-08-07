@@ -49,7 +49,7 @@ abstract class BaseSignpostViewModel(
     val secondaryDirection: MutableLiveData<Int> = MutableLiveData()
     val secondaryDirectionText: Int = R.string.then
     val secondaryDirectionContainerVisible: MutableLiveData<Boolean> = MutableLiveData(false)
-    val instructionText: MutableLiveData<TextHolder> = MutableLiveData(TextHolder.empty())
+    val instructionText: MutableLiveData<TextHolder> = MutableLiveData(TextHolder.empty)
 
     protected var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
     protected val directionInfo: MutableLiveData<DirectionInfo?> = MutableLiveData()

@@ -58,12 +58,12 @@ internal fun createInstructionText(directionInfo: DirectionInfo, naviSignInfo: N
 
     with(directionInfo.primary) {
         if (!isValid) {
-            return TextHolder.empty()
+            return TextHolder.empty
         }
 
         if (isRoundabout()) {
             getDirectionInstruction().let {
-                return if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty()
+                return if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty
             }
         }
 
@@ -72,7 +72,7 @@ internal fun createInstructionText(directionInfo: DirectionInfo, naviSignInfo: N
         }
 
         getDirectionInstruction().let {
-            return if (it != 0) TextHolder.from(it) else TextHolder.empty()
+            return if (it != 0) TextHolder.from(it) else TextHolder.empty
         }
     }
 }

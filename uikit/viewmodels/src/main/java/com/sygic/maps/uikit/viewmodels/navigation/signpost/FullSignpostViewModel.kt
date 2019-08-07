@@ -56,7 +56,7 @@ open class FullSignpostViewModel internal constructor(
     val pictogram: MutableLiveData<Int> = MutableLiveData(EMPTY_PICTOGRAM)
     val roadSigns: MutableLiveData<List<RoadSignData>> = MutableLiveData(listOf())
 
-    private val naviSignInfoHolder: MutableLiveData<NaviSignInfoHolder> = MutableLiveData(NaviSignInfoHolder.empty())
+    private val naviSignInfoHolder: MutableLiveData<NaviSignInfoHolder> = MutableLiveData(NaviSignInfoHolder.empty)
 
     init {
         navigationManager.addOnNaviSignListener(this)

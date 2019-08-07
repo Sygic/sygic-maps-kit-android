@@ -22,34 +22,6 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.searchresultlist.data
+package com.sygic.maps.uikit.views.common.extensions
 
-import android.os.Parcelable
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.common.utils.TextHolder
-
-interface SearchResultItem<T : Parcelable> : Parcelable {
-
-    val dataPayload: T
-
-    val title: TextHolder
-    val subTitle: TextHolder
-        get() = TextHolder.empty
-
-    @get:DrawableRes
-    val icon: Int
-        get() = R.drawable.ic_location
-
-    @get:ColorRes
-    val iconColor: Int
-        get() = R.color.white
-
-    @get:ColorRes
-    val iconBackgroundColor: Int
-        get() = R.color.iconBackground
-
-    val iconRingVisible: Boolean
-        get() = false
-}
+fun Float.getDecimal() = this % 1
