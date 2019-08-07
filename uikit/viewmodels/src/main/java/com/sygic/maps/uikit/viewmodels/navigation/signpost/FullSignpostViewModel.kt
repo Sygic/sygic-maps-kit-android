@@ -26,12 +26,12 @@ package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.extensions.createInstructionText
 import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
 import com.sygic.maps.uikit.viewmodels.common.extensions.pictogramDrawableRes
 import com.sygic.maps.uikit.viewmodels.common.extensions.roadSigns
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.holders.NaviSignInfoHolder
+import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
 import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
@@ -62,7 +62,7 @@ open class FullSignpostViewModel internal constructor(
         navigationManager.addOnNaviSignListener(this)
         directionInfo.combineLatest(naviSignInfoHolder).observeForever {
             it.first?.let { directionInfo ->
-                instructionText.value = directionInfo.createInstructionText(it.second.naviSignInfo)
+                instructionText.value = createInstructionText(directionInfo, it.second.naviSignInfo)
             }
         }
     }

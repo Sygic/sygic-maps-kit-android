@@ -29,3 +29,5 @@ import androidx.lifecycle.AndroidViewModel
 
 val AndroidViewModel.application: Application
     get() = getApplication()
+
+fun AndroidViewModel.isLandscape(): Boolean = application.resources.isLandscape()
