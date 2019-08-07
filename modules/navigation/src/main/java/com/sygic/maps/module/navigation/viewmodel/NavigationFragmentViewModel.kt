@@ -56,6 +56,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.common.extensions.isLandscape
 import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
@@ -66,10 +67,17 @@ import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.route.RouteInfo
 
 private const val DEFAULT_NAVIGATION_TILT = 60f
-private val DEFAULT_NAVIGATION_MAP_CENTER = MapCenter(0.5f, 0.3f)
-private val DEFAULT_NAVIGATION_MAP_CENTER_SETTING = MapCenterSettings(
-    DEFAULT_NAVIGATION_MAP_CENTER,
-    DEFAULT_NAVIGATION_MAP_CENTER,
+private val PORTRAIT_MAP_CENTER = MapCenter(0.5f, 0.25f)
+private val PORTRAIT_MAP_CENTER_SETTING = MapCenterSettings(
+    PORTRAIT_MAP_CENTER,
+    PORTRAIT_MAP_CENTER,
+    MapAnimation.NONE,
+    MapAnimation.NONE
+)
+private val LANDSCAPE_MAP_CENTER = MapCenter(0.75f, 0.3f)
+private val LANDSCAPE_MAP_CENTER_SETTING = MapCenterSettings(
+    LANDSCAPE_MAP_CENTER,
+    LANDSCAPE_MAP_CENTER,
     MapAnimation.NONE,
     MapAnimation.NONE
 )
@@ -176,6 +184,10 @@ class NavigationFragmentViewModel internal constructor(
         navigationManager.addOnRouteChangedListener(this)
     }
 
+    override fun onResume(owner: LifecycleOwner) {
+        cameraModel.mapCenterSettings = if (isLandscape()) LANDSCAPE_MAP_CENTER_SETTING else PORTRAIT_MAP_CENTER_SETTING
+    }
+
     override fun onRouteChanged(routeInfo: RouteInfo?) {
         mapDataModel.removeAllMapRoutes()
         routeInfo?.let {
@@ -188,7 +200,6 @@ class NavigationFragmentViewModel internal constructor(
         // set the default navigation camera state
         cameraModel.apply {
             tilt = DEFAULT_NAVIGATION_TILT
-            mapCenterSettings = DEFAULT_NAVIGATION_MAP_CENTER_SETTING
             movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
             rotationMode = Camera.RotationMode.Vehicle
         }
