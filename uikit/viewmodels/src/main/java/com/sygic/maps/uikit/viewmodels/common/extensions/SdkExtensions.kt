@@ -204,14 +204,16 @@ fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
 }
 
 fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
-    val hasPictogram = signElements.any { it.elementType == SignElementType.Pictogram }
     return signElements
         .asSequence()
-        .filter { it.elementType == SignElementType.RouteNumber && it.routeNumberFormat.insideNumber.isNotEmpty() }
-        .take(if (hasPictogram) maxRoadSignsCount - 1 else maxRoadSignsCount)
+        .filter { it.elementType == SignElementType.RouteNumber }
+        .filter { it.routeNumberFormat.insideNumber.isNotEmpty() }
+        .take(if (signElements.hasPictogram()) maxRoadSignsCount - 1 else maxRoadSignsCount)
         .toList()
         .toRoadSignDataList()
 }
+
+fun List<NaviSignInfo.SignElement>.hasPictogram(): Boolean = any { it.elementType == SignElementType.Pictogram }
 
 fun List<NaviSignInfo.SignElement>.toRoadSignDataList(): List<RoadSignData> {
     return map {
