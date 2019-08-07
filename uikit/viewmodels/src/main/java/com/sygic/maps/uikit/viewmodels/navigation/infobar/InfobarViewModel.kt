@@ -24,7 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation.infobar
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -36,8 +35,6 @@ import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.common.utils.Elevation
 import com.sygic.maps.uikit.viewmodels.common.utils.Time
 import com.sygic.maps.uikit.views.common.extensions.SPACE
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItemsHolder
 import com.sygic.sdk.navigation.NavigationManager
@@ -59,13 +56,8 @@ open class InfobarViewModel internal constructor(
     private val navigationManager: NavigationManager
 ) : ViewModel(), NavigationManager.OnNaviStatsListener {
 
-    val leftButtonVisible = true
-    val rightButtonVisible = true
-
     val primaryItemsHolder = MutableLiveData(InfobarItemsHolder(divider = SPACE))
     val secondaryItemsHolder = MutableLiveData(InfobarItemsHolder.empty())
-
-    val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
     private var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
     private val distanceUnitObserver = Observer<DistanceUnit> { distanceUnit = it }
@@ -104,12 +96,6 @@ open class InfobarViewModel internal constructor(
 
     open fun formatEstimatedTime(estimatedTime: Int) =
         dateTimeManager.formatTime(Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(estimatedTime.toLong())))
-
-    open fun onLeftButtonClick() {
-        //todo
-    }
-
-    open fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
 
     override fun onCleared() {
         super.onCleared()

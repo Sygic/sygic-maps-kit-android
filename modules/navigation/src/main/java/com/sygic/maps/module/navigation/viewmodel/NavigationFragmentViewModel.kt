@@ -31,6 +31,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.*
@@ -40,6 +41,8 @@ import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
 import com.sygic.maps.module.navigation.component.*
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -53,6 +56,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.common.extensions.isLandscape
 import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
@@ -63,10 +67,17 @@ import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.route.RouteInfo
 
 private const val DEFAULT_NAVIGATION_TILT = 60f
-private val DEFAULT_NAVIGATION_MAP_CENTER = MapCenter(0.5f, 0.3f)
-private val DEFAULT_NAVIGATION_MAP_CENTER_SETTING = MapCenterSettings(
-    DEFAULT_NAVIGATION_MAP_CENTER,
-    DEFAULT_NAVIGATION_MAP_CENTER,
+private val PORTRAIT_MAP_CENTER = MapCenter(0.5f, 0.25f)
+private val PORTRAIT_MAP_CENTER_SETTING = MapCenterSettings(
+    PORTRAIT_MAP_CENTER,
+    PORTRAIT_MAP_CENTER,
+    MapAnimation.NONE,
+    MapAnimation.NONE
+)
+private val LANDSCAPE_MAP_CENTER = MapCenter(0.75f, 0.3f)
+private val LANDSCAPE_MAP_CENTER_SETTING = MapCenterSettings(
+    LANDSCAPE_MAP_CENTER,
+    LANDSCAPE_MAP_CENTER,
     MapAnimation.NONE,
     MapAnimation.NONE
 )
@@ -94,12 +105,51 @@ class NavigationFragmentViewModel internal constructor(
     val currentSpeedEnabled: MutableLiveData<Boolean> = MutableLiveData(CURRENT_SPEED_ENABLED_DEFAULT_VALUE)
     val speedLimitEnabled: MutableLiveData<Boolean> = MutableLiveData(SPEED_LIMIT_ENABLED_DEFAULT_VALUE)
 
+    val leftButtonVisible: MutableLiveData<Boolean> = MutableLiveData(false)
+    val leftButtonBackgroundResource: MutableLiveData<Int> = MutableLiveData(0)
+    val leftButtonBackgroundTint: MutableLiveData<Int> = MutableLiveData(0)
+    val leftButtonImageResource: MutableLiveData<Int> = MutableLiveData(0)
+    val leftButtonImageTint: MutableLiveData<Int> = MutableLiveData(0)
+    val rightButtonVisible: MutableLiveData<Boolean> = MutableLiveData(false)
+    val rightButtonBackgroundResource: MutableLiveData<Int> = MutableLiveData(0)
+    val rightButtonBackgroundTint: MutableLiveData<Int> = MutableLiveData(0)
+    val rightButtonImageResource: MutableLiveData<Int> = MutableLiveData(0)
+    val rightButtonImageTint: MutableLiveData<Int> = MutableLiveData(0)
+
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
         override fun setValue(value: RouteInfo) {
             if (value != this.value) super.setValue(value)
         }
     }
+
+    var onInfobarButtonClickListener: OnInfobarButtonClickListener? = null
+        set(value) {
+            field = value
+            value?.let {
+                it.getLeftButton()?.let { leftButton ->
+                    leftButtonVisible.value = true
+                    leftButtonImageResource.value = leftButton.imageResource
+                    leftButtonImageTint.value = leftButton.imageTintColor
+                    leftButtonBackgroundResource.value = leftButton.backgroundResource
+                    leftButtonBackgroundTint.value = leftButton.backgroundTintColor
+                } ?: run {
+                    leftButtonVisible.value = false
+                }
+                it.getRightButton()?.let { rightButton ->
+                    rightButtonVisible.value = true
+                    rightButtonImageResource.value = rightButton.imageResource
+                    rightButtonImageTint.value = rightButton.imageTintColor
+                    rightButtonBackgroundResource.value = rightButton.backgroundResource
+                    rightButtonBackgroundTint.value = rightButton.backgroundTintColor
+                } ?: run {
+                    rightButtonVisible.value = false
+                }
+            } ?: run {
+                leftButtonVisible.value = false
+                rightButtonVisible.value = false
+            }
+        }
 
     var distanceUnit: DistanceUnit
         get() = regionalManager.distanceUnit.value!!
@@ -127,9 +177,19 @@ class NavigationFragmentViewModel internal constructor(
         previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
     }
 
+    override fun onCreate(owner: LifecycleOwner) {
+        if (owner is OnInfobarButtonClickListenerWrapper) {
+            owner.infobarButtonsClickListenerProvider.observe(owner, Observer { onInfobarButtonClickListener = it })
+        }
+    }
+
     override fun onStart(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = !previewMode.value!!
         navigationManager.addOnRouteChangedListener(this)
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        cameraModel.mapCenterSettings = if (isLandscape()) LANDSCAPE_MAP_CENTER_SETTING else PORTRAIT_MAP_CENTER_SETTING
     }
 
     override fun onRouteChanged(routeInfo: RouteInfo?) {
@@ -144,7 +204,6 @@ class NavigationFragmentViewModel internal constructor(
         // set the default navigation camera state
         cameraModel.apply {
             tilt = DEFAULT_NAVIGATION_TILT
-            mapCenterSettings = DEFAULT_NAVIGATION_MAP_CENTER_SETTING
             movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
             rotationMode = Camera.RotationMode.Vehicle
         }
@@ -168,6 +227,10 @@ class NavigationFragmentViewModel internal constructor(
             }
         }
     }
+
+    fun onLeftInfobarButtonClick() = onInfobarButtonClickListener?.onLeftButtonClick()
+
+    fun onRightInfobarButtonClick() = onInfobarButtonClickListener?.onRightButtonClick()
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false

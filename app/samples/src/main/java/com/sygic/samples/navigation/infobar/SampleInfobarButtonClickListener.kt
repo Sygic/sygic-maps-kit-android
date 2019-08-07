@@ -22,27 +22,31 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.signpost
+package com.sygic.samples.navigation.infobar
 
-import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
-import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
-import com.sygic.sdk.navigation.NavigationManager
+import android.app.Activity
+import com.sygic.maps.module.navigation.infobar.InfobarButton
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.samples.R
 
-/**
- * A [SimplifiedSignpostViewModel] is a basic ViewModel implementation for the [SimplifiedSignpostView] class. It listens to
- * the Sygic SDK [NavigationManager.OnDirectionListener] and updates the distance, primaryDirection, secondaryDirection,
- * secondaryDirectionText and instructionText in the [SimplifiedSignpostView].
- */
-@AutoFactory
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SimplifiedSignpostViewModel internal constructor(
-    regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
+class SampleInfobarButtonClickListener(val activity: Activity) : OnInfobarButtonClickListener {
 
-    init {
-        directionInfo.observeForever { it?.let { instructionText.value = createInstructionText(it) } }
-    }
+    private val leftInfobarButton = InfobarButton(
+        R.drawable.ic_more,
+        R.drawable.bg_infobar_button_rounded,
+        R.color.white,
+        R.color.colorAccent
+    )
+
+    private val rightInfobarButton = InfobarButton(
+        R.drawable.ic_close,
+        R.drawable.bg_infobar_button_rounded,
+        R.color.white,
+        R.color.brick_red
+    )
+
+    override fun getLeftButton(): InfobarButton? = leftInfobarButton
+    override fun getRightButton(): InfobarButton? = rightInfobarButton
+    override fun onLeftButtonClick() { /* TODO: MS-6218 */ }
+    override fun onRightButtonClick() = activity.finish()
 }

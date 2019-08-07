@@ -24,8 +24,13 @@
 
 package com.sygic.maps.uikit.views.common.extensions
 
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.util.TypedValue
+
+fun Resources.isLandscape(): Boolean {
+    return configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+}
 
 fun Resources.dpToPixels(dp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.displayMetrics)

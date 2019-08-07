@@ -22,27 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.signpost
+package com.sygic.maps.module.navigation.infobar
 
-import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
-import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
-import com.sygic.sdk.navigation.NavigationManager
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 
-/**
- * A [SimplifiedSignpostViewModel] is a basic ViewModel implementation for the [SimplifiedSignpostView] class. It listens to
- * the Sygic SDK [NavigationManager.OnDirectionListener] and updates the distance, primaryDirection, secondaryDirection,
- * secondaryDirectionText and instructionText in the [SimplifiedSignpostView].
- */
-@AutoFactory
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SimplifiedSignpostViewModel internal constructor(
-    regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
-
-    init {
-        directionInfo.observeForever { it?.let { instructionText.value = createInstructionText(it) } }
-    }
-}
+data class InfobarButton(
+    @DrawableRes val imageResource: Int,
+    @DrawableRes val backgroundResource: Int,
+    @ColorRes val imageTintColor: Int = 0,
+    @ColorRes val backgroundTintColor: Int = 0
+)
