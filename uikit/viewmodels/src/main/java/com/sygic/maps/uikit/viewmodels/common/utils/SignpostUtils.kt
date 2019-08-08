@@ -29,9 +29,16 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.*
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionInstruction
 import com.sygic.maps.uikit.viewmodels.common.extensions.isRoundabout
 import com.sygic.maps.uikit.viewmodels.common.extensions.nextRoadText
+import com.sygic.maps.uikit.viewmodels.common.sdk.holders.NaviSignInfoHolder
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.navigation.warnings.DirectionInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
+
+internal fun createInstructionText(directionAndNaviSignInfoPair: Pair<DirectionInfo, NaviSignInfoHolder>): TextHolder =
+    createInstructionText(directionAndNaviSignInfoPair.first, directionAndNaviSignInfoPair.second)
+
+internal fun createInstructionText(directionInfo: DirectionInfo, naviSignInfoHolder: NaviSignInfoHolder): TextHolder =
+    createInstructionText(directionInfo, naviSignInfoHolder.naviSignInfo)
 
 internal fun createInstructionText(directionInfo: DirectionInfo, naviSignInfo: NaviSignInfo? = null): TextHolder {
     if (directionInfo.distance > 2000) { // 2km

@@ -43,6 +43,6 @@ open class SimplifiedSignpostViewModel internal constructor(
 ) : BaseSignpostViewModel(regionalManager, navigationManager) {
 
     init {
-        directionInfo.observeForever { it?.let { instructionText.value = createInstructionText(it) } }
+        directionInfo.observeForever { instructionText.value = createInstructionText(it) }
     }
 }

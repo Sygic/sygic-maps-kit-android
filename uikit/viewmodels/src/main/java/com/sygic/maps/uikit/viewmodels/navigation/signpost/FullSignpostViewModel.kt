@@ -60,11 +60,8 @@ open class FullSignpostViewModel internal constructor(
 
     init {
         navigationManager.addOnNaviSignListener(this)
-        directionInfo.combineLatest(naviSignInfoHolder).observeForever {
-            it.first?.let { directionInfo ->
-                instructionText.value = createInstructionText(directionInfo, it.second.naviSignInfo)
-            }
-        }
+        directionInfo.combineLatest(naviSignInfoHolder)
+            .observeForever { instructionText.value = createInstructionText(it) }
     }
 
     override fun onNaviSignChanged(naviSignInfoList: List<NaviSignInfo>) {

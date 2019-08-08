@@ -25,6 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.annotation.CallSuper
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,7 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
+import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.DirectionInfo
@@ -51,23 +53,21 @@ abstract class BaseSignpostViewModel(
     val secondaryDirectionContainerVisible: MutableLiveData<Boolean> = MutableLiveData(false)
     val instructionText: MutableLiveData<TextHolder> = MutableLiveData(TextHolder.empty)
 
-    protected var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
-    protected val directionInfo: MutableLiveData<DirectionInfo?> = MutableLiveData()
+    protected val directionInfo: MutableLiveData<DirectionInfo> = MutableLiveData()
 
-    private val distanceUnitObserver = Observer<DistanceUnit> { distanceUnit = it }
-    private val directionInfoObserver = Observer<DirectionInfo?> { directionInfo ->
-        directionInfo?.let {
-            distance.value = it.getDistanceWithUnits(distanceUnit)
-            primaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.PRIMARY)
-            secondaryDirection.value = it.getDirectionDrawable(DirectionManeuverType.SECONDARY)
-            secondaryDirectionContainerVisible.value = it.secondary.isValid
-        }
+    private val directionInfoWithDistanceUnit: LiveData<Pair<DirectionInfo, DistanceUnit>>
+    private val directionInfoObserver = Observer<Pair<DirectionInfo, DistanceUnit>> {
+        distance.value = it.first.getDistanceWithUnits(it.second)
+        primaryDirection.value = it.first.getDirectionDrawable(DirectionManeuverType.PRIMARY)
+        secondaryDirection.value = it.first.getDirectionDrawable(DirectionManeuverType.SECONDARY)
+        secondaryDirectionContainerVisible.value = it.first.secondary.isValid
     }
 
     init {
         navigationManager.addOnDirectionListener(this)
-        directionInfo.observeForever(directionInfoObserver)
-        regionalManager.distanceUnit.observeForever(distanceUnitObserver)
+        directionInfoWithDistanceUnit = directionInfo.withLatestFrom(regionalManager.distanceUnit).apply {
+            observeForever(directionInfoObserver)
+        }
     }
 
     @CallSuper
@@ -79,6 +79,6 @@ abstract class BaseSignpostViewModel(
         super.onCleared()
 
         navigationManager.removeOnDirectionListener(this)
-        regionalManager.distanceUnit.removeObserver(distanceUnitObserver)
+        directionInfoWithDistanceUnit.removeObserver(directionInfoObserver)
     }
 }
