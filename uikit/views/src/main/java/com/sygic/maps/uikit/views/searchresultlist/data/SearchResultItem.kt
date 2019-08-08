@@ -36,7 +36,7 @@ interface SearchResultItem<T : Parcelable> : Parcelable {
 
     val title: TextHolder
     val subTitle: TextHolder
-        get() = TextHolder.empty()
+        get() = TextHolder.empty
 
     @get:DrawableRes
     val icon: Int

@@ -36,10 +36,7 @@ open class TextHolder private constructor(
 
     companion object {
 
-        @JvmStatic
-        fun empty(): TextHolder {
-            return TextHolder()
-        }
+        val empty = TextHolder()
 
         @JvmStatic
         fun from(@StringRes resId: Int): TextHolder {
