@@ -26,10 +26,10 @@ package com.sygic.maps.uikit.viewmodels.common.utils
 
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.getDecimal
 import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
@@ -45,7 +45,7 @@ object Distance {
     private const val M_TO_FT_CONVERSION_RATIO = 3.28084f
     private const val M_TO_YD_CONVERSION_RATIO = 1.09361f
 
-    private val DECIMAL_FORMAT = DecimalFormat("#.#", DecimalFormatSymbols(Locale.ENGLISH))
+    private val DECIMAL_FORMAT = DecimalFormat("#.#", DecimalFormatSymbols())
 
     fun getFormattedDistance(
         distanceUnit: DistanceUnit,
@@ -90,7 +90,7 @@ object Distance {
             miles >= 10 -> miles.roundToInt().toString() + IMPERIALS_MI_DISTANCE_UNIT
             smallUnitsValue >= 1000 -> {
                 val roundedMiles = miles.toInt()
-                val rest = miles % 1
+                val rest = miles.getDecimal()
 
                 if (rest < 0.3f) {
                     if (roundedMiles == 0) "¼$IMPERIALS_MI_DISTANCE_UNIT" else "$roundedMiles$IMPERIALS_MI_DISTANCE_UNIT"
