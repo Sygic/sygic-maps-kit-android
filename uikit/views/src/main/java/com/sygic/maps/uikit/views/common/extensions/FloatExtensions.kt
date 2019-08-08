@@ -22,27 +22,6 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.signpost
+package com.sygic.maps.uikit.views.common.extensions
 
-import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
-import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
-import com.sygic.sdk.navigation.NavigationManager
-
-/**
- * A [SimplifiedSignpostViewModel] is a basic ViewModel implementation for the [SimplifiedSignpostView] class. It listens to
- * the Sygic SDK [NavigationManager.OnDirectionListener] and updates the distance, primaryDirection, secondaryDirection,
- * secondaryDirectionText and instructionText in the [SimplifiedSignpostView].
- */
-@AutoFactory
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SimplifiedSignpostViewModel internal constructor(
-    regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
-
-    init {
-        directionInfo.observeForever { instructionText.value = createInstructionText(it) }
-    }
-}
+fun Float.getDecimal() = this % 1
