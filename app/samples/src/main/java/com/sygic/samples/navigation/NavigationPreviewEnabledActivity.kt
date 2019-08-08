@@ -29,6 +29,7 @@ import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.navigation.infobar.SampleInfobarButtonClickListener
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.RoutingOptions
@@ -52,9 +53,10 @@ class NavigationPreviewEnabledActivity : CommonSampleActivity() {
                 }
             }
 
-            computePrimaryRoute(routePlan) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
-            }
+            val navigationFragment =
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment)
+            navigationFragment.setOnInfobarButtonClickListener(SampleInfobarButtonClickListener(this))
+            computePrimaryRoute(routePlan) { navigationFragment.routeInfo = it }
         }
     }
 }

@@ -26,14 +26,11 @@ package com.sygic.maps.uikit.viewmodels.common.sdk.holders
 
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
 
-data class NaviSignInfoHolder(val naviSignInfo: NaviSignInfo? = null) {
+open class NaviSignInfoHolder(val naviSignInfo: NaviSignInfo? = null) {
 
     companion object {
 
-        @JvmStatic
-        fun empty(): NaviSignInfoHolder {
-            return NaviSignInfoHolder()
-        }
+        val empty = NaviSignInfoHolder()
 
         @JvmStatic
         fun from(naviSignInfo: NaviSignInfo?): NaviSignInfoHolder {

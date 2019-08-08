@@ -22,12 +22,6 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.navigation.speed.databinding
+package com.sygic.maps.uikit.views.common.extensions
 
-import androidx.annotation.ColorInt
-import androidx.databinding.BindingAdapter
-import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
-
-@BindingAdapter(value = ["android:foregroundTint"])
-fun setForegroundTint(currentSpeedView: CurrentSpeedView, @ColorInt colorRes: Int) =
-    currentSpeedView.setForegroundTintColorInt(colorRes)
+fun Float.getDecimal() = this % 1

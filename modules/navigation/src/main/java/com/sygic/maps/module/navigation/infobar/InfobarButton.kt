@@ -22,22 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.dialogs
+package com.sygic.maps.module.navigation.infobar
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.lifecycle.ViewModelProviders
-import com.sygic.samples.databinding.LayoutAboutDialogBinding
-import com.sygic.samples.app.viewmodels.AboutDialogViewModel
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 
-class AboutDialog : AppCompatDialogFragment() {
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        LayoutAboutDialogBinding.inflate(inflater, container, false).apply {
-            aboutDialogViewModel = ViewModelProviders.of(this@AboutDialog).get(AboutDialogViewModel::class.java)
-            lifecycleOwner = this@AboutDialog
-        }.root
-}
+data class InfobarButton(
+    @DrawableRes val imageResource: Int,
+    @DrawableRes val backgroundResource: Int,
+    @ColorRes val imageTintColor: Int = 0,
+    @ColorRes val backgroundTintColor: Int = 0
+)

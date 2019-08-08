@@ -27,4 +27,7 @@
     <color name="textColorPrimary">@color/zircon</color>
     <color name="textColorSecondary">@color/botticelli</color>
     <color name="iconBackground">@color/gray_chateau</color>
+    <color name="navigationBackgroundColor">@color/black</color>
+    <color name="navigationTextColorPrimary">@color/white</color>
+    <color name="navigationTextColorSecondary">@color/gray_chateau</color>
 </resources>

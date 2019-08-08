@@ -22,22 +22,31 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.dialogs
+package com.sygic.samples.navigation.infobar
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.lifecycle.ViewModelProviders
-import com.sygic.samples.databinding.LayoutAboutDialogBinding
-import com.sygic.samples.app.viewmodels.AboutDialogViewModel
+import android.app.Activity
+import com.sygic.maps.module.navigation.infobar.InfobarButton
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.samples.R
 
-class AboutDialog : AppCompatDialogFragment() {
+class SampleInfobarButtonClickListener(val activity: Activity) : OnInfobarButtonClickListener {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        LayoutAboutDialogBinding.inflate(inflater, container, false).apply {
-            aboutDialogViewModel = ViewModelProviders.of(this@AboutDialog).get(AboutDialogViewModel::class.java)
-            lifecycleOwner = this@AboutDialog
-        }.root
+    private val leftInfobarButton = InfobarButton(
+        R.drawable.ic_more,
+        R.drawable.bg_infobar_button_rounded,
+        R.color.white,
+        R.color.colorAccent
+    )
+
+    private val rightInfobarButton = InfobarButton(
+        R.drawable.ic_close,
+        R.drawable.bg_infobar_button_rounded,
+        R.color.white,
+        R.color.brick_red
+    )
+
+    override fun getLeftButton(): InfobarButton? = leftInfobarButton
+    override fun getRightButton(): InfobarButton? = rightInfobarButton
+    override fun onLeftButtonClick() { /* TODO: MS-6218 */ }
+    override fun onRightButtonClick() = activity.finish()
 }

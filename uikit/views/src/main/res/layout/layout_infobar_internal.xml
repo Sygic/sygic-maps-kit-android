@@ -28,7 +28,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <merge
-        tools:background="@drawable/bg_infobar_light_rounded"
+        tools:background="@drawable/bg_infobar_rounded"
         tools:elevation="@dimen/navigationComponentElevation"
         tools:ignore="ContentDescription"
         tools:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             tools:background="@drawable/bg_infobar_button_rounded"
             tools:backgroundTint="?android:attr/colorAccent"
             tools:src="@drawable/ic_more"
-            tools:tint="?attr/navigationLightTintColor"
+            tools:tint="@color/white"
             tools:visibility="visible" />
 
         <TextView
@@ -98,7 +98,7 @@
             tools:background="@drawable/bg_infobar_button_rounded"
             tools:backgroundTint="@color/brick_red"
             tools:src="@drawable/ic_close"
-            tools:tint="?attr/navigationLightTintColor"
+            tools:tint="@color/white"
             tools:visibility="visible" />
 
     </merge>
