@@ -42,8 +42,9 @@
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:padding="12dp"
+            android:padding="6dp"
             android:textColor="?attr/navigationTextColorPrimary"
+            app:autoSizeMaxTextSize="28sp"
             app:autoSizeTextType="uniform"
             tools:text="50" />
 
@@ -74,6 +75,7 @@
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="?attr/navigationTextColorPrimary"
+                app:autoSizeMaxTextSize="24sp"
                 app:autoSizeTextType="uniform"
                 tools:text="50" />
 
