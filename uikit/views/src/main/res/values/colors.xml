@@ -33,9 +33,7 @@
     <color name="navigationBackgroundColor">@color/white</color>
     <color name="navigationTextColorPrimary">@color/black</color>
     <color name="navigationTextColorSecondary">@color/ebony_clay</color>
-
-    <!--todo-->
-    <color name="progress_color">#1DE9B6</color>
-    <color name="background_color">#B0BEC5</color>
+    <color name="speedProgressBackgroundColor">@color/gray_chateau</color>
+    <color name="speedProgressForegroundColor">@color/limeade</color>
 
 </resources>

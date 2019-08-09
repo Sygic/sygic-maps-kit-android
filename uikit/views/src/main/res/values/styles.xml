@@ -92,6 +92,10 @@
         <item name="android:layout_marginTop">@dimen/speedLimitViewLayoutMargin</item>
     </style>
 
+    <style name="SygicSpeedProgressViewStyle">
+        <!--todo-->
+    </style>
+
     <style name="SygicZoomControlsMenuStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>

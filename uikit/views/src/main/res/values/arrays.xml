@@ -42,4 +42,7 @@
         <item>x86</item>
         <item>x86_64</item>
     </string-array>
+    <array name="speedProgressForegroundColors">
+        <item>@color/speedProgressForegroundColor</item>
+    </array>
 </resources>

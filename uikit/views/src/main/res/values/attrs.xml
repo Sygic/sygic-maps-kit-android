@@ -42,6 +42,7 @@
         <attr name="searchResultListStyle" format="reference" />
         <attr name="signpostViewStyle" format="reference" />
         <attr name="speedLimitViewStyle" format="reference" />
+        <attr name="speedProgressViewStyle" format="reference" />
         <attr name="zoomControlsMenuStyle" format="reference"/>
     </declare-styleable>
 
@@ -128,12 +129,13 @@
         <attr name="android:layout_marginEnd" format="dimension" />
     </declare-styleable>
 
-    <!-- todo -->
     <declare-styleable name="SpeedProgressView">
-        <attr name="progressColor" format="color" />
-        <attr name="barColor" format="color" />
-        <attr name="progressWidth" format="dimension" />
-        <attr name="barWidth" format="dimension" />
+        <attr name="roundSegmentEdges" format="boolean" />
+        <attr name="segmentBackgroundColor" format="color" />
+        <attr name="segmentForegroundColors" format="reference" />
+        <attr name="segmentAngle" format="integer" />
+        <attr name="segmentThickness" format="dimension" />
+        <attr name="segmentSpacing" format="fraction" />
     </declare-styleable>
 
 </resources>

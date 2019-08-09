@@ -28,77 +28,75 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
 import kotlin.math.min
 
-private const val angleMax = 270
-private const val angleStartPoint = 136 //todo: fixed
-private const val segmentStep = 10 // todo: currently is the value with width together
-private const val segmentWidth = 8f
-private const val isRoundEdge = false
+private const val angleMax = 270f
+private const val angleStartPoint = 45f
+private const val angleEndPoint = angleStartPoint + angleMax
+private const val maxProgress = 100f
 
-/*TODO: make configurable from outside only segment width, height, step (space between) */
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class SpeedProgressView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = /*R.attr.currentSpeedViewStyle*/ 0, //todo
-    defStyleRes: Int = /*R.style.SygicCurrentSpeedViewStyle*/ 0 //todo
+    defStyleAttr: Int = R.attr.speedProgressViewStyle,
+    defStyleRes: Int = R.style.SygicSpeedProgressViewStyle
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     private val oval = RectF()
-    private val progressPath: Path = Path()
-    private val backgroundPath: Path = Path()
+    private val foregroundPath = Path()
+    private val backgroundPath = Path()
+    private val foregroundPaint = createSegmentPaint()
+    private val backgroundPaint = createSegmentPaint()
 
-    private var left: Float = 0f
-    private var top: Float = 0f
-    private var right: Float = 0f
-    private var bottom: Float = 0f
-    private var isGradientColor: Boolean = false //todo
-
-    private var maximumProgress = 100f
     var progress = 0f
         set(value) {
-            field = if (value <= maximumProgress) value else maximumProgress
+            field = if (value <= maxProgress) value else maxProgress
             invalidate()
         }
 
-    var progressColor: Int = ContextCompat.getColor(context, R.color.progress_color)
+    var roundSegmentEdges = false
         set(value) {
             field = value
-            this.foregroundPaint.color = value
             invalidate()
-            requestLayout()
         }
 
-    private var strokeWidth = resources.getDimension(R.dimen.default_stroke_width)
-    private var backgroundStrokeWidth = resources.getDimension(R.dimen.default_background_stroke_width)
-    var strokeBackgroundColor = ContextCompat.getColor(context, R.color.background_color)
+    @ColorInt
+    var segmentForegroundColors = intArrayOf()
         set(value) {
             field = value
-            this.backgroundPaint.color = value
             invalidate()
-            requestLayout()
         }
 
-    private var backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = this@SpeedProgressView.strokeBackgroundColor
-        style = Paint.Style.STROKE
-        strokeWidth = this@SpeedProgressView.backgroundStrokeWidth
-    }
-    private var foregroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = this@SpeedProgressView.progressColor
-        style = Paint.Style.STROKE
-        strokeWidth = this@SpeedProgressView.strokeWidth
-        if (isRoundEdge) {
-            strokeCap = Paint.Cap.ROUND
-        }
-    }
-
-    var gradientColors: IntArray = intArrayOf()
+    @ColorInt
+    var segmentBackgroundColor = ContextCompat.getColor(context, R.color.speedProgressBackgroundColor)
         set(value) {
             field = value
-            this.isGradientColor = value.isNotEmpty()
+            backgroundPaint.color = value
+            invalidate()
+        }
+
+    var segmentAngle = resources.getInteger(R.integer.speedProgressViewSegmentAngle).toFloat()
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    var segmentThickness = resources.getDimensionPixelSize(R.dimen.speedProgressViewSegmentThickness)
+        set(value) {
+            field = value
+            foregroundPaint.strokeWidth = value.toFloat()
+            backgroundPaint.strokeWidth = value.toFloat()
+            invalidate()
+        }
+
+    var segmentSpacing = resources.getFraction(R.fraction.speedProgressViewSegmentSpacing, 1, 1)
+        set(value) {
+            field = value
+            invalidate()
         }
 
     init {
@@ -109,10 +107,12 @@ class SpeedProgressView @JvmOverloads constructor(
                 defStyleAttr,
                 defStyleRes
             ).apply {
-                strokeWidth = getDimension(R.styleable.SpeedProgressView_progressWidth, strokeWidth)
-                backgroundStrokeWidth = getDimension(R.styleable.SpeedProgressView_barWidth, backgroundStrokeWidth)
-                progressColor = getInt(R.styleable.SpeedProgressView_progressColor, progressColor)
-                strokeBackgroundColor = getInt(R.styleable.SpeedProgressView_barColor, strokeBackgroundColor)
+                roundSegmentEdges = getBoolean(R.styleable.SpeedProgressView_roundSegmentEdges, roundSegmentEdges)
+                segmentBackgroundColor = getInt(R.styleable.SpeedProgressView_segmentBackgroundColor, segmentBackgroundColor)
+                segmentForegroundColors = resources.getIntArray(getResourceId(R.styleable.SpeedProgressView_segmentForegroundColors, R.array.speedProgressForegroundColors))
+                segmentAngle = getInt(R.styleable.SpeedProgressView_segmentAngle, segmentAngle.toInt()).toFloat()
+                segmentThickness = getDimensionPixelSize(R.styleable.SpeedProgressView_segmentThickness, segmentThickness)
+                segmentSpacing = getFraction(R.styleable.SpeedProgressView_segmentSpacing, 1,1, segmentSpacing)
 
                 recycle()
             }
@@ -122,67 +122,75 @@ class SpeedProgressView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val min = setDimensions(widthMeasureSpec, heightMeasureSpec)
+        val width = getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
+        val height = getDefaultSize(suggestedMinimumHeight, heightMeasureSpec)
 
-        left = 0 + strokeWidth / 2
-        top = 0 + strokeWidth / 2
-        right = min - strokeWidth / 2
-        bottom = min - strokeWidth / 2
+        val min = min(width, height)
+        setMeasuredDimension(min, min)
+
+        val left = segmentThickness.toFloat() / 2
+        val top = segmentThickness.toFloat() / 2
+        val right = min - segmentThickness.toFloat() / 2
+        val bottom = min - segmentThickness.toFloat() / 2
         oval.set(left, top, right, bottom)
     }
 
-    private fun setDimensions(widthMeasureSpec: Int, heightMeasureSpec: Int): Int {
-        val height = getDefaultSize(suggestedMinimumHeight, heightMeasureSpec)
-        val width = getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
+    override fun onDraw(canvas: Canvas) {
+        canvas.rotate(90f, width.toFloat() / 2, height.toFloat() / 2)
 
-        val smallerDimens = min(width, height)
-        setMeasuredDimension(smallerDimens, smallerDimens)
-        return smallerDimens
-    }
+        val stepAngle = segmentAngle * segmentSpacing
+        val stepWithSpacing = segmentAngle + stepAngle
+        val rest = angleMax.rem(stepWithSpacing)
 
-    public override fun onDraw(canvas: Canvas) {
-        if (isGradientColor) {
-            setGradientPaint(foregroundPaint, left, top, right, bottom, gradientColors)
-        }
+        val startGap = rest / 2
+        val endGap = rest / 2
 
-        with(backgroundPath) {
+        val drawStartPoint = angleStartPoint + startGap
+
+        val drawTolerance = 0.1f
+
+        canvas.drawPath(backgroundPath.apply {
             reset()
-            for (i in angleStartPoint until angleMax + angleStartPoint step segmentStep) {
-                addArc(oval, i.toFloat(), segmentWidth)
+            val drawEndPoint = angleEndPoint - endGap - stepWithSpacing
+            var i = drawStartPoint
+            while (i < drawEndPoint || i in (drawEndPoint - drawTolerance)..(drawEndPoint + drawTolerance)) {
+                addArc(oval, i + (stepAngle / 2), segmentAngle)
+                i += stepWithSpacing
             }
-            canvas.drawPath(this, backgroundPaint)
-        }
+        }, backgroundPaint)
 
-        //todo
-        val angle = angleMax * progress.toInt() / maximumProgress + angleStartPoint
-        var i = angleStartPoint
-        while (i < angle) {
-            progressPath.addArc(oval, i.toFloat(), segmentWidth)
-            i += segmentStep
-        }
-        canvas.drawPath(progressPath, foregroundPaint)
-
-        /*with(progressPath) {
-            reset()
-
-            //todo
-            val angle = (angleMax * progress.toInt() / maximumProgress + angleStartPoint).toInt()
-            for (i in angleStartPoint..angle step segmentStep) {
-                addArc(oval, i.toFloat(), segmentWidth)
+        if (segmentForegroundColors.isNotEmpty()) {
+            if (segmentForegroundColors.size == 1) {
+                foregroundPaint.color = segmentForegroundColors.first()
+            } else {
+                foregroundPaint.apply {
+                    shader = createForegroundGradient(segmentForegroundColors)
+                    isAntiAlias = true
+                }
             }
-            canvas.drawPath(this, foregroundPaint)
-        }*/
+
+            canvas.drawPath(foregroundPath.apply {
+                val angle = angleMax * progress / maxProgress + angleStartPoint
+                var drawEndPoint = angle - endGap
+                if (progress == maxProgress) drawEndPoint -= stepWithSpacing
+                var i = drawStartPoint
+                while (i < drawEndPoint || i in (drawEndPoint - drawTolerance)..(drawEndPoint + drawTolerance)) {
+                    addArc(oval, i + (stepAngle / 2), segmentAngle)
+                    i += stepWithSpacing
+                }
+            }, foregroundPaint)
+        }
     }
 
-    fun setGradientPaint(paint: Paint, left: Float, top: Float, right: Float, bottom: Float, colors: IntArray) {
-        val linearGradient = LinearGradient(left, top, right, bottom, colors, null, Shader.TileMode.CLAMP)
-        paint.shader = linearGradient
-        paint.isAntiAlias = true
+    private fun createSegmentPaint() = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        if (roundSegmentEdges) strokeCap = Paint.Cap.ROUND
     }
 
-    //todo
-    fun setSweepGradientGradientPaint(paint: Paint, width: Float, height: Float, colorStart: Int, colorEnd: Int) {
-        paint.shader = SweepGradient(width, height, colorStart, colorEnd)
-        paint.isAntiAlias = true
-    }
+    private fun createForegroundGradient(@ColorInt colors: IntArray) = SweepGradient( //todo: create it less times
+        width.toFloat() / 2,
+        height.toFloat() / 2,
+        colors,
+        null //todo: positions? use multiple times the same colors instead? :)
+    )
 }

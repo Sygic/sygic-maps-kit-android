@@ -43,6 +43,9 @@
     <dimen name="currentSpeedViewLayoutMargin">16dp</dimen>
     <dimen name="speedLimitViewSize">56dp</dimen>
     <dimen name="speedLimitViewLayoutMargin">16dp</dimen>
+    <integer name="speedProgressViewSegmentAngle">8</integer>
+    <dimen name="speedProgressViewSegmentThickness">4dp</dimen>
+    <fraction name="speedProgressViewSegmentSpacing">20%</fraction>
     <dimen name="navigationComponentElevation">6dp</dimen>
     <dimen name="infobarLayoutMargin">16dp</dimen>
     <dimen name="signpostViewLayoutMargin">16dp</dimen>
@@ -54,9 +57,5 @@
     <dimen name="defaultPeekHeight">100dp</dimen>
     <dimen name="zoomControlsButtonSize">48dp</dimen>
     <dimen name="zoomControlsButtonMargin">6dp</dimen>
-
-    <!-- todo -->
-    <dimen name="default_stroke_width">4dp</dimen>
-    <dimen name="default_background_stroke_width">3dp</dimen>
 
 </resources>

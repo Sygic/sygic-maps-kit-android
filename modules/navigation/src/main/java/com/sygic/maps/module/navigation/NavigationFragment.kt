@@ -258,7 +258,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
 
         val segmentProgressView = view.findViewById(R.id.segment_bar) as SpeedProgressView
         //you can set linear gradient with default colors or to set yours colors, or sweep gradient
-        segmentProgressView.gradientColors = intArrayOf(Color.parseColor("#fb0000"), Color.parseColor("#fbf400"), Color.parseColor("#00FF00"))
+        segmentProgressView.segmentForegroundColors = intArrayOf(Color.parseColor("#00FF00"), Color.parseColor("#fbf400"), Color.parseColor("#fb0000"))
         Handler().postDelayed({
             segmentProgressView.progress = 50f
             Handler().postDelayed({
