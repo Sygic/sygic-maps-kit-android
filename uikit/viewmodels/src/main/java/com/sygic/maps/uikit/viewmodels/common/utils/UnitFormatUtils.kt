@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.common.utils
 
+import com.sygic.maps.uikit.viewmodels.common.extensions.getSpeedLimitValue
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.getDecimal
@@ -148,7 +149,7 @@ object Speed {
     private const val IMPERIALS_SPEED_UNIT = "mph"
     private const val KMH_TO_MPH_CONVERSION_RATIO = 0.621371192f
     private const val MPH_TO_KMH_CONVERSION_RATIO = 1.609344f
-    private const val SPEEDING_THRESHOLD_DIFFERENCE = 10
+    private const val SPEEDING_THRESHOLD_TOLERANCE = 1.06f
 
     fun getUnitFromDistanceUnit(distanceUnit: DistanceUnit): String = when (distanceUnit) {
         DistanceUnit.KILOMETERS -> METRIC_SPEED_UNIT
@@ -169,14 +170,8 @@ object Speed {
         }
     }
 
-    fun isSpeeding(speedValue: Int, speedLimitInfo: SpeedLimitInfo?, distanceUnit: DistanceUnit): Boolean {
-        val speedLimitValue: Int = speedLimitInfo?.getSpeedLimit(
-            when (distanceUnit) {
-                DistanceUnit.KILOMETERS -> SpeedLimitInfo.SpeedUnits.Kilometers
-                DistanceUnit.MILES_YARDS, DistanceUnit.MILES_FEETS -> SpeedLimitInfo.SpeedUnits.Miles
-            }
-        ) ?: 0
-
-        return speedLimitValue > 0 && speedValue > speedLimitValue + SPEEDING_THRESHOLD_DIFFERENCE
+    fun isSpeeding(speedValue: Int, speedLimitInfo: SpeedLimitInfo, distanceUnit: DistanceUnit): Boolean {
+        val speedLimitValue = speedLimitInfo.getSpeedLimitValue(distanceUnit)
+        return speedLimitValue > 0 && speedValue > speedLimitValue * SPEEDING_THRESHOLD_TOLERANCE
     }
 }

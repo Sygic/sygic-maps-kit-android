@@ -24,8 +24,17 @@
 
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.speed.limit.SpeedLimitType
 import com.sygic.sdk.map.MapView
+import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
+
+fun SpeedLimitInfo.getSpeedLimitValue(distanceUnit: DistanceUnit): Int = getSpeedLimit(
+    when (distanceUnit) {
+        DistanceUnit.KILOMETERS -> SpeedLimitInfo.SpeedUnits.Kilometers
+        DistanceUnit.MILES_YARDS, DistanceUnit.MILES_FEETS -> SpeedLimitInfo.SpeedUnits.Miles
+    }
+)
 
 @MapView.CountrySignage
 internal fun Int.toSpeedLimitType(): SpeedLimitType {

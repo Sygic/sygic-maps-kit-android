@@ -97,7 +97,7 @@ open class SpeedLimitView @JvmOverloads constructor(
      *
      * @param speedLimitType [SpeedLimitType] the speed limit type.
      */
-    fun setType(speedLimitType: SpeedLimitType) {
+    fun setLimitType(speedLimitType: SpeedLimitType) {
         displayedChild = speedLimitType.ordinal
     }
 
@@ -106,7 +106,7 @@ open class SpeedLimitView @JvmOverloads constructor(
      *
      * @param speedLimitValue [Int] the speed limit value.
      */
-    fun setValue(speedLimitValue: Int) {
+    fun setLimitValue(speedLimitValue: Int) {
         with(speedLimitValue.toString()) {
             binding.euSpeedLimitTextView.text = this
             binding.usSpeedLimitTextView.text = this

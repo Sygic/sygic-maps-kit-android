@@ -133,8 +133,8 @@
             app:layout_constraintBottom_toBottomOf="@id/currentSpeedView"
             app:layout_constraintEnd_toEndOf="@id/currentSpeedView"
             app:layout_constraintStart_toStartOf="@id/currentSpeedView"
-            app:type="@{speedLimitViewModel.speedLimitType}"
-            app:value="@{speedLimitViewModel.speedLimitValue}" />
+            app:limitType="@{speedLimitViewModel.speedLimitType}"
+            app:limitValue="@{speedLimitViewModel.speedLimitValue}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
