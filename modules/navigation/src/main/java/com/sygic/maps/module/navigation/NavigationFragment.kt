@@ -24,9 +24,7 @@
 
 package com.sygic.maps.module.navigation
 
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -54,7 +52,6 @@ import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
-import com.sygic.maps.uikit.views.navigation.speed.SpeedProgressView
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
@@ -250,21 +247,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
         speedLimitViewModel = viewModelOf(SpeedLimitViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
-    }
-
-    /*todo*/
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val segmentProgressView = view.findViewById(R.id.segment_bar) as SpeedProgressView
-        //you can set linear gradient with default colors or to set yours colors, or sweep gradient
-        segmentProgressView.segmentForegroundColors = intArrayOf(Color.parseColor("#00FF00"), Color.parseColor("#fbf400"), Color.parseColor("#fb0000"))
-        Handler().postDelayed({
-            segmentProgressView.progress = 50f
-            Handler().postDelayed({
-                segmentProgressView.progress = 100f
-            },2000)
-        },2000)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

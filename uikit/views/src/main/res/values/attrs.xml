@@ -55,6 +55,8 @@
     </declare-styleable>
 
     <declare-styleable name="CurrentSpeedView">
+        <attr name="android:background" format="reference" />
+        <attr name="android:elevation" format="dimension" />
         <attr name="android:layout_margin" format="dimension" />
         <attr name="android:layout_marginTop" format="dimension" />
         <attr name="android:layout_marginBottom" format="dimension" />

@@ -118,6 +118,7 @@
             app:isSpeeding="@{currentSpeedViewModel.speeding}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:speedProgress="@{currentSpeedViewModel.speedProgress}"
             app:speedUnit="@{currentSpeedViewModel.speedUnit}"
             app:speedValue="@{currentSpeedViewModel.speedValue}" />
 

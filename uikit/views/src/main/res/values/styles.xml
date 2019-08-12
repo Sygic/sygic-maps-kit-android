@@ -93,7 +93,7 @@
     </style>
 
     <style name="SygicSpeedProgressViewStyle">
-        <!--todo-->
+        <item name="segmentForegroundColors">@array/sygicSpeedProgressForegroundColors</item>
     </style>
 
     <style name="SygicZoomControlsMenuStyle">

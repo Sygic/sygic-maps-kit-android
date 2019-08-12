@@ -54,6 +54,7 @@ open class CurrentSpeedViewModel internal constructor(
 
     val speeding: MutableLiveData<Boolean> = MutableLiveData(false)
     val speedValue: MutableLiveData<Int> = MutableLiveData(0)
+    val speedProgress: MutableLiveData<Float> = MutableLiveData(0f)
     val speedUnit: MutableLiveData<String> = MutableLiveData(Speed.getUnitFromDistanceUnit(DistanceUnit.KILOMETERS))
 
     private var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
@@ -72,6 +73,7 @@ open class CurrentSpeedViewModel internal constructor(
         regionalManager.distanceUnit.observeForever(distanceUnitObserver)
         currentSpeedObserver.combineLatest(speedLimitInfoObserver).observeForever {
             speeding.value = Speed.isSpeeding(it.first, it.second, distanceUnit)
+            speedProgress.value = Speed.speedProgress(it.first, it.second, distanceUnit)
             speedValue.value = Speed.convertValue(it.first, targetDistanceUnit = distanceUnit)
         }
     }

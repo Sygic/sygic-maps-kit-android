@@ -34,6 +34,6 @@
     <color name="navigationTextColorPrimary">@color/black</color>
     <color name="navigationTextColorSecondary">@color/ebony_clay</color>
     <color name="speedProgressBackgroundColor">@color/gray_chateau</color>
-    <color name="speedProgressForegroundColor">@color/limeade</color>
-
+    <color name="speedProgressForegroundStartColor">@color/limeade</color>
+    <color name="speedProgressForegroundEndColor">@color/brick_red</color>
 </resources>
