@@ -25,10 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.common.utils
 
 import com.sygic.maps.uikit.viewmodels.R
-import com.sygic.maps.uikit.viewmodels.common.extensions.*
-import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionInstruction
-import com.sygic.maps.uikit.viewmodels.common.extensions.isRoundabout
-import com.sygic.maps.uikit.viewmodels.common.extensions.nextRoadText
+import com.sygic.maps.uikit.viewmodels.common.extensions.createInstructionText
 import com.sygic.maps.uikit.viewmodels.common.sdk.holders.NaviSignInfoHolder
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.navigation.warnings.DirectionInfo
@@ -46,40 +43,8 @@ internal fun createInstructionText(directionInfo: DirectionInfo, naviSignInfo: N
     }
 
     naviSignInfo?.let { info ->
-        val acceptedSignElements = info.signElements
-            .filter { element ->
-                element.elementType.let {
-                    it == NaviSignInfo.SignElement.SignElementType.ExitNumber
-                            || it == NaviSignInfo.SignElement.SignElementType.PlaceName
-                            || it == NaviSignInfo.SignElement.SignElementType.OtherDestination
-                }
-            }
-            .sortedByDescending { it.elementType == NaviSignInfo.SignElement.SignElementType.ExitNumber }
-
-        return if (acceptedSignElements.any { it.elementType == NaviSignInfo.SignElement.SignElementType.ExitNumber }) {
-            TextHolder.from(R.string.exit_number, acceptedSignElements.concatItems())
-        } else {
-            TextHolder.from(acceptedSignElements.concatItems())
-        }
+        return info.createInstructionText()
     }
 
-    with(directionInfo.primary) {
-        if (!isValid) {
-            return TextHolder.empty
-        }
-
-        if (isRoundabout()) {
-            getDirectionInstruction().let {
-                return if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty
-            }
-        }
-
-        with(nextRoadText()) {
-            if (isNotEmpty()) return TextHolder.from(this)
-        }
-
-        getDirectionInstruction().let {
-            return if (it != 0) TextHolder.from(it) else TextHolder.empty
-        }
-    }
+    return directionInfo.createInstructionText()
 }

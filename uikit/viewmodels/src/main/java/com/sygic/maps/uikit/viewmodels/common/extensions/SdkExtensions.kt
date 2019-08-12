@@ -28,6 +28,7 @@ import android.app.Activity
 import android.app.Application
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
@@ -38,6 +39,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
@@ -213,6 +215,22 @@ fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
         .toRoadSignDataList()
 }
 
+fun NaviSignInfo.createInstructionText(): TextHolder {
+    val acceptedSignElements = signElements
+        .filter { element ->
+            element.elementType.let {
+                it == SignElementType.ExitNumber || it == SignElementType.PlaceName || it == SignElementType.OtherDestination
+            }
+        }
+        .sortedByDescending { it.elementType == SignElementType.ExitNumber }
+
+    return if (acceptedSignElements.any { it.elementType == SignElementType.ExitNumber }) {
+        TextHolder.from(R.string.exit_number, acceptedSignElements.concatItems())
+    } else {
+        TextHolder.from(acceptedSignElements.concatItems())
+    }
+}
+
 fun List<NaviSignInfo.SignElement>.hasPictogram(): Boolean = any { it.elementType == SignElementType.Pictogram }
 
 fun List<NaviSignInfo.SignElement>.toRoadSignDataList(): List<RoadSignData> {
@@ -234,4 +252,26 @@ fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverT
     }
 
     return if (routeManeuver.isValid) routeManeuver.getDirectionDrawable() else 0
+}
+
+fun DirectionInfo.createInstructionText(): TextHolder {
+    with(primary) {
+        if (!isValid) {
+            return TextHolder.empty
+        }
+
+        if (isRoundabout()) {
+            getDirectionInstruction().let {
+                return if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty
+            }
+        }
+
+        with(nextRoadText()) {
+            if (isNotEmpty()) return TextHolder.from(this)
+        }
+
+        getDirectionInstruction().let {
+            return if (it != 0) TextHolder.from(it) else TextHolder.empty
+        }
+    }
 }
