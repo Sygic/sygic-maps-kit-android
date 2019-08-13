@@ -40,6 +40,7 @@ import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
 import com.sygic.maps.module.navigation.R
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.infobar.DefaultNavigationInfobarClickListener
+import com.sygic.maps.module.navigation.infobar.InfobarButtonWrapper
 import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
 import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
@@ -100,16 +101,8 @@ class NavigationFragmentViewModel internal constructor(
     val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
-    val leftInfobarButtonVisible: MutableLiveData<Boolean> = MutableLiveData(false)
-    val leftInfobarButtonBackgroundResource: MutableLiveData<Int> = MutableLiveData(0)
-    val leftInfobarButtonBackgroundTint: MutableLiveData<Int> = MutableLiveData(0)
-    val leftInfobarButtonImageResource: MutableLiveData<Int> = MutableLiveData(0)
-    val leftInfobarButtonImageTint: MutableLiveData<Int> = MutableLiveData(0)
-    val rightInfobarButtonVisible: MutableLiveData<Boolean> = MutableLiveData(false)
-    val rightInfobarButtonBackgroundResource: MutableLiveData<Int> = MutableLiveData(0)
-    val rightInfobarButtonBackgroundTint: MutableLiveData<Int> = MutableLiveData(0)
-    val rightInfobarButtonImageResource: MutableLiveData<Int> = MutableLiveData(0)
-    val rightInfobarButtonImageTint: MutableLiveData<Int> = MutableLiveData(0)
+    val leftInfobarButtonWrapper = InfobarButtonWrapper()
+    val rightInfobarButtonWrapper = InfobarButtonWrapper()
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
@@ -128,28 +121,21 @@ class NavigationFragmentViewModel internal constructor(
     private var onInfobarButtonClickListener: OnInfobarButtonClickListener? = null
         set(value) {
             field = value
+            //todo
             value?.let {
-                it.getLeftButton()?.let { leftButton ->
-                    leftInfobarButtonVisible.value = true
-                    leftInfobarButtonImageResource.value = leftButton.imageResource
-                    leftInfobarButtonImageTint.value = leftButton.imageTintColor
-                    leftInfobarButtonBackgroundResource.value = leftButton.backgroundResource
-                    leftInfobarButtonBackgroundTint.value = leftButton.backgroundTintColor
+                it.getLeftButton()?.let { leftButtonData ->
+                    leftInfobarButtonWrapper.setFrom(leftButtonData)
                 } ?: run {
-                    leftInfobarButtonVisible.value = false
+                    leftInfobarButtonWrapper.visible.value = false
                 }
-                it.getRightButton()?.let { rightButton ->
-                    rightInfobarButtonVisible.value = true
-                    rightInfobarButtonImageResource.value = rightButton.imageResource
-                    rightInfobarButtonImageTint.value = rightButton.imageTintColor
-                    rightInfobarButtonBackgroundResource.value = rightButton.backgroundResource
-                    rightInfobarButtonBackgroundTint.value = rightButton.backgroundTintColor
+                it.getRightButton()?.let { rightButtonData ->
+                    rightInfobarButtonWrapper.setFrom(rightButtonData)
                 } ?: run {
-                    rightInfobarButtonVisible.value = false
+                    rightInfobarButtonWrapper.visible.value = false
                 }
             } ?: run {
-                leftInfobarButtonVisible.value = false
-                rightInfobarButtonVisible.value = false
+                leftInfobarButtonWrapper.visible.value = false
+                rightInfobarButtonWrapper.visible.value = false
             }
         }
 
