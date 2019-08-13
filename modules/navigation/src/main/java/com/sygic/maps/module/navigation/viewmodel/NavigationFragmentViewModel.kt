@@ -92,7 +92,8 @@ class NavigationFragmentViewModel internal constructor(
     private val permissionsManager: PermissionsManager,
     private val navigationManager: NavigationManager,
     private val routeDemonstrationManager: RouteDemonstrationManager
-) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
+) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver,
+    NavigationManager.OnRouteChangedListener, Camera.ModeChangedListener {
 
     @LayoutRes
     val signpostLayout: Int
@@ -121,7 +122,16 @@ class NavigationFragmentViewModel internal constructor(
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
     private val defaultNavigationInfobarClickListener = object : DefaultNavigationInfobarClickListener() {
-        override fun onLeftButtonClick() { /*todo: MS-6218*/  }
+        override fun onLeftButtonClick() {
+            when (leftButtonState) {
+                LeftButtonState.MENU -> {}/*TODO: MS-6224*/
+                LeftButtonState.LOCK -> {
+                    cameraModel.rotationMode = Camera.RotationMode.Vehicle
+                    cameraModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
+                }
+            }
+        }
+
         override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 
@@ -187,6 +197,7 @@ class NavigationFragmentViewModel internal constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = !previewMode.value!!
+        cameraModel.addModeChangedListener(this)
         navigationManager.addOnRouteChangedListener(this)
     }
 
@@ -201,6 +212,22 @@ class NavigationFragmentViewModel internal constructor(
             mapDataModel.addMapRoute(MapRoute.from(it).build())
         }
     }
+
+    override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
+        if (onInfobarButtonClickListener is DefaultNavigationInfobarClickListener) {
+            when (mode) {
+                Camera.MovementMode.Free ->
+                    defaultNavigationInfobarClickListener.leftButtonState =
+                        DefaultNavigationInfobarClickListener.LeftButtonState.LOCK
+                Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
+                    defaultNavigationInfobarClickListener.leftButtonState =
+                        DefaultNavigationInfobarClickListener.LeftButtonState.MENU
+            }
+            onInfobarButtonClickListener = defaultNavigationInfobarClickListener
+        }
+    }
+
+    override fun onRotationModeChanged(@Camera.RotationMode mode: Int) {}
 
     private fun setRouteInfo(routeInfo: RouteInfo) {
         // set the default navigation camera state
@@ -238,6 +265,7 @@ class NavigationFragmentViewModel internal constructor(
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false
+        cameraModel.removeModeChangedListener(this)
         navigationManager.removeOnRouteChangedListener(this)
     }
 
