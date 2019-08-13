@@ -54,8 +54,9 @@ abstract class BaseSignpostViewModel(
     val instructionText: MutableLiveData<TextHolder> = MutableLiveData(TextHolder.empty)
 
     protected val directionInfo: MutableLiveData<DirectionInfo> = MutableLiveData()
+    private val directionInfoWithDistanceUnit: LiveData<Pair<DirectionInfo, DistanceUnit>> =
+        directionInfo.withLatestFrom(regionalManager.distanceUnit)
 
-    private val directionInfoWithDistanceUnit: LiveData<Pair<DirectionInfo, DistanceUnit>>
     private val directionInfoObserver = Observer<Pair<DirectionInfo, DistanceUnit>> {
         distance.value = it.first.getDistanceWithUnits(it.second)
         primaryDirection.value = it.first.getDirectionDrawable(DirectionManeuverType.PRIMARY)
@@ -65,9 +66,7 @@ abstract class BaseSignpostViewModel(
 
     init {
         navigationManager.addOnDirectionListener(this)
-        directionInfoWithDistanceUnit = directionInfo.withLatestFrom(regionalManager.distanceUnit).apply {
-            observeForever(directionInfoObserver)
-        }
+        directionInfoWithDistanceUnit.observeForever(directionInfoObserver)
     }
 
     @CallSuper
