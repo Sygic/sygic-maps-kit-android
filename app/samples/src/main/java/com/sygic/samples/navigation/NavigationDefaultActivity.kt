@@ -37,7 +37,6 @@ import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.maps.uikit.views.common.extensions.requestPermission
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.infobar.SampleInfobarButtonClickListener
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.RoutingOptions
@@ -56,14 +55,8 @@ class NavigationDefaultActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_navigation_default)
 
         if (savedInstanceState == null) {
-            setInfobarButtonClickListener()
             createRoutePlanAndComputeRoute()
         }
-    }
-
-    private fun setInfobarButtonClickListener() {
-        (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment)
-            .setOnInfobarButtonClickListener(SampleInfobarButtonClickListener(this))
     }
 
     private fun createRoutePlanAndComputeRoute() {
