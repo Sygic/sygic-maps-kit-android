@@ -52,12 +52,12 @@ interface OnInfobarButtonClickListener {
     /**
      * Called when a click to the infobar left button has been made.
      */
-    fun onLeftButtonClick()
+    fun onLeftButtonClick() {}
 
     /**
      * Called when a click to the infobar right button has been made.
      */
-    fun onRightButtonClick()
+    fun onRightButtonClick() {}
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

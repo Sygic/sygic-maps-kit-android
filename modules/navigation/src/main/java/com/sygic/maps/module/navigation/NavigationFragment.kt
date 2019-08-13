@@ -33,6 +33,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
@@ -48,6 +49,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsVi
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.extensions.finish
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
@@ -195,7 +197,11 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments)
+        fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
+            this.activityFinishObservable.observe(
+                this@NavigationFragment,
+                Observer<Any> { finish() })
+        }
         infobarViewModel = viewModelOf(InfobarViewModel::class.java)
         routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
         lifecycle.addObserver(fragmentViewModel)
