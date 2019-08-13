@@ -100,16 +100,16 @@ class NavigationFragmentViewModel internal constructor(
     val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
-    val leftButtonVisible: MutableLiveData<Boolean> = MutableLiveData(false)
-    val leftButtonBackgroundResource: MutableLiveData<Int> = MutableLiveData(0)
-    val leftButtonBackgroundTint: MutableLiveData<Int> = MutableLiveData(0)
-    val leftButtonImageResource: MutableLiveData<Int> = MutableLiveData(0)
-    val leftButtonImageTint: MutableLiveData<Int> = MutableLiveData(0)
-    val rightButtonVisible: MutableLiveData<Boolean> = MutableLiveData(false)
-    val rightButtonBackgroundResource: MutableLiveData<Int> = MutableLiveData(0)
-    val rightButtonBackgroundTint: MutableLiveData<Int> = MutableLiveData(0)
-    val rightButtonImageResource: MutableLiveData<Int> = MutableLiveData(0)
-    val rightButtonImageTint: MutableLiveData<Int> = MutableLiveData(0)
+    val leftInfobarButtonVisible: MutableLiveData<Boolean> = MutableLiveData(false)
+    val leftInfobarButtonBackgroundResource: MutableLiveData<Int> = MutableLiveData(0)
+    val leftInfobarButtonBackgroundTint: MutableLiveData<Int> = MutableLiveData(0)
+    val leftInfobarButtonImageResource: MutableLiveData<Int> = MutableLiveData(0)
+    val leftInfobarButtonImageTint: MutableLiveData<Int> = MutableLiveData(0)
+    val rightInfobarButtonVisible: MutableLiveData<Boolean> = MutableLiveData(false)
+    val rightInfobarButtonBackgroundResource: MutableLiveData<Int> = MutableLiveData(0)
+    val rightInfobarButtonBackgroundTint: MutableLiveData<Int> = MutableLiveData(0)
+    val rightInfobarButtonImageResource: MutableLiveData<Int> = MutableLiveData(0)
+    val rightInfobarButtonImageTint: MutableLiveData<Int> = MutableLiveData(0)
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
@@ -130,26 +130,26 @@ class NavigationFragmentViewModel internal constructor(
             field = value
             value?.let {
                 it.getLeftButton()?.let { leftButton ->
-                    leftButtonVisible.value = true
-                    leftButtonImageResource.value = leftButton.imageResource
-                    leftButtonImageTint.value = leftButton.imageTintColor
-                    leftButtonBackgroundResource.value = leftButton.backgroundResource
-                    leftButtonBackgroundTint.value = leftButton.backgroundTintColor
+                    leftInfobarButtonVisible.value = true
+                    leftInfobarButtonImageResource.value = leftButton.imageResource
+                    leftInfobarButtonImageTint.value = leftButton.imageTintColor
+                    leftInfobarButtonBackgroundResource.value = leftButton.backgroundResource
+                    leftInfobarButtonBackgroundTint.value = leftButton.backgroundTintColor
                 } ?: run {
-                    leftButtonVisible.value = false
+                    leftInfobarButtonVisible.value = false
                 }
                 it.getRightButton()?.let { rightButton ->
-                    rightButtonVisible.value = true
-                    rightButtonImageResource.value = rightButton.imageResource
-                    rightButtonImageTint.value = rightButton.imageTintColor
-                    rightButtonBackgroundResource.value = rightButton.backgroundResource
-                    rightButtonBackgroundTint.value = rightButton.backgroundTintColor
+                    rightInfobarButtonVisible.value = true
+                    rightInfobarButtonImageResource.value = rightButton.imageResource
+                    rightInfobarButtonImageTint.value = rightButton.imageTintColor
+                    rightInfobarButtonBackgroundResource.value = rightButton.backgroundResource
+                    rightInfobarButtonBackgroundTint.value = rightButton.backgroundTintColor
                 } ?: run {
-                    rightButtonVisible.value = false
+                    rightInfobarButtonVisible.value = false
                 }
             } ?: run {
-                leftButtonVisible.value = false
-                rightButtonVisible.value = false
+                leftInfobarButtonVisible.value = false
+                rightInfobarButtonVisible.value = false
             }
         }
 

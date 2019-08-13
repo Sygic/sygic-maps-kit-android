@@ -29,7 +29,7 @@ import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
 
 open class DefaultNavigationInfobarClickListener : OnInfobarButtonClickListener {
 
-    private val leftInfobarButton = InfobarButton(
+    private val leftInfobarMenuButton = InfobarButton(
         R.drawable.ic_more,
         R.drawable.bg_infobar_button_rounded,
         R.color.white,
@@ -43,6 +43,6 @@ open class DefaultNavigationInfobarClickListener : OnInfobarButtonClickListener 
         R.color.brick_red
     )
 
-    override fun getLeftButton(): InfobarButton? = leftInfobarButton
+    override fun getLeftButton(): InfobarButton? = leftInfobarMenuButton
     override fun getRightButton(): InfobarButton? = rightInfobarButton
 }
