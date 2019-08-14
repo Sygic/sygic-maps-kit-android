@@ -31,14 +31,14 @@ import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+class NavigationSimplifiedSignpostActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---preview-enabled"
+    override val wikiModulePath: String = "Module-Navigation#navigation---simplified-signpost"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_navigation_preview_enabled)
+        setContentView(R.layout.activity_navigation_simplified_signpost)
 
         if (savedInstanceState == null) {
             computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
