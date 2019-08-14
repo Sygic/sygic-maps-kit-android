@@ -39,10 +39,10 @@ import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
 import com.sygic.maps.module.navigation.R
 import com.sygic.maps.module.navigation.component.*
-import com.sygic.maps.module.navigation.infobar.DefaultNavigationInfobarClickListener
+import com.sygic.maps.module.navigation.infobar.NavigationDefaultInfobarClickListener
 import com.sygic.maps.module.navigation.infobar.InfobarButtonWrapper
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -113,12 +113,12 @@ class NavigationFragmentViewModel internal constructor(
 
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
-    private val defaultNavigationInfobarClickListener = object : DefaultNavigationInfobarClickListener() {
+    private val navigationDefaultInfobarClickListener = object : NavigationDefaultInfobarClickListener() {
         override fun onLeftButtonClick() { /*todo: MS-6218*/  }
         override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 
-    private var onInfobarButtonClickListener: OnInfobarButtonClickListener? = null
+    private var onInfobarButtonsClickListener: OnInfobarButtonsClickListener? = null
         set(value) {
             field = value
             value?.let {
@@ -153,12 +153,12 @@ class NavigationFragmentViewModel internal constructor(
 
         routeInfo.observeForever(::setRouteInfo)
         previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
-        onInfobarButtonClickListener = defaultNavigationInfobarClickListener
+        onInfobarButtonsClickListener = navigationDefaultInfobarClickListener
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        if (owner is OnInfobarButtonClickListenerWrapper) {
-            owner.infobarButtonsClickListenerProvider.observe(owner, Observer { onInfobarButtonClickListener = it })
+        if (owner is OnInfobarButtonsClickListenerWrapper) {
+            owner.infobarButtonsClickListenerProvider.observe(owner, Observer { onInfobarButtonsClickListener = it })
         }
     }
 
@@ -207,11 +207,9 @@ class NavigationFragmentViewModel internal constructor(
         }
     }
 
-    fun onLeftInfobarButtonClick() = onInfobarButtonClickListener?.onLeftButtonClick()
-        ?: defaultNavigationInfobarClickListener.onLeftButtonClick()
+    fun onLeftInfobarButtonClick() = onInfobarButtonsClickListener?.onLeftButtonClick()
 
-    fun onRightInfobarButtonClick() = onInfobarButtonClickListener?.onRightButtonClick()
-        ?: defaultNavigationInfobarClickListener.onRightButtonClick()
+    fun onRightInfobarButtonClick() = onInfobarButtonsClickListener?.onRightButtonClick()
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false
