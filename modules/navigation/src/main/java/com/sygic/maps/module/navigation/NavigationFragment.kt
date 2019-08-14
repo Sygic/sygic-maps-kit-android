@@ -33,13 +33,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
@@ -50,6 +51,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostVie
 import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
 import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.extensions.finish
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
@@ -78,7 +80,7 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), OnInfobarButtonClickListenerWrapper {
+class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), OnInfobarButtonsClickListenerWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
@@ -86,7 +88,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
     private lateinit var currentSpeedViewModel: CurrentSpeedViewModel
     private lateinit var speedLimitViewModel: SpeedLimitViewModel
 
-    override val infobarButtonsClickListenerProvider: LiveData<OnInfobarButtonClickListener> = MutableLiveData()
+    override val infobarButtonsClickListenerProvider: LiveData<OnInfobarButtonsClickListener> = MutableLiveData()
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
@@ -240,7 +242,11 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments)
+        fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
+            this.activityFinishObservable.observe(
+                this@NavigationFragment,
+                Observer<Any> { finish() })
+        }
         infobarViewModel = viewModelOf(InfobarViewModel::class.java)
         routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
         currentSpeedViewModel = viewModelOf(CurrentSpeedViewModel::class.java)
@@ -279,9 +285,9 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
     /**
      * Register a custom callback to be invoked when a click to the infobar button has been made.
      *
-     * @param onClickListener [OnInfobarButtonClickListener] callback to invoke on infobar button click.
+     * @param onClickListener [OnInfobarButtonsClickListener] callback to invoke on infobar button click.
      */
-    fun setOnInfobarButtonClickListener(onClickListener: OnInfobarButtonClickListener?) {
+    fun setOnInfobarButtonsClickListener(onClickListener: OnInfobarButtonsClickListener?) {
         infobarButtonsClickListenerProvider.asMutable().value = onClickListener
     }
 

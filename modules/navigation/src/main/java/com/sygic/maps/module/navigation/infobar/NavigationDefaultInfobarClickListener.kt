@@ -22,28 +22,27 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.maps.module.navigation.infobar
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import com.sygic.maps.module.navigation.R
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+open class NavigationDefaultInfobarClickListener : OnInfobarButtonsClickListener {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---preview-enabled"
+    private val leftInfobarMenuButton = InfobarButton(
+        R.drawable.ic_more,
+        R.drawable.bg_infobar_button_rounded,
+        R.color.white,
+        R.color.colorAccent
+    )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val rightInfobarButton = InfobarButton(
+        R.drawable.ic_close,
+        R.drawable.bg_infobar_button_rounded,
+        R.color.white,
+        R.color.brick_red
+    )
 
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
-            }
-        }
-    }
+    override fun getLeftButton(): InfobarButton? = leftInfobarMenuButton
+    override fun getRightButton(): InfobarButton? = rightInfobarButton
 }

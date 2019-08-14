@@ -22,31 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation.infobar
+package com.sygic.samples.navigation.utils
 
-import android.app.Activity
-import com.sygic.maps.module.navigation.infobar.InfobarButton
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
-import com.sygic.samples.R
+import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.route.RoutePlan
+import com.sygic.sdk.route.RoutingOptions
 
-class SampleInfobarButtonClickListener(val activity: Activity) : OnInfobarButtonClickListener {
+class SampleDemonstrationRoutePlan : RoutePlan() {
 
-    private val leftInfobarButton = InfobarButton(
-        R.drawable.ic_more,
-        R.drawable.bg_infobar_button_rounded,
-        R.color.white,
-        R.color.colorAccent
-    )
-
-    private val rightInfobarButton = InfobarButton(
-        R.drawable.ic_close,
-        R.drawable.bg_infobar_button_rounded,
-        R.color.white,
-        R.color.brick_red
-    )
-
-    override fun getLeftButton(): InfobarButton? = leftInfobarButton
-    override fun getRightButton(): InfobarButton? = rightInfobarButton
-    override fun onLeftButtonClick() { /* TODO: MS-6218 */ }
-    override fun onRightButtonClick() = activity.finish()
+    init {
+        setStart(GeoCoordinates(48.144722, 17.112778))
+        setDestination(GeoCoordinates(41.893056, 12.482778))
+        routingOptions = RoutingOptions().apply {
+            transportMode = RoutingOptions.TransportMode.Car
+            routingType = RoutingOptions.RoutingType.Economic
+        }
+    }
 }

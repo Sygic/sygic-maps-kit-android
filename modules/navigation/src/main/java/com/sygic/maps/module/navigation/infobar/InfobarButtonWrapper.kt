@@ -22,28 +22,27 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.maps.module.navigation.infobar
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import androidx.lifecycle.MutableLiveData
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+class InfobarButtonWrapper(
+    val imageResource: MutableLiveData<Int> = MutableLiveData(0),
+    val backgroundResource: MutableLiveData<Int> = MutableLiveData(0),
+    val imageTintColor: MutableLiveData<Int> = MutableLiveData(0),
+    val backgroundTintColor: MutableLiveData<Int> = MutableLiveData(0),
+    val visible: MutableLiveData<Boolean> = MutableLiveData(false)
+) {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---preview-enabled"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
-            }
+    fun setFrom(infobarButton: InfobarButton?) {
+        infobarButton?.let {
+            imageResource.value = it.imageResource
+            imageTintColor.value = it.imageTintColor
+            backgroundResource.value = it.backgroundResource
+            backgroundTintColor.value = it.backgroundTintColor
+            visible.value = true
+        } ?: run {
+            visible.value = false
         }
     }
 }

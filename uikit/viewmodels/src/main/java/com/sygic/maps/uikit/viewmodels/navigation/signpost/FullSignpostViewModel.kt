@@ -65,10 +65,10 @@ open class FullSignpostViewModel internal constructor(
     }
 
     override fun onNaviSignChanged(naviSignInfoList: List<NaviSignInfo>) {
-        naviSignInfoList.getNaviSignInfoOnRoute().let {
-            naviSignInfoHolder.value = NaviSignInfoHolder.from(it)
-            roadSigns.value = it?.roadSigns() ?: listOf()
-            pictogram.value = it?.pictogramDrawableRes() ?: EMPTY_PICTOGRAM
+        with(naviSignInfoList.getNaviSignInfoOnRoute()) {
+            naviSignInfoHolder.value = NaviSignInfoHolder.from(this)
+            roadSigns.value = this?.roadSigns() ?: listOf()
+            pictogram.value = this?.pictogramDrawableRes() ?: EMPTY_PICTOGRAM
         }
     }
 
