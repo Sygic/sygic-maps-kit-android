@@ -28,18 +28,18 @@
 
     <item
         android:id="@+id/pauseState"
-        android:drawable="@drawable/ic_pause"
+        android:drawable="@drawable/ic_pause_to_play"
         android:state_checked="true" />
     <item
         android:id="@+id/playState"
-        android:drawable="@drawable/ic_play" />
+        android:drawable="@drawable/ic_play_to_pause" />
 
     <transition
         android:fromId="@id/playState"
         android:reversible="true"
         android:toId="@id/pauseState">
 
-        <animated-vector android:drawable="@drawable/ic_play">
+        <animated-vector android:drawable="@drawable/ic_play_to_pause">
 
             <target
                 android:name="play_to_pause"

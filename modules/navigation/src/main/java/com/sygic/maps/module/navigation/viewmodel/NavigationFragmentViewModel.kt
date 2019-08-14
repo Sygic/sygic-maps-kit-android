@@ -41,6 +41,7 @@ import com.sygic.maps.module.navigation.R
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.infobar.DefaultNavigationInfobarClickListener
 import com.sygic.maps.module.navigation.infobar.InfobarButtonWrapper
+import com.sygic.maps.module.navigation.infobar.NavigationUnlockedInfobarClickListener
 import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
 import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
@@ -115,14 +116,14 @@ class NavigationFragmentViewModel internal constructor(
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
     private val defaultNavigationInfobarClickListener = object : DefaultNavigationInfobarClickListener() {
+        override fun onLeftButtonClick() {} /*TODO: MS-6224*/
+        override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
+    }
+
+    private val navigationUnlockedInfobarClickListener = object : NavigationUnlockedInfobarClickListener() {
         override fun onLeftButtonClick() {
-            when (leftButtonState) {
-                LeftButtonState.MENU -> {}/*TODO: MS-6224*/
-                LeftButtonState.LOCK -> {
-                    cameraModel.rotationMode = Camera.RotationMode.Vehicle
-                    cameraModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
-                }
-            }
+            cameraModel.rotationMode = Camera.RotationMode.Vehicle
+            cameraModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
         }
 
         override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
@@ -194,13 +195,10 @@ class NavigationFragmentViewModel internal constructor(
         if (onInfobarButtonClickListener is DefaultNavigationInfobarClickListener) {
             when (mode) {
                 Camera.MovementMode.Free ->
-                    defaultNavigationInfobarClickListener.leftButtonState =
-                        DefaultNavigationInfobarClickListener.LeftButtonState.LOCK
+                    onInfobarButtonClickListener = navigationUnlockedInfobarClickListener
                 Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
-                    defaultNavigationInfobarClickListener.leftButtonState =
-                        DefaultNavigationInfobarClickListener.LeftButtonState.MENU
+                    onInfobarButtonClickListener = defaultNavigationInfobarClickListener
             }
-            onInfobarButtonClickListener = defaultNavigationInfobarClickListener
         }
     }
 
@@ -235,10 +233,8 @@ class NavigationFragmentViewModel internal constructor(
     }
 
     fun onLeftInfobarButtonClick() = onInfobarButtonClickListener?.onLeftButtonClick()
-        ?: defaultNavigationInfobarClickListener.onLeftButtonClick()
 
     fun onRightInfobarButtonClick() = onInfobarButtonClickListener?.onRightButtonClick()
-        ?: defaultNavigationInfobarClickListener.onRightButtonClick()
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false

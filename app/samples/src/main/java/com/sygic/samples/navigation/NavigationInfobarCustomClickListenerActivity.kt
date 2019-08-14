@@ -1,0 +1,152 @@
+/*
+ * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ *
+ * This project is licensed under the MIT License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package com.sygic.samples.navigation
+
+import android.media.MediaPlayer
+import android.os.Bundle
+import com.sygic.maps.module.navigation.NavigationFragment
+import com.sygic.maps.module.navigation.infobar.InfobarButton
+import com.sygic.maps.module.navigation.infobar.NavigationUnlockedInfobarClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
+import com.sygic.samples.R
+import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import com.sygic.sdk.map.Camera
+
+class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
+
+    override val wikiModulePath: String = "Module-Navigation#navigation---infobar-custom-click-listener"
+
+    private var fanfareMediaPlayer: MediaPlayer? = null
+
+    private val leftInfobarPlayButton = InfobarButton(
+        R.drawable.ic_play,
+        R.drawable.bg_infobar_button_rounded,
+        R.color.white,
+        R.color.colorAccent
+    )
+
+    private val rightInfobarButton = InfobarButton(
+        R.drawable.ic_close,
+        R.drawable.bg_infobar_button_rounded,
+        R.color.white,
+        R.color.brick_red
+    )
+
+    private val cameraModeChangedListener = object : Camera.ModeChangedListener {
+        override fun onRotationModeChanged(@Camera.RotationMode mode: Int) {}
+        override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
+            with(supportFragmentManager.findFragmentById(R.id.navigationFragment)) {
+                if (this is NavigationFragment) {
+                    when (mode) {
+                        Camera.MovementMode.Free ->
+                            setOnInfobarButtonClickListener(navigationUnlockedInfobarClickListener)
+                        Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
+                            setOnInfobarButtonClickListener(customOnInfobarButtonsClickListener)
+                    }
+                }
+            }
+        }
+    }
+
+    private val navigationUnlockedInfobarClickListener = object : NavigationUnlockedInfobarClickListener() {
+        override fun onLeftButtonClick() = lockVehicle()
+        override fun onRightButtonClick() = finish()
+    }
+
+    private val customOnInfobarButtonsClickListener = object : OnInfobarButtonClickListener {
+        override fun getLeftButton() = leftInfobarPlayButton
+        override fun getRightButton() = rightInfobarButton
+        override fun onLeftButtonClick() = playFanfare()
+        override fun onRightButtonClick() = finish()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_navigation_infobar_custom_click_listener)
+
+        fanfareMediaPlayer = MediaPlayer.create(this, R.raw.fanfare)
+
+        if (savedInstanceState == null) {
+            setOnInfobarButtonsClickListener(customOnInfobarButtonsClickListener)
+            computePrimaryRoute(SampleDemonstrationRoutePlan()) {
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = it
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        ((supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment))
+            .cameraDataModel.addModeChangedListener(cameraModeChangedListener)
+    }
+
+    private fun setOnInfobarButtonsClickListener(listener: OnInfobarButtonClickListener) {
+        with(supportFragmentManager.findFragmentById(R.id.navigationFragment)) {
+            if (this is NavigationFragment) {
+                setOnInfobarButtonClickListener(listener)
+            }
+        }
+    }
+
+    private fun playFanfare() {
+        fanfareMediaPlayer?.apply {
+            if (isPlaying) {
+                stop()
+                prepare()
+            }
+
+            start()
+        }
+    }
+
+    private fun lockVehicle() {
+        with(supportFragmentManager.findFragmentById(R.id.navigationFragment)) {
+            if (this is NavigationFragment) {
+                cameraDataModel.rotationMode = Camera.RotationMode.Vehicle
+                cameraDataModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        ((supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment))
+            .cameraDataModel.removeModeChangedListener(cameraModeChangedListener)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        fanfareMediaPlayer?.apply {
+            stop()
+            if (isFinishing) release()
+        }
+    }
+}

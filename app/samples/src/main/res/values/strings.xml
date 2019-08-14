@@ -84,4 +84,6 @@
     <string name="navigation_default_summary">Navigation module with no configuration</string>
     <string name="navigation_preview_enabled">Navigation - Preview enabled</string>
     <string name="navigation_preview_enabled_summary">Navigation module with preview mode enabled</string>
+    <string name="navigation_infobar_custom_click_listener">Navigation - Infobar custom listener</string>
+    <string name="navigation_infobar_custom_click_listener_summary">Navigation module with custom infobar click listener</string>
 </resources>
