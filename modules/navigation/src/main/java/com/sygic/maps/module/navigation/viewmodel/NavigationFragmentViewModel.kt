@@ -121,18 +121,9 @@ class NavigationFragmentViewModel internal constructor(
     private var onInfobarButtonClickListener: OnInfobarButtonClickListener? = null
         set(value) {
             field = value
-            //todo
             value?.let {
-                it.getLeftButton()?.let { leftButtonData ->
-                    leftInfobarButtonWrapper.setFrom(leftButtonData)
-                } ?: run {
-                    leftInfobarButtonWrapper.visible.value = false
-                }
-                it.getRightButton()?.let { rightButtonData ->
-                    rightInfobarButtonWrapper.setFrom(rightButtonData)
-                } ?: run {
-                    rightInfobarButtonWrapper.visible.value = false
-                }
+                leftInfobarButtonWrapper.setFrom(it.getLeftButton())
+                rightInfobarButtonWrapper.setFrom(it.getRightButton())
             } ?: run {
                 leftInfobarButtonWrapper.visible.value = false
                 rightInfobarButtonWrapper.visible.value = false

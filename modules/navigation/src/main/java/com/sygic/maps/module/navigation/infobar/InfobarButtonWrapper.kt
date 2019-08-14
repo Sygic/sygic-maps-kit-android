@@ -34,11 +34,15 @@ class InfobarButtonWrapper(
     val visible: MutableLiveData<Boolean> = MutableLiveData(false)
 ) {
 
-    fun setFrom(infobarButton: InfobarButton)  {
-        imageResource.value = infobarButton.imageResource
-        imageTintColor.value = infobarButton.imageTintColor
-        backgroundResource.value = infobarButton.backgroundResource
-        backgroundTintColor.value = infobarButton.backgroundTintColor
-        visible.value = true
+    fun setFrom(infobarButton: InfobarButton?) {
+        infobarButton?.let {
+            imageResource.value = it.imageResource
+            imageTintColor.value = it.imageTintColor
+            backgroundResource.value = it.backgroundResource
+            backgroundTintColor.value = it.backgroundTintColor
+            visible.value = true
+        } ?: run {
+            visible.value = false
+        }
     }
 }
