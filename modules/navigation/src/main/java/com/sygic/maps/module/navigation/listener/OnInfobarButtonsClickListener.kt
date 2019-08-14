@@ -31,7 +31,7 @@ import com.sygic.maps.module.navigation.infobar.InfobarButton
 /**
  * Interface definition for a callback to be invoked when a click to the infobar button has been made.
  */
-interface OnInfobarButtonClickListener {
+interface OnInfobarButtonsClickListener {
 
     /**
      * Modifies the infobar left button appearance. Icon and background drawable is required (icon and background tint can be
@@ -61,6 +61,6 @@ interface OnInfobarButtonClickListener {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface OnInfobarButtonClickListenerWrapper {
-    val infobarButtonsClickListenerProvider: LiveData<OnInfobarButtonClickListener>
+interface OnInfobarButtonsClickListenerWrapper {
+    val infobarButtonsClickListenerProvider: LiveData<OnInfobarButtonsClickListener>
 }

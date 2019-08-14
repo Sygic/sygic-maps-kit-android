@@ -25,9 +25,9 @@
 package com.sygic.maps.module.navigation.infobar
 
 import com.sygic.maps.module.navigation.R
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
 
-open class DefaultNavigationInfobarClickListener : OnInfobarButtonClickListener {
+open class NavigationDefaultInfobarClickListener : OnInfobarButtonsClickListener {
 
     private val leftInfobarMenuButton = InfobarButton(
         R.drawable.ic_more,
