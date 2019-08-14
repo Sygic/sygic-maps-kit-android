@@ -22,28 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.samples.navigation.utils
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.route.RoutePlan
+import com.sygic.sdk.route.RoutingOptions
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+class SampleDemonstrationRoutePlan : RoutePlan() {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---preview-enabled"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
-            }
+    init {
+        setStart(GeoCoordinates(48.144722, 17.112778))
+        setDestination(GeoCoordinates(41.893056, 12.482778))
+        routingOptions = RoutingOptions().apply {
+            transportMode = RoutingOptions.TransportMode.Car
+            routingType = RoutingOptions.RoutingType.Economic
         }
     }
 }
