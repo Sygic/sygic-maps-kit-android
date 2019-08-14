@@ -57,7 +57,7 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
 
     init {
         drawerItemCheckObservable.asSingleEvent().value = R.id.nav_browse_map_module
-        samplesListFragmentsObservable.asSingleEvent().value = NavigationSampleListFragment()
+        samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSampleListFragment()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
