@@ -29,7 +29,7 @@ import android.os.Bundle
 import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.module.navigation.infobar.InfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationUnlockedInfobarClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
 import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
@@ -63,9 +63,9 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
                 if (this is NavigationFragment) {
                     when (mode) {
                         Camera.MovementMode.Free ->
-                            setOnInfobarButtonClickListener(navigationUnlockedInfobarClickListener)
+                            setOnInfobarButtonsClickListener(navigationUnlockedInfobarClickListener)
                         Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
-                            setOnInfobarButtonClickListener(customOnInfobarButtonsClickListener)
+                            setOnInfobarButtonsClickListener(customOnInfobarButtonsClickListener)
                     }
                 }
             }
@@ -77,7 +77,7 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
         override fun onRightButtonClick() = finish()
     }
 
-    private val customOnInfobarButtonsClickListener = object : OnInfobarButtonClickListener {
+    private val customOnInfobarButtonsClickListener = object : OnInfobarButtonsClickListener {
         override fun getLeftButton() = leftInfobarPlayButton
         override fun getRightButton() = rightInfobarButton
         override fun onLeftButtonClick() = playFanfare()
@@ -106,10 +106,10 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
             .cameraDataModel.addModeChangedListener(cameraModeChangedListener)
     }
 
-    private fun setOnInfobarButtonsClickListener(listener: OnInfobarButtonClickListener) {
+    private fun setOnInfobarButtonsClickListener(listener: OnInfobarButtonsClickListener) {
         with(supportFragmentManager.findFragmentById(R.id.navigationFragment)) {
             if (this is NavigationFragment) {
-                setOnInfobarButtonClickListener(listener)
+                setOnInfobarButtonsClickListener(listener)
             }
         }
     }
