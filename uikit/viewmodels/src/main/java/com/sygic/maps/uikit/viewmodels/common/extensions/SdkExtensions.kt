@@ -222,6 +222,7 @@ fun NaviSignInfo.createInstructionText(): TextHolder {
                 it == SignElementType.ExitNumber || it == SignElementType.PlaceName || it == SignElementType.OtherDestination
             }
         }
+        // The sort is stable, so it will only move the ExitNumbers to the top and leave the others as they are.
         .sortedByDescending { it.elementType == SignElementType.ExitNumber }
 
     return if (acceptedSignElements.any { it.elementType == SignElementType.ExitNumber }) {
@@ -261,8 +262,8 @@ fun DirectionInfo.createInstructionText(): TextHolder {
         }
 
         if (isRoundabout()) {
-            getDirectionInstruction().let {
-                return if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty
+            return getDirectionInstruction().let {
+                if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty
             }
         }
 
