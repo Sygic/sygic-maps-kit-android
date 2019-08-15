@@ -71,6 +71,8 @@
     <string name="full">Full</string>
     <string name="browse_map_themes">Browse Map - Themes</string>
     <string name="browse_map_themes_summary">Browse Map module with custom theme</string>
+    <string name="browse_map_split">Browse Map - Split</string>
+    <string name="browse_map_split_summary">Browse Map module with map split</string>
     <string name="search_default">Search - Default</string>
     <string name="search_default_summary">Search module with no configuration</string>
     <string name="search_from_browse_map">Search - From Browse Map</string>
@@ -79,6 +81,10 @@
     <string name="search_from_browse_map_pins_summary">Search module integrated into the Browse Map module with pins</string>
     <string name="search_pre_filled_input">Search - Pre-filled input</string>
     <string name="search_pre_filled_input_summary">Search module with a pre-filled input</string>
-    <string name="browse_map_split">Browse Map - Split</string>
-    <string name="browse_map_split_summary">Browse Map module with map split</string>
+    <string name="navigation_default">Navigation - Default</string>
+    <string name="navigation_default_summary">Navigation module with no configuration</string>
+    <string name="navigation_preview_enabled">Navigation - Preview enabled</string>
+    <string name="navigation_preview_enabled_summary">Navigation module with preview mode enabled</string>
+    <string name="navigation_simplified_signpost">Navigation - Simplified signpost</string>
+    <string name="navigation_simplified_signpost_summary">Navigation module with the simplified signpost view</string>
 </resources>

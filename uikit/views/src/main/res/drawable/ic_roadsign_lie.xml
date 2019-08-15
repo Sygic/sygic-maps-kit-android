@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="64.0"
+    android:viewportHeight="64.0">
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M58.01,11.03C61.3,11.03 63.99,14.66 63.99,19.02L63.99,47.86C63.99,52.25 61.3,55.9
+            58.01,55.9L31.99,58.86L5.97,55.9C2.65,55.9 0,52.25 0,47.86L0,19.02C0,14.66 2.65,11.03 5.97,
+            11.03L31.99,8L58.01,11.03Z" />
+
+    <path
+        android:fillColor="#D0011B"
+        android:pathData="M6.08,13.03C3.93,13.03 2,15.62 2,19.02L2,47.86C2,51.28 3.93,53.9 5.97,53.9L31.99,
+            56.85L57.89,53.9C60.03,53.9 61.99,51.26 61.99,47.86L61.99,19.02C61.99,15.65 60.04,13.03 58.01,
+            13.03L31.99,10.01L6.08,13.03Z" />
+</vector>

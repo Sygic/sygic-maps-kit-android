@@ -36,6 +36,8 @@ To get familiar with all the features available, you can first try out our Sampl
 
 3. Min API **21** (Android 5.0 Lollipop)
 
+4. Some Views and Modules requires global theme attributes to be specified. Don't forget to define them or use/extend our predefined theme! (otherwise, application crashes :( )
+
 ### Implementation
 
 1. Gradle **project file**:
@@ -56,10 +58,10 @@ To get familiar with all the features available, you can first try out our Sampl
     dependencies {
         ...
         // Pattern: implementation 'sygic-prefix:module-name:version'
-        implementation 'com.sygic.maps:module-browsemap:1.1.0'
-        implementation 'com.sygic.maps:module-search:1.3.1'
+        implementation 'com.sygic.maps:module-browsemap:1.1.1'
+        implementation 'com.sygic.maps:module-search:1.3.2'
+        implementation 'com.sygic.maps:module-navigation:1.0.0'
 
-        //implementation 'com.sygic.maps:module-navigation:1.0.0' (coming soon)
         ...
     }
     ```

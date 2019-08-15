@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="64.0"
+    android:viewportHeight="64.0">
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M2.56,55.77C1.33,55.77 0.11,54.55 0.12,53.32C0.12,53.32 0.12,31.96 0.12,23.39C0.12,14.81
+            9.93,14.85 11.16,17.26C9.93,4.76 29.38,4.95 32,0C34.71,4.97 54.06,4.81 52.84,17.26C54.07,14.85 63.88,14.81
+            63.88,23.39C63.88,31.96 63.88,53.32 63.88,53.32C63.89,54.55 62.67,55.77 61.44,55.77L2.56,55.77Z" />
+
+    <path
+        android:fillColor="@color/roadSignGreen"
+        android:pathData="M4.39,53.78C3.24,53.78 2.09,52.65 2.1,51.52L2.1,22.63C2.1,20.37 4.39,18.11 7.84,18.11C11.29,
+            18.11 12.12,19.55 13.57,20.43C12.2,6.67 29.53,7.06 31.98,2.49C34.52,7.08 51.83,6.05 50.4,20.43C51.85,19.55
+            52.68,18.11 56.13,18.11C59.58,18.11 61.87,20.37 61.87,22.63C61.87,24.9 61.87,51.52 61.87,51.52C61.88,52.65
+            60.73,53.78 59.58,53.78L4.39,53.78Z" />
+
+</vector>

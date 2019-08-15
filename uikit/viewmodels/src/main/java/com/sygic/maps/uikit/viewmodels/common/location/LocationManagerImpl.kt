@@ -24,7 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.common.location
 
-import android.app.Activity
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -88,10 +87,11 @@ class LocationManagerImpl : LocationManager {
             locationRequest.value = object : LocationManager.LocationRequesterCallback {
                 override fun onActivityResult(requestCode: Int, resultCode: Int) {
                     when (requestCode) {
-                        GOOGLE_API_CLIENT_REQUEST_CODE -> enableGpsCallback.onResult(if (resultCode == Activity.RESULT_OK) EnableGpsResult.ENABLED else EnableGpsResult.DENIED)
-                        SETTING_ACTIVITY_REQUEST_CODE -> checkGpsEnabled(Observer { gpsEnabled ->
-                            enableGpsCallback.onResult(if (gpsEnabled) EnableGpsResult.ENABLED else EnableGpsResult.DENIED)
-                        })
+                        GOOGLE_API_CLIENT_REQUEST_CODE, SETTING_ACTIVITY_REQUEST_CODE -> {
+                            checkGpsEnabled(Observer { gpsEnabled ->
+                                enableGpsCallback.onResult(if (gpsEnabled) EnableGpsResult.ENABLED else EnableGpsResult.DENIED)
+                            })
+                        }
                     }
                 }
             }

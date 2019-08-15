@@ -24,9 +24,98 @@
 
 package com.sygic.maps.module.common.extensions
 
+import android.content.Context
+import android.content.Intent
+import android.content.IntentSender
+import android.location.LocationManager
+import android.provider.Settings
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.sygic.maps.module.common.R
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.uikit.viewmodels.common.extensions.getSelectionType
+import com.sygic.maps.uikit.views.common.extensions.locationManager
+import com.sygic.maps.uikit.views.common.utils.logError
 import com.sygic.sdk.map.`object`.ViewObject
 
 fun OnMapClickListener.onMapClick(viewObject: ViewObject<*>): Boolean =
     onMapClick(viewObject.getSelectionType(), viewObject.position.latitude, viewObject.position.longitude)
+
+fun Fragment.isGooglePlayServicesAvailable(): Boolean = requireContext().isGooglePlayServicesAvailable()
+
+fun Context?.isGooglePlayServicesAvailable(): Boolean {
+    return this?.let {
+        GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS
+    } ?: false
+}
+
+fun Fragment.isGpsEnabled(): Boolean = requireContext().isGpsEnabled()
+
+fun Context?.isGpsEnabled(): Boolean {
+    return this?.let {
+        it.locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    } ?: false
+}
+
+fun Context?.isGpsNotEnabled(): Boolean = !isGpsEnabled()
+
+fun Fragment.createGoogleApiLocationRequest(requestCode: Int) =
+    requireActivity().createGoogleApiLocationRequest(requestCode)
+
+fun FragmentActivity.createGoogleApiLocationRequest(requestCode: Int) {
+    val locationRequest = LocationRequest.create()
+    locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+    val locationSettingsRequestBuilder = LocationSettingsRequest.Builder()
+        .setAlwaysShow(true)
+        .addLocationRequest(locationRequest)
+
+    val responseTask = LocationServices.getSettingsClient(this)
+        .checkLocationSettings(locationSettingsRequestBuilder.build())
+    responseTask.addOnCompleteListener(this) { task ->
+        try {
+            task.getResult(ApiException::class.java)
+        } catch (exception: ApiException) {
+            when (exception.statusCode) {
+                LocationSettingsStatusCodes.RESOLUTION_REQUIRED ->
+                    try {
+                        startIntentSenderForResult(
+                            (exception as ResolvableApiException).resolution.intentSender,
+                            requestCode,
+                            null,
+                            0,
+                            0,
+                            0,
+                            null
+                        )
+                    } catch (ignored: IntentSender.SendIntentException) {
+                        logError("RequesterWrapper -> SendIntentException")
+                    } catch (ignored: ClassCastException) {
+                        logError("RequesterWrapper -> ClassCastException")
+                    }
+            }
+        }
+    }
+}
+
+fun Fragment.showGenericNoGpsDialog(requestCode: Int) = requireActivity().showGenericNoGpsDialog(requestCode)
+
+fun FragmentActivity.showGenericNoGpsDialog(requestCode: Int): AlertDialog = AlertDialog.Builder(this)
+    .setTitle(R.string.enable_gps_dialog_title)
+    .setMessage(R.string.enable_gps_dialog_text)
+    .setNegativeButton(R.string.cancel, null)
+    .setPositiveButton(
+        R.string.settings
+    ) { _, _ ->
+        startActivityForResult(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), requestCode)
+    }
+    .show()

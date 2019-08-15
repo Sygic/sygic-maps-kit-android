@@ -48,11 +48,7 @@ open class CompassViewModel internal constructor(
     private val cameraModel: ExtendedCameraModel
 ) : ViewModel(), Camera.PositionChangedListener, DefaultLifecycleObserver {
 
-    val rotation: MutableLiveData<Float> = MutableLiveData()
-
-    init {
-        rotation.value = cameraModel.rotation
-    }
+    val rotation: MutableLiveData<Float> = MutableLiveData(cameraModel.rotation)
 
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addPositionChangedListener(this)

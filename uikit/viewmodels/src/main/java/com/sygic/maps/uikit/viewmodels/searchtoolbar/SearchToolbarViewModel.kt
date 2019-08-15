@@ -63,16 +63,13 @@ open class SearchToolbarViewModel internal constructor(
     private val searchManager: SearchManager
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
+    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData(true)
     val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
 
-    val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
-    val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>() {
+    val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
+    val inputText: MutableLiveData<CharSequence> = object : MutableLiveData<CharSequence>() {
         override fun setValue(value: CharSequence) {
-            if (value != this.value) {
-                super.setValue(value)
-                search(value.toString())
-            }
+            if (value != this.value) super.setValue(value)
         }
     }
 
@@ -90,7 +87,7 @@ open class SearchToolbarViewModel internal constructor(
 
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
     private var searchCoroutineJob: Job? = null
-    private var lastSearchedString: String = EMPTY_STRING
+    private var lastSearchedString: CharSequence = EMPTY_STRING
 
     init {
         with(arguments) {
@@ -99,19 +96,17 @@ open class SearchToolbarViewModel internal constructor(
             maxResultsCount = getInt(KEY_SEARCH_MAX_RESULTS_COUNT, MAX_RESULTS_COUNT_DEFAULT_VALUE)
         }
 
-        searchToolbarFocused.value = true
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
-
+        inputText.observeForever(::search)
         searchManager.addSearchResultsListener(searchResultsListener)
     }
 
-    private fun search(input: String) {
+    private fun search(input: CharSequence) {
         lastSearchedString = input
         searchCoroutineJob?.cancel()
         searchCoroutineJob = scope.launch {
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
             if (input.isNotEmpty()) delay(searchDelay)
-            searchManager.searchText(input, searchLocation)
+            searchManager.searchText(input.toString(), searchLocation)
         }
     }
 

@@ -34,6 +34,7 @@
 
     <color name="white_a80">#CCFFFFFF</color>
     <color name="white_a40">#66FFFFFF</color>
+    <color name="white_a25">#40ffffff</color>
     <color name="white_a10">#19ffffff</color>
     <color name="black_a20">#33000000</color>
     <color name="slate_gray_a80">#cc7a859a</color>

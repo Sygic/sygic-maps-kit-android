@@ -228,6 +228,6 @@ internal fun Int.toCategoryIconDrawableRes(): Int {
         PoiInfo.PoiCategory.Car_Dealer, PoiInfo.PoiCategory.Rent_a_Car_Parking, PoiInfo.PoiCategory.Chevrolet_Car_Dealer,
         PoiInfo.PoiCategory.Motoring_Organization_Office, PoiInfo.PoiCategory.Rent_a_Car_Facility -> R.drawable.ic_car
         PoiInfo.PoiCategory.Car_Services, PoiInfo.PoiCategory.Car_Repair_Facility, PoiInfo.PoiCategory.Chevrolet_Car_Repair -> R.drawable.ic_car_service
-        else -> return R.drawable.ic_location
+        else -> R.drawable.ic_location
     }
 }

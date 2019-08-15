@@ -59,11 +59,7 @@ open class PositionLockFabViewModel internal constructor(
     Camera.ModeChangedListener,
     DefaultLifecycleObserver {
 
-    val currentState: MutableLiveData<Int> = MutableLiveData()
-
-    init {
-        setState(LockState.UNLOCKED)
-    }
+    val currentState: MutableLiveData<Int> = MutableLiveData(LockState.UNLOCKED)
 
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
@@ -72,13 +68,9 @@ open class PositionLockFabViewModel internal constructor(
         }
     }
 
-    override fun onRotationModeChanged(@Camera.RotationMode mode: Int) {
-        modeChanged()
-    }
+    override fun onRotationModeChanged(@Camera.RotationMode mode: Int) = modeChanged()
 
-    override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
-        modeChanged()
-    }
+    override fun onMovementModeChanged(@Camera.MovementMode mode: Int) = modeChanged()
 
     private fun modeChanged() {
         when {

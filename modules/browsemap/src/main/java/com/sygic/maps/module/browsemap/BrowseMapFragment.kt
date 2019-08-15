@@ -85,8 +85,8 @@ open class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(),
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
-    override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData<ModuleConnectionProvider>()
-    override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData<OnMapClickListener>()
+    override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData()
+    override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
 
     override fun executeInjector() =
         injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
@@ -230,19 +230,17 @@ open class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(),
         lifecycle.addObserver(zoomControlsViewModel)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: LayoutBrowseMapBinding = LayoutBrowseMapBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.browseMapFragmentViewModel = fragmentViewModel
-        binding.compassViewModel = compassViewModel
-        binding.positionLockFabViewModel = positionLockFabViewModel
-        binding.zoomControlsViewModel = zoomControlsViewModel
-        val root = binding.root as ViewGroup
-        super.onCreateView(inflater, root, savedInstanceState)?.let {
-            root.addView(it, 0)
-        }
-        return root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        LayoutBrowseMapBinding.inflate(inflater, container, false).apply {
+            browseMapFragmentViewModel = fragmentViewModel
+            compassViewModel = this@BrowseMapFragment.compassViewModel
+            positionLockFabViewModel = this@BrowseMapFragment.positionLockFabViewModel
+            zoomControlsViewModel = this@BrowseMapFragment.zoomControlsViewModel
+            lifecycleOwner = this@BrowseMapFragment
+            with(root as ViewGroup) {
+                super.onCreateView(inflater, this, savedInstanceState)?.let { addView(it, 0) }
+            }
+        }.root
 
     /**
      * Register a custom callback to be invoked when a click to the map has been made. If null, default callback

@@ -123,12 +123,11 @@ dependencies {
 
     // modules
     implementation project(':module-browsemap')
+    implementation project(':module-navigation')
     implementation project(':module-search')
 
     // test libraries
-    androidTestImplementation "com.google.android.material:material:$materialVersion"
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    androidTestImplementation "androidx.test:rules:$testRunnerVersion"
+    androidTestImplementation "androidx.test:rules:$testRulesVersion"
     androidTestImplementation "androidx.test:runner:$testRunnerVersion"
     androidTestImplementation "androidx.test.ext:junit:$extJUnitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"

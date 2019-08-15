@@ -42,7 +42,7 @@ import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
 import com.sygic.maps.module.common.theme.ThemeManager
-import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
+import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload
@@ -73,7 +73,7 @@ class BrowseMapFragmentViewModel internal constructor(
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
     private val themeManager: ThemeManager
-) : AndroidViewModel(app), ThemeSupportedViewModel, DefaultLifecycleObserver, MapInteractionManager.Listener {
+) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, MapInteractionManager.Listener {
 
     @MapSelectionMode
     var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
@@ -89,11 +89,11 @@ class BrowseMapFragmentViewModel internal constructor(
             }
         }
 
-    val compassEnabled: MutableLiveData<Boolean> = MutableLiveData()
-    val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData()
-    val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData()
-    val searchEnabled: MutableLiveData<Boolean> = MutableLiveData()
-    val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData()
+    val compassEnabled: MutableLiveData<Boolean> = MutableLiveData(COMPASS_ENABLED_DEFAULT_VALUE)
+    val compassHideIfNorthUp: MutableLiveData<Boolean> = MutableLiveData(COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE)
+    val positionLockFabEnabled: MutableLiveData<Boolean> = MutableLiveData(POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
+    val searchEnabled: MutableLiveData<Boolean> = MutableLiveData(SEARCH_ENABLED_DEFAULT_VALUE)
+    val zoomControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
 
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
@@ -144,7 +144,6 @@ class BrowseMapFragmentViewModel internal constructor(
             owner.moduleConnectionProvider.observe(owner, Observer { provider ->
                 searchConnectionProvider = provider
             })
-
         }
         poiDetailListenerObservable.asSingleEvent().value = dialogFragmentListener
     }
@@ -263,8 +262,6 @@ class BrowseMapFragmentViewModel internal constructor(
             }
         })
     }
-
-    override fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) = themeManager.setSkinAtLayer(layer, skin)
 
     fun onSearchFabClick() =
         searchConnectionProvider?.let { openFragmentObservable.asSingleEvent().value = it.fragment }

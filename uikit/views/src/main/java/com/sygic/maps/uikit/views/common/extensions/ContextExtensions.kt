@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.views.common.extensions
 
 import android.content.*
 import android.content.Context.*
+import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.net.Uri
 import android.text.TextUtils
@@ -38,6 +39,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
 
 inline val Context.locationManager: LocationManager?
@@ -136,6 +138,12 @@ fun Context.copyToClipboard(text: String) {
         longToast(R.string.copied_to_clipboard)
     }
 }
+
+fun Context.isPermissionGranted(permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+}
+
+fun Context.isPermissionNotGranted(permission: String): Boolean = !isPermissionGranted(permission)
 
 fun Context.shortToast(@StringRes text: Int) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 fun Context.shortToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()

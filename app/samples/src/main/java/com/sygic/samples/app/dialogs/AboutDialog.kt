@@ -35,10 +35,9 @@ import com.sygic.samples.app.viewmodels.AboutDialogViewModel
 
 class AboutDialog : AppCompatDialogFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = LayoutAboutDialogBinding.inflate(inflater, container, false)
-        binding.aboutDialogViewModel = ViewModelProviders.of(this).get(AboutDialogViewModel::class.java)
-        binding.lifecycleOwner = this
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        LayoutAboutDialogBinding.inflate(inflater, container, false).apply {
+            aboutDialogViewModel = ViewModelProviders.of(this@AboutDialog).get(AboutDialogViewModel::class.java)
+            lifecycleOwner = this@AboutDialog
+        }.root
 }
