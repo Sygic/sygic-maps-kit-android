@@ -30,7 +30,6 @@ import android.os.Bundle
 import android.util.AttributeSet
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -57,7 +56,6 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.skin.MapSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isMapSkinValid
 import com.sygic.maps.uikit.views.common.extensions.getStringFromAttr
-import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.MapMarker
@@ -79,6 +77,10 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     internal lateinit var poiDataManager: PoiDataManager
     @Inject
     internal lateinit var mapInteractionManager: MapInteractionManager
+    @Inject
+    internal lateinit var mapDataModel: ExtendedMapDataModel
+    @Inject
+    internal lateinit var cameraDataModel: ExtendedCameraModel
     @Inject
     internal lateinit var sdkInitializationManager: SdkInitializationManager
     @Inject
@@ -117,8 +119,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         getMapAsync(this)
     }
 
-    override fun getMapDataModel(): MapView.MapDataModel = ExtendedMapDataModel //todo
-    override fun getCameraDataModel(): Camera.CameraModel = ExtendedCameraModel //todo
+    final override fun getMapDataModel() = mapDataModel
+    final override fun getCameraDataModel() = cameraDataModel
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         executeInjector()
@@ -150,8 +152,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mapDataModel.let { if (it is DefaultLifecycleObserver) lifecycle.addObserver(it) }
-        cameraDataModel.let { if (it is DefaultLifecycleObserver) lifecycle.addObserver(it) }
+        lifecycle.addObserver(mapDataModel)
+        lifecycle.addObserver(cameraDataModel)
     }
 
     @CallSuper
@@ -190,7 +192,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to be added.
      */
     fun addMapMarker(marker: MapMarker) {
-        //mapDataModel.addMapMarker(marker) //todo
+        mapDataModel.addMapMarker(marker)
     }
 
     /**
@@ -200,7 +202,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to remove.
      */
     fun removeMapMarker(marker: MapMarker) {
-        //mapDataModel.removeMapMarker(marker) //todo
+        mapDataModel.removeMapMarker(marker)
     }
 
     /**
@@ -217,7 +219,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * Remove all [MapMarker]-s from the map at once. This is useful if you want to remove all objects from the map.
      */
     fun removeAllMapMarkers() {
-        //mapDataModel.removeAllMapMarkers() //todo
+        mapDataModel.removeAllMapMarkers()
     }
 
     /**
@@ -247,7 +249,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     override fun onDestroy() {
         super.onDestroy()
 
-        mapDataModel.let { if (it is DefaultLifecycleObserver) lifecycle.removeObserver(it) }
-        cameraDataModel.let { if (it is DefaultLifecycleObserver) lifecycle.removeObserver(it) }
+        lifecycle.removeObserver(mapDataModel)
+        lifecycle.removeObserver(cameraDataModel)
     }
 }

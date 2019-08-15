@@ -35,7 +35,7 @@ import java.util.*
 import kotlin.collections.HashSet
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
-object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
+class ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     private var currentOnClickMapMarker: MapMarker? = null
     private val userMapObjects: MutableSet<MapObject<*>> = HashSet()

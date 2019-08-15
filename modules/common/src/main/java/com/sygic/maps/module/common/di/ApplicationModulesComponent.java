@@ -25,47 +25,46 @@
 package com.sygic.maps.module.common.di;
 
 import android.app.Application;
-import com.sygic.maps.module.common.di.module.*;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager;
+
+import com.sygic.maps.module.common.di.module.AppModule;
+import com.sygic.maps.module.common.di.module.LocationModule;
+import com.sygic.maps.module.common.di.module.NavigationManagerModule;
+import com.sygic.maps.module.common.di.module.PermissionsModule;
+import com.sygic.maps.module.common.di.module.PoiDataManagerModule;
+import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerModule;
+import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
+import com.sygic.maps.module.common.di.module.SearchModule;
 import com.sygic.maps.module.common.poi.manager.PoiDataManager;
-import com.sygic.maps.module.common.theme.ThemeManager;
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
 import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManager;
-import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel;
-import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
 import com.sygic.sdk.navigation.NavigationManager;
-import dagger.Component;
 
 import javax.inject.Singleton;
+
+import dagger.Component;
 
 @Singleton
 @Component(
         modules = {
                 AppModule.class,
-                MapModule.class,
                 PoiDataManagerModule.class,
                 SdkInitializationManagerModule.class,
                 PermissionsModule.class,
                 LocationModule.class,
                 SearchModule.class,
-                ThemeModule.class,
                 NavigationManagerModule.class,
                 RouteDemonstrationManagerModule.class
         }
 )
 public interface ApplicationModulesComponent {
-    ExtendedMapDataModel getMapDataModel();
-    ExtendedCameraModel getCameraModel();
-    MapInteractionManager getMapInteractionManager();
     PoiDataManager getPoiDataManager();
     SdkInitializationManager getSdkInitializationManager();
     PermissionsManager getPermissionsManager();
     LocationManager getLocationManager();
     SearchManager getSearchManager();
-    ThemeManager getThemeManager();
     Application getApplication();
     NavigationManager getNavigationManager();
     RouteDemonstrationManager getRouteDemonstrationManager();

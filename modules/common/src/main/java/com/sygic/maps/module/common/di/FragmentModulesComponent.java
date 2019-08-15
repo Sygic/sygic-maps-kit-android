@@ -24,9 +24,16 @@
 
 package com.sygic.maps.module.common.di;
 
+import com.sygic.maps.module.common.di.module.MapModule;
 import com.sygic.maps.module.common.di.module.RegionalModule;
+import com.sygic.maps.module.common.di.module.ThemeModule;
 import com.sygic.maps.module.common.di.scope.FragmentScope;
+import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager;
+import com.sygic.maps.module.common.theme.ThemeManager;
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager;
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel;
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel;
+
 import dagger.Component;
 
 @FragmentScope
@@ -35,9 +42,15 @@ import dagger.Component;
                 ApplicationModulesComponent.class
         },
         modules = {
-                RegionalModule.class
+                MapModule.class,
+                RegionalModule.class,
+                ThemeModule.class
         }
 )
 public interface FragmentModulesComponent extends ApplicationModulesComponent {
+    ExtendedMapDataModel getMapDataModel();
+    ExtendedCameraModel getCameraModel();
+    MapInteractionManager getMapInteractionManager();
     RegionalManager getRegionalManager();
+    ThemeManager getThemeManager();
 }

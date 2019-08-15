@@ -77,7 +77,7 @@ internal const val KEY_ZOOM_CONTROLS = "zoom_controls"
  * [PoiDetailBottomDialogFragment].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-open class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMapClickListenerWrapper,
+class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMapClickListenerWrapper,
     ModuleConnectionProviderWrapper {
 
     override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
