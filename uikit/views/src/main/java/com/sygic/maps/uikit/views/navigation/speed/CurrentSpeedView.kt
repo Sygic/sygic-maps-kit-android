@@ -73,19 +73,20 @@ open class CurrentSpeedView @JvmOverloads constructor(
         gravity = Gravity.CENTER
 
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.CurrentSpeedView,
                 defStyleAttr,
                 defStyleRes
-            ).apply {
-                layoutMargin = getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_margin, 0)
-                layoutMarginTop = getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginTop, 0)
-                layoutMarginBottom = getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginBottom, 0)
-                layoutMarginStart = getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginStart, 0)
-                layoutMarginEnd = getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginEnd, 0)
+            ).also {
+                layoutMargin = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_margin, 0)
+                layoutMarginTop = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginTop, 0)
+                layoutMarginBottom = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginBottom, 0)
+                layoutMarginStart = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginStart, 0)
+                layoutMarginEnd = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginEnd, 0)
 
-                recycle()
+                it.recycle()
             }
         }
     }

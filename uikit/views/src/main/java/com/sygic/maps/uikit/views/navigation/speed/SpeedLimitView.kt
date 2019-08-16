@@ -61,20 +61,21 @@ open class SpeedLimitView @JvmOverloads constructor(
         isClickable = true
 
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.SpeedLimitView,
                 defStyleAttr,
                 defStyleRes
-            ).apply {
-                elevation = getDimensionPixelSize(R.styleable.SpeedLimitView_android_elevation, 0).toFloat()
-                layoutMargin = getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_margin, 0)
-                layoutMarginTop = getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_marginTop, 0)
-                layoutMarginBottom = getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_marginBottom, 0)
-                layoutMarginStart = getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_marginStart, 0)
-                layoutMarginEnd = getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_marginEnd, 0)
+            ).also {
+                elevation = it.getDimensionPixelSize(R.styleable.SpeedLimitView_android_elevation, 0).toFloat()
+                layoutMargin = it.getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_margin, 0)
+                layoutMarginTop = it.getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_marginTop, 0)
+                layoutMarginBottom = it.getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_marginBottom, 0)
+                layoutMarginStart = it.getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_marginStart, 0)
+                layoutMarginEnd = it.getDimensionPixelSize(R.styleable.SpeedLimitView_android_layout_marginEnd, 0)
 
-                recycle()
+                it.recycle()
             }
         }
     }
