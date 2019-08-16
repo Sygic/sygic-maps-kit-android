@@ -56,30 +56,36 @@ class AdvancedInfoView @JvmOverloads constructor(
         orientation = VERTICAL
         gravity = Gravity.CENTER
 
+        @Suppress("Recycle")
         attrs?.let { attributeSet ->
-            context.obtainStyledAttributes(attributeSet, R.styleable.AdvancedInfoView, defStyleAttr, 0).apply {
+            context.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.AdvancedInfoView,
+                defStyleAttr,
+                0
+            ).also {
 
-                getResourceId(R.styleable.AdvancedInfoView_imageSource, NO_ID).let {
-                    if (it != NO_ID) setImageResource(it)
+                it.getResourceId(R.styleable.AdvancedInfoView_imageSource, NO_ID).let { resourceId ->
+                    if (resourceId != NO_ID) setImageResource(resourceId)
                 }
 
-                getResourceId(R.styleable.AdvancedInfoView_imageDescription, NO_ID).let {
-                    if (it != NO_ID) setImageDescription(it)
+                it.getResourceId(R.styleable.AdvancedInfoView_imageDescription, NO_ID).let { resourceId ->
+                    if (resourceId != NO_ID) setImageDescription(resourceId)
                 }
 
-                getResourceId(R.styleable.AdvancedInfoView_titleText, NO_ID).let {
-                    if (it != NO_ID) setTitleText(it)
+                it.getResourceId(R.styleable.AdvancedInfoView_titleText, NO_ID).let { resourceId ->
+                    if (resourceId != NO_ID) setTitleText(resourceId)
                 }
 
-                getResourceId(R.styleable.AdvancedInfoView_suggestionText, NO_ID).let {
-                    if (it != NO_ID) setSuggestionText(it)
+                it.getResourceId(R.styleable.AdvancedInfoView_suggestionText, NO_ID).let { resourceId ->
+                    if (resourceId != NO_ID) setSuggestionText(resourceId)
                 }
 
-                getResourceId(R.styleable.AdvancedInfoView_actionButtonText, NO_ID).let {
-                    if (it != NO_ID) setActionButtonText(it)
+                it.getResourceId(R.styleable.AdvancedInfoView_actionButtonText, NO_ID).let { resourceId ->
+                    if (resourceId != NO_ID) setActionButtonText(resourceId)
                 }
 
-                recycle()
+                it.recycle()
             }
         }
     }

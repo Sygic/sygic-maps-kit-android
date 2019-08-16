@@ -76,22 +76,23 @@ open class SearchToolbar @JvmOverloads constructor(
     init {
         descendantFocusability = FOCUS_AFTER_DESCENDANTS
 
+        @Suppress("Recycle")
         attrs?.let { attributeSet ->
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.SearchToolbar,
                 defStyleAttr,
                 defStyleRes
-            ).apply {
+            ).also {
                 binding.searchToolbarSearchIcon.setImageResource(
-                    getResourceId(R.styleable.SearchToolbar_searchIcon, R.drawable.ic_search_robust)
+                    it.getResourceId(R.styleable.SearchToolbar_searchIcon, R.drawable.ic_search_robust)
                 )
 
                 binding.searchToolbarClearButton.setImageResource(
-                    getResourceId(R.styleable.SearchToolbar_clearButtonIcon, R.drawable.ic_close)
+                    it.getResourceId(R.styleable.SearchToolbar_clearButtonIcon, R.drawable.ic_close)
                 )
 
-                recycle()
+                it.recycle()
             }
         }
     }

@@ -52,28 +52,29 @@ open class PositionLockFab @JvmOverloads constructor(
     init {
         isClickable = true
 
+        @Suppress("Recycle")
         attrs?.let { attributeSet ->
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.PositionLockFab,
                 defStyleAttr,
                 defStyleRes
-            ).apply {
+            ).also {
                 imageTintList = ColorStateList.valueOf(
-                    getColor(
+                    it.getColor(
                         R.styleable.PositionLockFab_android_tint,
                         context.getColorFromAttr(android.R.attr.colorAccent)
                     )
                 )
 
                 backgroundTintList = ColorStateList.valueOf(
-                    getColor(
+                    it.getColor(
                         R.styleable.PositionLockFab_android_backgroundTint,
                         context.getColorFromAttr(android.R.attr.colorBackground)
                     )
                 )
 
-                recycle()
+                it.recycle()
             }
         }
 
