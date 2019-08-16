@@ -52,8 +52,8 @@ open class SearchFab @JvmOverloads constructor(
         isClickable = true
         setImageResource(R.drawable.ic_search)
 
-        @Suppress("Recycle")
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.SearchFab,

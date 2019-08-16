@@ -56,8 +56,8 @@ class AdvancedInfoView @JvmOverloads constructor(
         orientation = VERTICAL
         gravity = Gravity.CENTER
 
-        @Suppress("Recycle")
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.AdvancedInfoView,
