@@ -52,6 +52,6 @@
         <item>@color/speedProgressForegroundStartColor</item>
         <item>@color/speedProgressForegroundStartColor</item>
         <item>@color/orange</item>
-        <item>@color/speedProgressForegroundEndColor</item>
+        <item>@color/orange</item>
     </array>
 </resources>
