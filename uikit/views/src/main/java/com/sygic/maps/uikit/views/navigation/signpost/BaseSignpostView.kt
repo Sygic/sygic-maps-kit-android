@@ -50,21 +50,22 @@ abstract class BaseSignpostView(
         layoutTransition = LayoutTransition()
 
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.SignpostView,
                 defStyleAttr,
                 defStyleRes
-            ).apply {
-                setBackgroundResource(getResourceId(R.styleable.SignpostView_android_background,0))
+            ).also {
+                setBackgroundResource(it.getResourceId(R.styleable.SignpostView_android_background,0))
 
-                layoutMargin = getDimensionPixelSize(R.styleable.SignpostView_android_layout_margin, 0)
-                layoutMarginTop = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginTop, 0)
-                layoutMarginBottom = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginBottom, 0)
-                layoutMarginStart = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginStart, 0)
-                layoutMarginEnd = getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginEnd, 0)
+                layoutMargin = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_margin, 0)
+                layoutMarginTop = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginTop, 0)
+                layoutMarginBottom = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginBottom, 0)
+                layoutMarginStart = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginStart, 0)
+                layoutMarginEnd = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginEnd, 0)
 
-                recycle()
+                it.recycle()
             }
         }
     }
