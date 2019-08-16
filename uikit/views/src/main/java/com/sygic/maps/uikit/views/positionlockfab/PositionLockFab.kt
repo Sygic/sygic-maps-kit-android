@@ -52,8 +52,8 @@ open class PositionLockFab @JvmOverloads constructor(
     init {
         isClickable = true
 
-        @Suppress("Recycle")
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.PositionLockFab,

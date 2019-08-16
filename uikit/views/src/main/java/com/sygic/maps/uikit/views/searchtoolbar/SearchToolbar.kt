@@ -76,8 +76,8 @@ open class SearchToolbar @JvmOverloads constructor(
     init {
         descendantFocusability = FOCUS_AFTER_DESCENDANTS
 
-        @Suppress("Recycle")
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.SearchToolbar,

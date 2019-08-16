@@ -49,8 +49,8 @@ abstract class BaseSignpostView(
         isClickable = true
         layoutTransition = LayoutTransition()
 
-        @Suppress("Recycle")
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.SignpostView,
