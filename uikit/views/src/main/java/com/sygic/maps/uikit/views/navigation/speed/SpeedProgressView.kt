@@ -107,34 +107,35 @@ class SpeedProgressView @JvmOverloads constructor(
 
     init {
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.SpeedProgressView,
                 defStyleAttr,
                 defStyleRes
-            ).apply {
-                roundSegmentEdges = getBoolean(
+            ).also {
+                roundSegmentEdges = it.getBoolean(
                     R.styleable.SpeedProgressView_roundSegmentEdges, roundSegmentEdges
                 )
-                segmentBackgroundColor = getInt(
+                segmentBackgroundColor = it.getInt(
                     R.styleable.SpeedProgressView_segmentBackgroundColor, segmentBackgroundColor
                 )
                 segmentForegroundColors = resources.getIntArray(
-                    getResourceId(
+                    it.getResourceId(
                         R.styleable.SpeedProgressView_segmentForegroundColors, R.array.speedProgressForegroundColors
                     )
                 )
-                segmentAngle = getInt(
+                segmentAngle = it.getInt(
                     R.styleable.SpeedProgressView_segmentAngle, segmentAngle.toInt()
                 ).toFloat()
-                segmentThickness = getDimensionPixelSize(
+                segmentThickness = it.getDimensionPixelSize(
                     R.styleable.SpeedProgressView_segmentThickness, segmentThickness
                 )
-                segmentSpacing = getFraction(
+                segmentSpacing = it.getFraction(
                     R.styleable.SpeedProgressView_segmentSpacing, 1, 1, segmentSpacing
                 )
 
-                recycle()
+                it.recycle()
             }
         }
     }
