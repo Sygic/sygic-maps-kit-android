@@ -74,39 +74,40 @@ open class Infobar @JvmOverloads constructor(
         layoutTransition = LayoutTransition()
 
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.Infobar,
                 defStyleAttr,
                 defStyleRes
-            ).apply {
-                setBackgroundResource(getResourceId(R.styleable.Infobar_android_background, 0))
+            ).also {
+                setBackgroundResource(it.getResourceId(R.styleable.Infobar_android_background, 0))
 
                 setLeftButtonImageResource(
-                    getResourceId(R.styleable.Infobar_leftButtonIcon, 0),
-                    getResourceId(R.styleable.Infobar_leftButtonIconTint, 0)
+                    it.getResourceId(R.styleable.Infobar_leftButtonIcon, 0),
+                    it.getResourceId(R.styleable.Infobar_leftButtonIconTint, 0)
                 )
                 setLeftButtonBackgroundResource(
-                    getResourceId(R.styleable.Infobar_leftButtonBackground, 0),
-                    getResourceId(R.styleable.Infobar_leftButtonBackgroundTint, 0)
+                    it.getResourceId(R.styleable.Infobar_leftButtonBackground, 0),
+                    it.getResourceId(R.styleable.Infobar_leftButtonBackgroundTint, 0)
                 )
                 setRightButtonImageResource(
-                    getResourceId(R.styleable.Infobar_rightButtonIcon, 0),
-                    getResourceId(R.styleable.Infobar_rightButtonIconTint, 0)
+                    it.getResourceId(R.styleable.Infobar_rightButtonIcon, 0),
+                    it.getResourceId(R.styleable.Infobar_rightButtonIconTint, 0)
                 )
                 setRightButtonBackgroundResource(
-                    getResourceId(R.styleable.Infobar_rightButtonBackground, 0),
-                    getResourceId(R.styleable.Infobar_rightButtonBackgroundTint, 0)
+                    it.getResourceId(R.styleable.Infobar_rightButtonBackground, 0),
+                    it.getResourceId(R.styleable.Infobar_rightButtonBackgroundTint, 0)
                 )
 
-                elevation = getDimensionPixelSize(R.styleable.Infobar_android_elevation, 0).toFloat()
-                layoutMargin = getDimensionPixelSize(R.styleable.Infobar_android_layout_margin, 0)
-                layoutMarginTop = getDimensionPixelSize(R.styleable.Infobar_android_layout_marginTop, 0)
-                layoutMarginBottom = getDimensionPixelSize(R.styleable.Infobar_android_layout_marginBottom, 0)
-                layoutMarginStart = getDimensionPixelSize(R.styleable.Infobar_android_layout_marginStart, 0)
-                layoutMarginEnd = getDimensionPixelSize(R.styleable.Infobar_android_layout_marginEnd, 0)
+                elevation = it.getDimensionPixelSize(R.styleable.Infobar_android_elevation, 0).toFloat()
+                layoutMargin = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_margin, 0)
+                layoutMarginTop = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginTop, 0)
+                layoutMarginBottom = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginBottom, 0)
+                layoutMarginStart = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginStart, 0)
+                layoutMarginEnd = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginEnd, 0)
 
-                recycle()
+                it.recycle()
             }
         }
     }
