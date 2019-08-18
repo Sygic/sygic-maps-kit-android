@@ -92,8 +92,7 @@ open class SearchToolbar @JvmOverloads constructor(
                     it.getResourceId(R.styleable.SearchToolbar_clearButtonIcon, R.drawable.ic_close)
                 )
 
-                it.recycle()
-            }
+            }.recycle()
         }
     }
 
