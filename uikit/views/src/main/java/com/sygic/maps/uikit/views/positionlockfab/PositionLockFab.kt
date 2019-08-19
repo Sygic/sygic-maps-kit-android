@@ -26,8 +26,8 @@ package com.sygic.maps.uikit.views.positionlockfab
 
 import android.content.Context
 import android.content.res.ColorStateList
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.util.AttributeSet
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.getColorFromAttr
 
@@ -74,8 +74,7 @@ open class PositionLockFab @JvmOverloads constructor(
                     )
                 )
 
-                it.recycle()
-            }
+            }.recycle()
         }
 
         setState(LockState.UNLOCKED)
