@@ -106,9 +106,7 @@ open class Infobar @JvmOverloads constructor(
                 layoutMarginBottom = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginBottom, 0)
                 layoutMarginStart = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginStart, 0)
                 layoutMarginEnd = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginEnd, 0)
-
-                it.recycle()
-            }
+            }.recycle()
         }
     }
 
