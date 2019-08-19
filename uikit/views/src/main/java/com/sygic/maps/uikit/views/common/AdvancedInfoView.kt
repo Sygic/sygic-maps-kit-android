@@ -85,8 +85,7 @@ class AdvancedInfoView @JvmOverloads constructor(
                     if (resourceId != NO_ID) setActionButtonText(resourceId)
                 }
 
-                it.recycle()
-            }
+            }.recycle()
         }
     }
 

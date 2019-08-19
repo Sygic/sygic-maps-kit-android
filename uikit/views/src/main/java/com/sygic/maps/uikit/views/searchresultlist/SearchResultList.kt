@@ -85,8 +85,7 @@ open class SearchResultList @JvmOverloads constructor(
                     R.layout.layout_search_item_result_internal
                 )
 
-                it.recycle()
-            }
+            }.recycle()
         }
     }
 

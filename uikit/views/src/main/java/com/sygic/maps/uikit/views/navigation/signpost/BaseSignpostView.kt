@@ -65,8 +65,7 @@ abstract class BaseSignpostView(
                 layoutMarginStart = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginStart, 0)
                 layoutMarginEnd = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginEnd, 0)
 
-                it.recycle()
-            }
+            }.recycle()
         }
     }
 
