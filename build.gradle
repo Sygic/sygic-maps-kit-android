@@ -39,10 +39,10 @@ buildscript {
 
         moduleBrowsemapVersion = '1.1.3'
         moduleSearchVersion = '1.3.5'
-        moduleNavigationVersion = '1.1.0'
-        moduleCommonVersion = '1.3.0'
-        uikitViewsVersion = '2.4.0'
-        uikitViewmodelsVersion = '2.3.0'
+        moduleNavigationVersion = '1.3.0'
+        moduleCommonVersion = '1.3.2'
+        uikitViewsVersion = '2.7.0'
+        uikitViewmodelsVersion = '2.6.0'
         toolsViewmodelFactoryVersion = '1.1.1'
 
         kotlinVersion = '1.3.41'
