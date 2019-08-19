@@ -73,19 +73,19 @@ open class SearchResultList @JvmOverloads constructor(
         binding.searchResultListRecyclerView.itemAnimator = DefaultItemAnimator()
 
         attrs?.let { attributeSet ->
+            @Suppress("Recycle")
             context.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.SearchResultList,
                 defStyleAttr,
                 defStyleRes
-            ).apply {
-                itemLayoutId = getResourceId(
+            ).also {
+                itemLayoutId = it.getResourceId(
                     R.styleable.SearchResultList_itemLayoutId,
                     R.layout.layout_search_item_result_internal
                 )
 
-                recycle()
-            }
+            }.recycle()
         }
     }
 
