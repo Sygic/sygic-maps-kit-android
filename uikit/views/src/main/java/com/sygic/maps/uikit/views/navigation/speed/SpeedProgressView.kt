@@ -134,9 +134,7 @@ class SpeedProgressView @JvmOverloads constructor(
                 segmentSpacing = it.getFraction(
                     R.styleable.SpeedProgressView_segmentSpacing, 1, 1, segmentSpacing
                 )
-
-                it.recycle()
-            }
+            }.recycle()
         }
     }
 
