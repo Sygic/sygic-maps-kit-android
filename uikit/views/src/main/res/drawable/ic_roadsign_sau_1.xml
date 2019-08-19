@@ -1,0 +1,47 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="64.0"
+    android:viewportHeight="64.0">
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M59.79,0C62.04,0 63.88,1.99 63.88,4.38L63.88,59.38C63.88,61.78 62.04,63.75 59.79,
+            63.75L4.21,63.75C1.91,63.75 0.12,61.78 0.12,59.38L0.12,4.38C0.12,1.99 1.91,0 4.21,0L59.79,0L59.79,0Z" />
+
+    <path
+        android:fillColor="@color/roadSignGreen"
+        android:pathData="M10.58,28.39L14.32,32.62L14.07,36.86L16.68,37.98L21.29,47.56C21.29,47.56 21.2,48.97
+            21.04,49.81L21.79,52.54L26.89,58.77L30.01,58.89L35.11,52.79L36.98,52.42L43.33,48.44L45.2,45.95C45.2,45.95
+            47.43,44.97 48.44,44.58C48.44,44.58 54.98,38.47 55.53,38.1C55.58,37.54 59.89,27.39 59.89,27.39L57.28,
+            25.53L54.91,23.28L49.31,20.54L49.31,15.56L47.69,15.56C47.69,15.56 44.15,20.57 43.33,23.16C42.56,23
+            39.72,22.79 39.72,22.79L39.6,20.3C39.6,20.3 38.04,17.31 37.98,17.31C37.93,17.31 37.93,20.43
+            37.98,21.91C37.98,21.99 31.75,14.07 31.75,14.07L23.53,11.08L11.95,4.98L8.72,8.09L10.46,10.33L8.09,13.2L5.6,
+            13.95L5.11,17.31L10.58,28.39ZM61.88,6.09L61.88,57.66C61.88,59.91 60.16,61.76 58.05,61.76L5.95,61.76C3.79,
+            61.76 2.12,59.91 2.12,57.66L2.12,6.09C2.12,3.86 3.79,1.99 5.95,1.99L58.05,1.99C60.16,1.99
+            61.88,3.86 61.88,6.09Z" />
+</vector>

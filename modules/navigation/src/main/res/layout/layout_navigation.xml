@@ -23,7 +23,18 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="navigationFragmentViewModel"
+            type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
+
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -31,6 +42,18 @@
         android:clickable="true"
         android:clipChildren="false"
         android:focusable="true">
+
+        <ViewStub
+            android:id="@+id/signpostViewViewStub"
+            android:inflatedId="@+id/signpostView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout="@{navigationFragmentViewModel.signpostLayout}"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationFragmentViewModel="@{navigationFragmentViewModel}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -68,7 +68,8 @@ fun Context?.isGpsEnabled(): Boolean {
 
 fun Context?.isGpsNotEnabled(): Boolean = !isGpsEnabled()
 
-fun Fragment.createGoogleApiLocationRequest(requestCode: Int) = requireActivity().createGoogleApiLocationRequest(requestCode)
+fun Fragment.createGoogleApiLocationRequest(requestCode: Int) =
+    requireActivity().createGoogleApiLocationRequest(requestCode)
 
 fun FragmentActivity.createGoogleApiLocationRequest(requestCode: Int) {
     val locationRequest = LocationRequest.create()

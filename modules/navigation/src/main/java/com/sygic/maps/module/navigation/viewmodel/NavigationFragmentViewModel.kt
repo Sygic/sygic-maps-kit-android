@@ -26,24 +26,37 @@ package com.sygic.maps.module.navigation.viewmodel
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.LayoutRes
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
+import com.sygic.maps.module.navigation.*
 import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
+import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
+import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
+import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
+import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
+import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
+import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.common.extensions.isLandscape
+import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.map.MapCenter
@@ -53,10 +66,17 @@ import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.route.RouteInfo
 
 private const val DEFAULT_NAVIGATION_TILT = 60f
-private val DEFAULT_NAVIGATION_MAP_CENTER = MapCenter(0.5f, 0.3f)
-private val DEFAULT_NAVIGATION_MAP_CENTER_SETTING = MapCenterSettings(
-    DEFAULT_NAVIGATION_MAP_CENTER,
-    DEFAULT_NAVIGATION_MAP_CENTER,
+private val PORTRAIT_MAP_CENTER = MapCenter(0.5f, 0.25f)
+private val PORTRAIT_MAP_CENTER_SETTING = MapCenterSettings(
+    PORTRAIT_MAP_CENTER,
+    PORTRAIT_MAP_CENTER,
+    MapAnimation.NONE,
+    MapAnimation.NONE
+)
+private val LANDSCAPE_MAP_CENTER = MapCenter(0.75f, 0.3f)
+private val LANDSCAPE_MAP_CENTER_SETTING = MapCenterSettings(
+    LANDSCAPE_MAP_CENTER,
+    LANDSCAPE_MAP_CENTER,
     MapAnimation.NONE,
     MapAnimation.NONE
 )
@@ -69,32 +89,44 @@ class NavigationFragmentViewModel internal constructor(
     themeManager: ThemeManager,
     private val cameraModel: ExtendedCameraModel,
     private val mapDataModel: ExtendedMapDataModel,
+    private val regionalManager: RegionalManager,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
     private val navigationManager: NavigationManager,
     private val routeDemonstrationManager: RouteDemonstrationManager
 ) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, NavigationManager.OnRouteChangedListener {
 
-    val previewMode: MutableLiveData<Boolean> = MutableLiveData()
-    val routeInfo: MutableLiveData<RouteInfo?> = object : MutableLiveData<RouteInfo?>() {
-        override fun setValue(value: RouteInfo?) {
-            value?.let {
-                if (value != this.value) {
-                    super.setValue(it)
-                    processRouteInfo(it)
-                }
-            }
+    @LayoutRes
+    val signpostLayout: Int
+    val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
+
+    val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
+    val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
+        override fun setValue(value: RouteInfo) {
+            if (value != this.value) super.setValue(value)
         }
     }
+
+    var distanceUnit: DistanceUnit
+        get() = regionalManager.distanceUnit.value!!
+        set(value) {
+            regionalManager.distanceUnit.value = value
+        }
 
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
+            signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
+            signpostLayout = when (getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE) {
+                SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
+                SignpostType.SIMPLIFIED -> R.layout.layout_signpost_simplified_view_stub
+            }
+            distanceUnit = getParcelableValue(KEY_DISTANCE_UNITS) ?: DISTANCE_UNITS_DEFAULT_VALUE
+            getParcelableValue<RouteInfo>(KEY_ROUTE_INFO)?.let { routeInfo.value = it }
         }
-    }
 
-    override fun onCreate(owner: LifecycleOwner) {
-        previewMode.observe(owner, Observer { routeInfo.value?.let { processRouteInfo(it) } })
+        routeInfo.observeForever(::setRouteInfo)
+        previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -102,38 +134,45 @@ class NavigationFragmentViewModel internal constructor(
         navigationManager.addOnRouteChangedListener(this)
     }
 
-    override fun onRouteChanged(routeInfo: RouteInfo?) {
-        mapDataModel.removeAllMapRoutes()
-        routeInfo?.let { mapDataModel.addMapRoute(MapRoute.from(it).build()) }
+    override fun onResume(owner: LifecycleOwner) {
+        cameraModel.mapCenterSettings = if (isLandscape()) LANDSCAPE_MAP_CENTER_SETTING else PORTRAIT_MAP_CENTER_SETTING
     }
 
-    private fun processRouteInfo(routeInfo: RouteInfo) {
-        // stop the previous navigation/demonstration first
-        navigationManager.stopNavigation()
-        routeDemonstrationManager.stop()
+    override fun onRouteChanged(routeInfo: RouteInfo?) {
+        mapDataModel.removeAllMapRoutes()
+        routeInfo?.let {
+            this.routeInfo.value = it
+            mapDataModel.addMapRoute(MapRoute.from(it).build())
+        }
+    }
 
+    private fun setRouteInfo(routeInfo: RouteInfo) {
         // set the default navigation camera state
         cameraModel.apply {
             tilt = DEFAULT_NAVIGATION_TILT
-            mapCenterSettings = DEFAULT_NAVIGATION_MAP_CENTER_SETTING
             movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
             rotationMode = Camera.RotationMode.Vehicle
         }
 
         // set the new RouteInfo for navigation
         navigationManager.setRouteForNavigation(routeInfo)
+    }
 
-        if (isPreviewModeActive()) {
+    private fun processRoutePreview(previewActive: Boolean, routeInfo: RouteInfo) {
+        if (previewActive) {
             // start preview mode
             locationManager.positionOnMapEnabled = false
             routeDemonstrationManager.start(routeInfo)
         } else {
+            // stop the previous demonstration first
+            routeDemonstrationManager.stop()
+
             // start navigation mode
-            requestLocationAccess(permissionsManager, locationManager) { locationManager.positionOnMapEnabled = true }
+            requestLocationAccess(permissionsManager, locationManager) {
+                locationManager.positionOnMapEnabled = true
+            }
         }
     }
-
-    private fun isPreviewModeActive() = previewMode.value!!
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false

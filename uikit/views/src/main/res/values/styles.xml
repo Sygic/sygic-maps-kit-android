@@ -25,30 +25,9 @@
 
 <resources>
 
-    <style name="Theme.Sygic.Light.DarkActionBar" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/azure_radiance</item>
-        <item name="colorPrimaryDark">@color/science_blue</item>
-        <item name="colorAccent">@color/azure_radiance</item>
-
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/textColorSecondary</item>
-    </style>
-
-    <style name="Theme.Sygic.Colored" parent="Theme.AppCompat.DayNight">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryDark">@color/cinnabar</item>
-        <item name="colorAccent">@color/fruit_salad</item>
-
-        <item name="android:colorBackground">@color/mine_shaft</item>
-        <item name="android:textColorPrimary">@color/mystic</item>
-        <item name="android:textColorSecondary">@color/botticelli</item>
-
-        <item name="sygicMapSkin">"night"</item>
-    </style>
-
     <style name="SygicCompassStyle">
         <item name="android:elevation">4dp</item>
-        <item name="android:background">@drawable/compass_background</item>
+        <item name="android:background">@drawable/bg_compass</item>
     </style>
 
     <style name="SygicPositionLockFabStyle">
@@ -70,10 +49,18 @@
         <item name="itemLayoutId">@layout/layout_search_item_result_internal</item>
     </style>
 
+    <style name="SygicSignpostViewStyle">
+        <item name="android:background">@drawable/bg_signpost_rounded</item>
+        <item name="android:layout_marginBottom">@dimen/signpostViewLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/signpostViewLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/signpostViewLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/signpostViewLayoutMargin</item>
+    </style>
+
     <style name="SygicZoomControlsMenuStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
-        <item name="android:background">@drawable/zoom_controls_button_background</item>
+        <item name="android:background">@drawable/bg_zoom_controls_button</item>
     </style>
 
     <style name="PoiDetailItem">

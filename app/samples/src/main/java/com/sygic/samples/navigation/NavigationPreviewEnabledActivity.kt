@@ -29,9 +29,7 @@ import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.route.RoutePlan
-import com.sygic.sdk.route.RoutingOptions
+import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
 
 class NavigationPreviewEnabledActivity : CommonSampleActivity() {
 
@@ -42,17 +40,10 @@ class NavigationPreviewEnabledActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_navigation_preview_enabled)
 
-        val routePlan = RoutePlan().apply {
-            setStart(GeoCoordinates(48.144722, 17.112778))
-            setDestination(GeoCoordinates(41.893056, 12.482778))
-            routingOptions = RoutingOptions().apply {
-                transportMode = RoutingOptions.TransportMode.Car
-                routingType = RoutingOptions.RoutingType.Economic
+        if (savedInstanceState == null) {
+            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
             }
-        }
-
-        computePrimaryRoute(routePlan) { route ->
-            (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
         }
     }
 }

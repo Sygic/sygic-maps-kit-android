@@ -51,10 +51,13 @@ open class EmptyRecyclerView @JvmOverloads constructor(
 
     init {
         attrs?.let { attributeSet ->
-            context.obtainStyledAttributes(attributeSet, R.styleable.EmptyRecyclerView).apply {
-                emptyViewId = getResourceId(R.styleable.EmptyRecyclerView_emptyView, View.NO_ID)
-                recycle()
-            }
+            @Suppress("Recycle")
+            context.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.EmptyRecyclerView
+            ).also {
+                emptyViewId = it.getResourceId(R.styleable.EmptyRecyclerView_emptyView, View.NO_ID)
+            }.recycle()
         }
     }
 

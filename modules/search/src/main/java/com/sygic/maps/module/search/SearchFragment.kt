@@ -37,7 +37,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
+import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
+import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
@@ -71,8 +72,6 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
 
-    private val modulesComponent = ModulesComponentDelegate()
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
@@ -87,7 +86,13 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     private var injected = false
     private fun inject() {
         if (!injected) {
-            DaggerSearchComponent.builder().plus(modulesComponent.getInstance(this)).build().inject(this)
+            DaggerSearchComponent
+                .builder()
+                .plus(
+                    FragmentsComponentDelegate.getComponent(this, ApplicationComponentDelegate)
+                )
+                .build()
+                .inject(this)
             injected = true
         }
     }
@@ -95,16 +100,16 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     /**
      * If *[searchInput]* is defined, then it will be used as input text.
      *
-     * @param [String] text input to be processed.
+     * @param [CharSequence] text input to be processed.
      *
-     * @return [String] the text input value.
+     * @return [CharSequence] the text input value.
      */
-    var searchInput: String
+    var searchInput: CharSequence
         get() = if (::searchToolbarViewModel.isInitialized) {
-            searchToolbarViewModel.inputText.value.toString()
-        } else arguments.getString(KEY_SEARCH_INPUT, EMPTY_STRING)
+            searchToolbarViewModel.inputText.value!!
+        } else arguments.getCharSequence(KEY_SEARCH_INPUT, EMPTY_STRING)
         set(value) {
-            arguments = Bundle(arguments).apply { putString(KEY_SEARCH_INPUT, value) }
+            arguments = Bundle(arguments).apply { putCharSequence(KEY_SEARCH_INPUT, value) }
             if (::searchToolbarViewModel.isInitialized) {
                 searchToolbarViewModel.inputText.value = value
             }
@@ -204,14 +209,13 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
         OnlineManager.getInstance().enableOnlineMapStreaming(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = LayoutSearchBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.searchFragmentViewModel = fragmentViewModel
-        binding.searchToolbarViewModel = searchToolbarViewModel
-        binding.searchResultListViewModel = searchResultListViewModel
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        LayoutSearchBinding.inflate(inflater, container, false).apply {
+            searchFragmentViewModel = fragmentViewModel
+            searchToolbarViewModel = this@SearchFragment.searchToolbarViewModel
+            searchResultListViewModel = this@SearchFragment.searchResultListViewModel
+            lifecycleOwner = this@SearchFragment
+        }.root
 
     /**
      * Register a custom callback to be invoked when a search process is done.
