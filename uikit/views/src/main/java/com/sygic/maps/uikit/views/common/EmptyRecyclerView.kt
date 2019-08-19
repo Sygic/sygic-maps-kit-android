@@ -57,8 +57,7 @@ open class EmptyRecyclerView @JvmOverloads constructor(
                 R.styleable.EmptyRecyclerView
             ).also {
                 emptyViewId = it.getResourceId(R.styleable.EmptyRecyclerView_emptyView, View.NO_ID)
-                it.recycle()
-            }
+            }.recycle()
         }
     }
 

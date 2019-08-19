@@ -88,9 +88,7 @@ open class RoutePreviewControls @JvmOverloads constructor(
                 layoutMarginBottom = it.getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginBottom, 0)
                 layoutMarginStart = it.getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginStart, 0)
                 layoutMarginEnd = it.getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginEnd, 0)
-
-                it.recycle()
-            }
+            }.recycle()
         }
     }
 
