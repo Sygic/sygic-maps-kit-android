@@ -35,11 +35,7 @@ class InfobarItemsHolder(
 ) {
 
     companion object {
-
-        @JvmStatic
-        fun empty(): InfobarItemsHolder {
-            return InfobarItemsHolder()
-        }
+        val empty = InfobarItemsHolder()
     }
 
     fun isEmpty() = items.isEmpty()
