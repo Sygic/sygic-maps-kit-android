@@ -174,6 +174,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
+        lifecycle.addObserver(routePreviewControlsViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -204,6 +205,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         super.onDestroy()
 
         lifecycle.removeObserver(fragmentViewModel)
+        lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 
     override fun resolveAttributes(attributes: AttributeSet) {
