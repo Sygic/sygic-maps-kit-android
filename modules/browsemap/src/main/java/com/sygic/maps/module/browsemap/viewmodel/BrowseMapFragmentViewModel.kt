@@ -47,7 +47,7 @@ import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload
-import com.sygic.maps.uikit.viewmodels.common.extensions.removeMarker
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
@@ -112,7 +112,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
-            mapDataModel.removeMarker(selectedMarker)
+            mapDataModel.removeMapMarker(selectedMarker)
         }
     }
 
@@ -158,7 +158,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onMapObjectsRequestStarted() {
-        mapDataModel.removeMarker(selectedMarker)
+        mapDataModel.removeMapMarker(selectedMarker)
     }
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject<*>>) {

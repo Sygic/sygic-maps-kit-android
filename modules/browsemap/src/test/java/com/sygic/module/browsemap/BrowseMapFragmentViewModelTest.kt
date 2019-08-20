@@ -39,8 +39,6 @@ import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
-import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
-import com.sygic.maps.uikit.viewmodels.common.extensions.removeMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
@@ -153,8 +151,13 @@ class BrowseMapFragmentViewModelTest {
 
     @Test
     fun onMapObjectsRequestStartedTest() {
+        val tesViewObject = MapRoute.from(mock()).build()
+
+        browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
+        browseMapFragmentViewModel.onMapObjectsReceived(listOf(tesViewObject))
+
         browseMapFragmentViewModel.onMapObjectsRequestStarted()
-        verify(extendedMapDataModel).removeMarker(anyOrNull())
+        verify(extendedMapDataModel).removeMapObject(anyOrNull<MapMarker>())
     }
 
     @Test
@@ -209,7 +212,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(tesViewObject))
         verify(poiDataManager).getViewObjectData(any(), any())
-        verify(extendedMapDataModel).addMapMarker(any())
+        verify(extendedMapDataModel).addMapObject(any<MapMarker>())
         browseMapFragmentViewModel.poiDetailDataObservable.test().assertValue(tesViewObject.data.toPoiDetailData())
     }
 
@@ -248,7 +251,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapClickListener = onMapClickListener
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
-        verify(extendedMapDataModel).addMapMarker(any())
+        verify(extendedMapDataModel).addMapObject(any<MapMarker>())
         verify(poiDataManager).getViewObjectData(any(), any())
         verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
@@ -266,7 +269,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapClickListener = onMapClickListener
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
-        verify(extendedMapDataModel, never()).addMapMarker(any())
+        verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
         verify(poiDataManager, never()).getViewObjectData(any(), any())
         verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
         verify(onMapClickListener, never()).onMapDataReceived(any())
@@ -292,7 +295,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapClickListener = onMapClickListener
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
-        verify(extendedMapDataModel).addMapMarker(any())
+        verify(extendedMapDataModel).addMapObject(any<MapMarker>())
         verify(poiDataManager).getViewObjectData(any(), any())
         verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
@@ -316,7 +319,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapClickListener = onMapClickListener
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
-        verify(extendedMapDataModel, never()).addMapMarker(any())
+        verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
         verify(poiDataManager).getViewObjectData(any(), any())
         verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
@@ -337,7 +340,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.detailsViewFactory = detailsViewFactory
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker))
-        verify(extendedMapDataModel, never()).addMapMarker(any())
+        verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
         verify(poiDataManager).getViewObjectData(eq(testMapMarker), any())
         verify(extendedMapDataModel).addMapObject(any())
         browseMapFragmentViewModel.poiDetailDataObservable.test().assertNoValue()

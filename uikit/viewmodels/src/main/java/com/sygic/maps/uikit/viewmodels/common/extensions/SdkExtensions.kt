@@ -130,8 +130,8 @@ fun MapView.MapDataModel.addMapMarker(marker: MapMarker) {
     addMapObject(marker)
 }
 
-fun MapView.MapDataModel.removeMapMarker(marker: MapMarker) {
-    removeMapObject(marker)
+fun MapView.MapDataModel.removeMapMarker(marker: MapMarker?) {
+    marker?.let { removeMapObject(it) }
 }
 
 fun MapView.MapDataModel.addMapRoute(mapRoute: MapRoute) {
@@ -150,14 +150,6 @@ fun MapView.MapDataModel.removeMapRoute(mapRoute: MapRoute) {
 fun MapView.MapDataModel.removeAllMapMarkers() = removeAllMapObjects<MapMarker>()
 
 fun MapView.MapDataModel.removeAllMapRoutes() = removeAllMapObjects<MapRoute>()
-
-fun MapView.MapDataModel.removeMarker(marker: MapMarker?) {
-    marker?.let {markerIt ->
-        getMapObjects(this).filterIsInstance<MapMarker>().find { it.id == markerIt.id }?.let {
-            removeMapObject(it)
-        }
-    }
-}
 
 private inline fun <reified T : MapObject<*>> MapView.MapDataModel.removeAllMapObjects() = with(getMapObjects(this)) {
     forEach { mapObject ->
