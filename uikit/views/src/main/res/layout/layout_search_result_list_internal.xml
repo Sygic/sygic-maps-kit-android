@@ -44,6 +44,7 @@
             android:layout_height="0dp"
             android:scrollbars="vertical"
             app:emptyView="@id/searchResultListErrorViewAnimator"
+            app:hasFixedSize="@{true}"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

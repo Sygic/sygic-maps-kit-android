@@ -40,6 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        app:hasFixedSize="@{true}"
         app:layoutManager="LinearLayoutManager"
         app:setAdapter="@{samplesListViewModel.adapter}"
         tools:listitem="@layout/layout_card_item" />

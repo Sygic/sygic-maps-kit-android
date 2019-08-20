@@ -64,7 +64,6 @@ abstract class BaseSamplesListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         LayoutSamplesListBinding.inflate(inflater, container, false).apply {
-            sampleListRecyclerView.setHasFixedSize(true)
             samplesListViewModel = this@BaseSamplesListFragment.samplesListViewModel
             lifecycleOwner = this@BaseSamplesListFragment
         }.root
