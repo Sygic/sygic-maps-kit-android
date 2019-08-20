@@ -40,10 +40,14 @@ import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest
 import com.sygic.maps.module.common.extensions.isGooglePlayServicesAvailable
 import com.sygic.maps.module.common.extensions.showGenericNoGpsDialog
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
-import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
+import com.sygic.maps.module.common.utils.BackingCameraDataModel
+import com.sygic.maps.module.common.utils.BackingMapDataModel
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
@@ -74,8 +78,6 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     lateinit var viewModelFactory: ViewModelFactory
 
     @Inject
-    internal lateinit var poiDataManager: PoiDataManager
-    @Inject
     internal lateinit var mapInteractionManager: MapInteractionManager
     @Inject
     internal lateinit var mapDataModel: ExtendedMapDataModel
@@ -92,6 +94,9 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
+
+    private val backingMapDataModel = lazy { BackingMapDataModel() }
+    private val backingCameraModel = lazy { BackingCameraDataModel() }
 
     protected var injected = false
     protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
@@ -119,8 +124,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         getMapAsync(this)
     }
 
-    final override fun getMapDataModel() = mapDataModel
-    final override fun getCameraDataModel() = cameraDataModel
+    final override fun getMapDataModel() = if (::mapDataModel.isInitialized) mapDataModel else backingMapDataModel.value
+    final override fun getCameraDataModel() = if(::cameraDataModel.isInitialized) cameraDataModel else backingCameraModel.value
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         executeInjector()
@@ -154,6 +159,13 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
 
         lifecycle.addObserver(mapDataModel)
         lifecycle.addObserver(cameraDataModel)
+
+        if (backingMapDataModel.isInitialized()) {
+            backingMapDataModel.value.dumpToModel(mapDataModel)
+        }
+        if (backingCameraModel.isInitialized()) {
+            backingCameraModel.value.dumpToModel(cameraDataModel)
+        }
     }
 
     @CallSuper
@@ -192,7 +204,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to be added.
      */
     fun addMapMarker(marker: MapMarker) {
-        mapDataModel.addMapMarker(marker)
+        getMapDataModel().addMapMarker(marker)
     }
 
     /**
@@ -202,7 +214,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to remove.
      */
     fun removeMapMarker(marker: MapMarker) {
-        mapDataModel.removeMapMarker(marker)
+        getMapDataModel().removeMapMarker(marker)
     }
 
     /**
@@ -219,7 +231,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * Remove all [MapMarker]-s from the map at once. This is useful if you want to remove all objects from the map.
      */
     fun removeAllMapMarkers() {
-        mapDataModel.removeAllMapMarkers()
+        getMapDataModel().removeAllMapMarkers()
     }
 
     /**

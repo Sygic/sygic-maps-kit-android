@@ -25,16 +25,40 @@
 package com.sygic.samples.browsemap
 
 import android.os.Bundle
+import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
+import com.sygic.maps.module.browsemap.BrowseMapFragment
+import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.position.GeoCoordinates
 
 class BrowseMapSplitActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Browse-Map#browse-map---split" //todo
 
+    private lateinit var browseMapFragment: BrowseMapFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_browsemap_split)
+
+        if (savedInstanceState == null) {
+            browseMapFragment = BrowseMapFragment().apply {
+                cameraDataModel.zoomLevel = 14F
+                cameraDataModel.position = GeoCoordinates(48.264514, 17.248591)
+                positionOnMapEnabled = true
+                mapSelectionMode = MapSelectionMode.FULL
+                addMapMarker(MapMarker.at(48.264514, 17.248591).build())
+            }.also {
+                supportFragmentManager
+                    ?.beginTransaction()
+                    ?.replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
+                    ?.commit()
+            }
+        } else {
+            browseMapFragment = supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment
+        }
     }
 }
