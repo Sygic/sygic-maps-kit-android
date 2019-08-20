@@ -57,7 +57,7 @@
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:textColor="?attr/signpostTintColor"
-            android:textSize="36sp"
+            android:textSize="@dimen/fontSizeHuge"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/signpostSecondaryDirectionContainer"
             app:layout_constraintStart_toEndOf="@id/signpostPrimaryDirectionImageView"

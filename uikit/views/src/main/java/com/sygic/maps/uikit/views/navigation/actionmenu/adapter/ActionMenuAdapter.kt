@@ -22,44 +22,44 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.adapters
+package com.sygic.maps.uikit.views.navigation.actionmenu.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.sygic.samples.databinding.LayoutCardItemBinding
-import com.sygic.samples.app.models.Sample
+import com.sygic.maps.uikit.views.common.extensions.text
+import com.sygic.maps.uikit.views.common.extensions.tint
+import com.sygic.maps.uikit.views.databinding.LayoutActionMenuItemInternalBinding
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
 
-class SamplesRecyclerViewAdapter : RecyclerView.Adapter<SamplesRecyclerViewAdapter.SampleViewHolder>() {
+internal class ActionMenuAdapter : RecyclerView.Adapter<ActionMenuAdapter.ItemViewHolder>() {
 
-    var clickListener: ClickListener? = null
-    var items: List<Sample> = mutableListOf()
+    var clickListener: ActionMenuItemClickListener? = null
+    var items: List<ActionMenuItem> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    interface ClickListener {
-        fun onSampleItemClick(sample: Sample)
-    }
-
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        SampleViewHolder(LayoutCardItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        ItemViewHolder(LayoutActionMenuItemInternalBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: SampleViewHolder, position: Int) = holder.update(items[position])
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.update(items[position])
 
-    inner class SampleViewHolder(private val binding: LayoutCardItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ItemViewHolder(private val binding: LayoutActionMenuItemInternalBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.root.setOnClickListener { clickListener?.onSampleItemClick(items[adapterPosition]) }
+            binding.root.setOnClickListener { clickListener?.onActionMenuItemClick(items[adapterPosition]) }
         }
 
-        fun update(sample: Sample) {
-            binding.previewImage.setImageResource(sample.previewImage)
-            binding.title.setText(sample.title)
-            binding.subtitle.setText(sample.subtitle)
+        fun update(actionMenuItem: ActionMenuItem) {
+            binding.actionMenuItemImageView.setImageResource(actionMenuItem.icon)
+            binding.actionMenuItemImageView.tint(actionMenuItem.iconColor)
+            binding.actionMenuItemTextView.text(actionMenuItem.title)
         }
     }
 }

@@ -39,7 +39,7 @@ import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
-import com.sygic.maps.uikit.views.poidetail.dialog.BottomSheetDialog
+import com.sygic.maps.uikit.views.common.BottomSheetDialog
 import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.poidetail.manager.PreferencesManager
 import com.sygic.maps.uikit.views.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
@@ -59,11 +59,35 @@ private const val POI_DETAIL_DATA = "poi_detail_data"
  */
 open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
 
-    private var dialogFragmentListener: DialogFragmentListener? = null
     private var viewModel: PoiDetailInternalViewModel? = null
 
     private lateinit var preferencesManager: PreferencesManager
     private lateinit var binding: LayoutPoiDetailInternalBinding
+
+    /**
+     * Set a [PoiDetailData] for [PoiDetailBottomDialogFragment] content generation. If null, the loading [ProgressBar] view
+     * will be displayed.
+     *
+     * @param [PoiDetailData] which will be used for fulfillment the [PoiDetailBottomDialogFragment] content.
+     */
+    var data: PoiDetailData?
+        get() = arguments?.getParcelable(POI_DETAIL_DATA)
+        set(value) {
+            arguments?.putParcelable(POI_DETAIL_DATA, value)
+            viewModel?.onDataChanged(value)
+        }
+
+    /**
+     * Register a callback to be invoked when a [PoiDetailBottomDialogFragment] is dismissed.
+     *
+     * @param [DialogFragmentListener] callback to invoke [PoiDetailBottomDialogFragment] dismiss.
+     */
+    var listener: DialogFragmentListener? = null
+        get() = viewModel?.listener ?: field
+        set(value) {
+            field = value
+            viewModel?.let { it.listener = value }
+        }
 
     /**
      * A *[currentState]* reflects the current [PoiDetailBottomDialogFragment] state.
@@ -95,6 +119,8 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
             }
     }
 
+    override fun getDialog(): BottomSheetDialog = super.getDialog() as BottomSheetDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -108,8 +134,8 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
                 Observer<Int> { setState(it) })
 
             this.onDataChanged(arguments.getParcelableValue(POI_DETAIL_DATA))
-            this.listener = dialogFragmentListener
-            dialogFragmentListener = null
+            this.listener = this@PoiDetailBottomDialogFragment.listener
+            this@PoiDetailBottomDialogFragment.listener = null
         }
     }
 
@@ -120,10 +146,6 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
             this.resources.getDimensionPixelSize(R.dimen.defaultPeekHeight),
             if (preferencesManager.showcaseAllowed) SHOWCASE_BEHAVIOR_STATE else DEFAULT_BEHAVIOR_STATE
         )
-    }
-
-    override fun getDialog(): BottomSheetDialog {
-        return super.getDialog() as BottomSheetDialog
     }
 
     // Using LayoutInflater from AppCompatActivity instead of provided inflater from onCreateView fix DialogFragment
@@ -150,29 +172,9 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         dialog.behavior?.state = state
     }
 
-    /**
-     * Register a callback to be invoked when a [PoiDetailBottomDialogFragment] is dismissed.
-     *
-     * @param listener [DialogFragmentListener] callback to invoke [PoiDetailBottomDialogFragment] dismiss.
-     */
-    fun setListener(listener: DialogFragmentListener) {
-        viewModel?.let { it.listener = listener } ?: run { dialogFragmentListener = listener }
-    }
-
-    /**
-     * Set a [PoiDetailData] for [PoiDetailBottomDialogFragment] content generation. If null, the loading [ProgressBar] view
-     * will be displayed.
-     *
-     * @param data [PoiDetailData] which will be used for fulfillment the [PoiDetailBottomDialogFragment] content.
-     */
-    fun setData(data: PoiDetailData?) {
-        arguments?.putParcelable(POI_DETAIL_DATA, data)
-        viewModel?.onDataChanged(data)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
-        dialogFragmentListener = null
+        listener = null
     }
 }

@@ -24,24 +24,42 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="samplesListViewModel"
-            type="com.sygic.samples.app.viewmodels.SamplesListViewModel" />
-
-    </data>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sampleListRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        app:layoutManager="LinearLayoutManager"
-        app:setAdapter="@{samplesListViewModel.adapter}"
-        tools:listitem="@layout/layout_card_item" />
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:minHeight="120dp"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/actionMenuItemImageView"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_parking"
+            tools:tint="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/actionMenuItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:lines="2"
+            android:maxLines="2"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/fontSizeSmall"
+            tools:text="Parking places" />
+
+    </LinearLayout>
 
 </layout>

@@ -30,18 +30,38 @@
     <data>
 
         <variable
-            name="samplesListViewModel"
-            type="com.sygic.samples.app.viewmodels.SamplesListViewModel" />
+            name="actionMenuInternalViewModel"
+            type="com.sygic.maps.uikit.views.navigation.actionmenu.viewmodel.ActionMenuInternalViewModel" />
 
     </data>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sampleListRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        app:layoutManager="LinearLayoutManager"
-        app:setAdapter="@{samplesListViewModel.adapter}"
-        tools:listitem="@layout/layout_card_item" />
+        android:layout_height="wrap_content"
+        android:background="?android:attr/colorBackground"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/actionMenuTitle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorSecondary"
+            app:text="@{actionMenuInternalViewModel.titleText}"
+            tools:text="Action Menu Title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/actionMenuRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="GridLayoutManager"
+            app:setAdapter="@{actionMenuInternalViewModel.adapter}"
+            app:spanCount="@{safeUnbox(actionMenuInternalViewModel.spanCount)}"
+            tools:listitem="@layout/layout_action_menu_item_internal" />
+
+    </LinearLayout>
 
 </layout>

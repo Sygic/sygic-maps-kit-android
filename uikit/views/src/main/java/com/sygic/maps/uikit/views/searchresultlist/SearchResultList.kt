@@ -32,8 +32,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.AdvancedInfoView
@@ -69,8 +67,6 @@ open class SearchResultList @JvmOverloads constructor(
 
     init {
         binding.searchResultListRecyclerView.setHasFixedSize(true)
-        binding.searchResultListRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.searchResultListRecyclerView.itemAnimator = DefaultItemAnimator()
 
         attrs?.let { attributeSet ->
             @Suppress("Recycle")

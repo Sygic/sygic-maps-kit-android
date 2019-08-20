@@ -22,35 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.viewmodels
+package com.sygic.maps.uikit.views.navigation.actionmenu.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.app.adapters.SamplesRecyclerViewAdapter
-import com.sygic.samples.app.models.Sample
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import android.os.Parcelable
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.utils.TextHolder
+import kotlinx.android.parcel.Parcelize
 
-class SamplesListViewModel(samples: List<Sample>) : ViewModel(), SamplesRecyclerViewAdapter.ClickListener {
+@Parcelize
+data class ActionMenuData(
+    val menuTitle: TextHolder,
+    val menuItems: List<ActionMenuItem>
+) : Parcelable {
 
-    val adapter = SamplesRecyclerViewAdapter()
-    val startActivityObservable: LiveData<Class<out CommonSampleActivity>> = SingleLiveEvent()
-
-    init {
-        adapter.clickListener = this
-        adapter.items = samples
-    }
-
-    override fun onSampleItemClick(sample: Sample) {
-        startActivityObservable.asSingleEvent().value = sample.target
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class Factory(private val samples: List<Sample>): ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SamplesListViewModel(samples) as T
-        }
+    companion object {
+        val empty = ActionMenuData(TextHolder.from(EMPTY_STRING), listOf())
     }
 }

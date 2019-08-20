@@ -22,35 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.viewmodels
+package com.sygic.maps.uikit.views.common.binding.adapters
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.app.adapters.SamplesRecyclerViewAdapter
-import com.sygic.samples.app.models.Sample
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-class SamplesListViewModel(samples: List<Sample>) : ViewModel(), SamplesRecyclerViewAdapter.ClickListener {
-
-    val adapter = SamplesRecyclerViewAdapter()
-    val startActivityObservable: LiveData<Class<out CommonSampleActivity>> = SingleLiveEvent()
-
-    init {
-        adapter.clickListener = this
-        adapter.items = samples
-    }
-
-    override fun onSampleItemClick(sample: Sample) {
-        startActivityObservable.asSingleEvent().value = sample.target
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class Factory(private val samples: List<Sample>): ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SamplesListViewModel(samples) as T
+@BindingAdapter(value = ["spanCount"])
+fun setSpanCount(recyclerView: RecyclerView, count: Int) {
+    with(recyclerView.layoutManager) {
+        if (this is GridLayoutManager) {
+            spanCount = count
         }
     }
 }

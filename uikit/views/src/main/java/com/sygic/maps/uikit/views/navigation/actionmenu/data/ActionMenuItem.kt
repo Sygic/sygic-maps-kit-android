@@ -22,58 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.common.utils
+package com.sygic.maps.uikit.views.navigation.actionmenu.data
 
-import android.content.Context
 import android.os.Parcelable
-import androidx.annotation.StringRes
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.NO_ID
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-open class TextHolder private constructor(
-    @StringRes private var textResource: Int = NO_ID,
-    private var textString: String = EMPTY_STRING
-) : Parcelable {
-
-    companion object {
-
-        val empty = TextHolder()
-
-        @JvmStatic
-        fun from(@StringRes resId: Int): TextHolder {
-            return TextHolder(textResource = resId)
-        }
-
-        @JvmStatic
-        fun from(text: String): TextHolder {
-            return TextHolder(textString = text)
-        }
-
-        @JvmStatic
-        fun from(@StringRes resId: Int, text: String): TextHolder {
-            return TextHolder(textResource = resId, textString = text)
-        }
-
-        @JvmStatic
-        fun from(@StringRes resId: Int, number: Int): TextHolder {
-            return TextHolder(textResource = resId, textString = number.toString())
-        }
-    }
-
-    open fun getText(context: Context): String {
-        if (textResource != NO_ID && textString.isNotEmpty()) {
-            return String.format(context.getString(textResource), textString)
-        }
-
-        if (textResource != NO_ID) {
-            return context.getString(textResource)
-        }
-
-        return textString
-    }
-
-    fun isEmpty() = textResource == NO_ID && textString == EMPTY_STRING
-    fun isNotEmpty() = !isEmpty()
-}
+data class ActionMenuItem(
+    @DrawableRes val icon: Int,
+    val title: TextHolder = TextHolder.from(EMPTY_STRING),
+    @ColorRes val iconColor: Int = R.color.colorAccent,
+    val id: Int = NO_ID
+) : Parcelable

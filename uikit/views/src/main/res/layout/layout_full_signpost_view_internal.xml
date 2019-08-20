@@ -45,7 +45,7 @@
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:textColor="?attr/signpostTintColor"
-            android:textSize="36sp"
+            android:textSize="@dimen/fontSizeHuge"
             app:layout_constraintBottom_toTopOf="@+id/signpostInstructionTextView"
             app:layout_constraintEnd_toStartOf="@+id/signpostPrimaryDirectionImageView"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
             android:maxLines="2"
             android:minHeight="48dp"
             android:textColor="?attr/signpostTintColor"
-            android:textSize="16sp"
+            android:textSize="@dimen/fontSizeSmall"
             app:layout_constraintBottom_toTopOf="@+id/signpostSecondaryDirectionContainer"
             app:layout_constraintEnd_toStartOf="@+id/signpostRoadSignsView"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +132,6 @@
                 android:layout_weight="1"
                 android:fontFamily="sans-serif"
                 android:textColor="?attr/signpostTintColor"
-                android:textSize="14sp"
                 tools:text="Then"
                 tools:textColor="@color/white" />
 

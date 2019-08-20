@@ -52,6 +52,9 @@ import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.finish
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
@@ -198,6 +201,12 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
+            this.actionMenuObservable.observe(
+                this@NavigationFragment,
+                Observer<ActionMenuData> { showActionMenu(it) })
+            this.actionMenuItemClickListenerObservable.observe(
+                this@NavigationFragment,
+                Observer<ActionMenuItemClickListener> { setActionMenuItemClickListener(it) })
             this.activityFinishObservable.observe(
                 this@NavigationFragment,
                 Observer<Any> { finish() })
@@ -231,6 +240,18 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
                 super.onCreateView(inflater, this, savedInstanceState)?.let { addView(it, 0) }
             }
         }.root
+
+    private fun showActionMenu(actionMenuData: ActionMenuData) {
+        ActionMenuBottomDialogFragment.newInstance(actionMenuData).apply {
+            itemClickListener = fragmentViewModel.actionMenuItemClickListener
+        }.show(fragmentManager, ActionMenuBottomDialogFragment.TAG)
+    }
+
+    private fun setActionMenuItemClickListener(listener: ActionMenuItemClickListener) {
+        fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as ActionMenuBottomDialogFragment).itemClickListener = listener
+        }
+    }
 
     /**
      * Register a custom callback to be invoked when a click to the infobar button has been made.

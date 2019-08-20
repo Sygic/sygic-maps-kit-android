@@ -26,6 +26,7 @@ package com.sygic.maps.module.navigation.viewmodel
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.LayoutRes
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
@@ -57,6 +58,10 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.common.utils.TextHolder
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.map.MapCenter
@@ -113,10 +118,25 @@ class NavigationFragmentViewModel internal constructor(
         }
     }
 
+    val actionMenuObservable: LiveData<ActionMenuData> = SingleLiveEvent()
+    val actionMenuItemClickListenerObservable: LiveData<ActionMenuItemClickListener> = SingleLiveEvent()
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
+    val actionMenuItemClickListener: ActionMenuItemClickListener = object : ActionMenuItemClickListener {
+        override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
+            Log.d("Tomas", "onActionMenuItemClick() called with: actionMenuItem = [$actionMenuItem]") //todo
+        }
+    }
+
+    private val actionMenuData = ActionMenuData( //todo
+        TextHolder.from("XY"),
+        listOf(
+            ActionMenuItem(R.drawable.ic_parfumes, TextHolder.from("Ahoj")),
+            ActionMenuItem(R.drawable.ic_parking, TextHolder.from("Ahoj X")))
+    )
+
     private val navigationDefaultInfobarClickListener = object : NavigationDefaultInfobarClickListener() {
-        override fun onLeftButtonClick() {} /*TODO: MS-6224*/
+        override fun onLeftButtonClick() { actionMenuObservable.asSingleEvent().value = actionMenuData }
         override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 
@@ -177,6 +197,7 @@ class NavigationFragmentViewModel internal constructor(
         locationManager.positionOnMapEnabled = !previewMode.value!!
         cameraModel.addModeChangedListener(this)
         navigationManager.addOnRouteChangedListener(this)
+        actionMenuItemClickListenerObservable.asSingleEvent().value = actionMenuItemClickListener
     }
 
     override fun onResume(owner: LifecycleOwner) {

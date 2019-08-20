@@ -278,20 +278,19 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
 
     private fun showPoiDetail() {
         PoiDetailBottomDialogFragment.newInstance().apply {
-            setListener(fragmentViewModel.dialogFragmentListener)
-            showNow(this@BrowseMapFragment.fragmentManager, PoiDetailBottomDialogFragment.TAG)
-        }
+            listener = fragmentViewModel.dialogFragmentListener
+        }.showNow(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
     private fun setPoiDetailListener(listener: DialogFragmentListener) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setListener(listener)
+            (fragment as PoiDetailBottomDialogFragment).listener = listener
         }
     }
 
     private fun setPoiDetailData(data: PoiDetailData) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setData(data)
+            (fragment as PoiDetailBottomDialogFragment).data = data
         }
     }
 
