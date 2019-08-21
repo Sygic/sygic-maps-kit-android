@@ -68,7 +68,7 @@ open class RoutePreviewControls @JvmOverloads constructor(
         /**
          * Called when a [PlayPauseButtonState] changed.
          */
-        fun onPlayPauseButtonStateChanged(state: PlayPauseButtonState)
+        fun onPlayPauseButtonStateChanged(newState: PlayPauseButtonState)
     }
 
     init {

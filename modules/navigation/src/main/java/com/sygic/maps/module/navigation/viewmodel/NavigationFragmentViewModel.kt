@@ -59,6 +59,7 @@ import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.common.extensions.isLandscape
 import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
+import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.map.MapCenter
@@ -104,11 +105,7 @@ class NavigationFragmentViewModel internal constructor(
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
-    val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
-        override fun setValue(value: RouteInfo) {
-            if (value != this.value) super.setValue(value)
-        }
-    }
+    val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
     var distanceUnit: DistanceUnit
         get() = regionalManager.distanceUnit.value!!

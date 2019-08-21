@@ -51,8 +51,8 @@ open class RoutePreviewControlsViewModel internal constructor(
         })
     }
 
-    override fun onPlayPauseButtonStateChanged(state: PlayPauseButtonState) {
-        when (state) {
+    override fun onPlayPauseButtonStateChanged(newState: PlayPauseButtonState) {
+        when (newState) {
             PlayPauseButtonState.PLAY -> routeDemonstrationManager.pause()
             PlayPauseButtonState.PAUSE -> {
                 if (routeDemonstrationManager.demonstrationState.value == DemonstrationState.PAUSED) {
