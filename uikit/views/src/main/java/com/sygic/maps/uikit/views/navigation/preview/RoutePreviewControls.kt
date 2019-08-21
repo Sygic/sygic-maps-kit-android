@@ -130,6 +130,15 @@ open class RoutePreviewControls @JvmOverloads constructor(
     }
 
     /**
+     * Register a callback to be invoked when [RoutePreviewControls] play / pause action button is clicked.
+     *
+     * @param listener [View.OnClickListener] callback to invoke on [RoutePreviewControls] play / pause button click.
+     */
+    fun setOnPlayPauseButtonClickListener(listener: OnClickListener) {
+        binding.routePreviewControlsPlayPauseButton.setOnClickListener(listener)
+    }
+
+    /**
      * Register a callback to be invoked when [RoutePreviewControls] speed action button is clicked.
      *
      * @param listener [View.OnClickListener] callback to invoke on [RoutePreviewControls] speed button click.

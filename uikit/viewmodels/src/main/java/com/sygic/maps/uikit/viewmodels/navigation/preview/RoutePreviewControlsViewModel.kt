@@ -40,7 +40,7 @@ import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class RoutePreviewControlsViewModel internal constructor(
     private val routeDemonstrationManager: RouteDemonstrationManager
-) : ViewModel(), DefaultLifecycleObserver, RoutePreviewControls.OnPlayPauseStateChangedListener {
+) : ViewModel(), DefaultLifecycleObserver {
 
     val playPauseButtonState: MutableLiveData<PlayPauseButtonState> = MutableLiveData(PlayPauseButtonState.PLAY)
 
@@ -51,16 +51,11 @@ open class RoutePreviewControlsViewModel internal constructor(
         })
     }
 
-    override fun onPlayPauseButtonStateChanged(newState: PlayPauseButtonState) {
-        when (newState) {
-            PlayPauseButtonState.PLAY -> routeDemonstrationManager.pause()
-            PlayPauseButtonState.PAUSE -> {
-                if (routeDemonstrationManager.demonstrationState.value == DemonstrationState.PAUSED) {
-                    routeDemonstrationManager.unPause()
-                } else {
-                    routeDemonstrationManager.restart()
-                }
-            }
+    open fun onPlayPauseButtonClick() {
+        when (routeDemonstrationManager.demonstrationState.value) {
+            DemonstrationState.ACTIVE -> routeDemonstrationManager.pause()
+            DemonstrationState.PAUSED -> routeDemonstrationManager.unPause()
+            DemonstrationState.INACTIVE -> routeDemonstrationManager.restart()
         }
     }
 
@@ -70,11 +65,5 @@ open class RoutePreviewControlsViewModel internal constructor(
 
     open fun onStopButtonClick() {
         routeDemonstrationManager.stop()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        routeDemonstrationManager.destroy()
     }
 }

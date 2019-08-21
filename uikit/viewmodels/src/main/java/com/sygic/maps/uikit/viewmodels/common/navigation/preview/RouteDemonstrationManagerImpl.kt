@@ -54,7 +54,10 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
     }
 
     override fun restart() {
-        routeDemonstrateSimulator?.start()
+        routeDemonstrateSimulator?.let {
+            it.start()
+            demonstrationState.value = DemonstrationState.ACTIVE
+        }
     }
 
     override fun pause() {
