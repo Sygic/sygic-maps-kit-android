@@ -23,26 +23,8 @@
   ~ SOFTWARE.
   -->
 
-<resources>
-
-    <!-- SHADES OF BASE COLORS (transparency and stuff)-->
-
-    <!-- FF means 0 transparency, rendering a color as solid. 00 means full transparency making the color invisible
-    EXAMPLE: A color named "black_a20" is more see through than the color "black_a80"-->
-
-    <color name="black_a10">#19000000</color>
-
-    <color name="white_a80">#CCFFFFFF</color>
-    <color name="white_a40">#66FFFFFF</color>
-    <color name="white_a25">#40ffffff</color>
-    <color name="white_a10">#19ffffff</color>
-    <color name="black_a20">#33000000</color>
-    <color name="slate_gray_a80">#cc7a859a</color>
-    <color name="shuttle_gray_a80">#cc5c6373</color>
-    <color name="charade_a80">#cc2d3140</color>
-    <color name="shocking_a80">#cc6c778c</color>
-
-    <color name="mystic_a0">#00E0E6EF</color> <!-- Pouziva sa pre to, aby android vedel krajsie urobit gradientovy prechod -->
-
-    <color name="azure_radiance_a13">#210080ff</color>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/shuttle_gray_a80" />
+    <corners android:radius="8dp" />
+</shape>

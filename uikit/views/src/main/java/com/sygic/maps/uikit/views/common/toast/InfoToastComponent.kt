@@ -22,21 +22,9 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.navigation.actionmenu.data
+package com.sygic.maps.uikit.views.common.toast
 
-import android.os.Parcelable
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.views.common.extensions.NO_ID
-import com.sygic.maps.uikit.views.common.utils.TextHolder
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.StringRes
 
-@Parcelize
-open class ActionMenuItem(
-    @DrawableRes val icon: Int,
-    val title: TextHolder = TextHolder.from(EMPTY_STRING),
-    @ColorRes val iconColor: Int = R.color.colorAccent,
-    val id: Int = NO_ID
-) : Parcelable
+data class InfoToastComponent(@DrawableRes val iconResId: Int, @StringRes val titleResId: Int)

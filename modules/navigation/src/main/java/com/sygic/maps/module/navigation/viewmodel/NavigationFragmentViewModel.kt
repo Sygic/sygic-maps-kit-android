@@ -26,7 +26,6 @@ package com.sygic.maps.module.navigation.viewmodel
 
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.LayoutRes
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
@@ -39,6 +38,8 @@ import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
 import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
 import com.sygic.maps.module.navigation.R
+import com.sygic.maps.module.navigation.actionmenu.SoundsOffActionMenuItem
+import com.sygic.maps.module.navigation.actionmenu.SoundsOnActionMenuItem
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultInfobarClickListener
 import com.sygic.maps.module.navigation.infobar.InfobarButtonWrapper
@@ -58,6 +59,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
@@ -68,6 +70,8 @@ import com.sygic.sdk.map.MapCenter
 import com.sygic.sdk.map.MapCenterSettings
 import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.navigation.NavigationManager
+import com.sygic.sdk.navigation.listeners.NoAudioInstructionListener
+import com.sygic.sdk.navigation.listeners.NoAudioWarningListener
 import com.sygic.sdk.route.RouteInfo
 
 private const val DEFAULT_NAVIGATION_TILT = 60f
@@ -118,25 +122,43 @@ class NavigationFragmentViewModel internal constructor(
         }
     }
 
-    val actionMenuObservable: LiveData<ActionMenuData> = SingleLiveEvent()
+    val infoToastObservable: LiveData<InfoToastComponent> = SingleLiveEvent()
+    val actionMenuShowObservable: LiveData<ActionMenuData> = SingleLiveEvent()
+    val actionMenuHideObservable: LiveData<Any> = SingleLiveEvent()
     val actionMenuItemClickListenerObservable: LiveData<ActionMenuItemClickListener> = SingleLiveEvent()
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
-    val actionMenuItemClickListener: ActionMenuItemClickListener = object : ActionMenuItemClickListener {
-        override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
-            Log.d("Tomas", "onActionMenuItemClick() called with: actionMenuItem = [$actionMenuItem]") //todo
+    val actionMenuItemClickListener: ActionMenuItemClickListener =
+        object : ActionMenuItemClickListener {
+            override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
+                when (actionMenuItem) {
+                    is SoundsOnActionMenuItem -> {
+                        navigationManager.removeAudioWarningListener()
+                        navigationManager.removeAudioInstructionListener()
+                        infoToastObservable.asSingleEvent().value =
+                            InfoToastComponent(R.drawable.ic_sounds_on, R.string.sounds_enabled)
+                    }
+                    is SoundsOffActionMenuItem -> {
+                        navigationManager.setAudioWarningListener(NoAudioWarningListener())
+                        navigationManager.setAudioInstructionListener(NoAudioInstructionListener())
+                        infoToastObservable.asSingleEvent().value =
+                            InfoToastComponent(R.drawable.ic_sounds_off, R.string.sounds_disabled)
+                    }
+                }
+                actionMenuHideObservable.asSingleEvent().call()
+            }
         }
-    }
 
-    private val actionMenuData = ActionMenuData( //todo
-        TextHolder.from("XY"),
+    private val actionMenuData = ActionMenuData(
+        TextHolder.from(R.string.action_menu),
         listOf(
-            ActionMenuItem(R.drawable.ic_parfumes, TextHolder.from("Ahoj")),
-            ActionMenuItem(R.drawable.ic_parking, TextHolder.from("Ahoj X")))
+            SoundsOnActionMenuItem(),
+            SoundsOffActionMenuItem()
+        )
     )
 
     private val navigationDefaultInfobarClickListener = object : NavigationDefaultInfobarClickListener() {
-        override fun onLeftButtonClick() { actionMenuObservable.asSingleEvent().value = actionMenuData }
+        override fun onLeftButtonClick() { actionMenuShowObservable.asSingleEvent().value = actionMenuData }
         override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 

@@ -31,6 +31,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -48,10 +49,8 @@ import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
-import com.sygic.maps.uikit.views.common.extensions.asMutable
-import com.sygic.maps.uikit.views.common.extensions.finish
-import com.sygic.maps.uikit.views.common.extensions.getBoolean
-import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
@@ -201,9 +200,15 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
-            this.actionMenuObservable.observe(
+            this.infoToastObservable.observe(
+                this@NavigationFragment,
+                Observer<InfoToastComponent> { showInfoToast(it) })
+            this.actionMenuShowObservable.observe(
                 this@NavigationFragment,
                 Observer<ActionMenuData> { showActionMenu(it) })
+            this.actionMenuHideObservable.observe(
+                this@NavigationFragment,
+                Observer<Any> { hideActionMenu() })
             this.actionMenuItemClickListenerObservable.observe(
                 this@NavigationFragment,
                 Observer<ActionMenuItemClickListener> { setActionMenuItemClickListener(it) })
@@ -250,6 +255,12 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
     private fun setActionMenuItemClickListener(listener: ActionMenuItemClickListener) {
         fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as ActionMenuBottomDialogFragment).itemClickListener = listener
+        }
+    }
+
+    private fun hideActionMenu() {
+        fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as DialogFragment).dismiss()
         }
     }
 

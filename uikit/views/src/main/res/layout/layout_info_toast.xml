@@ -23,26 +23,35 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="160dp"
+    android:layout_height="160dp"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_info_toast"
+    android:gravity="center"
+    android:minWidth="160dp"
+    android:minHeight="160dp"
+    android:orientation="vertical"
+    tools:background="@color/shuttle_gray">
 
-    <!-- SHADES OF BASE COLORS (transparency and stuff)-->
+    <ImageView
+        android:id="@+id/infoToastImageView"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:tint="@color/white"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_book" />
 
-    <!-- FF means 0 transparency, rendering a color as solid. 00 means full transparency making the color invisible
-    EXAMPLE: A color named "black_a20" is more see through than the color "black_a80"-->
+    <TextView
+        android:id="@+id/infoToastTextDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:padding="16dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/fontSizeExtraSmall"
+        tools:text="TEXT WHICH SPANS a lot of lines Lorem" />
 
-    <color name="black_a10">#19000000</color>
-
-    <color name="white_a80">#CCFFFFFF</color>
-    <color name="white_a40">#66FFFFFF</color>
-    <color name="white_a25">#40ffffff</color>
-    <color name="white_a10">#19ffffff</color>
-    <color name="black_a20">#33000000</color>
-    <color name="slate_gray_a80">#cc7a859a</color>
-    <color name="shuttle_gray_a80">#cc5c6373</color>
-    <color name="charade_a80">#cc2d3140</color>
-    <color name="shocking_a80">#cc6c778c</color>
-
-    <color name="mystic_a0">#00E0E6EF</color> <!-- Pouziva sa pre to, aby android vedel krajsie urobit gradientovy prechod -->
-
-    <color name="azure_radiance_a13">#210080ff</color>
-</resources>
+</LinearLayout>
