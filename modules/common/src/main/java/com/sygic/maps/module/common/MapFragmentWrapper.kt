@@ -133,9 +133,17 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         resolveAttributes(attrs)
     }
 
+    @CallSuper
     override fun onAttach(context: Context) {
         executeInjector()
         super.onAttach(context)
+
+        if (backingMapDataModel.isInitialized()) {
+            backingMapDataModel.value.dumpToModel(mapDataModel)
+        }
+        if (backingCameraModel.isInitialized()) {
+            backingCameraModel.value.dumpToModel(cameraDataModel)
+        }
 
         sdkInitializationManager.initialize(this)
         permissionManager.observe(this, Observer {
@@ -159,13 +167,6 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
 
         lifecycle.addObserver(mapDataModel)
         lifecycle.addObserver(cameraDataModel)
-
-        if (backingMapDataModel.isInitialized()) {
-            backingMapDataModel.value.dumpToModel(mapDataModel)
-        }
-        if (backingCameraModel.isInitialized()) {
-            backingCameraModel.value.dumpToModel(cameraDataModel)
-        }
     }
 
     @CallSuper
