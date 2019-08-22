@@ -40,29 +40,22 @@ import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class RoutePreviewControlsViewModel internal constructor(
     private val routeDemonstrationManager: RouteDemonstrationManager
-) : ViewModel(), RoutePreviewControls.OnPlayPauseStateChangedListener {
+) : ViewModel(), DefaultLifecycleObserver {
 
     val playPauseButtonState: MutableLiveData<PlayPauseButtonState> = MutableLiveData(PlayPauseButtonState.PLAY)
 
-    private val demonstrationStateObserver = Observer<DemonstrationState> { state ->
-        playPauseButtonState.value =
-            if (state == DemonstrationState.ACTIVE) PlayPauseButtonState.PAUSE else PlayPauseButtonState.PLAY
+    override fun onCreate(owner: LifecycleOwner) {
+        routeDemonstrationManager.demonstrationState.observe(owner, Observer { state ->
+            playPauseButtonState.value =
+                if (state == DemonstrationState.ACTIVE) PlayPauseButtonState.PAUSE else PlayPauseButtonState.PLAY
+        })
     }
 
-    init {
-        routeDemonstrationManager.demonstrationState.observeForever(demonstrationStateObserver)
-    }
-
-    override fun onPlayPauseButtonStateChanged(state: PlayPauseButtonState) {
-        when (state) {
-            PlayPauseButtonState.PLAY -> routeDemonstrationManager.pause()
-            PlayPauseButtonState.PAUSE -> {
-                if (routeDemonstrationManager.demonstrationState.value == DemonstrationState.PAUSED) {
-                    routeDemonstrationManager.unPause()
-                } else {
-                    routeDemonstrationManager.restart()
-                }
-            }
+    open fun onPlayPauseButtonClick() {
+        when (routeDemonstrationManager.demonstrationState.value) {
+            DemonstrationState.ACTIVE -> routeDemonstrationManager.pause()
+            DemonstrationState.PAUSED -> routeDemonstrationManager.unPause()
+            DemonstrationState.INACTIVE -> routeDemonstrationManager.restart()
         }
     }
 
@@ -72,12 +65,5 @@ open class RoutePreviewControlsViewModel internal constructor(
 
     open fun onStopButtonClick() {
         routeDemonstrationManager.stop()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        routeDemonstrationManager.demonstrationState.removeObserver(demonstrationStateObserver)
-        routeDemonstrationManager.destroy()
     }
 }
