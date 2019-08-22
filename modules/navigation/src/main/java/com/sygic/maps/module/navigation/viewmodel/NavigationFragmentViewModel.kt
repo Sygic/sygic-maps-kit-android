@@ -57,6 +57,7 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.map.MapCenter
@@ -107,11 +108,7 @@ class NavigationFragmentViewModel internal constructor(
     val rightInfobarButtonWrapper = InfobarButtonWrapper()
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
-    val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
-        override fun setValue(value: RouteInfo) {
-            if (value != this.value) super.setValue(value)
-        }
-    }
+    val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
