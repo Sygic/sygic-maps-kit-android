@@ -68,7 +68,7 @@ open class RoutePreviewControls @JvmOverloads constructor(
         /**
          * Called when a [PlayPauseButtonState] changed.
          */
-        fun onPlayPauseButtonStateChanged(state: PlayPauseButtonState)
+        fun onPlayPauseButtonStateChanged(newState: PlayPauseButtonState)
     }
 
     init {
@@ -127,6 +127,15 @@ open class RoutePreviewControls @JvmOverloads constructor(
                     listener.onPlayPauseButtonStateChanged(if (isChecked) PlayPauseButtonState.PAUSE else PlayPauseButtonState.PLAY)
                 }
             }
+    }
+
+    /**
+     * Register a callback to be invoked when [RoutePreviewControls] play / pause action button is clicked.
+     *
+     * @param listener [View.OnClickListener] callback to invoke on [RoutePreviewControls] play / pause button click.
+     */
+    fun setOnPlayPauseButtonClickListener(listener: OnClickListener) {
+        binding.routePreviewControlsPlayPauseButton.setOnClickListener(listener)
     }
 
     /**

@@ -22,22 +22,13 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.navigation.infobar.items
+package com.sygic.maps.uikit.views.common.utils
 
-private const val DEFAULT_DIVIDER = " | "
+import androidx.lifecycle.MutableLiveData
 
-class InfobarItemsHolder(
-    vararg val items: String = emptyArray(),
-    val divider: String = DEFAULT_DIVIDER,
-    val prefix: String = "",
-    val postfix: String = "",
-    val limit: Int = -1
-) {
+class UniqueMutableLiveData<T> : MutableLiveData<T>() {
 
-    companion object {
-        val empty = InfobarItemsHolder()
+    override fun setValue(value: T) {
+        if (value != this.value) super.setValue(value)
     }
-
-    fun isEmpty() = items.isEmpty()
-    fun isNotEmpty() = !isEmpty()
 }
