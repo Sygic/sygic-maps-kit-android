@@ -57,7 +57,7 @@ open class InfobarViewModel internal constructor(
 ) : ViewModel(), NavigationManager.OnNaviStatsListener {
 
     val primaryItemsHolder = MutableLiveData(InfobarItemsHolder(divider = SPACE))
-    val secondaryItemsHolder = MutableLiveData(InfobarItemsHolder.empty())
+    val secondaryItemsHolder = MutableLiveData(InfobarItemsHolder.empty)
 
     private var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
     private val distanceUnitObserver = Observer<DistanceUnit> { distanceUnit = it }

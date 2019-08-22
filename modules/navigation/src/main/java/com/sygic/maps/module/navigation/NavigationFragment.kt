@@ -253,6 +253,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
         speedLimitViewModel = viewModelOf(SpeedLimitViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
+        lifecycle.addObserver(routePreviewControlsViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -295,6 +296,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
         super.onDestroy()
 
         lifecycle.removeObserver(fragmentViewModel)
+        lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 
     override fun resolveAttributes(attributes: AttributeSet) {
