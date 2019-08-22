@@ -61,6 +61,7 @@ import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.utils.TextHolder
+import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
@@ -116,11 +117,7 @@ class NavigationFragmentViewModel internal constructor(
     val rightInfobarButtonWrapper = InfobarButtonWrapper()
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
-    val routeInfo: MutableLiveData<RouteInfo> = object : MutableLiveData<RouteInfo>() {
-        override fun setValue(value: RouteInfo) {
-            if (value != this.value) super.setValue(value)
-        }
-    }
+    val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
     val infoToastObservable: LiveData<InfoToastComponent> = SingleLiveEvent()
     val actionMenuShowObservable: LiveData<ActionMenuData> = SingleLiveEvent()

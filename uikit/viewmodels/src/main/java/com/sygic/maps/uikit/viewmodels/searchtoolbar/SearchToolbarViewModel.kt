@@ -42,6 +42,7 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATI
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
@@ -67,11 +68,7 @@ open class SearchToolbarViewModel internal constructor(
     val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
 
     val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
-    val inputText: MutableLiveData<CharSequence> = object : MutableLiveData<CharSequence>() {
-        override fun setValue(value: CharSequence) {
-            if (value != this.value) super.setValue(value)
-        }
-    }
+    val inputText: MutableLiveData<CharSequence> = UniqueMutableLiveData()
 
     var searchLocation: GeoCoordinates? = null
     var searchDelay: Long = DEFAULT_SEARCH_DELAY

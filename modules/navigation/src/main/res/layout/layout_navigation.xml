@@ -99,7 +99,7 @@
             app:layout_constraintBottom_toTopOf="@id/infobar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:onPlayPauseButtonStateChangedListener="@{routePreviewControlsViewModel}"
+            app:onPlayPauseButtonClickListener="@{() -> routePreviewControlsViewModel.onPlayPauseButtonClick()}"
             app:onSpeedButtonClickListener="@{() -> routePreviewControlsViewModel.onSpeedButtonClick()}"
             app:onStopButtonClickListener="@{() -> routePreviewControlsViewModel.onStopButtonClick()}"
             app:playPauseButtonState="@{routePreviewControlsViewModel.playPauseButtonState}"
