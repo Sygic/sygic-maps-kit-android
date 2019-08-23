@@ -45,7 +45,7 @@ import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItemsHolder
 /**
  * A [Infobar] view can be used as an visual presentation component for the navigation info data (eta, distanceToEnd,
  * altitude etc.) and as user interaction component. It contains two [ImageButton]'s (left/right) and pre-customized
- * primary/secondary [TextView] which can be controlled with [InfobarItemsHolder] class.
+ * primary/secondary [TextView] which can be controlled with the [InfobarItemsHolder] class.
  *
  * The [Infobar] design can be completely changed with the custom _infoBarStyle_ or the standard android
  * attributes as _background_, _navigationTextColorPrimary_ or _navigationTextColorSecondary_ can be used. The [Infobar]
