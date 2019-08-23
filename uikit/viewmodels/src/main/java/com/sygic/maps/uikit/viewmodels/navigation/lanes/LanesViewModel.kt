@@ -45,6 +45,7 @@ class LanesViewModel internal constructor(
 
     override fun onLanesInfoChanged(info: LanesInfo) {
         if (!info.isActive) {
+            enabled.asMutable().value = false
             return
         }
 

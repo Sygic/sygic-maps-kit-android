@@ -32,11 +32,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.sygic.maps.module.common.MapFragmentWrapper
-import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
@@ -49,6 +45,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
@@ -58,6 +55,7 @@ const val NAVIGATION_FRAGMENT_TAG = "navigation_fragment_tag"
 internal const val KEY_DISTANCE_UNITS = "distance_units"
 internal const val KEY_SIGNPOST_ENABLED = "signpost_enabled"
 internal const val KEY_SIGNPOST_TYPE = "signpost_type"
+internal const val KEY_LANES_VIEW_ENABLED = "lanes_view_enabled"
 internal const val KEY_PREVIEW_CONTROLS_ENABLED = "preview_controls_enabled"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_ROUTE_INFO = "route_info"
@@ -129,6 +127,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
             arguments = Bundle(arguments).apply { putBoolean(KEY_PREVIEW_MODE, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.previewMode.value = value
+            }
+        }
+
+    /**
+     * A *[lanesViewEnabled]* modifies the [SimpleLanesView] visibility..
+     *
+     * @param [Boolean] true to enable the LanesView, false otherwise.
+     *
+     * @return whether the LanesView is on or off.
+     */
+    var lanesViewEnabled: Boolean
+    get() = if (::fragmentViewModel.isInitialized) {
+        fragmentViewModel.lanesViewEnabled.value!!
+    } else arguments.getBoolean(KEY_LANES_VIEW_ENABLED, LANES_VIEW_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_LANES_VIEW_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.lanesViewEnabled.value = value
             }
         }
 
@@ -225,6 +241,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                         DISTANCE_UNITS_DEFAULT_VALUE.ordinal
                     )
                 )
+            }
+            if(hasValue(R.styleable.NavigationFragment_sygic_lanes_view_enabled)) {
+                lanesViewEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_lanes_view_enabled,
+                        LANES_VIEW_ENABLED_DEFAULT_VALUE
+                    )
             }
             if (hasValue(R.styleable.NavigationFragment_sygic_signpost_enabled)) {
                 signpostEnabled =

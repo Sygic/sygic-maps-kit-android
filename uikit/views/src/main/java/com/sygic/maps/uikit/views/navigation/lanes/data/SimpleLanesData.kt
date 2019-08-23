@@ -20,5 +20,9 @@
 
 package com.sygic.maps.uikit.views.navigation.lanes.data
 
+import com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
 
+/**
+ * Data class holding lane data for views like [SimpleLanesView]
+ */
 data class SimpleLanesData(val directions: List<Int>, val highlighted: Boolean)

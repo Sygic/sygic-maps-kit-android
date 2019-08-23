@@ -40,6 +40,10 @@ import com.sygic.maps.uikit.views.navigation.lanes.data.SimpleLanesData
 
 private const val POOL_SIZE = 10
 
+/**
+ * [SimpleLanesView] displays actual lanes on the road in front of the vehicle as arrows
+ * and highlights those which follows the direction of the current route.
+ */
 class SimpleLanesView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -47,6 +51,10 @@ class SimpleLanesView @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicLanesViewStyle
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
+    /**
+     * Provides lane data for the [SimpleLanesView] to show. Single [item][SimpleLanesData]
+     * in the array represents single line.
+     */
     var lanes: Array<SimpleLanesData> = emptyArray()
         set(value) {
             field = value
@@ -154,6 +162,9 @@ class SimpleLanesView @JvmOverloads constructor(
         return super.getChildAt(index) as ImageView
     }
 
+    /**
+     * Adds child view to the [SimpleLanesView]. **Only [ImageView]s are supported.**
+     */
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
         if (child is ImageView) {
             super.addView(child, index, params)

@@ -34,16 +34,7 @@ import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.*
-import com.sygic.maps.module.navigation.KEY_PREVIEW_CONTROLS_ENABLED
-import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
-import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
-import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
-import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
-import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -103,6 +94,7 @@ class NavigationFragmentViewModel internal constructor(
     val signpostLayout: Int
     val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
+    val lanesViewEnabled: MutableLiveData<Boolean> = MutableLiveData(LANES_VIEW_ENABLED_DEFAULT_VALUE)
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
@@ -118,6 +110,7 @@ class NavigationFragmentViewModel internal constructor(
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
             previewControlsEnabled.value = getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
+            lanesViewEnabled.value = getBoolean(KEY_LANES_VIEW_ENABLED, LANES_VIEW_ENABLED_DEFAULT_VALUE)
             signpostLayout = when (getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE) {
                 SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
                 SignpostType.SIMPLIFIED -> R.layout.layout_signpost_simplified_view_stub
