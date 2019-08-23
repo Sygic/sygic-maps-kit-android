@@ -24,7 +24,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -33,6 +34,10 @@
         <variable
             name="navigationFragmentViewModel"
             type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
+
+        <variable
+            name="routePreviewControlsViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel" />
 
     </data>
 
@@ -63,6 +68,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/signpostView" />
+
+        <com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
+            android:id="@+id/routePreviewControls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.previewMode) &amp;&amp; safeUnbox(navigationFragmentViewModel.previewControlsEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:onPlayPauseButtonClickListener="@{() -> routePreviewControlsViewModel.onPlayPauseButtonClick()}"
+            app:onSpeedButtonClickListener="@{() -> routePreviewControlsViewModel.onSpeedButtonClick()}"
+            app:onStopButtonClickListener="@{() -> routePreviewControlsViewModel.onStopButtonClick()}"
+            app:playPauseButtonState="@{routePreviewControlsViewModel.playPauseButtonState}"
+            tools:background="@drawable/bg_navigation_rounded"
+            tools:layout_height="32dp"
+            tools:layout_margin="@dimen/routePreviewControlsLayoutMargin"
+            tools:layout_width="164dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

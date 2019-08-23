@@ -32,6 +32,7 @@
             <enum name="miles_feets" value="2" />
         </attr>
         <attr name="sygic_navigation_previewMode" format="boolean" />
+        <attr name="sygic_previewControls_enabled" format="boolean" />
         <attr name="sygic_signpost_enabled" format="boolean" />
         <attr name="sygic_signpost_type" format="enum">
             <enum name="full" value="0" />
