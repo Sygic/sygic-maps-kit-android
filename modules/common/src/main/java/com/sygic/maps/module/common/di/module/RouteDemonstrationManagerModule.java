@@ -24,8 +24,8 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManager;
-import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManagerImpl;
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerImpl;
 import dagger.Module;
 import dagger.Provides;
 
