@@ -39,7 +39,9 @@
     <dimen name="roadSignSpacing">6dp</dimen>
     <dimen name="roadSignTextSize">12sp</dimen>
     <dimen name="roadSignTextPadding">4dp</dimen>
+    <dimen name="navigationComponentElevation">6dp</dimen>
     <dimen name="signpostViewLayoutMargin">16dp</dimen>
+    <dimen name="routePreviewControlsLayoutMargin">16dp</dimen>
 
     <!-- Others -->
     <dimen name="toolbarHeight">56dp</dimen>

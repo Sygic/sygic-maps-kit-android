@@ -34,6 +34,7 @@
     <declare-styleable name="Theme">
         <attr name="compassStyle" format="reference"/>
         <attr name="positionLockFabStyle" format="reference" />
+        <attr name="routePreviewControlsStyle" format="reference" />
         <attr name="searchFabStyle" format="reference" />
         <attr name="searchToolbarStyle" format="reference" />
         <attr name="searchResultListStyle" format="reference" />
@@ -56,6 +57,14 @@
     <declare-styleable name="PositionLockFab">
         <attr name="android:tint" />
         <attr name="android:backgroundTint" />
+    </declare-styleable>
+
+    <declare-styleable name="RoutePreviewControls">
+        <attr name="android:layout_margin" format="dimension" />
+        <attr name="android:layout_marginTop" format="dimension" />
+        <attr name="android:layout_marginBottom" format="dimension" />
+        <attr name="android:layout_marginStart" format="dimension" />
+        <attr name="android:layout_marginEnd" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="SearchFab">

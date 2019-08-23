@@ -37,7 +37,7 @@ import com.sygic.maps.module.common.di.module.SearchModule;
 import com.sygic.maps.module.common.poi.manager.PoiDataManager;
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
-import com.sygic.maps.uikit.viewmodels.common.navigation.RouteDemonstrationManager;
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
 import com.sygic.sdk.navigation.NavigationManager;
