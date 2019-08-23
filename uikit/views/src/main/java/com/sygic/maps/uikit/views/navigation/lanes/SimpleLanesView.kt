@@ -144,6 +144,7 @@ class SimpleLanesView @JvmOverloads constructor(
             }.toTypedArray()
 
             getChildAt(i).setImageDrawable(LayerDrawable(drawables).apply {
+                mutate()
                 if (lane.highlighted) {
                     setTintMode(PorterDuff.Mode.SRC_ATOP)
                     setTint(highlightedColor)
