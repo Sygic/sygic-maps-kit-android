@@ -1,18 +1,14 @@
 <!--
   ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
-  ~
   ~ This project is licensed under the MIT License.
-  ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
   ~ in the Software without restriction, including without limitation the rights
   ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
   ~ copies of the Software, and to permit persons to whom the Software is
   ~ furnished to do so, subject to the following conditions:
-  ~
   ~ The above copyright notice and this permission notice shall be included in all
   ~ copies or substantial portions of the Software.
-  ~
   ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
   ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,15 +19,13 @@
   -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/directionSize"
-    android:height="@dimen/directionSize"
-    android:viewportWidth="48.0"
-    android:viewportHeight="48.0">
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
 
-    <path
-        android:fillColor="?attr/navigationTextColorTertiary"
-        android:pathData="M14 0L14 40 0 40 10 0 14 0ZM42 0L38.4375 16.25 34.1875 12 32.125 14.125c-0.833338
-            0.833338 -1.531247 1.739578 -2.09375 2.71875 -0.562503 0.979172 -0.989582 2.010411 -1.28125 3.09375
-            -0.541669 1.875009 -0.645835 3.833323 -0.3125 5.875L32 40 18 40 18 0l4 0 3.25 13.125c0.708337
-            -1.125006 1.583328 -2.208328 2.625 -3.25L30 7.8125 25.75 3.5625 42 0Z" />
+  <path
+      android:pathData="M12.0146,30.2264C12.0987,30.1694 12.2194,30.0952 12.3643,30.0134C12.7467,29.7973 13.2154,29.5729 13.7153,29.3747C14.9543,28.8833 16.188,28.6262 17.2086,28.6829C19.5919,28.8153 21,30.6957 21,36.5L21,46L27,46L27,36.5C27,27.7695 23.4435,23.02 17.5414,22.6921C13.977,22.4941 9.4799,24.2774 7.8787,25.8787L12.1213,30.1213C12.0428,30.1998 12.0143,30.225 12.0098,30.2293L12.0146,30.2264Z, M15.6962,34.7942l-2.8125,-4.8714l-3.375,-5.8457l-2.8125,-4.8714l-5.8923,13.7942z"
+      android:fillColor="@color/directionBackground"/>
+
 </vector>

@@ -41,7 +41,7 @@
     </data>
 
     <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
-        android:layout_width="0dp"
+        android:layout_width="@dimen/signpostViewWidth"
         android:layout_height="wrap_content"
         android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
         app:distance="@{signpostViewModel.distance}"

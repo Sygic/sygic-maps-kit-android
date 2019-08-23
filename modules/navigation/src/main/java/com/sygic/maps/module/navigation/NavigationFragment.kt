@@ -42,6 +42,7 @@ import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
+import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
@@ -157,7 +158,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
             navigationFragmentViewModel = fragmentViewModel
             lifecycleOwner = this@NavigationFragment
 
-            signpostViewViewStub.setOnInflateListener { _, view ->
+            signpostView.setOnInflateListener { _, view ->
                 DataBindingUtil.bind<ViewDataBinding>(view)?.let {
                     it.setVariable(
                         BR.signpostViewModel, when (view) {
@@ -166,6 +167,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                             else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
                         }
                     )
+                    it.lifecycleOwner = this@NavigationFragment
+                }
+            }
+
+            lanesView.setOnInflateListener {_, view ->
+                DataBindingUtil.bind<ViewDataBinding>(view)?.let {
+                    it.setVariable(BR.lanesViewModel, viewModelOf(LanesViewModel::class.java))
                     it.lifecycleOwner = this@NavigationFragment
                 }
             }

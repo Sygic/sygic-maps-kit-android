@@ -1,18 +1,14 @@
 <!--
   ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
-  ~
   ~ This project is licensed under the MIT License.
-  ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
   ~ in the Software without restriction, including without limitation the rights
   ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
   ~ copies of the Software, and to permit persons to whom the Software is
   ~ furnished to do so, subject to the following conditions:
-  ~
   ~ The above copyright notice and this permission notice shall be included in all
   ~ copies or substantial portions of the Software.
-  ~
   ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
   ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,15 +19,13 @@
   -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/directionSize"
-    android:height="@dimen/directionSize"
-    android:viewportWidth="48.0"
-    android:viewportHeight="48.0">
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
 
-    <path
-        android:fillColor="?attr/navigationTextColorTertiary"
-        android:pathData="M14 0L14 40 0 40 10 0 14 0ZM42 0L38.4375 16.25 34.1875 12 32.125 14.125c-0.833338
-            0.833338 -1.531247 1.739578 -2.09375 2.71875 -0.562503 0.979172 -0.989582 2.010411 -1.28125 3.09375
-            -0.541669 1.875009 -0.645835 3.833323 -0.3125 5.875L32 40 18 40 18 0l4 0 3.25 13.125c0.708337
-            -1.125006 1.583328 -2.208328 2.625 -3.25L30 7.8125 25.75 3.5625 42 0Z" />
+  <path
+      android:pathData="M21,4h6v42h-6z"
+      android:fillColor="@color/directionBackground"/>
+
 </vector>
