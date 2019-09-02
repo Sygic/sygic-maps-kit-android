@@ -212,7 +212,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
             this.actionMenuItemClickListenerObservable.observe(
                 this@NavigationFragment,
                 Observer<ActionMenuItemClickListener> { setActionMenuItemClickListener(it) })
-            this.rightInfobarButtonActionObservable.observe(
+            this.activityFinishObservable.observe(
                 this@NavigationFragment,
                 Observer<Any> { finish() })
         }
