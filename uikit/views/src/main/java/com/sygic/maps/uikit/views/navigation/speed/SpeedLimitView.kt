@@ -34,8 +34,8 @@ import com.sygic.maps.uikit.views.databinding.LayoutSpeedLimitInternalBinding
 import com.sygic.maps.uikit.views.navigation.speed.limit.SpeedLimitType
 
 /**
- * A [SpeedLimitView] view is designed to be used as an visual presentation component for the speed limit value. It
- * contains two predefined speed limit styles [SpeedLimitType.EU] and [SpeedLimitType.US]'.
+ * A [SpeedLimitView] is designed to be used as an visual presentation component for the speed limit value. It
+ * contains two predefined speed limit styles [SpeedLimitType.EU] and [SpeedLimitType.US].
  *
  * The [SpeedLimitView] design can be only little bit changed with the custom _speedLimitViewStyle_ or the
  * _navigationTextColorPrimary_ attribute.
