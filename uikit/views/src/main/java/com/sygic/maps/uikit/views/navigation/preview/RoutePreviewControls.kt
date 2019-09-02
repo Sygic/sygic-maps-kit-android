@@ -37,11 +37,15 @@ import com.sygic.maps.uikit.views.databinding.LayoutRoutePreviewControlsInternal
 import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 
 /**
- * A [RoutePreviewControls] can be used to control the route preview process. The [View] has three predefined control
- * buttons of which one (play/pause) is multi-state. Speed and stop button have common [View.OnClickListener] callback.
+ * A [RoutePreviewControls] can be used to control the route preview process. The [View] has three
+ * predefined control buttons of which one (play/pause) is multi-state. Play/pause, speed and also
+ * stop button have common [View.OnClickListener] callback.
  *
  * Play/pause button state can be controlled with the [setPlayPauseButtonState] method and observed with the
  * [OnPlayPauseStateChangedListener].
+ *
+ * Default margin, elevation, background and tint color (_navigationTextColorPrimary_ attribute) can
+ * be changed with the custom _routePreviewControlsStyle_.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class RoutePreviewControls @JvmOverloads constructor(

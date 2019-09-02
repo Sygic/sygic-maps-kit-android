@@ -110,11 +110,11 @@ class NavigationFragmentViewModel internal constructor(
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
-    val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
+    val rightInfobarButtonActionObservable: LiveData<Any> = SingleLiveEvent()
 
     private val navigationDefaultInfobarClickListener = object : NavigationDefaultInfobarClickListener() {
         override fun onLeftButtonClick() {} /*TODO: MS-6224*/
-        override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
+        override fun onRightButtonClick() = rightInfobarButtonActionObservable.asSingleEvent().call()
     }
 
     private val navigationUnlockedInfobarClickListener = object : NavigationUnlockedInfobarClickListener() {
@@ -123,7 +123,7 @@ class NavigationFragmentViewModel internal constructor(
             cameraModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
         }
 
-        override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
+        override fun onRightButtonClick() = rightInfobarButtonActionObservable.asSingleEvent().call()
     }
 
     private var onInfobarButtonsClickListener: OnInfobarButtonsClickListener? = null

@@ -198,7 +198,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
-            this.activityFinishObservable.observe(
+            this.rightInfobarButtonActionObservable.observe(
                 this@NavigationFragment,
                 Observer<Any> { finish() })
         }
