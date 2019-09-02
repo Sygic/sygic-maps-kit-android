@@ -108,11 +108,11 @@ class NavigationFragmentViewModel internal constructor(
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
-    val rightInfobarButtonActionObservable: LiveData<Any> = SingleLiveEvent()
+    val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
     private val navigationDefaultInfobarClickListener = object : NavigationDefaultInfobarClickListener() {
         override fun onLeftButtonClick() { /*todo: MS-6218*/  }
-        override fun onRightButtonClick() = rightInfobarButtonActionObservable.asSingleEvent().call()
+        override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 
     private var onInfobarButtonsClickListener: OnInfobarButtonsClickListener? = null
