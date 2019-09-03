@@ -27,10 +27,12 @@ package com.sygic.maps.module.common.di;
 import android.app.Application;
 
 import com.sygic.maps.module.common.di.module.AppModule;
+import com.sygic.maps.module.common.di.module.DateTimeManagerModule;
 import com.sygic.maps.module.common.di.module.LocationModule;
 import com.sygic.maps.module.common.di.module.NavigationManagerModule;
 import com.sygic.maps.module.common.di.module.PermissionsModule;
 import com.sygic.maps.module.common.di.module.PoiDataManagerModule;
+import com.sygic.maps.module.common.di.module.PositionManagerModule;
 import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerModule;
 import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
 import com.sygic.maps.module.common.di.module.SearchModule;
@@ -52,26 +54,26 @@ import dagger.Component;
 @Component(
         modules = {
                 AppModule.class,
-                PoiDataManagerModule.class,
-                SdkInitializationManagerModule.class,
-                PermissionsModule.class,
+                DateTimeManagerModule.class,
                 LocationModule.class,
-                SearchModule.class,
                 NavigationManagerModule.class,
+                PermissionsModule.class,
+                PoiDataManagerModule.class,
                 PositionManagerModule.class,
                 RouteDemonstrationManagerModule.class,
-                DateTimeManagerModule.class
+                SearchModule.class,
+                SdkInitializationManagerModule.class
         }
 )
 public interface ApplicationModulesComponent {
-    PoiDataManager getPoiDataManager();
-    SdkInitializationManager getSdkInitializationManager();
-    PermissionsManager getPermissionsManager();
-    LocationManager getLocationManager();
-    SearchManager getSearchManager();
     Application getApplication();
+    DateTimeManager getDateTimeManager();
+    LocationManager getLocationManager();
     NavigationManager getNavigationManager();
+    PermissionsManager getPermissionsManager();
+    PoiDataManager getPoiDataManager();
     PositionManager getPositionManager();
     RouteDemonstrationManager getRouteDemonstrationManager();
-    DateTimeManager getDateTimeManager();
+    SearchManager getSearchManager();
+    SdkInitializationManager getSdkInitializationManager();
 }
