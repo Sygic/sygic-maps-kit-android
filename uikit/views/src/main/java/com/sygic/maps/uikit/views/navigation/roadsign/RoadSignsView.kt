@@ -31,8 +31,9 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.getColor
+import com.sygic.maps.uikit.views.common.extensions.getDrawable
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 
 /**
@@ -62,7 +63,7 @@ open class RoadSignsView @JvmOverloads constructor(
         orientation = HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         showDividers = SHOW_DIVIDER_MIDDLE
-        dividerDrawable = ContextCompat.getDrawable(context, R.drawable.shape_empty_roadsigns_divider)
+        dividerDrawable = getDrawable(R.drawable.shape_empty_roadsigns_divider)
 
         textSize = resources.getDimension(R.dimen.roadSignTextSize)
         textPadding = resources.getDimensionPixelOffset(R.dimen.roadSignTextPadding)
@@ -80,7 +81,7 @@ open class RoadSignsView @JvmOverloads constructor(
         gravity = Gravity.CENTER
         setBackgroundResource(data.background)
         setPadding(textPadding, textPadding, textPadding, textPadding)
-        setTextColor(ContextCompat.getColor(context, data.textColor))
+        setTextColor(getColor(data.textColor))
         setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         setTypeface(typeface, Typeface.BOLD)
     }

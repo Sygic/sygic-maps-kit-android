@@ -29,8 +29,8 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.getColor
 import kotlin.math.min
 
 private const val angleShift = 90f
@@ -78,7 +78,7 @@ class SpeedProgressView @JvmOverloads constructor(
         }
 
     @ColorInt
-    var segmentBackgroundColor = ContextCompat.getColor(context, R.color.speedProgressBackgroundColor)
+    var segmentBackgroundColor = getColor(R.color.speedProgressBackgroundColor)
         set(value) {
             field = value
             backgroundPaint.color = value

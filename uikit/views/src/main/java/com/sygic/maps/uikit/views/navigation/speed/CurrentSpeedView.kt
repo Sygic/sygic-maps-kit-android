@@ -32,8 +32,8 @@ import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.getColor
 import com.sygic.maps.uikit.views.common.extensions.getColorFromAttr
 import com.sygic.maps.uikit.views.databinding.LayoutCurrentSpeedInternalBinding
 
@@ -63,9 +63,9 @@ open class CurrentSpeedView @JvmOverloads constructor(
     private var layoutMarginEnd: Int = 0
 
     @ColorInt
-    private val whiteColor = ContextCompat.getColor(context, R.color.white)
+    private val whiteColor = getColor(R.color.white)
     @ColorInt
-    private val redColor = ContextCompat.getColor(context, R.color.brick_red)
+    private val redColor = getColor(R.color.brick_red)
 
     init {
         isClickable = true
