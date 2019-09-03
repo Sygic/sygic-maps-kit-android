@@ -35,13 +35,13 @@ object FragmentsComponentDelegate {
         val fragmentManager = fragment.requireFragmentManager()
 
         val retainInstance =
-            fragmentManager.findFragmentByTag(COMPONENT_FRAGMENT_TAG) ?: ComponentHolderFragment(
+            fragmentManager.findFragmentByTag(COMPONENT_FRAGMENT_TAG + fragment.id) ?: ComponentHolderFragment(
                 DaggerFragmentModulesComponent
                     .builder()
                     .applicationModulesComponent(delegate.getComponent(fragment))
                     .build()
             ).also {
-                fragmentManager.beginTransaction().add(it, COMPONENT_FRAGMENT_TAG).commit()
+                fragmentManager.beginTransaction().add(it, COMPONENT_FRAGMENT_TAG + fragment.id).commit()
             }
 
         return (retainInstance as ComponentHolderFragment).component

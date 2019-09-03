@@ -34,11 +34,6 @@ import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.*
-import com.sygic.maps.module.navigation.KEY_PREVIEW_CONTROLS_ENABLED
-import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
-import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
-import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
-import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
 import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
@@ -47,6 +42,8 @@ import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.addMapRoute
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapRoutes
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
