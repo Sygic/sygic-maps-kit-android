@@ -43,6 +43,10 @@ private const val POOL_SIZE = 10
 /**
  * [SimpleLanesView] displays actual lanes on the road in front of the vehicle as arrows
  * and highlights those which follows the direction of the current route.
+ *
+ * The size, background drawable or color can be changed by standard android
+ * attributes like _background_ and so on. Color of the lanes can be changed
+ * by modifying _navigationTextColorTertiary_ color attribute in theme.
  */
 class SimpleLanesView @JvmOverloads constructor(
     context: Context,
@@ -55,7 +59,7 @@ class SimpleLanesView @JvmOverloads constructor(
      * Provides lane data for the [SimpleLanesView] to show. Single [item][SimpleLanesData]
      * in the array represents single line.
      */
-    var lanes: Array<SimpleLanesData> = emptyArray()
+    var lanesData: Array<SimpleLanesData> = emptyArray()
         set(value) {
             field = value
             setLanesInternal(value)
@@ -69,15 +73,16 @@ class SimpleLanesView @JvmOverloads constructor(
 
     @ColorInt
     private val highlightedColor = context.getColorFromAttr(R.attr.navigationTextColorTertiary)
-    private val laneViewSize = resources.dpToPixels(24f).toInt()
+    private val laneViewSize = resources.getDimensionPixelSize(R.dimen.simpleLaneSize)
 
     private val viewPool: Pools.SimplePool<ImageView> = Pools.SimplePool(POOL_SIZE)
 
     init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER_HORIZONTAL
-        val padding = resources.dpToPixels(8f).toInt()
-        setPadding(padding, padding, padding, padding)
+        resources.dpToPixels(8f).toInt().let {
+            setPadding(it, it, it, it)
+        }
 
         attrs?.let { attributeSet ->
             @Suppress("Recycle")
