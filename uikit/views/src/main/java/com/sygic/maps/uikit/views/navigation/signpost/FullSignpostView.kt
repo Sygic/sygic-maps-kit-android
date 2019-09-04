@@ -33,6 +33,7 @@ import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.databinding.LayoutFullSignpostViewInternalBinding
+import com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
 import com.sygic.maps.uikit.views.navigation.lanes.data.SimpleLanesData
 import com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
@@ -50,6 +51,9 @@ open class FullSignpostView @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicSignpostViewStyle
 ) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) {
 
+    /**
+     * Toggles embedded [SimpleLanesView] _on_ or _off_
+     */
     var lanesViewEnabled: Boolean = true
         set(value) {
             field = value
@@ -196,6 +200,11 @@ open class FullSignpostView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Sets the data about actual lanes situation on the road
+     *
+     * @param lanesData [Array] od [SimpleLanesData] items representing lanes on the road
+     */
     fun setLanesData(lanesData: Array<SimpleLanesData>) {
         if (!lanesViewEnabled || lanesData.isEmpty()) {
             binding.signpostSecondaryDirectionContainer.displayedChild = 0
