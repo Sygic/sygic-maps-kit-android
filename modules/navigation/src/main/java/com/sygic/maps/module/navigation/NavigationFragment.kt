@@ -202,13 +202,21 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
 
             signpostView.setOnInflateListener { _, view ->
                 DataBindingUtil.bind<ViewDataBinding>(view)?.let {
-                    it.setVariable(
-                        BR.signpostViewModel, when (view) {
-                            is FullSignpostView -> viewModelOf(FullSignpostViewModel::class.java)
-                            is SimplifiedSignpostView -> viewModelOf(SimplifiedSignpostViewModel::class.java)
-                            else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
+                    when (view) {
+                        is FullSignpostView -> {
+                            it.setVariable(
+                                BR.signpostViewModel, viewModelOf(FullSignpostViewModel::class.java)
+                            )
+                            it.setVariable(
+                                BR.lanesViewModel, viewModelOf(LanesViewModel::class.java)
+                            )
                         }
-                    )
+                        is SimplifiedSignpostView -> it.setVariable(
+                            BR.signpostViewModel, viewModelOf(SimplifiedSignpostViewModel::class.java)
+                        )
+                        else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
+                    }
+
                     it.lifecycleOwner = this@NavigationFragment
                 }
             }

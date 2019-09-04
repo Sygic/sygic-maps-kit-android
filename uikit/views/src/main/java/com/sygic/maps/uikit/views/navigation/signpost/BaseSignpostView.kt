@@ -59,7 +59,7 @@ abstract class BaseSignpostView(
             ).also {
                 setBackgroundResource(it.getResourceId(R.styleable.SignpostView_android_background,0))
 
-                layoutMargin = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_margin, 0)
+                layoutMargin = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_margin, -1)
                 layoutMarginTop = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginTop, 0)
                 layoutMarginBottom = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginBottom, 0)
                 layoutMarginStart = it.getDimensionPixelSize(R.styleable.SignpostView_android_layout_marginStart, 0)
@@ -74,7 +74,7 @@ abstract class BaseSignpostView(
         super.onAttachedToWindow()
 
         with((layoutParams as MarginLayoutParams)) {
-            if (layoutMargin != 0) {
+            if (layoutMargin >= 0) {
                 setMargins(layoutMargin, layoutMargin, layoutMargin, layoutMargin)
             } else {
                 setMargins(layoutMarginStart, layoutMarginTop, layoutMarginEnd, layoutMarginBottom)

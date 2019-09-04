@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:inflatedId="@id/lanesView"
             android:layout="@layout/layout_lanes_view_stub"
-            android:visibility="@{safeUnbox(navigationFragmentViewModel.lanesViewEnabled) ? View.VISIBLE : View.GONE}"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.lanesViewEnabled) &amp;&amp; (!navigationFragmentViewModel.lanesViewEmbedded) ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/signpostView"
             app:layout_constraintStart_toStartOf="@id/signpostView"
             app:layout_constraintTop_toBottomOf="@id/signpostView"

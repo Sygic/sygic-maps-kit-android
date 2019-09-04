@@ -39,7 +39,7 @@
         android:layout_width="@dimen/lanesViewWidth"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:lanesData="@{lanesViewModel.lanes}"
+        app:lanesData="@{lanesViewModel.lanesData}"
         android:visibility="@{safeUnbox(navigationFragmentViewModel.lanesViewEnabled) &amp;&amp; safeUnbox(lanesViewModel.enabled) ? View.VISIBLE : View.GONE}"/>
 
 </layout>

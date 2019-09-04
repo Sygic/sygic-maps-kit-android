@@ -105,13 +105,16 @@ class NavigationFragmentViewModel internal constructor(
             regionalManager.distanceUnit.value = value
         }
 
+    private val signpostType: SignpostType
+
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
             previewControlsEnabled.value = getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
             lanesViewEnabled.value = getBoolean(KEY_LANES_VIEW_ENABLED, LANES_VIEW_ENABLED_DEFAULT_VALUE)
-            signpostLayout = when (getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE) {
+            signpostType = getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE
+            signpostLayout = when (signpostType) {
                 SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
                 SignpostType.SIMPLIFIED -> R.layout.layout_signpost_simplified_view_stub
             }
@@ -122,6 +125,8 @@ class NavigationFragmentViewModel internal constructor(
         routeInfo.observeForever(::setRouteInfo)
         previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
     }
+
+    fun isLanesViewEmbedded() = signpostType == SignpostType.FULL
 
     override fun onStart(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = !previewMode.value!!

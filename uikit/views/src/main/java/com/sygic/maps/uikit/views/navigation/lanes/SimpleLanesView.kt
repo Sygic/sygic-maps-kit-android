@@ -93,7 +93,7 @@ open class SimpleLanesView @JvmOverloads constructor(
                 defStyleRes
             ).also {
                 layoutMargin =
-                    it.getDimensionPixelSize(R.styleable.SimpleLanesView_android_layout_margin, 0)
+                    it.getDimensionPixelSize(R.styleable.SimpleLanesView_android_layout_margin, -1)
                 layoutMarginTop = it.getDimensionPixelSize(
                     R.styleable.SimpleLanesView_android_layout_marginTop,
                     0
@@ -118,7 +118,7 @@ open class SimpleLanesView @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         with((layoutParams as MarginLayoutParams)) {
-            if (layoutMargin != 0) {
+            if (layoutMargin >= 0) {
                 setMargins(layoutMargin, layoutMargin, layoutMargin, layoutMargin)
             } else {
                 setMargins(layoutMarginStart, layoutMarginTop, layoutMarginEnd, layoutMarginBottom)
@@ -127,10 +127,7 @@ open class SimpleLanesView @JvmOverloads constructor(
     }
 
     private fun setLanesInternal(lanes: Array<SimpleLanesData>) {
-        val lanesCount = lanes.run {
-            reverse()
-            size
-        }
+        val lanesCount = lanes.size
 
         if (lanesCount < childCount) {
             for (i in childCount - 1 downTo lanesCount) {
@@ -143,7 +140,7 @@ open class SimpleLanesView @JvmOverloads constructor(
             }
         }
 
-        lanes.forEachIndexed { i, lane ->
+        lanes.reversedArray().forEachIndexed { i, lane ->
             val drawables = lane.directions.map {
                 ContextCompat.getDrawable(context, it)
             }.toTypedArray()

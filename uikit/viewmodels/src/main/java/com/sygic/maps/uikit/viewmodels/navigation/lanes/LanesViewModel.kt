@@ -37,7 +37,7 @@ class LanesViewModel internal constructor(
 ) : ViewModel(), NavigationManager.OnLanesListener {
 
     val enabled: LiveData<Boolean> = MutableLiveData(false)
-    val lanes: LiveData<Array<SimpleLanesData>> = MutableLiveData(emptyArray())
+    val lanesData: LiveData<Array<SimpleLanesData>> = MutableLiveData(emptyArray())
 
     init {
         navigationManager.addOnLanesListener(this)
@@ -57,7 +57,7 @@ class LanesViewModel internal constructor(
                 )
             }?.toTypedArray() ?: emptyArray()
 
-            lanes.asMutable().value = lanesArray
+            lanesData.asMutable().value = lanesArray
             enabled.asMutable().value = lanesArray.isNotEmpty()
         }
     }

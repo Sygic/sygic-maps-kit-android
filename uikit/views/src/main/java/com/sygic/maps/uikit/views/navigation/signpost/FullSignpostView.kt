@@ -33,6 +33,7 @@ import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.databinding.LayoutFullSignpostViewInternalBinding
+import com.sygic.maps.uikit.views.navigation.lanes.data.SimpleLanesData
 import com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 
@@ -48,6 +49,14 @@ open class FullSignpostView @JvmOverloads constructor(
     defStyleAttr: Int = R.attr.signpostViewStyle,
     defStyleRes: Int = R.style.SygicSignpostViewStyle
 ) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) {
+
+    var lanesViewEnabled: Boolean = true
+        set(value) {
+            field = value
+            if (!value) {
+                binding.signpostSecondaryDirectionContainer.displayedChild = 0
+            }
+        }
 
     private val binding = LayoutFullSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -184,6 +193,15 @@ open class FullSignpostView @JvmOverloads constructor(
                 visibility = GONE
                 setImageDrawable(null)
             }
+        }
+    }
+
+    fun setLanesData(lanesData: Array<SimpleLanesData>) {
+        if (!lanesViewEnabled || lanesData.isEmpty()) {
+            binding.signpostSecondaryDirectionContainer.displayedChild = 0
+        } else {
+            binding.signpostLanesView.lanesData = lanesData
+            binding.signpostSecondaryDirectionContainer.displayedChild = 1
         }
     }
 }
