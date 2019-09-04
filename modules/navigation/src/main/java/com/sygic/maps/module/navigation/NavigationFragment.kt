@@ -131,11 +131,11 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         }
 
     /**
-     * A *[lanesViewEnabled]* modifies the [SimpleLanesView] visibility..
+     * A *[lanesViewEnabled]* modifies the [SimpleLanesView] visibility.
      *
-     * @param [Boolean] true to enable the LanesView, false otherwise.
+     * @param [Boolean] true to enable the [SimpleLanesView], false otherwise.
      *
-     * @return whether the LanesView is on or off.
+     * @return whether the [SimpleLanesView] is on or off.
      */
     var lanesViewEnabled: Boolean
     get() = if (::fragmentViewModel.isInitialized) {

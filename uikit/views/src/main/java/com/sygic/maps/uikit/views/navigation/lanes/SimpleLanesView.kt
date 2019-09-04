@@ -48,7 +48,7 @@ private const val POOL_SIZE = 10
  * attributes like _background_ and so on. Color of the lanes can be changed
  * by modifying _navigationTextColorTertiary_ color attribute in theme.
  */
-class SimpleLanesView @JvmOverloads constructor(
+open class SimpleLanesView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.lanesViewStyle,
