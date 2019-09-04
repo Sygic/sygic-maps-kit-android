@@ -126,7 +126,7 @@ class NavigationFragmentViewModel internal constructor(
         previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
     }
 
-    fun isLanesViewEmbedded() = signpostType == SignpostType.FULL
+    fun isLanesViewEmbedded() = signpostEnabled.value!! && signpostType == SignpostType.FULL
 
     override fun onStart(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = !previewMode.value!!

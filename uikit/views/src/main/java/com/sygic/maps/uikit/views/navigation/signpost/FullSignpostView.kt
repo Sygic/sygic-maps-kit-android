@@ -38,6 +38,9 @@ import com.sygic.maps.uikit.views.navigation.lanes.data.SimpleLanesData
 import com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 
+private const val SECONDARY_CONTENT_DIRECTION = 0
+private const val SECONDARY_CONTENT_LANES = 1
+
 /**
  * A [FullSignpostView] can be used as an visual presentation component for the navigation Signpost or Direction. It contains
  * __distanceTextView__, __primaryDirectionImageView__, __instructionTextView__ , [RoadSignsView], __pictogramImageView__,
@@ -58,7 +61,7 @@ open class FullSignpostView @JvmOverloads constructor(
         set(value) {
             field = value
             if (!value) {
-                binding.signpostSecondaryDirectionContainer.displayedChild = 0
+                binding.signpostSecondaryDirectionContainer.displayedChild = SECONDARY_CONTENT_DIRECTION
             }
         }
 
@@ -207,10 +210,10 @@ open class FullSignpostView @JvmOverloads constructor(
      */
     fun setLanesData(lanesData: Array<SimpleLanesData>) {
         if (!lanesViewEnabled || lanesData.isEmpty()) {
-            binding.signpostSecondaryDirectionContainer.displayedChild = 0
+            binding.signpostSecondaryDirectionContainer.displayedChild = SECONDARY_CONTENT_DIRECTION
         } else {
             binding.signpostLanesView.lanesData = lanesData
-            binding.signpostSecondaryDirectionContainer.displayedChild = 1
+            binding.signpostSecondaryDirectionContainer.displayedChild = SECONDARY_CONTENT_LANES
         }
     }
 }
