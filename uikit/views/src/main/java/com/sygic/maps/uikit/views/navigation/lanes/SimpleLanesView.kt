@@ -44,7 +44,7 @@ private const val POOL_SIZE = 10
  * [SimpleLanesView] displays actual lanes on the road in front of the vehicle as arrows
  * and highlights those which follows the direction of the current route.
  */
-class SimpleLanesView @JvmOverloads constructor(
+open class SimpleLanesView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.lanesViewStyle,
