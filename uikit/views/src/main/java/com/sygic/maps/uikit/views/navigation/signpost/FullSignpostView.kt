@@ -206,7 +206,7 @@ open class FullSignpostView @JvmOverloads constructor(
     /**
      * Sets the data about actual lanes situation on the road
      *
-     * @param lanesData [Array] od [SimpleLanesData] items representing lanes on the road
+     * @param lanesData [Array] of [SimpleLanesData] items representing lanes on the road
      */
     fun setLanesData(lanesData: Array<SimpleLanesData>) {
         if (!lanesViewEnabled || lanesData.isEmpty()) {
