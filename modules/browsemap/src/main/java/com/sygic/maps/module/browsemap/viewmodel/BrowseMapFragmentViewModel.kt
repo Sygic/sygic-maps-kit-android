@@ -45,7 +45,9 @@ import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
@@ -110,11 +112,12 @@ class BrowseMapFragmentViewModel internal constructor(
 
     val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
         override fun onDismiss() {
-            mapDataModel.removeOnClickMapMarker()
+            mapDataModel.removeMapMarker(selectedMarker)
         }
     }
 
     private var poiDetailsView: UiObject? = null
+    private var selectedMarker: MapMarker? = null
 
     init {
         with(arguments) {
@@ -155,7 +158,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onMapObjectsRequestStarted() {
-        mapDataModel.removeOnClickMapMarker()
+        mapDataModel.removeMapMarker(selectedMarker)
     }
 
     override fun onMapObjectsReceived(viewObjects: List<ViewObject<*>>) {
@@ -212,13 +215,16 @@ class BrowseMapFragmentViewModel internal constructor(
                 // Add the OnClickMapMarker only if the click is not at MapMarker
                 if (firstViewObject !is MapMarker) {
                     getOnClickMapMarker(firstViewObject)?.let { clickMapMarker ->
-                        mapDataModel.addOnClickMapMarker(
+                        mapDataModel.addMapMarker(
                             when (firstViewObject) {
                                 // To persist ProxyPoi data payload we need to create a copy of the provided MapMarker
                                 // and give it the same payload
                                 is ProxyPoi -> clickMapMarker.getCopyWithPayload(firstViewObject)
                                 else -> clickMapMarker
-                            }.also { firstViewObject = it })
+                            }.also {
+                                firstViewObject = it
+                                selectedMarker = it
+                            })
                     }
                 }
 

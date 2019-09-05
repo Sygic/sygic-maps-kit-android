@@ -38,6 +38,8 @@ import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.addMapRoute
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapRoutes
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager

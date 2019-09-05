@@ -72,6 +72,8 @@
     <string name="full">Full</string>
     <string name="browse_map_themes">Browse Map - Themes</string>
     <string name="browse_map_themes_summary">Browse Map module with custom theme</string>
+    <string name="browse_map_split">Browse Map - Split</string>
+    <string name="browse_map_split_summary">Browse Map module with map split</string>
     <string name="search_default">Search - Default</string>
     <string name="search_default_summary">Search module with no configuration</string>
     <string name="search_from_browse_map">Search - From Browse Map</string>
