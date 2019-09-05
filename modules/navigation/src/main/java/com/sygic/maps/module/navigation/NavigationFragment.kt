@@ -250,7 +250,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                     )
                 )
             }
-            if(hasValue(R.styleable.NavigationFragment_sygic_lanes_view_enabled)) {
+            if (hasValue(R.styleable.NavigationFragment_sygic_lanes_view_enabled)) {
                 lanesViewEnabled =
                     getBoolean(
                         R.styleable.NavigationFragment_sygic_lanes_view_enabled,
