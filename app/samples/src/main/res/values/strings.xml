@@ -65,6 +65,8 @@
     <string name="browse_map_markers_summary">Browse Map module with own custom map markers</string>
     <string name="browse_map_modes">Browse Map - Modes</string>
     <string name="browse_map_modes_summary">Browse Map module with all available modes</string>
+    <string name="browse_map_vehicle_map_skin">Browse Map - Vehicle and Map skin</string>
+    <string name="browse_map_vehicle_map_skin_summary">Custom vehicle and map skin fragment attribute</string>
     <string name="selection_mode">Selection mode</string>
     <string name="selection_mode_is">Selection mode is</string>
     <string name="none">None</string>

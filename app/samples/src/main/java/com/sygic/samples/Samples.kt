@@ -66,6 +66,10 @@ object Samples {
             R.string.browse_map_split, R.string.browse_map_split_summary
         ),
         Sample(
+            BrowseMapVehicleMapSkinActivity::class.java, R.drawable.preview_browsemap_vehicle_map_skin,
+            R.string.browse_map_vehicle_map_skin, R.string.browse_map_vehicle_map_skin_summary
+        ),
+        Sample(
             BrowseMapThemesActivity::class.java, R.drawable.preview_browsemap_themes,
             R.string.browse_map_themes, R.string.browse_map_themes_summary
         )

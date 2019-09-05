@@ -22,18 +22,10 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.skin
+package com.sygic.maps.uikit.views.common.extensions
 
-fun isMapSkinValid(it: String): Boolean {
-    if (it.isEmpty()) return false
-    if (it == MapSkin.DEFAULT || it == MapSkin.DAY || it == MapSkin.NIGHT) return true
+import android.content.res.TypedArray
+import androidx.annotation.StyleableRes
 
-    return false
-}
-
-fun isVehicleSkinValid(it: String): Boolean {
-    if (it.isEmpty()) return false
-    if (it == VehicleSkin.CAR || it == VehicleSkin.CAR_NO_SIGNAL || it == VehicleSkin.PEDESTRIAN || it == VehicleSkin.PEDESTRIAN_NO_SIGNAL) return true
-
-    return false
-}
+fun TypedArray.getString(@StyleableRes index: Int, defaultValue: String): String =
+    this.getString(index) ?: defaultValue
