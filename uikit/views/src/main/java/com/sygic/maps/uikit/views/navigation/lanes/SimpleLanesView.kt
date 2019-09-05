@@ -80,9 +80,7 @@ open class SimpleLanesView @JvmOverloads constructor(
     init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER_HORIZONTAL
-        resources.dpToPixels(8f).toInt().let {
-            setPadding(it, it, it, it)
-        }
+        resources.dpToPixels(8f).toInt().let { setPadding(it, it, it, it) }
 
         attrs?.let { attributeSet ->
             @Suppress("Recycle")
@@ -92,8 +90,10 @@ open class SimpleLanesView @JvmOverloads constructor(
                 defStyleAttr,
                 defStyleRes
             ).also {
-                layoutMargin =
-                    it.getDimensionPixelSize(R.styleable.SimpleLanesView_android_layout_margin, -1)
+                layoutMargin = it.getDimensionPixelSize(
+                    R.styleable.SimpleLanesView_android_layout_margin,
+                    -1
+                )
                 layoutMarginTop = it.getDimensionPixelSize(
                     R.styleable.SimpleLanesView_android_layout_marginTop,
                     0
@@ -161,9 +161,7 @@ open class SimpleLanesView @JvmOverloads constructor(
         scaleType = ImageView.ScaleType.FIT_CENTER
     }
 
-    override fun getChildAt(index: Int): ImageView {
-        return super.getChildAt(index) as ImageView
-    }
+    override fun getChildAt(index: Int) = super.getChildAt(index) as ImageView
 
     /**
      * Adds child view to the [SimpleLanesView]. **Only [ImageView]s are supported.**
