@@ -26,7 +26,7 @@ package com.sygic.maps.module.navigation.infobar
 
 import androidx.lifecycle.MutableLiveData
 
-internal class InfobarButtonWrapper(
+class InfobarButtonWrapper(
     val imageResource: MutableLiveData<Int> = MutableLiveData(0),
     val backgroundResource: MutableLiveData<Int> = MutableLiveData(0),
     val imageTintColor: MutableLiveData<Int> = MutableLiveData(0),
