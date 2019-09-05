@@ -39,7 +39,6 @@ buildscript {
 
         moduleBrowsemapVersion = '1.1.4'
         moduleSearchVersion = '1.3.5'
-
         moduleNavigationVersion = '1.2.0'
         moduleCommonVersion = '1.3.3'
         uikitViewsVersion = '2.6.0'
