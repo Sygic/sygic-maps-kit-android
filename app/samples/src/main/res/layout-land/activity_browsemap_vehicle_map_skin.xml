@@ -29,14 +29,14 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:divider="@drawable/divider"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:showDividers="middle">
 
     <fragment
         android:id="@+id/browseMapFragment1"
         class="com.sygic.maps.module.browsemap.BrowseMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="0.5"
         app:sygic_map_skin="night"
         app:sygic_map_zoom="2"
@@ -46,11 +46,11 @@
     <fragment
         android:id="@+id/browseMapFragment2"
         class="com.sygic.maps.module.browsemap.BrowseMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="0.5"
         app:sygic_map_skin="day"
-        app:sygic_map_zoom="6"
+        app:sygic_map_zoom="2"
         app:sygic_positionOnMap_enabled="true"
         app:sygic_vehicle_skin="vehicle" />
 
