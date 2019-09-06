@@ -24,31 +24,31 @@
 
 package com.sygic.maps.module.common.di.module;
 
+import com.sygic.maps.module.common.di.scope.FragmentScope;
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager;
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManagerImpl;
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel;
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel;
+
 import dagger.Module;
 import dagger.Provides;
-
-import javax.inject.Singleton;
 
 @Module
 public class MapModule {
 
-    @Singleton
+    @FragmentScope
     @Provides
     ExtendedMapDataModel provideDataModel() {
-        return ExtendedMapDataModel.INSTANCE;
+        return new ExtendedMapDataModel();
     }
 
-    @Singleton
+    @FragmentScope
     @Provides
     ExtendedCameraModel provideCameraModel() {
-        return ExtendedCameraModel.INSTANCE;
+        return new ExtendedCameraModel();
     }
 
-    @Singleton
+    @FragmentScope
     @Provides
     MapInteractionManager provideMapInteractionManager() {
         return new MapInteractionManagerImpl();

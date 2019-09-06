@@ -63,6 +63,10 @@ object Samples {
             R.string.browse_map_click_listener, R.string.browse_map_click_listener_summary
         ),
         Sample(
+            BrowseMapSplitActivity::class.java, R.drawable.preview_browsemap_split,
+            R.string.browse_map_split, R.string.browse_map_split_summary
+        ),
+        Sample(
             BrowseMapThemesActivity::class.java, R.drawable.preview_browsemap_themes,
             R.string.browse_map_themes, R.string.browse_map_themes_summary
         )

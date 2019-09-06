@@ -33,9 +33,9 @@ import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
-import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
+import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
@@ -43,17 +43,16 @@ import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
-import com.sygic.sdk.places.LocationInfo
-import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.`object`.MapObject
-import com.sygic.sdk.map.`object`.ProxyObject
-import com.sygic.sdk.map.`object`.ViewObject
+import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.`object`.*
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
+import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.sdk.navigation.warnings.DirectionInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo.SignElement.SignElementType
+import com.sygic.sdk.places.LocationInfo
+import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.route.RouteInfo
@@ -125,6 +124,46 @@ fun MapMarker.getCopyWithPayload(payload: Parcelable): MapMarker {
         .setMaxZoomLevel(data.maxZoomLevel)
         .withPayload(payload)
         .build()
+}
+
+fun MapView.MapDataModel.addMapMarker(marker: MapMarker) {
+    addMapObject(marker)
+}
+
+fun MapView.MapDataModel.removeMapMarker(marker: MapMarker?) {
+    marker?.let { removeMapObject(it) }
+}
+
+fun MapView.MapDataModel.addMapRoute(mapRoute: MapRoute) {
+    addMapObject(mapRoute)
+}
+
+fun MapView.MapDataModel.setMapRoute(mapRoute: MapRoute) {
+    removeAllMapRoutes()
+    addMapRoute(mapRoute)
+}
+
+fun MapView.MapDataModel.removeMapRoute(mapRoute: MapRoute) {
+    removeMapObject(mapRoute)
+}
+
+fun MapView.MapDataModel.removeAllMapMarkers() = removeAllMapObjects<MapMarker>()
+
+fun MapView.MapDataModel.removeAllMapRoutes() = removeAllMapObjects<MapRoute>()
+
+private inline fun <reified T : MapObject<*>> MapView.MapDataModel.removeAllMapObjects() = with(getMapObjects(this)) {
+    forEach { mapObject ->
+        if (mapObject is T) {
+            removeMapObject(mapObject)
+        }
+    }
+}
+
+//todo: MS-6338 remove with next version (v16) of SDK
+private fun getMapObjects(model: MapView.MapDataModel): Set<MapObject<*>> {
+    val m = SimpleMapDataModel::class.java.getDeclaredMethod("getMapObjects")
+    m.isAccessible = true
+    return m.invoke(model) as Set<MapObject<*>>
 }
 
 fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
