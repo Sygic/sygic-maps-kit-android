@@ -32,23 +32,22 @@ import androidx.lifecycle.*
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.*
-import com.sygic.maps.module.navigation.KEY_PREVIEW_CONTROLS_ENABLED
-import com.sygic.maps.module.navigation.KEY_PREVIEW_MODE
-import com.sygic.maps.module.navigation.KEY_ROUTE_INFO
-import com.sygic.maps.module.navigation.KEY_SIGNPOST_ENABLED
-import com.sygic.maps.module.navigation.KEY_SIGNPOST_TYPE
 import com.sygic.maps.module.navigation.R
 import com.sygic.maps.module.navigation.actionmenu.SoundsOffActionMenuItem
 import com.sygic.maps.module.navigation.actionmenu.SoundsOnActionMenuItem
 import com.sygic.maps.module.navigation.component.*
-import com.sygic.maps.module.navigation.infobar.NavigationDefaultInfobarClickListener
+import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
+import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
 import com.sygic.maps.module.navigation.infobar.InfobarButtonWrapper
-import com.sygic.maps.module.navigation.infobar.NavigationUnlockedInfobarClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListenerWrapper
+import com.sygic.maps.module.navigation.infobar.NavigationDefaultUnlockedLeftInfobarButton
+import com.sygic.maps.module.navigation.listener.InfobarButtonType
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.addMapRoute
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapRoutes
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
@@ -154,31 +153,25 @@ class NavigationFragmentViewModel internal constructor(
         )
     )
 
-    private val navigationDefaultInfobarClickListener = object : NavigationDefaultInfobarClickListener() {
-        override fun onLeftButtonClick() { actionMenuShowObservable.asSingleEvent().value = actionMenuData }
-        override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
+    private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
+
+    private val navigationDefaultLeftInfobarClickListener = object : OnInfobarButtonClickListener {
+        override val button = NavigationDefaultLeftInfobarButton()
+        override fun onButtonClick() { actionMenuShowObservable.asSingleEvent().value = actionMenuData }
     }
 
-    private val navigationUnlockedInfobarClickListener = object : NavigationUnlockedInfobarClickListener() {
-        override fun onLeftButtonClick() {
+    private val navigationDefaultRightInfobarClickListener = object : OnInfobarButtonClickListener {
+        override val button = NavigationDefaultRightInfobarButton()
+        override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
+    }
+
+    private val navigationUnlockedLeftInfobarClickListener = object : OnInfobarButtonClickListener {
+        override val button = NavigationDefaultUnlockedLeftInfobarButton()
+        override fun onButtonClick() {
             cameraModel.rotationMode = Camera.RotationMode.Vehicle
             cameraModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
         }
-
-        override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
-
-    private var onInfobarButtonsClickListener: OnInfobarButtonsClickListener? = null
-        set(value) {
-            field = value
-            value?.let {
-                leftInfobarButtonWrapper.setFrom(it.getLeftButton())
-                rightInfobarButtonWrapper.setFrom(it.getRightButton())
-            } ?: run {
-                leftInfobarButtonWrapper.visible.value = false
-                rightInfobarButtonWrapper.visible.value = false
-            }
-        }
 
     var distanceUnit: DistanceUnit
         get() = regionalManager.distanceUnit.value!!
@@ -203,12 +196,16 @@ class NavigationFragmentViewModel internal constructor(
 
         routeInfo.observeForever(::setRouteInfo)
         previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
-        onInfobarButtonsClickListener = navigationDefaultInfobarClickListener
+
+        updateInfobarListenersMap(InfobarButtonType.LEFT, navigationDefaultLeftInfobarClickListener)
+        updateInfobarListenersMap(InfobarButtonType.RIGHT, navigationDefaultRightInfobarClickListener)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        if (owner is OnInfobarButtonsClickListenerWrapper) {
-            owner.infobarButtonsClickListenerProvider.observe(owner, Observer { onInfobarButtonsClickListener = it })
+        if (owner is OnInfobarButtonClickListenerWrapper) {
+            owner.infobarButtonClickListenerProvider.observe(owner, Observer {
+                updateInfobarListenersMap(it.infobarButtonType, it.onInfobarButtonClickListener)
+            })
         }
     }
 
@@ -232,12 +229,18 @@ class NavigationFragmentViewModel internal constructor(
     }
 
     override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
-        if (onInfobarButtonsClickListener is NavigationDefaultInfobarClickListener) {
+        if (infobarButtonListenersMap[InfobarButtonType.LEFT] == navigationDefaultLeftInfobarClickListener) {
             when (mode) {
                 Camera.MovementMode.Free ->
-                    onInfobarButtonsClickListener = navigationUnlockedInfobarClickListener
+                    updateInfobarListenersMap(
+                        InfobarButtonType.LEFT,
+                        navigationUnlockedLeftInfobarClickListener
+                    )
                 Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
-                    onInfobarButtonsClickListener = navigationDefaultInfobarClickListener
+                    updateInfobarListenersMap(
+                        InfobarButtonType.LEFT,
+                        navigationDefaultLeftInfobarClickListener
+                    )
             }
         }
     }
@@ -272,9 +275,32 @@ class NavigationFragmentViewModel internal constructor(
         }
     }
 
-    fun onLeftInfobarButtonClick() = onInfobarButtonsClickListener?.onLeftButtonClick()
+    private fun updateInfobarListenersMap(
+        buttonType: InfobarButtonType,
+        listener: OnInfobarButtonClickListener?
+    ) {
+        (infobarButtonListenersMap as MutableMap)[buttonType] = listener
+        when (buttonType) {
+            InfobarButtonType.LEFT -> {
+                listener?.let {
+                    leftInfobarButtonWrapper.setFrom(it.button)
+                } ?: run {
+                    leftInfobarButtonWrapper.visible.value = false
+                }
+            }
+            InfobarButtonType.RIGHT -> {
+                listener?.let {
+                    rightInfobarButtonWrapper.setFrom(it.button)
+                } ?: run {
+                    rightInfobarButtonWrapper.visible.value = false
+                }
+            }
+        }
+    }
 
-    fun onRightInfobarButtonClick() = onInfobarButtonsClickListener?.onRightButtonClick()
+    fun onLeftInfobarButtonClick() = infobarButtonListenersMap[InfobarButtonType.LEFT]?.onButtonClick()
+
+    fun onRightInfobarButtonClick() = infobarButtonListenersMap[InfobarButtonType.RIGHT]?.onButtonClick()
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false

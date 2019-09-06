@@ -28,8 +28,9 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.module.navigation.infobar.InfobarButton
-import com.sygic.maps.module.navigation.infobar.NavigationUnlockedInfobarClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
+import com.sygic.maps.module.navigation.infobar.NavigationDefaultUnlockedLeftInfobarButton
+import com.sygic.maps.module.navigation.listener.InfobarButtonType
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
 import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
@@ -38,50 +39,38 @@ import com.sygic.sdk.map.Camera
 
 class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---infobar-custom-click-listener"
+    override val wikiModulePath: String =
+        "Module-Navigation#navigation---infobar-custom-click-listener"
 
     private var fanfareMediaPlayer: MediaPlayer? = null
+    private lateinit var navigationFragment: NavigationFragment
 
-    private val leftInfobarPlayButton = InfobarButton(
-        R.drawable.ic_play,
-        R.drawable.bg_infobar_button_rounded,
-        R.color.white,
-        R.color.colorAccent
-    )
+    private val unlockedLeftInfobarButtonClickListener = object : OnInfobarButtonClickListener {
+        override val button = NavigationDefaultUnlockedLeftInfobarButton()
+        override fun onButtonClick() = lockVehicle()
+    }
 
-    private val rightInfobarButton = InfobarButton(
-        R.drawable.ic_close,
-        R.drawable.bg_infobar_button_rounded,
-        R.color.white,
-        R.color.brick_red
-    )
+    private val customLeftInfobarButtonClickListener = object : OnInfobarButtonClickListener {
+        override val button = InfobarButton(
+            R.drawable.ic_play,
+            R.drawable.bg_infobar_button_rounded,
+            R.color.white,
+            R.color.colorAccent
+        )
+
+        override fun onButtonClick() = playFanfare()
+    }
 
     private val cameraModeChangedListener = object : Camera.ModeChangedListener {
         override fun onRotationModeChanged(@Camera.RotationMode mode: Int) {}
         override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
-            with(supportFragmentManager.findFragmentById(R.id.navigationFragment)) {
-                if (this is NavigationFragment) {
-                    when (mode) {
-                        Camera.MovementMode.Free ->
-                            setOnInfobarButtonsClickListener(navigationUnlockedInfobarClickListener)
-                        Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
-                            setOnInfobarButtonsClickListener(customOnInfobarButtonsClickListener)
-                    }
-                }
+            when (mode) {
+                Camera.MovementMode.Free ->
+                    setLeftInfobarButtonClickListener(unlockedLeftInfobarButtonClickListener)
+                Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
+                    setLeftInfobarButtonClickListener(customLeftInfobarButtonClickListener)
             }
         }
-    }
-
-    private val navigationUnlockedInfobarClickListener = object : NavigationUnlockedInfobarClickListener() {
-        override fun onLeftButtonClick() = lockVehicle()
-        override fun onRightButtonClick() = finish()
-    }
-
-    private val customOnInfobarButtonsClickListener = object : OnInfobarButtonsClickListener {
-        override fun getLeftButton() = leftInfobarPlayButton
-        override fun getRightButton() = rightInfobarButton
-        override fun onLeftButtonClick() = playFanfare()
-        override fun onRightButtonClick() = finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,11 +79,12 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_navigation_infobar_custom_click_listener)
 
         fanfareMediaPlayer = MediaPlayer.create(this, R.raw.fanfare)
+        navigationFragment = (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment)
 
         if (savedInstanceState == null) {
-            setOnInfobarButtonsClickListener(customOnInfobarButtonsClickListener)
+            setLeftInfobarButtonClickListener(customLeftInfobarButtonClickListener)
             computePrimaryRoute(SampleDemonstrationRoutePlan()) {
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = it
+                navigationFragment.routeInfo = it
             }
         }
     }
@@ -102,17 +92,11 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
     override fun onResume() {
         super.onResume()
 
-        ((supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment))
-            .cameraDataModel.addModeChangedListener(cameraModeChangedListener)
+        navigationFragment.cameraDataModel.addModeChangedListener(cameraModeChangedListener)
     }
 
-    private fun setOnInfobarButtonsClickListener(listener: OnInfobarButtonsClickListener) {
-        with(supportFragmentManager.findFragmentById(R.id.navigationFragment)) {
-            if (this is NavigationFragment) {
-                setOnInfobarButtonsClickListener(listener)
-            }
-        }
-    }
+    private fun setLeftInfobarButtonClickListener(listener: OnInfobarButtonClickListener) =
+        navigationFragment.setOnInfobarButtonClickListener(InfobarButtonType.LEFT, listener)
 
     private fun playFanfare() {
         fanfareMediaPlayer?.apply {

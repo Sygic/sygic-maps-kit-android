@@ -22,14 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.module.navigation.listener
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-open class InfobarButton(
-    @DrawableRes val imageResource: Int,
-    @DrawableRes val backgroundResource: Int,
-    @ColorRes val imageTintColor: Int = 0,
-    @ColorRes val backgroundTintColor: Int = 0
-)
+@Parcelize
+enum class InfobarButtonType : Parcelable {
+    LEFT, RIGHT
+}

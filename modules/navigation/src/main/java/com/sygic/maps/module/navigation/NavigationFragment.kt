@@ -40,8 +40,9 @@ import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListenerWrapper
+import com.sygic.maps.module.navigation.listener.InfobarButtonType
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
+import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
@@ -75,13 +76,13 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [CurrentSpeed] or [SpeedLimit] may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), OnInfobarButtonsClickListenerWrapper {
+class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), OnInfobarButtonClickListenerWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
     private lateinit var infobarViewModel: InfobarViewModel
 
-    override val infobarButtonsClickListenerProvider: LiveData<OnInfobarButtonsClickListener> = MutableLiveData()
+    override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
@@ -268,10 +269,19 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
     /**
      * Register a custom callback to be invoked when a click to the infobar button has been made.
      *
-     * @param onClickListener [OnInfobarButtonsClickListener] callback to invoke on infobar button click.
+     * @param infobarButtonType [InfobarButtonType] infobar button type to be used.
+     * @param onClickListener [OnInfobarButtonClickListener] callback to invoke on infobar button click.
+     *
      */
-    fun setOnInfobarButtonsClickListener(onClickListener: OnInfobarButtonsClickListener?) {
-        infobarButtonsClickListenerProvider.asMutable().value = onClickListener
+    fun setOnInfobarButtonClickListener(
+        infobarButtonType: InfobarButtonType,
+        onClickListener: OnInfobarButtonClickListener?
+    ) {
+        infobarButtonClickListenerProvider.asMutable().value =
+            OnInfobarButtonClickListenerWrapper.ProviderComponent(
+                onClickListener,
+                infobarButtonType
+            )
     }
 
     override fun onDestroy() {
