@@ -37,6 +37,7 @@ import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
 import com.sygic.maps.module.navigation.infobar.InfobarButtonWrapper
+import com.sygic.maps.module.navigation.infobar.NavigationDefaultUnlockedLeftInfobarButton
 import com.sygic.maps.module.navigation.listener.InfobarButtonType
 import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
 import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
@@ -112,13 +113,22 @@ class NavigationFragmentViewModel internal constructor(
 
     private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
 
-    private val navigationUnlockedInfobarClickListener = object : NavigationUnlockedInfobarClickListener() {
-        override fun onLeftButtonClick() {
+    private val navigationDefaultLeftInfobarClickListener = object : OnInfobarButtonClickListener {
+        override val button = NavigationDefaultLeftInfobarButton()
+        override fun onButtonClick() { /*todo: MS-6218*/  }
+    }
+
+    private val navigationDefaultRightInfobarClickListener = object : OnInfobarButtonClickListener {
+        override val button = NavigationDefaultRightInfobarButton()
+        override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
+    }
+
+    private val navigationUnlockedLeftInfobarClickListener = object : OnInfobarButtonClickListener {
+        override val button = NavigationDefaultUnlockedLeftInfobarButton()
+        override fun onButtonClick() {
             cameraModel.rotationMode = Camera.RotationMode.Vehicle
             cameraModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
         }
-
-        override fun onRightButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 
     var distanceUnit: DistanceUnit
@@ -145,14 +155,8 @@ class NavigationFragmentViewModel internal constructor(
         routeInfo.observeForever(::setRouteInfo)
         previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
 
-        updateInfobarListenersMap(InfobarButtonType.LEFT, object : OnInfobarButtonClickListener {
-            override val button = NavigationDefaultLeftInfobarButton()
-            override fun onButtonClick() { /*todo: MS-6218*/  }
-        })
-        updateInfobarListenersMap(InfobarButtonType.RIGHT, object : OnInfobarButtonClickListener {
-            override val button = NavigationDefaultRightInfobarButton()
-            override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
-        })
+        updateInfobarListenersMap(InfobarButtonType.LEFT, navigationDefaultLeftInfobarClickListener)
+        updateInfobarListenersMap(InfobarButtonType.RIGHT, navigationDefaultRightInfobarClickListener)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -182,12 +186,18 @@ class NavigationFragmentViewModel internal constructor(
     }
 
     override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
-        if (onInfobarButtonsClickListener is NavigationDefaultInfobarClickListener) {
+        if (infobarButtonListenersMap[InfobarButtonType.LEFT] == navigationDefaultLeftInfobarClickListener) {
             when (mode) {
                 Camera.MovementMode.Free ->
-                    onInfobarButtonsClickListener = navigationUnlockedInfobarClickListener
+                    updateInfobarListenersMap(
+                        InfobarButtonType.LEFT,
+                        navigationUnlockedLeftInfobarClickListener
+                    )
                 Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
-                    onInfobarButtonsClickListener = navigationDefaultInfobarClickListener
+                    updateInfobarListenersMap(
+                        InfobarButtonType.LEFT,
+                        navigationDefaultLeftInfobarClickListener
+                    )
             }
         }
     }

@@ -26,14 +26,9 @@ package com.sygic.maps.module.navigation.infobar
 
 import com.sygic.maps.module.navigation.R
 
-open class NavigationUnlockedInfobarClickListener : NavigationDefaultInfobarClickListener() {
-
-    private val leftInfobarLockButton = InfobarButton(
-        R.drawable.ic_map_lock_full,
-        R.drawable.bg_infobar_button_rounded,
-        R.color.white,
-        R.color.colorAccent
-    )
-
-    override fun getLeftButton(): InfobarButton? = leftInfobarLockButton
-}
+open class NavigationDefaultUnlockedLeftInfobarButton : InfobarButton(
+    R.drawable.ic_map_lock_full,
+    R.drawable.bg_infobar_button_rounded,
+    R.color.white,
+    R.color.colorAccent
+)
