@@ -102,7 +102,7 @@ open class Infobar @JvmOverloads constructor(
                 )
 
                 elevation = it.getDimensionPixelSize(R.styleable.Infobar_android_elevation, 0).toFloat()
-                layoutMargin = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_margin, 0)
+                layoutMargin = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_margin, -1)
                 layoutMarginTop = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginTop, 0)
                 layoutMarginBottom = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginBottom, 0)
                 layoutMarginStart = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginStart, 0)
@@ -116,7 +116,7 @@ open class Infobar @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         with((layoutParams as MarginLayoutParams)) {
-            if (layoutMargin != 0) {
+            if (layoutMargin >= 0) {
                 setMargins(layoutMargin, layoutMargin, layoutMargin, layoutMargin)
             } else {
                 setMargins(layoutMarginStart, layoutMarginTop, layoutMarginEnd, layoutMarginBottom)
@@ -133,7 +133,7 @@ open class Infobar @JvmOverloads constructor(
     @JvmOverloads
     fun setLeftButtonImageResource(@DrawableRes imageResource: Int, @ColorRes tintColor: Int = 0) {
         if (imageResource != 0) binding.infobarLeftButton.setImageResource(imageResource)
-        if (tintColor != 0) setLeftButtonImageTint(tintColor)
+        setLeftButtonImageTint(tintColor)
     }
 
     /**
@@ -142,7 +142,7 @@ open class Infobar @JvmOverloads constructor(
      * @param tintColor [Int] left button tint.
      */
     fun setLeftButtonImageTint(@ColorRes tintColor: Int) {
-        if (tintColor != 0) binding.infobarLeftButton.tint(tintColor)
+        binding.infobarLeftButton.tint(tintColor)
     }
 
     /**
@@ -154,7 +154,7 @@ open class Infobar @JvmOverloads constructor(
     @JvmOverloads
     fun setLeftButtonBackgroundResource(@DrawableRes backgroundResource: Int, @ColorRes tintColor: Int = 0) {
         if (backgroundResource != 0) binding.infobarLeftButton.setBackgroundResource(backgroundResource)
-        if (tintColor != 0) setLeftButtonBackgroundTint(tintColor)
+        setLeftButtonBackgroundTint(tintColor)
     }
 
     /**
@@ -163,7 +163,7 @@ open class Infobar @JvmOverloads constructor(
      * @param tintColor [Int] left button background tint.
      */
     fun setLeftButtonBackgroundTint(@ColorRes tintColor: Int) {
-        if (tintColor != 0) binding.infobarLeftButton.backgroundTint(tintColor)
+        binding.infobarLeftButton.backgroundTint(tintColor)
     }
 
     /**
@@ -193,7 +193,7 @@ open class Infobar @JvmOverloads constructor(
     @JvmOverloads
     fun setRightButtonImageResource(@DrawableRes imageResource: Int, @ColorRes tintColor: Int = 0) {
         if (imageResource != 0) binding.infobarRightButton.setImageResource(imageResource)
-        if (tintColor != 0) setRightButtonImageTint(tintColor)
+        setRightButtonImageTint(tintColor)
     }
 
     /**
@@ -202,7 +202,7 @@ open class Infobar @JvmOverloads constructor(
      * @param tintColor [Int] right button tint.
      */
     fun setRightButtonImageTint(@ColorRes tintColor: Int) {
-        if (tintColor != 0) binding.infobarRightButton.tint(tintColor)
+        binding.infobarRightButton.tint(tintColor)
     }
 
     /**
@@ -214,7 +214,7 @@ open class Infobar @JvmOverloads constructor(
     @JvmOverloads
     fun setRightButtonBackgroundResource(@DrawableRes backgroundResource: Int, @ColorRes tintColor: Int = 0) {
         if (backgroundResource != 0) binding.infobarRightButton.setBackgroundResource(backgroundResource)
-        if (tintColor != 0) setRightButtonBackgroundTint(tintColor)
+        setRightButtonBackgroundTint(tintColor)
     }
 
     /**
@@ -223,7 +223,7 @@ open class Infobar @JvmOverloads constructor(
      * @param tintColor [Int] right button background tint.
      */
     fun setRightButtonBackgroundTint(@ColorRes tintColor: Int) {
-        if (tintColor != 0) binding.infobarRightButton.backgroundTint(tintColor)
+        binding.infobarRightButton.backgroundTint(tintColor)
     }
 
     /**
@@ -233,7 +233,6 @@ open class Infobar @JvmOverloads constructor(
      */
     fun setOnRightButtonClickListener(listener: OnClickListener) {
         binding.infobarRightButton.setOnClickListener(listener)
-        binding.infobarRightButton.visibility = View.VISIBLE
     }
 
     /**

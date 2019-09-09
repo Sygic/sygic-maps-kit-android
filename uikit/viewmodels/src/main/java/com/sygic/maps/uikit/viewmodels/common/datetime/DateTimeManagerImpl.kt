@@ -47,8 +47,8 @@ class DateTimeManagerImpl private constructor(
         fun getInstance(app: Application): DateTimeManagerImpl = getInstance { DateTimeManagerImpl(app) }
     }
 
-    private val timeInstances: SparseArray<DateFormat> = SparseArray()
-    private val dateInstances: SparseArray<DateFormat> = SparseArray()
+    private val timeInstances = SparseArray<DateFormat>()
+    private val dateInstances = SparseArray<DateFormat>()
 
     init {
         app.applicationContext.registerReceiver(this, IntentFilter(Intent.ACTION_TIME_CHANGED))
@@ -59,7 +59,7 @@ class DateTimeManagerImpl private constructor(
             return it.format(date)
         }
 
-        return DateFormat.getTimeInstance(style).apply { timeInstances.put(style, this) }.format(date)
+        return DateFormat.getTimeInstance(style).also { timeInstances.put(style, it) }.format(date)
     }
 
     override fun formatDate(date: Date, style: Int): String {
@@ -67,7 +67,7 @@ class DateTimeManagerImpl private constructor(
             return it.format(date)
         }
 
-        return DateFormat.getDateInstance(style).apply { dateInstances.put(style, this) }.format(date)
+        return DateFormat.getDateInstance(style).also { dateInstances.put(style, it) }.format(date)
     }
 
     override fun formatDuration(duration: Int): String = Time.getFormattedTime(abs(duration))
