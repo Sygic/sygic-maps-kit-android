@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.utils
+package com.sygic.maps.uikit.views.common.utils
 
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.getDecimal
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.concurrent.TimeUnit
@@ -139,4 +139,6 @@ object Time {
 object Elevation {
 
     fun getFormattedElevation(meters: Int): String = "$meters m asl"
+
+    fun getFormattedElevation(meters: Double): String = getFormattedElevation(meters.roundToInt())
 }

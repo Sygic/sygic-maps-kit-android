@@ -36,10 +36,10 @@ import com.sygic.maps.module.navigation.R
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
-import com.sygic.maps.module.navigation.infobar.InfobarButtonWrapper
-import com.sygic.maps.module.navigation.listener.InfobarButtonType
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListenerWrapper
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonWrapper
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -49,7 +49,7 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
@@ -204,20 +204,8 @@ class NavigationFragmentViewModel internal constructor(
     ) {
         (infobarButtonListenersMap as MutableMap)[buttonType] = listener
         when (buttonType) {
-            InfobarButtonType.LEFT -> {
-                listener?.let {
-                    leftInfobarButtonWrapper.setFrom(it.button)
-                } ?: run {
-                    leftInfobarButtonWrapper.visible.value = false
-                }
-            }
-            InfobarButtonType.RIGHT -> {
-                listener?.let {
-                    rightInfobarButtonWrapper.setFrom(it.button)
-                } ?: run {
-                    rightInfobarButtonWrapper.visible.value = false
-                }
-            }
+            InfobarButtonType.LEFT -> leftInfobarButtonWrapper.setFrom(listener?.button)
+            InfobarButtonType.RIGHT -> rightInfobarButtonWrapper.setFrom(listener?.button)
         }
     }
 

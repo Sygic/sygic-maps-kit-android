@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.views.navigation.infobar
 
 import android.animation.LayoutTransition
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -40,12 +41,12 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.backgroundTint
 import com.sygic.maps.uikit.views.common.extensions.tint
 import com.sygic.maps.uikit.views.databinding.LayoutInfobarInternalBinding
-import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItemsHolder
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 
 /**
  * A [Infobar] view can be used as an visual presentation component for the navigation info data (eta, distanceToEnd,
  * altitude etc.) and as user interaction component. It contains two [ImageButton]'s (left/right) and pre-customized
- * primary/secondary [TextView] which can be controlled with the [InfobarItemsHolder] class.
+ * primary/secondary [TextView] which can be controlled with the [InfobarTextData] class.
  *
  * The [Infobar] design can be completely changed with the custom _infoBarStyle_ or the standard android
  * attributes as _background_, _navigationTextColorPrimary_ or _navigationTextColorSecondary_ can be used. The [Infobar]
@@ -245,18 +246,19 @@ open class Infobar @JvmOverloads constructor(
     }
 
     /**
-     * Sets the [InfobarItemsHolder] which will be converted to the secondary infobar text.
+     * Sets the [InfobarTextData] which will be converted to the secondary infobar text.
      *
-     * @param itemsHolder [InfobarItemsHolder] primary infobar ItemsHolder with valid data, empty list otherwise.
+     * @param textData [InfobarTextData] primary infobar TextData with valid data, empty list otherwise.
      */
-    fun setPrimaryItemsHolder(itemsHolder: InfobarItemsHolder) {
-        if (itemsHolder.isNotEmpty()) {
-            binding.infobarPrimaryTextView.text = itemsHolder.items.joinToString(
-                itemsHolder.divider,
-                itemsHolder.prefix,
-                itemsHolder.postfix,
-                itemsHolder.limit
-            )
+    fun setPrimaryTextData(textData: InfobarTextData) {
+        if (textData.isNotEmpty()) {
+            binding.infobarPrimaryTextView.text =
+                textData.items.map { it.text }.filter { it.isNotEmpty() }.joinTo(
+                    SpannableStringBuilder(),
+                    textData.divider,
+                    textData.prefix,
+                    textData.postfix
+                )
             binding.infobarPrimaryTextView.visibility = View.VISIBLE
         } else {
             binding.infobarPrimaryTextView.text = EMPTY_STRING
@@ -265,18 +267,19 @@ open class Infobar @JvmOverloads constructor(
     }
 
     /**
-     * Sets the [InfobarItemsHolder] which will be converted to the secondary infobar text.
+     * Sets the [InfobarTextData] which will be converted to the secondary infobar text.
      *
-     * @param itemsHolder [InfobarItemsHolder] secondary infobar ItemsHolder with valid data, empty list otherwise.
+     * @param textData [InfobarTextData] secondary infobar TextData with valid data, empty list otherwise.
      */
-    fun setSecondaryItemsHolder(itemsHolder: InfobarItemsHolder) {
-        if (itemsHolder.isNotEmpty()) {
-            binding.infobarSecondaryTextView.text = itemsHolder.items.joinToString(
-                itemsHolder.divider,
-                itemsHolder.prefix,
-                itemsHolder.postfix,
-                itemsHolder.limit
-            )
+    fun setSecondaryTextData(textData: InfobarTextData) {
+        if (textData.isNotEmpty()) {
+            binding.infobarSecondaryTextView.text =
+                textData.items.map { it.text }.filter { it.isNotEmpty() }.joinTo(
+                    SpannableStringBuilder(),
+                    textData.divider,
+                    textData.prefix,
+                    textData.postfix
+                )
             binding.infobarSecondaryTextView.visibility = View.VISIBLE
         } else {
             binding.infobarSecondaryTextView.text = EMPTY_STRING

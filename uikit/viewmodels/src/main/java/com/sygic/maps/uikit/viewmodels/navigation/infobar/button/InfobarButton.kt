@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.button
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
-    R.drawable.ic_more,
-    R.drawable.bg_infobar_button_rounded,
-    R.color.white,
-    R.color.colorAccent
+open class InfobarButton(
+    @DrawableRes val imageResource: Int,
+    @DrawableRes val backgroundResource: Int,
+    @ColorRes val imageTintColor: Int = 0,
+    @ColorRes val backgroundTintColor: Int = 0
 )

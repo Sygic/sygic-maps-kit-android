@@ -22,14 +22,9 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
+import com.sygic.sdk.position.GeoCoordinates
 
-open class InfobarButton(
-    @DrawableRes val imageResource: Int,
-    @DrawableRes val backgroundResource: Int,
-    @ColorRes val imageTintColor: Int = 0,
-    @ColorRes val backgroundTintColor: Int = 0
-)
+data class PositionData(val currentLocation: GeoCoordinates) : ItemData()

@@ -22,16 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.regional.units
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items
 
-import android.os.Parcelable
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.DistanceData
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.utils.Distance
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItem
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-enum class DistanceUnit : Parcelable {
-    KILOMETERS, MILES_YARDS, MILES_FEETS;
+open class RemainingDistanceInfobarItem : InfobarItem<DistanceData> {
 
-    companion object {
-        fun atIndex(index: Int) = values()[index]
+    @IgnoredOnParcel
+    override var text: CharSequence = EMPTY_STRING
+
+    override fun update(data: DistanceData?) {
+        data?.let { text = Distance.getFormattedDistance(it.distanceUnit, it.distanceToEnd) }
     }
 }

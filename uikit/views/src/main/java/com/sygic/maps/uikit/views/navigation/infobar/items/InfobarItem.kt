@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.listener
+package com.sygic.maps.uikit.views.navigation.infobar.items
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
 
-@Parcelize
-enum class InfobarButtonType : Parcelable {
-    LEFT, RIGHT
+interface InfobarItem<T : ItemData> : Parcelable {
+    var text: CharSequence
+    fun update(data: T?)
 }
