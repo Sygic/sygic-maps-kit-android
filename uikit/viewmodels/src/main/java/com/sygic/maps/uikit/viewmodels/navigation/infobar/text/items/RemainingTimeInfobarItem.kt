@@ -22,37 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.listener
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items
 
-import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
-import com.sygic.maps.module.navigation.infobar.InfobarButton
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.TimeData
+import com.sygic.maps.uikit.views.common.utils.Time
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItem
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
-/**
- * Interface definition for a callback to be invoked when a click to the infobar button has been made.
- */
-interface OnInfobarButtonClickListener {
+@Parcelize
+open class RemainingTimeInfobarItem : InfobarItem<TimeData> {
 
-    /**
-     * Modifies the infobar button appearance. Icon and background drawable is required (icon and background tint can be
-     * optionally provided).
-     *
-     * @return your [InfobarButton] or null if no [InfobarButton] should be displayed.
-     */
-    val button: InfobarButton?
+    @IgnoredOnParcel
+    override var text: CharSequence = EMPTY_STRING
 
-    /**
-     * Called when a click to the infobar right button has been made.
-     */
-    fun onButtonClick()
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface OnInfobarButtonClickListenerWrapper {
-    val infobarButtonClickListenerProvider: LiveData<ProviderComponent>
-
-    data class ProviderComponent(
-        val onInfobarButtonClickListener: OnInfobarButtonClickListener?,
-        val infobarButtonType: InfobarButtonType
-    )
+    override fun update(data: TimeData?) {
+        data?.let { text = Time.getFormattedTime(it.timeToEndWithSpeedProfileAndTraffic) }
+    }
 }
