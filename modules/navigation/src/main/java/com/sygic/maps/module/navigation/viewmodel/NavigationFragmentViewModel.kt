@@ -34,6 +34,7 @@ import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.*
 import com.sygic.maps.module.navigation.R
 import com.sygic.maps.module.navigation.component.*
+import com.sygic.maps.module.navigation.infobar.InternalLeftInfobarClickListener
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultUnlockedLeftInfobarButton
@@ -113,22 +114,22 @@ class NavigationFragmentViewModel internal constructor(
 
     private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
 
-    private val navigationDefaultLeftInfobarClickListener = object : OnInfobarButtonClickListener {
+    private val navigationDefaultLeftInfobarClickListener = object : InternalLeftInfobarClickListener() {
         override val button = NavigationDefaultLeftInfobarButton()
         override fun onButtonClick() { /*todo: MS-6218*/  }
     }
 
-    private val navigationDefaultRightInfobarClickListener = object : OnInfobarButtonClickListener {
-        override val button = NavigationDefaultRightInfobarButton()
-        override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
-    }
-
-    private val navigationUnlockedLeftInfobarClickListener = object : OnInfobarButtonClickListener {
+    private val navigationUnlockedLeftInfobarClickListener = object : InternalLeftInfobarClickListener() {
         override val button = NavigationDefaultUnlockedLeftInfobarButton()
         override fun onButtonClick() {
             cameraModel.rotationMode = Camera.RotationMode.Vehicle
             cameraModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
         }
+    }
+
+    private val navigationDefaultRightInfobarClickListener = object : OnInfobarButtonClickListener {
+        override val button = NavigationDefaultRightInfobarButton()
+        override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 
     var distanceUnit: DistanceUnit
@@ -186,7 +187,7 @@ class NavigationFragmentViewModel internal constructor(
     }
 
     override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
-        if (infobarButtonListenersMap[InfobarButtonType.LEFT] == navigationDefaultLeftInfobarClickListener) {
+        if (infobarButtonListenersMap[InfobarButtonType.LEFT] is InternalLeftInfobarClickListener) {
             when (mode) {
                 Camera.MovementMode.Free ->
                     updateInfobarListenersMap(

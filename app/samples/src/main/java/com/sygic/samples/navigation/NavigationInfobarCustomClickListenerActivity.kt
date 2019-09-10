@@ -50,7 +50,7 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
         override fun onButtonClick() = lockVehicle()
     }
 
-    private val customLeftInfobarButtonClickListener = object : OnInfobarButtonClickListener {
+    private val fanfareLeftInfobarButtonClickListener = object : OnInfobarButtonClickListener {
         override val button = InfobarButton(
             R.drawable.ic_play,
             R.drawable.bg_infobar_button_rounded,
@@ -68,7 +68,7 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
                 Camera.MovementMode.Free ->
                     setLeftInfobarButtonClickListener(unlockedLeftInfobarButtonClickListener)
                 Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
-                    setLeftInfobarButtonClickListener(customLeftInfobarButtonClickListener)
+                    setLeftInfobarButtonClickListener(fanfareLeftInfobarButtonClickListener)
             }
         }
     }
@@ -82,7 +82,7 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
         navigationFragment = (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment)
 
         if (savedInstanceState == null) {
-            setLeftInfobarButtonClickListener(customLeftInfobarButtonClickListener)
+            setLeftInfobarButtonClickListener(fanfareLeftInfobarButtonClickListener)
             computePrimaryRoute(SampleDemonstrationRoutePlan()) {
                 navigationFragment.routeInfo = it
             }
@@ -110,19 +110,16 @@ class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
     }
 
     private fun lockVehicle() {
-        with(supportFragmentManager.findFragmentById(R.id.navigationFragment)) {
-            if (this is NavigationFragment) {
-                cameraDataModel.rotationMode = Camera.RotationMode.Vehicle
-                cameraDataModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
-            }
+        with(navigationFragment) {
+            cameraDataModel.rotationMode = Camera.RotationMode.Vehicle
+            cameraDataModel.movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
         }
     }
 
     override fun onPause() {
         super.onPause()
 
-        ((supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment))
-            .cameraDataModel.removeModeChangedListener(cameraModeChangedListener)
+        navigationFragment.cameraDataModel.removeModeChangedListener(cameraModeChangedListener)
     }
 
     override fun onDestroy() {
