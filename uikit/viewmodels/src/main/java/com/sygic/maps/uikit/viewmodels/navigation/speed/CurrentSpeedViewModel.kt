@@ -29,9 +29,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.utils.Speed
 import com.sygic.maps.uikit.views.common.extensions.combineLatest
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
