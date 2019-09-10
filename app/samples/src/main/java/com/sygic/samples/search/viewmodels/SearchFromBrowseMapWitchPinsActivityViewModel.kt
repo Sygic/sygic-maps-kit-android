@@ -92,6 +92,7 @@ class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), ModuleConnect
     override val fragment: Fragment
         get() {
             val searchFragment = SearchFragment()
+            searchFragment.searchLocation = cameraDataModel?.position
             searchFragment.setResultCallback(callback)
             return searchFragment
         }
