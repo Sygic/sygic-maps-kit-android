@@ -27,11 +27,11 @@ package com.sygic.samples.navigation
 import android.media.MediaPlayer
 import android.os.Bundle
 import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.module.navigation.infobar.InfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultUnlockedLeftInfobarButton
-import com.sygic.maps.module.navigation.listener.InfobarButtonType
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonClickListener
 import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
