@@ -33,7 +33,7 @@ import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.maps.uikit.views.common.utils.TextHolder

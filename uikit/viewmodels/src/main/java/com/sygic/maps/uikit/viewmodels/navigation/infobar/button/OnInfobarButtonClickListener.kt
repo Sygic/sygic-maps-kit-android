@@ -22,45 +22,36 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.listener
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.button
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
-import com.sygic.maps.module.navigation.infobar.InfobarButton
 
 /**
  * Interface definition for a callback to be invoked when a click to the infobar button has been made.
  */
-interface OnInfobarButtonsClickListener {
+interface OnInfobarButtonClickListener {
 
     /**
-     * Modifies the infobar left button appearance. Icon and background drawable is required (icon and background tint can be
+     * Modifies the infobar button appearance. Icon and background drawable is required (icon and background tint can be
      * optionally provided).
      *
-     * @return your left [InfobarButton] to display or null if no left [InfobarButton] should be displayed.
+     * @return your [InfobarButton] or null if no [InfobarButton] should be displayed.
      */
-    fun getLeftButton(): InfobarButton? = null
-
-    /**
-     * Modifies the infobar right button appearance. Icon and background drawable is required (icon and background tint can be
-     * optionally provided).
-     *
-     * @return your right [InfobarButton] to display or null if no right [InfobarButton] should be displayed.
-     */
-    fun getRightButton(): InfobarButton? = null
-
-    /**
-     * Called when a click to the infobar left button has been made.
-     */
-    fun onLeftButtonClick() {}
+    val button: InfobarButton?
 
     /**
      * Called when a click to the infobar right button has been made.
      */
-    fun onRightButtonClick() {}
+    fun onButtonClick()
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface OnInfobarButtonsClickListenerWrapper {
-    val infobarButtonsClickListenerProvider: LiveData<OnInfobarButtonsClickListener>
+interface OnInfobarButtonClickListenerWrapper {
+    val infobarButtonClickListenerProvider: LiveData<ProviderComponent>
+
+    data class ProviderComponent(
+        val onInfobarButtonClickListener: OnInfobarButtonClickListener?,
+        val infobarButtonType: InfobarButtonType
+    )
 }

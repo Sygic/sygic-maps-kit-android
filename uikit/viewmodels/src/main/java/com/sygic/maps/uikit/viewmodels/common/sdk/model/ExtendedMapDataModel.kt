@@ -27,67 +27,10 @@ package com.sygic.maps.uikit.viewmodels.common.sdk.model
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.`object`.MapObject
-import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.map.data.SimpleMapDataModel
-import java.util.*
-import kotlin.collections.HashSet
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
-object ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
-
-    private var currentOnClickMapMarker: MapMarker? = null
-    private val userMapObjects: MutableSet<MapObject<*>> = HashSet()
-
-    fun addMapMarker(marker: MapMarker) {
-        userMapObjects.add(marker)
-        addMapObject(marker)
-    }
-
-    fun removeMapMarker(marker: MapMarker) {
-        userMapObjects.remove(marker)
-        removeMapObject(marker)
-    }
-
-    fun addMapRoute(mapRoute: MapRoute) {
-        userMapObjects.add(mapRoute)
-        addMapObject(mapRoute)
-    }
-
-    fun setMapRoute(mapRoute: MapRoute) {
-        removeAllMapRoutes()
-        addMapRoute(mapRoute)
-    }
-
-    fun removeMapRoute(mapRoute: MapRoute) {
-        userMapObjects.remove(mapRoute)
-        removeMapObject(mapRoute)
-    }
-
-    fun removeAllMapMarkers() = removeAllMapObjects<MapMarker>()
-
-    fun removeAllMapRoutes() = removeAllMapObjects<MapRoute>()
-
-    fun getUserMapObjects(): Set<MapObject<*>> = Collections.unmodifiableSet(userMapObjects)
-
-    fun addOnClickMapMarker(onClickMapMarker: MapMarker) {
-        currentOnClickMapMarker = onClickMapMarker
-        addMapObject(onClickMapMarker)
-    }
-
-    fun removeOnClickMapMarker() {
-        currentOnClickMapMarker?.let { removeMapObject(it) }
-    }
-
-    private inline fun <reified T : MapObject<*>> removeAllMapObjects() = with(userMapObjects.iterator()) {
-        forEach { mapObject ->
-            if (mapObject is T) {
-                removeMapObject(mapObject)
-                remove()
-            }
-        }
-    }
+class ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     override fun onDestroy(owner: LifecycleOwner) {
         if (owner is Fragment) owner.activity?.run { if (isFinishing) clear() }

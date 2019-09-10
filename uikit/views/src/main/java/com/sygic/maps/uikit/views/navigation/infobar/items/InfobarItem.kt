@@ -22,14 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.views.navigation.infobar.items
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import android.os.Parcelable
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
 
-data class InfobarButton(
-    @DrawableRes val imageResource: Int,
-    @DrawableRes val backgroundResource: Int,
-    @ColorRes val imageTintColor: Int = 0,
-    @ColorRes val backgroundTintColor: Int = 0
-)
+interface InfobarItem<T : ItemData> : Parcelable {
+    var text: CharSequence
+    fun update(data: T?)
+}

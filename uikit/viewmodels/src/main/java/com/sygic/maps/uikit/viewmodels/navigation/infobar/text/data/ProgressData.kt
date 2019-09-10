@@ -22,27 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
 
-open class NavigationDefaultInfobarClickListener : OnInfobarButtonsClickListener {
-
-    private val leftInfobarMenuButton = InfobarButton(
-        R.drawable.ic_more,
-        R.drawable.bg_infobar_button_rounded,
-        R.color.white,
-        R.color.colorAccent
-    )
-
-    private val rightInfobarButton = InfobarButton(
-        R.drawable.ic_close,
-        R.drawable.bg_infobar_button_rounded,
-        R.color.white,
-        R.color.brick_red
-    )
-
-    override fun getLeftButton(): InfobarButton? = leftInfobarMenuButton
-    override fun getRightButton(): InfobarButton? = rightInfobarButton
-}
+data class ProgressData(val routeProgress: Int) : ItemData()

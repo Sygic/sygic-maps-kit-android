@@ -39,12 +39,15 @@ import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListener
-import com.sygic.maps.module.navigation.listener.OnInfobarButtonsClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextType
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextDataWrapper
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
@@ -55,6 +58,7 @@ import com.sygic.maps.uikit.views.common.extensions.finish
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
@@ -80,7 +84,8 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), OnInfobarButtonsClickListenerWrapper {
+class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
+    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
@@ -88,7 +93,8 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
     private lateinit var currentSpeedViewModel: CurrentSpeedViewModel
     private lateinit var speedLimitViewModel: SpeedLimitViewModel
 
-    override val infobarButtonsClickListenerProvider: LiveData<OnInfobarButtonsClickListener> = MutableLiveData()
+    override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
+    override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
@@ -253,6 +259,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
         speedLimitViewModel = viewModelOf(SpeedLimitViewModel::class.java)
 
         lifecycle.addObserver(fragmentViewModel)
+        lifecycle.addObserver(infobarViewModel)
         lifecycle.addObserver(routePreviewControlsViewModel)
     }
 
@@ -286,16 +293,34 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(), On
     /**
      * Register a custom callback to be invoked when a click to the infobar button has been made.
      *
-     * @param onClickListener [OnInfobarButtonsClickListener] callback to invoke on infobar button click.
+     * @param buttonType [InfobarButtonType] infobar button type to be used.
+     * @param onClickListener [OnInfobarButtonClickListener] callback to invoke on infobar button click.
+     *
      */
-    fun setOnInfobarButtonsClickListener(onClickListener: OnInfobarButtonsClickListener?) {
-        infobarButtonsClickListenerProvider.asMutable().value = onClickListener
+    fun setOnInfobarButtonClickListener(
+        buttonType: InfobarButtonType,
+        onClickListener: OnInfobarButtonClickListener?
+    ) {
+        infobarButtonClickListenerProvider.asMutable().value =
+            OnInfobarButtonClickListenerWrapper.ProviderComponent(onClickListener, buttonType)
+    }
+
+    /**
+     * Sets the [InfobarTextData] which will be converted to the formatted text for the specified [InfobarTextType].
+     *
+     * @param textType [InfobarTextType] infobar text type to be used.
+     * @param textData [InfobarTextData] infobar text data with valid data, empty list otherwise.
+     */
+    fun setInfobarTextData(textType: InfobarTextType, textData: InfobarTextData) {
+        infobarTextDataProvider.asMutable().value =
+            InfobarTextDataWrapper.ProviderComponent(textData, textType)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
         lifecycle.removeObserver(fragmentViewModel)
+        lifecycle.removeObserver(infobarViewModel)
         lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 
