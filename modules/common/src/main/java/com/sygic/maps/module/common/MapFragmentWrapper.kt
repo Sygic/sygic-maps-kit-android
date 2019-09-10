@@ -134,7 +134,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         executeInjector()
         super.onInflate(context, attrs, savedInstanceState)
-        resolveAttributesInternal(attrs)
+        resolveAttributesInternal(context, attrs)
     }
 
     @CallSuper
@@ -247,7 +247,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      */
     fun setMapSkin(@MapSkin mapSkin: String) {
         if (!isMapSkinValid(mapSkin)) {
-            logWarning("MapSkin $mapSkin is not valid.")
+            logWarning("MapSkin \"$mapSkin\" is not valid.")
             return
         }
 
@@ -264,7 +264,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      */
     fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
         if (!isVehicleSkinValid(vehicleSkin)) {
-            logWarning("VehicleSkin $vehicleSkin is not valid.")
+            logWarning("VehicleSkin \"$vehicleSkin\" is not valid.")
             return
         }
 
@@ -281,8 +281,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         lifecycle.removeObserver(cameraDataModel)
     }
 
-    private fun resolveAttributesInternal(attrs: AttributeSet) {
-        with(requireContext().obtainStyledAttributes(attrs, R.styleable.MapFragmentWrapper)) {
+    private fun resolveAttributesInternal(context: Context, attrs: AttributeSet) {
+        with(context.obtainStyledAttributes(attrs, R.styleable.MapFragmentWrapper)) {
             if (hasValue(R.styleable.MapFragmentWrapper_sygic_map_skin)) {
                 setMapSkin(getString(R.styleable.MapFragmentWrapper_sygic_map_skin, EMPTY_STRING))
             }

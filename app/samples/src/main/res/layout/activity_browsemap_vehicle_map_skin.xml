@@ -52,6 +52,6 @@
         app:sygic_map_skin="day"
         app:sygic_map_zoom="6"
         app:sygic_positionOnMap_enabled="true"
-        app:sygic_vehicle_skin="vehicle" />
+        app:sygic_vehicle_skin="car" />
 
 </LinearLayout>
