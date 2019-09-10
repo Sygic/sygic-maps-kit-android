@@ -33,7 +33,7 @@ import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.search.viewmodels.SearchFromBrowseMapWitchPinsActivityViewModel
 
-class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() { //todo: wiki update
+class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
 
     override val wikiModulePath: String = "Module-Search#search---from-browse-map-with-pins"
 
