@@ -22,14 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.PositionData
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.utils.Elevation
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItem
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
-    R.drawable.ic_more,
-    R.drawable.bg_infobar_button_rounded,
-    R.color.white,
-    R.color.colorAccent
-)
+@Parcelize
+open class ActualElevationInfobarItem : InfobarItem<PositionData> {
+
+    @IgnoredOnParcel
+    override var text: CharSequence = EMPTY_STRING
+
+    override fun update(data: PositionData?) {
+        data?.let { text = Elevation.getFormattedElevation(it.currentLocation.altitude) }
+    }
+}

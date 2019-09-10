@@ -22,14 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.views.common.units
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
-    R.drawable.ic_more,
-    R.drawable.bg_infobar_button_rounded,
-    R.color.white,
-    R.color.colorAccent
-)
+@Parcelize
+enum class DistanceUnit : Parcelable {
+    KILOMETERS, MILES_YARDS, MILES_FEETS;
+
+    companion object {
+        fun atIndex(index: Int) = values()[index]
+    }
+}

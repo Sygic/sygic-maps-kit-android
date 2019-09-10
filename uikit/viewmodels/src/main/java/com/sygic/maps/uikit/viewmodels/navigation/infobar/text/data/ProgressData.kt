@@ -22,27 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 
-import androidx.lifecycle.MutableLiveData
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
 
-class InfobarButtonWrapper(
-    val imageResource: MutableLiveData<Int> = MutableLiveData(0),
-    val backgroundResource: MutableLiveData<Int> = MutableLiveData(0),
-    val imageTintColor: MutableLiveData<Int> = MutableLiveData(0),
-    val backgroundTintColor: MutableLiveData<Int> = MutableLiveData(0),
-    val visible: MutableLiveData<Boolean> = MutableLiveData(false)
-) {
-
-    fun setFrom(infobarButton: InfobarButton?) {
-        infobarButton?.let {
-            imageResource.value = it.imageResource
-            imageTintColor.value = it.imageTintColor
-            backgroundResource.value = it.backgroundResource
-            backgroundTintColor.value = it.backgroundTintColor
-            visible.value = true
-        } ?: run {
-            visible.value = false
-        }
-    }
-}
+data class ProgressData(val routeProgress: Int) : ItemData()

@@ -22,22 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.navigation.infobar.items
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 
-private const val DEFAULT_DIVIDER = " | "
+import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
+import java.util.*
+import java.util.concurrent.TimeUnit
 
-class InfobarItemsHolder(
-    vararg val items: String = emptyArray(),
-    val divider: String = DEFAULT_DIVIDER,
-    val prefix: String = "",
-    val postfix: String = "",
-    val limit: Int = -1
-) {
+data class TimeData(
+    private val dateTimeManager: DateTimeManager,
+    val timeToEndIdeal: Int,
+    val timeToEndWithSpeedProfile: Int,
+    val timeToEndWithSpeedProfileAndTraffic: Int
+) : ItemData() {
 
-    companion object {
-        val empty = InfobarItemsHolder()
-    }
-
-    fun isEmpty() = items.isEmpty()
-    fun isNotEmpty() = !isEmpty()
+    fun formatEstimateTime(): CharSequence = dateTimeManager.formatTime(
+        Date(
+            System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(
+                timeToEndWithSpeedProfileAndTraffic.toLong()
+            )
+        )
+    )
 }

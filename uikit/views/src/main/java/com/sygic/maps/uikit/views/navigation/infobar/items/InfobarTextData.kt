@@ -22,14 +22,26 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.views.navigation.infobar.items
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import android.os.Parcelable
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.SPACE
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
+import kotlinx.android.parcel.Parcelize
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
-    R.drawable.ic_more,
-    R.drawable.bg_infobar_button_rounded,
-    R.color.white,
-    R.color.colorAccent
-)
+@Parcelize
+class InfobarTextData(
+    val items: Array<InfobarItem<out ItemData>>,
+    val divider: String = SPACE,
+    val prefix: String = EMPTY_STRING,
+    val postfix: String = EMPTY_STRING
+) : Parcelable {
+
+    companion object {
+        val empty = InfobarTextData(emptyArray())
+    }
+
+    fun isEmpty() = items.isEmpty()
+    fun isNotEmpty() = !isEmpty()
+}

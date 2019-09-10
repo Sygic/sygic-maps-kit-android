@@ -22,14 +22,36 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.button
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
-    R.drawable.ic_more,
-    R.drawable.bg_infobar_button_rounded,
-    R.color.white,
-    R.color.colorAccent
-)
+/**
+ * Interface definition for a callback to be invoked when a click to the infobar button has been made.
+ */
+interface OnInfobarButtonClickListener {
+
+    /**
+     * Modifies the infobar button appearance. Icon and background drawable is required (icon and background tint can be
+     * optionally provided).
+     *
+     * @return your [InfobarButton] or null if no [InfobarButton] should be displayed.
+     */
+    val button: InfobarButton?
+
+    /**
+     * Called when a click to the infobar right button has been made.
+     */
+    fun onButtonClick()
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface OnInfobarButtonClickListenerWrapper {
+    val infobarButtonClickListenerProvider: LiveData<ProviderComponent>
+
+    data class ProviderComponent(
+        val onInfobarButtonClickListener: OnInfobarButtonClickListener?,
+        val infobarButtonType: InfobarButtonType
+    )
+}

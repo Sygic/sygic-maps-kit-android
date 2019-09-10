@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.views.navigation.infobar
 
 import android.animation.LayoutTransition
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -40,12 +41,12 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.backgroundTint
 import com.sygic.maps.uikit.views.common.extensions.tint
 import com.sygic.maps.uikit.views.databinding.LayoutInfobarInternalBinding
-import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItemsHolder
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 
 /**
  * A [Infobar] view can be used as an visual presentation component for the navigation info data (eta, distanceToEnd,
  * altitude etc.) and as user interaction component. It contains two [ImageButton]'s (left/right) and pre-customized
- * primary/secondary [TextView] which can be controlled with the [InfobarItemsHolder] class.
+ * primary/secondary [TextView] which can be controlled with the [InfobarTextData] class.
  *
  * The [Infobar] design can be completely changed with the custom _infoBarStyle_ or the standard android
  * attributes as _background_, _navigationTextColorPrimary_ or _navigationTextColorSecondary_ can be used. The [Infobar]
@@ -101,7 +102,7 @@ open class Infobar @JvmOverloads constructor(
                 )
 
                 elevation = it.getDimensionPixelSize(R.styleable.Infobar_android_elevation, 0).toFloat()
-                layoutMargin = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_margin, 0)
+                layoutMargin = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_margin, -1)
                 layoutMarginTop = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginTop, 0)
                 layoutMarginBottom = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginBottom, 0)
                 layoutMarginStart = it.getDimensionPixelSize(R.styleable.Infobar_android_layout_marginStart, 0)
@@ -115,7 +116,7 @@ open class Infobar @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         with((layoutParams as MarginLayoutParams)) {
-            if (layoutMargin != 0) {
+            if (layoutMargin >= 0) {
                 setMargins(layoutMargin, layoutMargin, layoutMargin, layoutMargin)
             } else {
                 setMargins(layoutMarginStart, layoutMarginTop, layoutMarginEnd, layoutMarginBottom)
@@ -132,7 +133,7 @@ open class Infobar @JvmOverloads constructor(
     @JvmOverloads
     fun setLeftButtonImageResource(@DrawableRes imageResource: Int, @ColorRes tintColor: Int = 0) {
         if (imageResource != 0) binding.infobarLeftButton.setImageResource(imageResource)
-        if (tintColor != 0) setLeftButtonImageTint(tintColor)
+        setLeftButtonImageTint(tintColor)
     }
 
     /**
@@ -141,7 +142,7 @@ open class Infobar @JvmOverloads constructor(
      * @param tintColor [Int] left button tint.
      */
     fun setLeftButtonImageTint(@ColorRes tintColor: Int) {
-        if (tintColor != 0) binding.infobarLeftButton.tint(tintColor)
+        binding.infobarLeftButton.tint(tintColor)
     }
 
     /**
@@ -153,7 +154,7 @@ open class Infobar @JvmOverloads constructor(
     @JvmOverloads
     fun setLeftButtonBackgroundResource(@DrawableRes backgroundResource: Int, @ColorRes tintColor: Int = 0) {
         if (backgroundResource != 0) binding.infobarLeftButton.setBackgroundResource(backgroundResource)
-        if (tintColor != 0) setLeftButtonBackgroundTint(tintColor)
+        setLeftButtonBackgroundTint(tintColor)
     }
 
     /**
@@ -162,7 +163,7 @@ open class Infobar @JvmOverloads constructor(
      * @param tintColor [Int] left button background tint.
      */
     fun setLeftButtonBackgroundTint(@ColorRes tintColor: Int) {
-        if (tintColor != 0) binding.infobarLeftButton.backgroundTint(tintColor)
+        binding.infobarLeftButton.backgroundTint(tintColor)
     }
 
     /**
@@ -192,7 +193,7 @@ open class Infobar @JvmOverloads constructor(
     @JvmOverloads
     fun setRightButtonImageResource(@DrawableRes imageResource: Int, @ColorRes tintColor: Int = 0) {
         if (imageResource != 0) binding.infobarRightButton.setImageResource(imageResource)
-        if (tintColor != 0) setRightButtonImageTint(tintColor)
+        setRightButtonImageTint(tintColor)
     }
 
     /**
@@ -201,7 +202,7 @@ open class Infobar @JvmOverloads constructor(
      * @param tintColor [Int] right button tint.
      */
     fun setRightButtonImageTint(@ColorRes tintColor: Int) {
-        if (tintColor != 0) binding.infobarRightButton.tint(tintColor)
+        binding.infobarRightButton.tint(tintColor)
     }
 
     /**
@@ -213,7 +214,7 @@ open class Infobar @JvmOverloads constructor(
     @JvmOverloads
     fun setRightButtonBackgroundResource(@DrawableRes backgroundResource: Int, @ColorRes tintColor: Int = 0) {
         if (backgroundResource != 0) binding.infobarRightButton.setBackgroundResource(backgroundResource)
-        if (tintColor != 0) setRightButtonBackgroundTint(tintColor)
+        setRightButtonBackgroundTint(tintColor)
     }
 
     /**
@@ -222,7 +223,7 @@ open class Infobar @JvmOverloads constructor(
      * @param tintColor [Int] right button background tint.
      */
     fun setRightButtonBackgroundTint(@ColorRes tintColor: Int) {
-        if (tintColor != 0) binding.infobarRightButton.backgroundTint(tintColor)
+        binding.infobarRightButton.backgroundTint(tintColor)
     }
 
     /**
@@ -232,7 +233,6 @@ open class Infobar @JvmOverloads constructor(
      */
     fun setOnRightButtonClickListener(listener: OnClickListener) {
         binding.infobarRightButton.setOnClickListener(listener)
-        binding.infobarRightButton.visibility = View.VISIBLE
     }
 
     /**
@@ -245,18 +245,19 @@ open class Infobar @JvmOverloads constructor(
     }
 
     /**
-     * Sets the [InfobarItemsHolder] which will be converted to the secondary infobar text.
+     * Sets the [InfobarTextData] which will be converted to the secondary infobar text.
      *
-     * @param itemsHolder [InfobarItemsHolder] primary infobar ItemsHolder with valid data, empty list otherwise.
+     * @param textData [InfobarTextData] primary infobar TextData with valid data, empty list otherwise.
      */
-    fun setPrimaryItemsHolder(itemsHolder: InfobarItemsHolder) {
-        if (itemsHolder.isNotEmpty()) {
-            binding.infobarPrimaryTextView.text = itemsHolder.items.joinToString(
-                itemsHolder.divider,
-                itemsHolder.prefix,
-                itemsHolder.postfix,
-                itemsHolder.limit
-            )
+    fun setPrimaryTextData(textData: InfobarTextData) {
+        if (textData.isNotEmpty()) {
+            binding.infobarPrimaryTextView.text =
+                textData.items.map { it.text }.filter { it.isNotEmpty() }.joinTo(
+                    SpannableStringBuilder(),
+                    textData.divider,
+                    textData.prefix,
+                    textData.postfix
+                )
             binding.infobarPrimaryTextView.visibility = View.VISIBLE
         } else {
             binding.infobarPrimaryTextView.text = EMPTY_STRING
@@ -265,18 +266,19 @@ open class Infobar @JvmOverloads constructor(
     }
 
     /**
-     * Sets the [InfobarItemsHolder] which will be converted to the secondary infobar text.
+     * Sets the [InfobarTextData] which will be converted to the secondary infobar text.
      *
-     * @param itemsHolder [InfobarItemsHolder] secondary infobar ItemsHolder with valid data, empty list otherwise.
+     * @param textData [InfobarTextData] secondary infobar TextData with valid data, empty list otherwise.
      */
-    fun setSecondaryItemsHolder(itemsHolder: InfobarItemsHolder) {
-        if (itemsHolder.isNotEmpty()) {
-            binding.infobarSecondaryTextView.text = itemsHolder.items.joinToString(
-                itemsHolder.divider,
-                itemsHolder.prefix,
-                itemsHolder.postfix,
-                itemsHolder.limit
-            )
+    fun setSecondaryTextData(textData: InfobarTextData) {
+        if (textData.isNotEmpty()) {
+            binding.infobarSecondaryTextView.text =
+                textData.items.map { it.text }.filter { it.isNotEmpty() }.joinTo(
+                    SpannableStringBuilder(),
+                    textData.divider,
+                    textData.prefix,
+                    textData.postfix
+                )
             binding.infobarSecondaryTextView.visibility = View.VISIBLE
         } else {
             binding.infobarSecondaryTextView.text = EMPTY_STRING

@@ -22,14 +22,9 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
-    R.drawable.ic_more,
-    R.drawable.bg_infobar_button_rounded,
-    R.color.white,
-    R.color.colorAccent
-)
+data class DistanceData(val distanceToEnd: Int, val distanceUnit: DistanceUnit) : ItemData()

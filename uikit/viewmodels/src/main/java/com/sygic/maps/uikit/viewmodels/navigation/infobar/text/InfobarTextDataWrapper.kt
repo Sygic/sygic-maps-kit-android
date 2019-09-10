@@ -22,14 +22,18 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
-    R.drawable.ic_more,
-    R.drawable.bg_infobar_button_rounded,
-    R.color.white,
-    R.color.colorAccent
-)
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface InfobarTextDataWrapper {
+    val infobarTextDataProvider: LiveData<ProviderComponent>
+
+    data class ProviderComponent(
+        val textData: InfobarTextData,
+        val textType: InfobarTextType
+    )
+}
