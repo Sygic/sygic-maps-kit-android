@@ -25,7 +25,6 @@
 package com.sygic.samples.search
 
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
@@ -33,46 +32,27 @@ import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.search.viewmodels.SearchFromBrowseMapWitchPinsActivityViewModel
-import com.sygic.sdk.map.MapRectangle
-import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.map.`object`.MapMarker
 
-class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
+class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() { //todo: wiki update
 
     override val wikiModulePath: String = "Module-Search#search---from-browse-map-with-pins"
 
-    private lateinit var browseMapFragment: BrowseMapFragment
+    private lateinit var viewModel: SearchFromBrowseMapWitchPinsActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_search_from_browse_map_pins)
 
-        val viewModel =
-            ViewModelProviders.of(this).get(SearchFromBrowseMapWitchPinsActivityViewModel::class.java).apply {
-                //TODO: MS-5347
-                this.addMapMarkerObservable.observe(
-                    this@SearchFromBrowseMapWithPinsActivity,
-                    Observer<MapMarker> { addMapMarker(it) })
-                this.removeAllMapMarkersObservable.observe(
-                    this@SearchFromBrowseMapWithPinsActivity,
-                    Observer<Any> { removeAllMapMarkers() })
-                this.setCameraPositionObservable.observe(
-                    this@SearchFromBrowseMapWithPinsActivity,
-                    Observer<GeoCoordinates> { setCameraPosition(it) })
-                this.setCameraRectangleObservable.observe(
-                    this@SearchFromBrowseMapWithPinsActivity,
-                    Observer<MapRectangle> { setCameraRectangle(it) })
-                this.setCameraZoomLevelObservable.observe(
-                    this@SearchFromBrowseMapWithPinsActivity,
-                    Observer<Float> { setCameraZoomLevel(it) })
-            }
+        viewModel = ViewModelProviders.of(this)
+            .get(SearchFromBrowseMapWitchPinsActivityViewModel::class.java)
 
-        if (savedInstanceState == null) {
-            browseMapFragment = placeBrowseMapFragment().apply { cameraDataModel.zoomLevel = 2F }
+        val browseMapFragment = if (savedInstanceState == null) {
+            placeBrowseMapFragment().apply { cameraDataModel.zoomLevel = 2F }
         } else {
-            browseMapFragment = supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment
+            supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment
         }
+
         setFragmentModuleConnection(browseMapFragment, viewModel)
     }
 
@@ -83,6 +63,10 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
             supportFragmentManager
                 ?.beginTransaction()
                 ?.replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
+                ?.runOnCommit {
+                    viewModel.mapDataModel = it.mapDataModel
+                    viewModel.cameraDataModel = it.cameraDataModel
+                }
                 ?.commit()
         }
 
@@ -90,20 +74,4 @@ class SearchFromBrowseMapWithPinsActivity : CommonSampleActivity() {
         fragment: BrowseMapFragment,
         moduleConnectionProvider: ModuleConnectionProvider
     ) = fragment.setSearchConnectionProvider(moduleConnectionProvider)
-
-    private fun addMapMarker(mapMarker: MapMarker) = browseMapFragment.addMapMarker(mapMarker)
-
-    private fun removeAllMapMarkers() = browseMapFragment.removeAllMapMarkers()
-
-    private fun setCameraPosition(position: GeoCoordinates) {
-        browseMapFragment.cameraDataModel.position = position
-    }
-
-    private fun setCameraRectangle(mapRectangle: MapRectangle) {
-        browseMapFragment.cameraDataModel.mapRectangle = mapRectangle
-    }
-
-    private fun setCameraZoomLevel(zoomLevel: Float) {
-        browseMapFragment.cameraDataModel.zoomLevel = zoomLevel
-    }
 }
