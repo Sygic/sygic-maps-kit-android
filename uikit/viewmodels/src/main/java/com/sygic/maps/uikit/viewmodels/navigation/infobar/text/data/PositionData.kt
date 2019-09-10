@@ -22,22 +22,9 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.navigation.infobar.items
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 
-private const val DEFAULT_DIVIDER = " | "
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
+import com.sygic.sdk.position.GeoCoordinates
 
-class InfobarItemsHolder(
-    vararg val items: String = emptyArray(),
-    val divider: String = DEFAULT_DIVIDER,
-    val prefix: String = "",
-    val postfix: String = "",
-    val limit: Int = -1
-) {
-
-    companion object {
-        val empty = InfobarItemsHolder()
-    }
-
-    fun isEmpty() = items.isEmpty()
-    fun isNotEmpty() = !isEmpty()
-}
+data class PositionData(val currentLocation: GeoCoordinates) : ItemData()

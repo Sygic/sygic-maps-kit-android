@@ -24,23 +24,24 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation.infobar
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
-import com.sygic.maps.uikit.viewmodels.common.utils.Distance
-import com.sygic.maps.uikit.viewmodels.common.utils.Elevation
-import com.sygic.maps.uikit.viewmodels.common.utils.Time
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextDataWrapper
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextType
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.DistanceData
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.PositionData
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.TimeData
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.*
 import com.sygic.maps.uikit.views.common.extensions.SPACE
+import com.sygic.maps.uikit.views.common.extensions.VERTICAL_BAR
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
-import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItemsHolder
+import com.sygic.maps.uikit.views.navigation.infobar.items.*
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.position.PositionManager
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * A [InfobarViewModel] is a basic ViewModel implementation for the [Infobar] view class. It listens
@@ -54,10 +55,11 @@ open class InfobarViewModel internal constructor(
     private val dateTimeManager: DateTimeManager,
     private val positionManager: PositionManager,
     private val navigationManager: NavigationManager
-) : ViewModel(), NavigationManager.OnNaviStatsListener {
+) : ViewModel(), DefaultLifecycleObserver, NavigationManager.OnNaviStatsListener {
 
-    val primaryItemsHolder = MutableLiveData(InfobarItemsHolder(divider = SPACE))
-    val secondaryItemsHolder = MutableLiveData(InfobarItemsHolder.empty)
+    val textDataPrimary: LiveData<InfobarTextData> = MutableLiveData(InfobarTextData.empty)
+    val textDataSecondary: LiveData<InfobarTextData> = MutableLiveData(InfobarTextData.empty)
+    private val textDataMap: Map<InfobarTextType, InfobarTextData> = mutableMapOf()
 
     private var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
     private val distanceUnitObserver = Observer<DistanceUnit> { distanceUnit = it }
@@ -65,11 +67,39 @@ open class InfobarViewModel internal constructor(
     init {
         navigationManager.addOnNaviStatsListener(this)
         regionalManager.distanceUnit.observeForever(distanceUnitObserver)
+
+        setTextData(
+            InfobarTextType.PRIMARY, InfobarTextData(
+                items = arrayOf(RemainingTimeInfobarItem())
+            )
+        )
+
+        setTextData(
+            InfobarTextType.SECONDARY, InfobarTextData(
+                items = arrayOf(
+                    RemainingDistanceInfobarItem(),
+                    ActualElevationInfobarItem(),
+                    EstimatedTimeInfobarItem()
+                ),
+                divider = SPACE + VERTICAL_BAR + SPACE
+            )
+        )
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        if (owner is InfobarTextDataWrapper) {
+            owner.infobarTextDataProvider.observe(owner, Observer {
+                setTextData(it.textType, it.textData)
+            })
+        }
     }
 
     override fun onNaviStatsChanged(
-        distanceToEnd: Int, timeToEndIdeal: Int, timeToEndWithSpeedProfile: Int,
-        timeToEndWithSpeedProfileAndTraffic: Int, routeProgress: Int
+        distanceToEnd: Int,
+        timeToEndIdeal: Int,
+        timeToEndWithSpeedProfile: Int,
+        timeToEndWithSpeedProfileAndTraffic: Int,
+        routeProgress: Int
     ) {
         if (distanceToEnd == 0 && timeToEndIdeal == 0 && timeToEndWithSpeedProfile == 0
             && timeToEndWithSpeedProfileAndTraffic == 0 && routeProgress == 0
@@ -77,25 +107,47 @@ open class InfobarViewModel internal constructor(
             return
         }
 
-        primaryItemsHolder.value = InfobarItemsHolder(
-            formatRemainingTime(timeToEndWithSpeedProfileAndTraffic)
+        val currentLocation = positionManager.lastKnownPosition.coordinates
+        val positionData = PositionData(currentLocation)
+        val distanceData = DistanceData(distanceToEnd, distanceUnit)
+        val timeData = TimeData(
+            dateTimeManager, timeToEndIdeal,
+            timeToEndWithSpeedProfile,
+            timeToEndWithSpeedProfileAndTraffic
         )
-        secondaryItemsHolder.value = InfobarItemsHolder(
-            formatRemainingDistance(distanceToEnd),
-            formatCurrentElevation(),
-            formatEstimatedTime(timeToEndWithSpeedProfileAndTraffic)
-        )
+
+        updateTextData(positionData, distanceData, timeData)
     }
 
-    open fun formatRemainingTime(time: Int) = Time.getFormattedTime(time)
+    private fun updateTextData(
+        positionData: PositionData,
+        distanceData: DistanceData,
+        timeData: TimeData
+    ) {
+        textDataMap.forEach {
+            setTextData(it.key, it.value.also { infobarTextData ->
+                infobarTextData.items.forEach { item ->
+                    when (item) {
+                        is ActualElevationInfobarItem -> item.update(positionData)
+                        is EstimatedTimeInfobarItem -> item.update(timeData)
+                        is RemainingDistanceInfobarItem -> item.update(distanceData)
+                        is RemainingTimeInfobarItem -> item.update(timeData)
+                        else -> item.update(null)
+                    }
+                }
+            })
+        }
+    }
 
-    open fun formatRemainingDistance(distance: Int) = Distance.getFormattedDistance(distanceUnit, distance)
+    fun setTextData(textType: InfobarTextType, data: InfobarTextData) {
+        (textDataMap as MutableMap)[textType] = data
+        when (textType) {
+            InfobarTextType.PRIMARY -> textDataPrimary.asMutable().value = data
+            InfobarTextType.SECONDARY -> textDataSecondary.asMutable().value = data
+        }
+    }
 
-    //TODO: Waiting from SDK PR (https://git.sygic.com/projects/NAVI/repos/sdk/pull-requests/3903/overview)
-    open fun formatCurrentElevation() = Elevation.getFormattedElevation(/*positionManager.lastKnownPosition.coordinates.altitude*/ 600)
-
-    open fun formatEstimatedTime(estimatedTime: Int) =
-        dateTimeManager.formatTime(Date(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(estimatedTime.toLong())))
+    fun getTextData(textType: InfobarTextType): InfobarTextData = textDataMap[textType] ?: InfobarTextData.empty
 
     override fun onCleared() {
         super.onCleared()

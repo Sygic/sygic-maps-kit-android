@@ -22,16 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.regional.units
+package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager
+import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
+import java.util.*
+import java.util.concurrent.TimeUnit
 
-@Parcelize
-enum class DistanceUnit : Parcelable {
-    KILOMETERS, MILES_YARDS, MILES_FEETS;
+data class TimeData(
+    private val dateTimeManager: DateTimeManager,
+    val timeToEndIdeal: Int,
+    val timeToEndWithSpeedProfile: Int,
+    val timeToEndWithSpeedProfileAndTraffic: Int
+) : ItemData() {
 
-    companion object {
-        fun atIndex(index: Int) = values()[index]
-    }
+    fun formatEstimateTime(): CharSequence = dateTimeManager.formatTime(
+        Date(
+            System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(
+                timeToEndWithSpeedProfileAndTraffic.toLong()
+            )
+        )
+    )
 }

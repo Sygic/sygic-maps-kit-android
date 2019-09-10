@@ -26,7 +26,7 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="?attr/colorControlHighlight">
     <item>
-        <shape>
+        <shape android:shape="rectangle">
             <solid android:color="?android:attr/colorAccent" />
             <corners android:radius="16dp" />
         </shape>

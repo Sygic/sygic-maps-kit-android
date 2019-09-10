@@ -26,3 +26,4 @@ package com.sygic.maps.uikit.views.common.extensions
 
 const val EMPTY_STRING = ""
 const val SPACE = " "
+const val VERTICAL_BAR = "|"
