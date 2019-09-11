@@ -22,29 +22,37 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.navigation.infobar
+package com.sygic.maps.uikit.views.navigation.infobar.buttons
 
 import androidx.databinding.BindingAdapter
-import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButtonWrapper
+import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 
 @BindingAdapter(value = ["leftButton"])
-fun setLeftButtonWrapper(infobar: Infobar, leftButtonWrapper: InfobarButtonWrapper) {
-    with(leftButtonWrapper) {
-        infobar.setLeftButtonBackgroundResource(backgroundResource)
-        infobar.setLeftButtonBackgroundTint(backgroundTintColor)
-        infobar.setLeftButtonImageResource(imageResource)
-        infobar.setLeftButtonImageTint(imageTintColor)
-        infobar.setLeftButtonVisible(visible)
+fun setLeftButton(infobar: Infobar, leftButton: InfobarButton?) {
+    if (leftButton != null) {
+        with(leftButton) {
+            infobar.setLeftButtonBackgroundResource(backgroundResource)
+            infobar.setLeftButtonBackgroundTint(backgroundTintColor)
+            infobar.setLeftButtonImageResource(imageResource)
+            infobar.setLeftButtonImageTint(imageTintColor)
+            infobar.setLeftButtonVisible(true)
+        }
+    } else {
+        infobar.setLeftButtonVisible(false)
     }
 }
 
 @BindingAdapter(value = ["rightButton"])
-fun setRightButtonWrapper(infobar: Infobar, rightButtonWrapper: InfobarButtonWrapper) {
-    with(rightButtonWrapper) {
-        infobar.setRightButtonBackgroundResource(backgroundResource)
-        infobar.setRightButtonBackgroundTint(backgroundTintColor)
-        infobar.setRightButtonImageResource(imageResource)
-        infobar.setRightButtonImageTint(imageTintColor)
-        infobar.setRightButtonVisible(visible)
+fun setRightButton(infobar: Infobar, rightButton: InfobarButton?) {
+    if (rightButton != null) {
+        with(rightButton) {
+            infobar.setRightButtonBackgroundResource(backgroundResource)
+            infobar.setRightButtonBackgroundTint(backgroundTintColor)
+            infobar.setRightButtonImageResource(imageResource)
+            infobar.setRightButtonImageTint(imageTintColor)
+            infobar.setRightButtonVisible(true)
+        }
+    } else {
+        infobar.setRightButtonVisible(false)
     }
 }
