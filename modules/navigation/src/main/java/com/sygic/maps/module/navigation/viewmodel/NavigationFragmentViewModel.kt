@@ -36,7 +36,7 @@ import com.sygic.maps.module.navigation.R
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonWrapper
+import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButtonWrapper
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper

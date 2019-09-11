@@ -22,14 +22,29 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.infobar.button
+package com.sygic.maps.uikit.views.navigation.infobar
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import androidx.databinding.BindingAdapter
+import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButtonWrapper
 
-open class InfobarButton(
-    @DrawableRes val imageResource: Int,
-    @DrawableRes val backgroundResource: Int,
-    @ColorRes val imageTintColor: Int = 0,
-    @ColorRes val backgroundTintColor: Int = 0
-)
+@BindingAdapter(value = ["leftButton"])
+fun setLeftButtonWrapper(infobar: Infobar, leftButtonWrapper: InfobarButtonWrapper) {
+    with(leftButtonWrapper) {
+        infobar.setLeftButtonBackgroundResource(backgroundResource)
+        infobar.setLeftButtonBackgroundTint(backgroundTintColor)
+        infobar.setLeftButtonImageResource(imageResource)
+        infobar.setLeftButtonImageTint(imageTintColor)
+        infobar.setLeftButtonVisible(visible)
+    }
+}
+
+@BindingAdapter(value = ["rightButton"])
+fun setRightButtonWrapper(infobar: Infobar, rightButtonWrapper: InfobarButtonWrapper) {
+    with(rightButtonWrapper) {
+        infobar.setRightButtonBackgroundResource(backgroundResource)
+        infobar.setRightButtonBackgroundTint(backgroundTintColor)
+        infobar.setRightButtonImageResource(imageResource)
+        infobar.setRightButtonImageTint(imageTintColor)
+        infobar.setRightButtonVisible(visible)
+    }
+}

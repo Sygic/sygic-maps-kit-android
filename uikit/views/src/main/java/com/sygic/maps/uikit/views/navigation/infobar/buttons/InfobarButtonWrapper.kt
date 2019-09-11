@@ -22,14 +22,28 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.infobar
+package com.sygic.maps.uikit.views.navigation.infobar.buttons
 
-import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
-    R.drawable.ic_more,
-    R.drawable.bg_infobar_button_rounded,
-    R.color.white,
-    R.color.colorAccent
-)
+class InfobarButtonWrapper(
+    @DrawableRes var imageResource: Int = 0,
+    @DrawableRes var backgroundResource: Int = 0,
+    @ColorRes var imageTintColor: Int = 0,
+    @ColorRes var backgroundTintColor: Int = 0,
+    var visible: Boolean = false
+) {
+
+    fun setFrom(infobarButton: InfobarButton?) {
+        if (infobarButton != null) {
+            imageResource = infobarButton.imageResource
+            imageTintColor = infobarButton.imageTintColor
+            backgroundResource = infobarButton.backgroundResource
+            backgroundTintColor = infobarButton.backgroundTintColor
+            visible = true
+        } else {
+            visible = false
+        }
+    }
+}
