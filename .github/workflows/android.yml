@@ -14,5 +14,5 @@ jobs:
       uses: msfjarvis/setup-android@0.1
     - name: Build
       run: ./gradlew :app-samples:check
-    - name: Ui Tests
+#    - name: Ui Tests
 #      run: ./test.sh
