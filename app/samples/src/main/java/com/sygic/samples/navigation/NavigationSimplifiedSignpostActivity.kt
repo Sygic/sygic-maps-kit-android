@@ -42,7 +42,7 @@ class NavigationSimplifiedSignpostActivity : CommonSampleActivity() {
 
         if (savedInstanceState == null) {
             computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
             }
         }
     }

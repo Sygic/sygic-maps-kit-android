@@ -54,6 +54,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/navigationFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
@@ -61,10 +62,10 @@
         android:focusable="true">
 
         <ViewStub
-            android:id="@+id/signpostViewViewStub"
+            android:id="@+id/signpostView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inflatedId="@+id/signpostView"
+            android:inflatedId="@id/signpostView"
             android:layout="@{navigationFragmentViewModel.signpostLayout}"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"

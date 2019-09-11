@@ -22,28 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.samples.navigation.robot
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import com.sygic.samples.base.BaseRobot
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+fun navigation(commonSampleActivity: CommonSampleActivity, func: NavigationRobot.() -> Unit) =
+    NavigationRobot(commonSampleActivity).apply { func() }
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---preview-enabled"
+@Suppress("MemberVisibilityCanBePrivate", "unused")
+class NavigationRobot(private val activity: CommonSampleActivity) : BaseRobot(activity, R.id.navigationFragment) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
-            }
-        }
-    }
 }

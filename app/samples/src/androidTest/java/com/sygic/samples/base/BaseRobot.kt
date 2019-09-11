@@ -36,6 +36,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import com.sygic.samples.app.activities.CommonSampleActivity
 import org.hamcrest.Matchers.not
 import org.hamcrest.core.AllOf.allOf
+import org.junit.Assert.assertEquals
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes private val parentViewId: Int) {
@@ -81,5 +82,9 @@ abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes priv
 
     fun pressImeActionButton(@IdRes viewId: Int) {
         onView(withId(viewId)).perform(pressImeActionButton())
+    }
+
+    fun isActivityFinishing() {
+        assertEquals(true, activity.isFinishing)
     }
 }

@@ -71,7 +71,7 @@ class NavigationDefaultActivity : CommonSampleActivity() {
             }
 
             computePrimaryRoute(routePlan) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo =
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo =
                     route
             }
         }

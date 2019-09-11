@@ -272,7 +272,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
             speedLimitViewModel = this@NavigationFragment.speedLimitViewModel
             lifecycleOwner = this@NavigationFragment
 
-            signpostViewViewStub.setOnInflateListener { _, view ->
+            signpostView.setOnInflateListener { _, view ->
                 DataBindingUtil.bind<ViewDataBinding>(view)?.let {
                     it.setVariable(
                         BR.signpostViewModel, when (view) {
