@@ -101,8 +101,8 @@ class NavigationFragmentViewModel internal constructor(
     val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
-    val leftInfobarButtonWrapper = InfobarButtonWrapper()
-    val rightInfobarButtonWrapper = InfobarButtonWrapper()
+    val leftInfobarButton = InfobarButtonWrapper()
+    val rightInfobarButton = InfobarButtonWrapper()
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
@@ -204,8 +204,8 @@ class NavigationFragmentViewModel internal constructor(
     ) {
         (infobarButtonListenersMap as MutableMap)[buttonType] = listener
         when (buttonType) {
-            InfobarButtonType.LEFT -> leftInfobarButtonWrapper.setFrom(listener?.button)
-            InfobarButtonType.RIGHT -> rightInfobarButtonWrapper.setFrom(listener?.button)
+            InfobarButtonType.LEFT -> leftInfobarButton.setFrom(listener?.button)
+            InfobarButtonType.RIGHT -> rightInfobarButton.setFrom(listener?.button)
         }
     }
 
