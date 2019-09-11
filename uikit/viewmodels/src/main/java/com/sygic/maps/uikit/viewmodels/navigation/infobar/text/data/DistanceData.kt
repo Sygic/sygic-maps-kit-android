@@ -27,4 +27,4 @@ package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
 
-data class DistanceData(val distanceToEnd: Int, val distanceUnit: DistanceUnit) : ItemData()
+data class DistanceData(val distanceToEnd: Int, val distanceUnit: DistanceUnit) : ItemData

@@ -27,4 +27,4 @@ package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
 import com.sygic.sdk.position.GeoCoordinates
 
-data class PositionData(val currentLocation: GeoCoordinates) : ItemData()
+data class PositionData(val currentLocation: GeoCoordinates) : ItemData
