@@ -17,4 +17,4 @@ jobs:
     - name: Build
       run: ./gradlew :app-samples:check
     - name: Ui Tests
-        uses: vgaidarji/android-github-actions/emulator@v1.0.0
+      uses: vgaidarji/android-github-actions/emulator@v1.0.0
