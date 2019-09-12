@@ -22,14 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.infobar.button
+package com.sygic.maps.module.navigation.infobar
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
 
-open class InfobarButton(
-    @DrawableRes val imageResource: Int,
-    @DrawableRes val backgroundResource: Int,
-    @ColorRes val imageTintColor: Int = 0,
-    @ColorRes val backgroundTintColor: Int = 0
-)
+internal abstract class InternalLeftInfobarClickListener : OnInfobarButtonClickListener

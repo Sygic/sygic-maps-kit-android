@@ -113,6 +113,10 @@
             android:name=".navigation.NavigationSimplifiedSignpostActivity"
             android:label="@string/navigation_simplified_signpost"
             android:theme="@style/AppTheme.NoExitAnimation" />
+        <activity
+            android:name=".navigation.NavigationInfobarCustomClickListenerActivity"
+            android:label="@string/navigation_infobar_custom_click_listener"
+            android:theme="@style/AppTheme.NoExitAnimation" />
 
         <meta-data
             android:name="@string/com_sygic_api_key"

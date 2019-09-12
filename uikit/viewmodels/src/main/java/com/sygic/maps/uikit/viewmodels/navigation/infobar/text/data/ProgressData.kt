@@ -26,4 +26,4 @@ package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
 
 import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
 
-data class ProgressData(val routeProgress: Int) : ItemData()
+data class ProgressData(val routeProgress: Int) : ItemData

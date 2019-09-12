@@ -32,6 +32,7 @@ import java.text.DecimalFormatSymbols
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
+//todo: texty jednotiek budeme potrebovat nacitavat z resourcov
 object Distance {
 
     private const val METRIC_KM_DISTANCE_UNIT = "km"
