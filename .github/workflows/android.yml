@@ -11,8 +11,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1.0.0
     - name: Set-up workspace
-      uses: msfjarvis/setup-android@0.1
-    - name: Build
+      uses: actions/setup-java@v1
+#      uses: msfjarvis/setup-android@0.1
+    - name: Compile and test sample app
       run: ./gradlew :app-samples:check
 #    - name: Ui Tests
+#      uses: vgaidarji/android-github-actions/emulator@v1.0.0
 #      run: ./test.sh
