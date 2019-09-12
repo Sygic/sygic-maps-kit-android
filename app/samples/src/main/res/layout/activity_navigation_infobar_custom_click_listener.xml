@@ -23,41 +23,16 @@
   ~ SOFTWARE.
   -->
 
-<animated-selector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:constantSize="true">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <item
-        android:id="@+id/pauseState"
-        android:drawable="@drawable/ic_pause_to_play"
-        android:state_checked="true" />
-    <item
-        android:id="@+id/playState"
-        android:drawable="@drawable/ic_play_to_pause" />
+    <fragment
+        android:id="@+id/navigationFragment"
+        class="com.sygic.maps.module.navigation.NavigationFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:sygic_navigation_previewMode="true" />
 
-    <transition
-        android:fromId="@id/playState"
-        android:toId="@id/pauseState">
-
-        <animated-vector android:drawable="@drawable/ic_play_to_pause">
-
-            <target
-                android:name="play_to_pause"
-                android:animation="@anim/play_to_pause" />
-        </animated-vector>
-
-    </transition>
-
-    <transition
-        android:fromId="@id/pauseState"
-        android:toId="@id/playState">
-
-        <animated-vector android:drawable="@drawable/ic_pause_to_play">
-
-            <target
-                android:name="pause_to_play"
-                android:animation="@anim/pause_to_play" />
-        </animated-vector>
-
-    </transition>
-
-</animated-selector>
+</FrameLayout>

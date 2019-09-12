@@ -27,7 +27,7 @@ package com.sygic.maps.module.navigation.infobar
 import com.sygic.maps.module.navigation.R
 import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 
-open class NavigationDefaultLeftInfobarButton : InfobarButton(
+class NavigationDefaultLeftInfobarButton : InfobarButton(
     R.drawable.ic_more,
     R.drawable.bg_infobar_button_rounded,
     R.color.white,
