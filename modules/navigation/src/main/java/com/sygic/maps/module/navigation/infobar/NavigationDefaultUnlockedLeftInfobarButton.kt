@@ -22,9 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
+package com.sygic.maps.module.navigation.infobar
 
-import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
-import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.maps.module.navigation.R
+import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 
-data class PositionData(val currentLocation: GeoCoordinates) : ItemData
+class NavigationDefaultUnlockedLeftInfobarButton : InfobarButton(
+    R.drawable.ic_map_lock_full,
+    R.drawable.bg_infobar_button_rounded,
+    R.color.white,
+    R.color.colorAccent
+)
