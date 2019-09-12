@@ -24,9 +24,29 @@
 
 package com.sygic.maps.uikit.views.navigation.actionmenu.listener
 
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
 
+/**
+ * Interface definition for a callback to be invoked when a click to the action menu item has been made.
+ */
 @FunctionalInterface
 interface ActionMenuItemClickListener {
+
+    /**
+     * Called when a click to the action menu item has been made.
+     */
     fun onActionMenuItemClick(actionMenuItem: ActionMenuItem)
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface ActionMenuItemsProviderWrapper {
+    val actionMenuItemsProvider: LiveData<ProviderComponent>
+
+    data class ProviderComponent(
+        val actionMenuData: ActionMenuData,
+        val actionMenuItemClickListener: ActionMenuItemClickListener
+    )
 }

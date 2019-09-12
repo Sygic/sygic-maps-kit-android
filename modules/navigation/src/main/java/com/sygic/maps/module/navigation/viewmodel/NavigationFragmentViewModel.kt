@@ -64,6 +64,7 @@ import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
 import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
@@ -125,35 +126,6 @@ class NavigationFragmentViewModel internal constructor(
     val actionMenuItemClickListenerObservable: LiveData<ActionMenuItemClickListener> = SingleLiveEvent()
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
-    val actionMenuItemClickListener: ActionMenuItemClickListener =
-        object : ActionMenuItemClickListener {
-            override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
-                when (actionMenuItem) {
-                    is SoundsOnActionMenuItem -> {
-                        navigationManager.removeAudioWarningListener()
-                        navigationManager.removeAudioInstructionListener()
-                        infoToastObservable.asSingleEvent().value =
-                            InfoToastComponent(R.drawable.ic_sounds_on, R.string.sounds_enabled)
-                    }
-                    is SoundsOffActionMenuItem -> {
-                        navigationManager.setAudioWarningListener(NoAudioWarningListener())
-                        navigationManager.setAudioInstructionListener(NoAudioInstructionListener())
-                        infoToastObservable.asSingleEvent().value =
-                            InfoToastComponent(R.drawable.ic_sounds_off, R.string.sounds_disabled)
-                    }
-                }
-                actionMenuHideObservable.asSingleEvent().call()
-            }
-        }
-
-    private val actionMenuData = ActionMenuData(
-        TextHolder.from(R.string.action_menu),
-        listOf(
-            SoundsOnActionMenuItem(),
-            SoundsOffActionMenuItem()
-        )
-    )
-
     private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
 
     private val navigationDefaultLeftInfobarClickListener = object : InternalLeftInfobarClickListener() {
@@ -174,11 +146,42 @@ class NavigationFragmentViewModel internal constructor(
         override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 
+    private val navigationDefaultActionMenuData = ActionMenuData(
+        TextHolder.from(R.string.action_menu),
+        listOf(
+            SoundsOnActionMenuItem(),
+            SoundsOffActionMenuItem()
+        )
+    )
+
+    private val navigationDefaultActionMenuItemClickListener = object : ActionMenuItemClickListener {
+            override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
+                when (actionMenuItem) {
+                    is SoundsOnActionMenuItem -> {
+                        navigationManager.removeAudioWarningListener()
+                        navigationManager.removeAudioInstructionListener()
+                        infoToastObservable.asSingleEvent().value =
+                            InfoToastComponent(R.drawable.ic_sounds_on, R.string.sounds_enabled)
+                    }
+                    is SoundsOffActionMenuItem -> {
+                        navigationManager.setAudioWarningListener(NoAudioWarningListener())
+                        navigationManager.setAudioInstructionListener(NoAudioInstructionListener())
+                        infoToastObservable.asSingleEvent().value =
+                            InfoToastComponent(R.drawable.ic_sounds_off, R.string.sounds_disabled)
+                    }
+                }
+                actionMenuHideObservable.asSingleEvent().call()
+            }
+        }
+
     var distanceUnit: DistanceUnit
         get() = regionalManager.distanceUnit.value!!
         set(value) {
             regionalManager.distanceUnit.value = value
         }
+
+    var actionMenuData: ActionMenuData = navigationDefaultActionMenuData
+    var actionMenuItemClickListener: ActionMenuItemClickListener = navigationDefaultActionMenuItemClickListener
 
     init {
         with(arguments) {
@@ -206,6 +209,12 @@ class NavigationFragmentViewModel internal constructor(
         if (owner is OnInfobarButtonClickListenerWrapper) {
             owner.infobarButtonClickListenerProvider.observe(owner, Observer {
                 updateInfobarListenersMap(it.infobarButtonType, it.onInfobarButtonClickListener)
+            })
+        }
+        if (owner is ActionMenuItemsProviderWrapper) {
+            owner.actionMenuItemsProvider.observe(owner, Observer {
+                actionMenuData = it.actionMenuData
+                actionMenuItemClickListener = it.actionMenuItemClickListener
             })
         }
     }

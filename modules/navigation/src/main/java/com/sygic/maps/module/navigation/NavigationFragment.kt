@@ -57,6 +57,7 @@ import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
@@ -80,7 +81,7 @@ internal const val KEY_ROUTE_INFO = "route_info"
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
-    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper {
+    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
@@ -88,6 +89,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
 
     override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
     override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
+    override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
@@ -270,6 +272,21 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
         fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as DialogFragment).dismiss()
         }
+    }
+
+    /**
+     * Set a custom [ActionMenuData] and [ActionMenuItemClickListener] for the [ActionMenuBottomDialogFragment] content fulfillment.
+     *
+     * @param actionMenuData [ActionMenuData] which will be used for fulfillment the [ActionMenuBottomDialogFragment] content.
+     * @param actionMenuItemClickListener [ActionMenuItemClickListener] callback to invoke action menu item click.
+     *
+     */
+    fun setActionMenuItems(
+        actionMenuData: ActionMenuData,
+        actionMenuItemClickListener: ActionMenuItemClickListener
+    ) {
+        actionMenuItemsProvider.asMutable().value =
+            ActionMenuItemsProviderWrapper.ProviderComponent(actionMenuData, actionMenuItemClickListener)
     }
 
     /**

@@ -62,7 +62,7 @@ open class ActionMenuBottomDialogFragment : AppCompatDialogFragment() {
     private lateinit var binding: LayoutActionMenuInternalBinding
 
     /**
-     * Set a [ActionMenuData] for [ActionMenuBottomDialogFragment] content generation.
+     * Set a [ActionMenuData] for the [ActionMenuBottomDialogFragment] content fulfillment.
      *
      * @param [ActionMenuData] which will be used for fulfillment the [ActionMenuBottomDialogFragment] content.
      */
