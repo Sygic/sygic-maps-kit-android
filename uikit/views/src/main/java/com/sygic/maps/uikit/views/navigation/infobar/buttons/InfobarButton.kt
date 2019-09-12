@@ -22,27 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.infobar.button
+package com.sygic.maps.uikit.views.navigation.infobar.buttons
 
-import androidx.lifecycle.MutableLiveData
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 
-class InfobarButtonWrapper(
-    val imageResource: MutableLiveData<Int> = MutableLiveData(0),
-    val backgroundResource: MutableLiveData<Int> = MutableLiveData(0),
-    val imageTintColor: MutableLiveData<Int> = MutableLiveData(0),
-    val backgroundTintColor: MutableLiveData<Int> = MutableLiveData(0),
-    val visible: MutableLiveData<Boolean> = MutableLiveData(false)
-) {
-
-    fun setFrom(infobarButton: InfobarButton?) {
-        if (infobarButton != null) {
-            imageResource.value = infobarButton.imageResource
-            imageTintColor.value = infobarButton.imageTintColor
-            backgroundResource.value = infobarButton.backgroundResource
-            backgroundTintColor.value = infobarButton.backgroundTintColor
-            visible.value = true
-        } else {
-            visible.value = false
-        }
-    }
-}
+open class InfobarButton(
+    @DrawableRes val imageResource: Int,
+    @DrawableRes val backgroundResource: Int,
+    @ColorRes val imageTintColor: Int = 0,
+    @ColorRes val backgroundTintColor: Int = 0
+)

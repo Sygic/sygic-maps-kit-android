@@ -29,8 +29,6 @@
     android:viewportHeight="24.0">
 
     <path
-        android:name="play_to_pause"
         android:fillColor="?android:attr/colorAccent"
-        android:pathData="M9.75,7 L18.75,12.024 L18.75,12.029 L9.75,17.053 L9.75,7 Z M5.25,19.5 L5.25,4.5 L9.75,7
-            L9.75,17.053 L5.25,19.5Z" />
+        android:pathData="M8,5v14l11,-7z" />
 </vector>
