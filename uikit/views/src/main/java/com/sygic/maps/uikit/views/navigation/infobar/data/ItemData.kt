@@ -24,10 +24,4 @@
 
 package com.sygic.maps.uikit.views.navigation.infobar.data
 
-open class ItemData {
-
-    companion object {
-
-        val empty = ItemData()
-    }
-}
+interface ItemData

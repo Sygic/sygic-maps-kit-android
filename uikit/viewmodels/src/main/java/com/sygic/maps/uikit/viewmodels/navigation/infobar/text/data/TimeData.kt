@@ -34,7 +34,7 @@ data class TimeData(
     val timeToEndIdeal: Int,
     val timeToEndWithSpeedProfile: Int,
     val timeToEndWithSpeedProfileAndTraffic: Int
-) : ItemData() {
+) : ItemData {
 
     fun formatEstimateTime(): CharSequence = dateTimeManager.formatTime(
         Date(
