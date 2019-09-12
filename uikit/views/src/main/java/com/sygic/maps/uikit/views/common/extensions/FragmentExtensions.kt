@@ -49,6 +49,8 @@ fun Fragment.openFragment(fragment: Fragment) {
     }
 }
 
+fun Fragment.finish() = requireActivity().finish()
+
 private inline val Fragment.containerId: Int?
     @IdRes
     get() = view?.let { it.parent.let { parent -> if (parent is ViewGroup) parent.id else null } }

@@ -39,6 +39,10 @@
             name="routePreviewControlsViewModel"
             type="com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel" />
 
+        <variable
+            name="infobarViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,23 +54,41 @@
 
         <ViewStub
             android:id="@+id/signpostViewViewStub"
-            android:inflatedId="@+id/signpostView"
             android:layout_width="344dp"
             android:layout_height="wrap_content"
+            android:inflatedId="@+id/signpostView"
             android:layout="@{navigationFragmentViewModel.signpostLayout}"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationFragmentViewModel="@{navigationFragmentViewModel}" />
 
+        <com.sygic.maps.uikit.views.navigation.infobar.Infobar
+            android:id="@+id/infobar"
+            android:layout_width="344dp"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.infobarEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:leftButton="@{navigationFragmentViewModel.leftInfobarButton}"
+            app:onLeftButtonClickListener="@{() -> navigationFragmentViewModel.onLeftInfobarButtonClick()}"
+            app:onRightButtonClickListener="@{() -> navigationFragmentViewModel.onRightInfobarButtonClick()}"
+            app:primaryTextData="@{infobarViewModel.textDataPrimary}"
+            app:rightButton="@{navigationFragmentViewModel.rightInfobarButton}"
+            app:secondaryTextData="@{infobarViewModel.textDataSecondary}"
+            tools:background="@drawable/bg_infobar_rounded"
+            tools:layout_height="64dp"
+            tools:layout_margin="@dimen/routePreviewControlsLayoutMargin" />
+
         <com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
             android:id="@+id/routePreviewControls"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.previewMode) &amp;&amp; safeUnbox(navigationFragmentViewModel.previewControlsEnabled) ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/infobar"
+            app:layout_constraintEnd_toEndOf="@id/infobar"
+            app:layout_constraintStart_toStartOf="@id/infobar"
             app:onPlayPauseButtonClickListener="@{() -> routePreviewControlsViewModel.onPlayPauseButtonClick()}"
             app:onSpeedButtonClickListener="@{() -> routePreviewControlsViewModel.onSpeedButtonClick()}"
             app:onStopButtonClickListener="@{() -> routePreviewControlsViewModel.onStopButtonClick()}"

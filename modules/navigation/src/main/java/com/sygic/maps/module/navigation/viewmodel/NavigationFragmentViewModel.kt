@@ -28,17 +28,17 @@ import android.app.Application
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.*
-import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.R
+import com.sygic.maps.module.navigation.component.*
+import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
+import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -48,15 +48,14 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
-import com.sygic.maps.uikit.views.common.extensions.getBoolean
-import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
-import com.sygic.maps.uikit.views.common.extensions.isLandscape
-import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
+import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
+import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.map.MapCenter
@@ -99,10 +98,18 @@ class NavigationFragmentViewModel internal constructor(
     @LayoutRes
     val signpostLayout: Int
     val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
+    val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
+
+    val leftInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
+    val rightInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
+
+    val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
+
+    private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
 
     var distanceUnit: DistanceUnit
         get() = regionalManager.distanceUnit.value!!
@@ -113,7 +120,9 @@ class NavigationFragmentViewModel internal constructor(
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
-            previewControlsEnabled.value = getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
+            infobarEnabled.value = getBoolean(KEY_INFOBAR_ENABLED, INFOBAR_ENABLED_DEFAULT_VALUE)
+            previewControlsEnabled.value =
+                getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
             signpostLayout = when (getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE) {
                 SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
@@ -125,6 +134,23 @@ class NavigationFragmentViewModel internal constructor(
 
         routeInfo.observeForever(::setRouteInfo)
         previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
+
+        updateInfobarListenersMap(InfobarButtonType.LEFT, object : OnInfobarButtonClickListener {
+            override val button = NavigationDefaultLeftInfobarButton()
+            override fun onButtonClick() { /*todo: MS-6218*/  }
+        })
+        updateInfobarListenersMap(InfobarButtonType.RIGHT, object : OnInfobarButtonClickListener {
+            override val button = NavigationDefaultRightInfobarButton()
+            override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
+        })
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        if (owner is OnInfobarButtonClickListenerWrapper) {
+            owner.infobarButtonClickListenerProvider.observe(owner, Observer {
+                updateInfobarListenersMap(it.infobarButtonType, it.onInfobarButtonClickListener)
+            })
+        }
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -171,6 +197,21 @@ class NavigationFragmentViewModel internal constructor(
             }
         }
     }
+
+    private fun updateInfobarListenersMap(
+        buttonType: InfobarButtonType,
+        listener: OnInfobarButtonClickListener?
+    ) {
+        (infobarButtonListenersMap as MutableMap)[buttonType] = listener
+        when (buttonType) {
+            InfobarButtonType.LEFT -> leftInfobarButton.value = listener?.button
+            InfobarButtonType.RIGHT -> rightInfobarButton.value = listener?.button
+        }
+    }
+
+    fun onLeftInfobarButtonClick() = infobarButtonListenersMap[InfobarButtonType.LEFT]?.onButtonClick()
+
+    fun onRightInfobarButtonClick() = infobarButtonListenersMap[InfobarButtonType.RIGHT]?.onButtonClick()
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = false
