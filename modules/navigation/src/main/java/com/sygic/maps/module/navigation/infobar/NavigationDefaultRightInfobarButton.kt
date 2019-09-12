@@ -25,7 +25,7 @@
 package com.sygic.maps.module.navigation.infobar
 
 import com.sygic.maps.module.navigation.R
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButton
+import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 
 class NavigationDefaultRightInfobarButton : InfobarButton(
     R.drawable.ic_close,

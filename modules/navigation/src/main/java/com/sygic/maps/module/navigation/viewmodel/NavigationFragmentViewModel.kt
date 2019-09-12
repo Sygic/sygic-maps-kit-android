@@ -40,7 +40,6 @@ import com.sygic.maps.module.navigation.infobar.InternalLeftInfobarClickListener
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultUnlockedLeftInfobarButton
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonWrapper
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
@@ -65,6 +64,7 @@ import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
+import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.map.MapCenter
@@ -113,8 +113,8 @@ class NavigationFragmentViewModel internal constructor(
     val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
 
-    val leftInfobarButtonWrapper = InfobarButtonWrapper()
-    val rightInfobarButtonWrapper = InfobarButtonWrapper()
+    val leftInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
+    val rightInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
 
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
@@ -282,8 +282,8 @@ class NavigationFragmentViewModel internal constructor(
     ) {
         (infobarButtonListenersMap as MutableMap)[buttonType] = listener
         when (buttonType) {
-            InfobarButtonType.LEFT -> leftInfobarButtonWrapper.setFrom(listener?.button)
-            InfobarButtonType.RIGHT -> rightInfobarButtonWrapper.setFrom(listener?.button)
+            InfobarButtonType.LEFT -> leftInfobarButton.value = listener?.button
+            InfobarButtonType.RIGHT -> rightInfobarButton.value = listener?.button
         }
     }
 

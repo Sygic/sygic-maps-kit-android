@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.viewmodels.navigation.infobar.button
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
+import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 
 /**
  * Interface definition for a callback to be invoked when a click to the infobar button has been made.
