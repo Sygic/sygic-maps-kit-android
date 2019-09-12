@@ -25,6 +25,7 @@
 package com.sygic.samples.navigation
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.samples.R
 import com.sygic.samples.base.BaseTest
 import com.sygic.samples.navigation.robot.navigation
@@ -37,7 +38,7 @@ class NavigationDefaultEspressoTest : BaseTest(NavigationDefaultActivity::class.
     @Test
     fun navigationFragmentDisplayed() {
         navigation(activity) {
-            isViewDisplayed(R.id.signpostView)
+            isViewDisplayed(FullSignpostView::class.java)
             isViewDisplayed(R.id.infobar)
             isViewDisplayed(R.id.currentSpeedView)
             isViewNotDisplayed(R.id.routePreviewControls)

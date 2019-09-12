@@ -34,6 +34,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.sygic.samples.app.activities.CommonSampleActivity
+import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.not
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert.assertEquals
@@ -57,6 +58,10 @@ abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes priv
 
     fun isViewNotDisplayed(@IdRes viewId: Int) {
         onView(allOf(withId(viewId), withParent(withId(parentViewId)))).check(matches(not(isDisplayed())))
+    }
+
+    fun isViewDisplayed(viewClass: Class<*>) {
+        onView(allOf(instanceOf(viewClass), withParent(withId(parentViewId)))).check(matches(isDisplayed()))
     }
 
     fun isToastVisible() {

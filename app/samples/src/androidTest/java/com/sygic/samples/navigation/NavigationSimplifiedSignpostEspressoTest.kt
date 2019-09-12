@@ -25,47 +25,19 @@
 package com.sygic.samples.navigation
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
-import com.sygic.samples.R
+import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.samples.base.BaseTest
 import com.sygic.samples.navigation.robot.navigation
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class NavigationPreviewEnabledEspressoTest : BaseTest(NavigationPreviewEnabledActivity::class.java) {
+class NavigationSimplifiedSignpostEspressoTest : BaseTest(NavigationSimplifiedSignpostActivity::class.java) {
 
     @Test
-    fun navigationFragmentDisplayed() {
+    fun navigationFragmentHasSimplifiedSignpostDisplayed() {
         navigation(activity) {
-            isViewDisplayed(FullSignpostView::class.java)
-            isViewDisplayed(R.id.infobar)
-            isViewDisplayed(R.id.currentSpeedView)
-            isViewDisplayed(R.id.routePreviewControls)
+            isViewDisplayed(SimplifiedSignpostView::class.java)
         }
     }
-
-    @Test
-    fun clickOnInfobar_rightButtonClick() {
-        navigation(activity) {
-            isViewDisplayed(R.id.infobar)
-            clickOnView(R.id.infobarRightButton)
-            isActivityFinishing()
-        }
-    }
-
-    @Test
-    fun clickOnInfobar_leftButtonClick() { //todo
-        navigation(activity) {
-            isViewDisplayed(R.id.infobar)
-            clickOnView(R.id.infobarLeftButton)
-        }
-    }
-
-    /*@Test
-    fun clickOnRoutePreviewControls_pause() { //todo
-        navigation(activity) {
-
-        }
-    }*/
 }
