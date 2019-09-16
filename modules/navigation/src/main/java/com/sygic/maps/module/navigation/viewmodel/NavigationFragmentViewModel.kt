@@ -38,9 +38,6 @@ import com.sygic.maps.module.navigation.infobar.InternalLeftInfobarClickListener
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultUnlockedLeftInfobarButton
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -51,12 +48,15 @@ import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrat
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 import com.sygic.sdk.map.Camera
