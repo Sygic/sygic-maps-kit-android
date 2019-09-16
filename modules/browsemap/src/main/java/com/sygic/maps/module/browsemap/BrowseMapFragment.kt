@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.browsemap
 
+import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -304,8 +305,8 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
         lifecycle.removeObserver(zoomControlsViewModel)
     }
 
-    override fun resolveAttributes(attributes: AttributeSet) {
-        with(requireContext().obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)) {
+    override fun resolveAttributes(context: Context, attributes: AttributeSet) {
+        with(context.obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)) {
             if (hasValue(R.styleable.BrowseMapFragment_sygic_map_selectionMode)) {
                 mapSelectionMode =
                     getInt(

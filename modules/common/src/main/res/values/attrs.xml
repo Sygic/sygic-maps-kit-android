@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
   ~
@@ -22,11 +23,11 @@
   ~ SOFTWARE.
   -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
-    <size
-        android:width="2dp"
-        android:height="2dp" />
-    <solid android:color="?attr/colorAccent" />
+    <declare-styleable name="MapFragmentWrapper">
+        <attr name="sygic_map_skin" format="string" />
+        <attr name="sygic_vehicle_skin" format="string" />
+    </declare-styleable>
 
-</shape>
+</resources>

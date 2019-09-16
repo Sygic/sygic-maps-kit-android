@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.skin
+package com.sygic.samples.browsemap
 
-fun isMapSkinValid(it: String): Boolean {
-    if (it.isEmpty()) return false
-    if (it == MapSkin.DEFAULT || it == MapSkin.DAY || it == MapSkin.NIGHT) return true
+import android.os.Bundle
+import com.sygic.samples.R
+import com.sygic.samples.app.activities.CommonSampleActivity
 
-    return false
-}
+class BrowseMapVehicleMapSkinActivity : CommonSampleActivity() {
 
-fun isVehicleSkinValid(it: String): Boolean {
-    if (it.isEmpty()) return false
-    if (it == VehicleSkin.CAR || it == VehicleSkin.CAR_NO_SIGNAL || it == VehicleSkin.PEDESTRIAN || it == VehicleSkin.PEDESTRIAN_NO_SIGNAL) return true
+    override val wikiModulePath: String = "Module-Browse-Map#browse-map---vehicle-and-map-skin"
 
-    return false
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_browsemap_vehicle_map_skin)
+    }
 }

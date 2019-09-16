@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.navigation
 
+import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -310,8 +311,8 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
         lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 
-    override fun resolveAttributes(attributes: AttributeSet) {
-        with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
+    override fun resolveAttributes(context: Context, attributes: AttributeSet) {
+        with(context.obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
             if (hasValue(R.styleable.NavigationFragment_sygic_navigation_distanceUnit)) {
                 distanceUnit = DistanceUnit.atIndex(
                     getInt(
