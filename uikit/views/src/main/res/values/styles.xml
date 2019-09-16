@@ -30,6 +30,15 @@
         <item name="android:background">@drawable/bg_compass</item>
     </style>
 
+    <style name="SygicInfobarStyle">
+        <item name="android:background">@drawable/bg_infobar_rounded</item>
+        <item name="android:layout_marginBottom">@dimen/infobarLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/infobarLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/infobarLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/infobarLayoutMargin</item>
+        <item name="android:elevation">@dimen/navigationComponentElevation</item>
+    </style>
+
     <style name="SygicPositionLockFabStyle">
         <item name="android:tint">?android:attr/colorAccent</item>
         <item name="android:backgroundTint">?android:attr/colorBackground</item>
@@ -64,6 +73,14 @@
         <item name="android:layout_marginEnd">@dimen/signpostViewLayoutMargin</item>
         <item name="android:layout_marginStart">@dimen/signpostViewLayoutMargin</item>
         <item name="android:layout_marginTop">@dimen/signpostViewLayoutMargin</item>
+    </style>
+
+    <style name="SygicLanesViewStyle">
+        <item name="android:background">@drawable/bg_signpost_rounded</item>
+        <item name="android:layout_marginBottom">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/lanesViewLayoutMargin</item>
     </style>
 
     <style name="SygicZoomControlsMenuStyle">

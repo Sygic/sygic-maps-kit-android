@@ -24,8 +24,7 @@
   -->
 
 <resources>
-    <color name="directionForeground">?attr/signpostTintColor</color>
-    <color name="directionBackground">@color/white_a40</color>
+    <color name="directionBackground">@color/boulder</color>
 
     <color name="roadSignGreen">#009966</color>
     <color name="roadSignBlue">#0080FF</color>

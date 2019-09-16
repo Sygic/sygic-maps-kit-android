@@ -22,16 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.regional.units
+package com.sygic.maps.uikit.viewmodels.common.datetime
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.RestrictTo
+import java.text.DateFormat
+import java.util.*
 
-@Parcelize
-enum class DistanceUnit : Parcelable {
-    KILOMETERS, MILES_YARDS, MILES_FEETS;
-
-    companion object {
-        fun atIndex(index: Int) = values()[index]
-    }
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface DateTimeManager {
+    fun formatTime(date: Date): String = formatTime(date, DateFormat.SHORT)
+    fun formatTime(date: Date, style: Int): String
+    fun formatDate(date: Date): String = formatDate(date, DateFormat.SHORT)
+    fun formatDate(date: Date, style: Int): String
+    fun formatDuration(duration: Int): String
 }

@@ -31,23 +31,34 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
-import com.sygic.maps.module.navigation.component.DISTANCE_UNITS_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.PREVIEW_MODE_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_ENABLED_DEFAULT_VALUE
-import com.sygic.maps.module.navigation.component.SIGNPOST_TYPE_DEFAULT_VALUE
+import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextDataWrapper
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextType
+import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
+import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.extensions.finish
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.views.navigation.infobar.Infobar
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
+import com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
@@ -57,8 +68,10 @@ const val NAVIGATION_FRAGMENT_TAG = "navigation_fragment_tag"
 internal const val KEY_DISTANCE_UNITS = "distance_units"
 internal const val KEY_SIGNPOST_ENABLED = "signpost_enabled"
 internal const val KEY_SIGNPOST_TYPE = "signpost_type"
+internal const val KEY_LANES_VIEW_ENABLED = "lanes_view_enabled"
 internal const val KEY_PREVIEW_CONTROLS_ENABLED = "preview_controls_enabled"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
+internal const val KEY_INFOBAR_ENABLED = "infobar_enabled"
 internal const val KEY_ROUTE_INFO = "route_info"
 
 /**
@@ -67,10 +80,15 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [CurrentSpeed] or [SpeedLimit] may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
+class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
+    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
+    private lateinit var infobarViewModel: InfobarViewModel
+
+    override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
+    override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
@@ -132,6 +150,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
         }
 
     /**
+     * A *[lanesViewEnabled]* modifies the [SimpleLanesView] visibility.
+     *
+     * @param [Boolean] true to enable the [SimpleLanesView], false otherwise.
+     *
+     * @return whether the [SimpleLanesView] is on or off.
+     */
+    var lanesViewEnabled: Boolean
+    get() = if (::fragmentViewModel.isInitialized) {
+        fragmentViewModel.lanesViewEnabled.value!!
+    } else arguments.getBoolean(KEY_LANES_VIEW_ENABLED, LANES_VIEW_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_LANES_VIEW_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.lanesViewEnabled.value = value
+            }
+        }
+
+    /**
      * A *[previewControlsEnabled]* modifies the [RoutePreviewControls] visibility.
      *
      * @param [Boolean] true to enable the [RoutePreviewControls], false otherwise.
@@ -146,6 +182,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
             arguments = Bundle(arguments).apply { putBoolean(KEY_PREVIEW_CONTROLS_ENABLED, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.previewControlsEnabled.value = value
+            }
+        }
+
+    /**
+     * A *[infobarEnabled]* modifies the [Infobar] view visibility.
+     *
+     * @param [Boolean] true to enable the [Infobar] view, false otherwise.
+     *
+     * @return whether the [Infobar] view is on or off.
+     */
+    var infobarEnabled: Boolean
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.infobarEnabled.value!!
+        } else arguments.getBoolean(KEY_INFOBAR_ENABLED, INFOBAR_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_INFOBAR_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.infobarEnabled.value = value
             }
         }
 
@@ -170,28 +224,49 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments)
+        fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
+            this.activityFinishObservable.observe(
+                this@NavigationFragment,
+                Observer<Any> { finish() })
+        }
+        infobarViewModel = viewModelOf(InfobarViewModel::class.java)
         routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
-
         lifecycle.addObserver(fragmentViewModel)
+        lifecycle.addObserver(infobarViewModel)
         lifecycle.addObserver(routePreviewControlsViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         LayoutNavigationBinding.inflate(inflater, container, false).apply {
             navigationFragmentViewModel = fragmentViewModel
+            infobarViewModel = this@NavigationFragment.infobarViewModel
             routePreviewControlsViewModel = this@NavigationFragment.routePreviewControlsViewModel
             lifecycleOwner = this@NavigationFragment
 
-            signpostViewViewStub.setOnInflateListener { _, view ->
+            signpostView.setOnInflateListener { _, view ->
                 DataBindingUtil.bind<ViewDataBinding>(view)?.let {
-                    it.setVariable(
-                        BR.signpostViewModel, when (view) {
-                            is FullSignpostView -> viewModelOf(FullSignpostViewModel::class.java)
-                            is SimplifiedSignpostView -> viewModelOf(SimplifiedSignpostViewModel::class.java)
-                            else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
+                    when (view) {
+                        is FullSignpostView -> {
+                            it.setVariable(
+                                BR.signpostViewModel, viewModelOf(FullSignpostViewModel::class.java)
+                            )
+                            it.setVariable(
+                                BR.lanesViewModel, viewModelOf(LanesViewModel::class.java)
+                            )
                         }
-                    )
+                        is SimplifiedSignpostView -> it.setVariable(
+                            BR.signpostViewModel, viewModelOf(SimplifiedSignpostViewModel::class.java)
+                        )
+                        else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
+                    }
+
+                    it.lifecycleOwner = this@NavigationFragment
+                }
+            }
+
+            lanesView.setOnInflateListener {_, view ->
+                DataBindingUtil.bind<ViewDataBinding>(view)?.let {
+                    it.setVariable(BR.lanesViewModel, viewModelOf(LanesViewModel::class.java))
                     it.lifecycleOwner = this@NavigationFragment
                 }
             }
@@ -201,10 +276,37 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
             }
         }.root
 
+    /**
+     * Register a custom callback to be invoked when a click to the infobar button has been made.
+     *
+     * @param buttonType [InfobarButtonType] infobar button type to be used.
+     * @param onClickListener [OnInfobarButtonClickListener] callback to invoke on infobar button click.
+     *
+     */
+    fun setOnInfobarButtonClickListener(
+        buttonType: InfobarButtonType,
+        onClickListener: OnInfobarButtonClickListener?
+    ) {
+        infobarButtonClickListenerProvider.asMutable().value =
+            OnInfobarButtonClickListenerWrapper.ProviderComponent(onClickListener, buttonType)
+    }
+
+    /**
+     * Sets the [InfobarTextData] which will be converted to the formatted text for the specified [InfobarTextType].
+     *
+     * @param textType [InfobarTextType] infobar text type to be used.
+     * @param textData [InfobarTextData] infobar text data with valid data, empty list otherwise.
+     */
+    fun setInfobarTextData(textType: InfobarTextType, textData: InfobarTextData) {
+        infobarTextDataProvider.asMutable().value =
+            InfobarTextDataWrapper.ProviderComponent(textData, textType)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
         lifecycle.removeObserver(fragmentViewModel)
+        lifecycle.removeObserver(infobarViewModel)
         lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 
@@ -217,6 +319,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                         DISTANCE_UNITS_DEFAULT_VALUE.ordinal
                     )
                 )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_lanes_view_enabled)) {
+                lanesViewEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_lanes_view_enabled,
+                        LANES_VIEW_ENABLED_DEFAULT_VALUE
+                    )
             }
             if (hasValue(R.styleable.NavigationFragment_sygic_signpost_enabled)) {
                 signpostEnabled =
@@ -249,6 +358,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>() {
                     getBoolean(
                         R.styleable.NavigationFragment_sygic_previewControls_enabled,
                         PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_infobar_enabled)) {
+                infobarEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_infobar_enabled,
+                        INFOBAR_ENABLED_DEFAULT_VALUE
                     )
             }
 

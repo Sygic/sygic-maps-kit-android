@@ -35,17 +35,23 @@
             type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
 
         <variable
+            name="lanesViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel" />
+
+        <variable
             name="signpostViewModel"
             type="com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel" />
 
     </data>
 
     <com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
-        android:layout_width="0dp"
+        android:layout_width="@dimen/signpostViewWidth"
         android:layout_height="wrap_content"
         android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
         app:distance="@{signpostViewModel.distance}"
         app:instructionText="@{signpostViewModel.instructionText}"
+        app:lanesData="@{lanesViewModel.lanesData}"
+        app:lanesViewEnabled="@{safeUnbox(navigationFragmentViewModel.lanesViewEnabled) &amp;&amp; safeUnbox(lanesViewModel.enabled)}"
         app:pictogram="@{signpostViewModel.pictogram}"
         app:primaryDirection="@{signpostViewModel.primaryDirection}"
         app:roadSigns="@{signpostViewModel.roadSigns}"
