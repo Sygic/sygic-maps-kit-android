@@ -33,6 +33,8 @@ import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.databinding.LayoutFullSignpostViewInternalBinding
+import com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
+import com.sygic.maps.uikit.views.navigation.lanes.data.SimpleLanesData
 import com.sygic.maps.uikit.views.navigation.roadsign.RoadSignsView
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 
@@ -48,6 +50,17 @@ open class FullSignpostView @JvmOverloads constructor(
     defStyleAttr: Int = R.attr.signpostViewStyle,
     defStyleRes: Int = R.style.SygicSignpostViewStyle
 ) : BaseSignpostView(context, attrs, defStyleAttr, defStyleRes) {
+
+    /**
+     * Toggles embedded [SimpleLanesView] _on_ or _off_
+     */
+    var lanesViewEnabled: Boolean = true
+        set(value) {
+            field = value
+            if (!value) {
+                binding.signpostSecondaryDirectionContainer.displayedChild = FullSignpostViewSecondaryContentIndex.DIRECTION
+            }
+        }
 
     private val binding = LayoutFullSignpostViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -184,6 +197,20 @@ open class FullSignpostView @JvmOverloads constructor(
                 visibility = GONE
                 setImageDrawable(null)
             }
+        }
+    }
+
+    /**
+     * Sets the data about actual lanes situation on the road
+     *
+     * @param lanesData [Array] of [SimpleLanesData] items representing lanes on the road
+     */
+    fun setLanesData(lanesData: Array<SimpleLanesData>) {
+        if (!lanesViewEnabled || lanesData.isEmpty()) {
+            binding.signpostSecondaryDirectionContainer.displayedChild = FullSignpostViewSecondaryContentIndex.DIRECTION
+        } else {
+            binding.signpostLanesView.lanesData = lanesData
+            binding.signpostSecondaryDirectionContainer.displayedChild = FullSignpostViewSecondaryContentIndex.LANES
         }
     }
 }
