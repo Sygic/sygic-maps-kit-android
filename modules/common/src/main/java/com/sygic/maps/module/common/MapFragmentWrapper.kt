@@ -61,8 +61,8 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isMapSkinValid
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isVehicleSkinValid
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.views.common.extensions.getStringFromAttr
 import com.sygic.maps.uikit.views.common.extensions.getString
+import com.sygic.maps.uikit.views.common.extensions.getStringFromAttr
 import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
@@ -76,7 +76,7 @@ import javax.inject.Inject
 abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected abstract fun executeInjector()
-    protected abstract fun resolveAttributes(attributes: AttributeSet)
+    protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -293,6 +293,6 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
             recycle()
         }
 
-        resolveAttributes(attrs)
+        resolveAttributes(context, attrs)
     }
 }
