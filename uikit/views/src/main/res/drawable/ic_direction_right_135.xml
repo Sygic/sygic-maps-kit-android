@@ -36,7 +36,7 @@
             android:fillColor="@color/directionBackground"
             android:pathData="M0 44L0 0 6 0 6 44Z" />
         <path
-            android:fillColor="@color/directionForeground"
+            android:fillColor="?attr/navigationTextColorTertiary"
             android:pathData="@string/turn_135_path_data" />
     </group>
 </vector>

@@ -38,9 +38,6 @@ import com.sygic.maps.module.navigation.infobar.InternalLeftInfobarClickListener
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultRightInfobarButton
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultUnlockedLeftInfobarButton
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -48,14 +45,18 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.addMapRoute
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapRoutes
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 import com.sygic.sdk.map.Camera
@@ -103,6 +104,7 @@ class NavigationFragmentViewModel internal constructor(
     val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
     val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
+    val lanesViewEnabled: MutableLiveData<Boolean> = MutableLiveData(LANES_VIEW_ENABLED_DEFAULT_VALUE)
 
     val leftInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
     val rightInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
@@ -138,6 +140,8 @@ class NavigationFragmentViewModel internal constructor(
             regionalManager.distanceUnit.value = value
         }
 
+    private val signpostType: SignpostType
+
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
@@ -145,7 +149,9 @@ class NavigationFragmentViewModel internal constructor(
             previewControlsEnabled.value =
                 getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
-            signpostLayout = when (getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE) {
+            lanesViewEnabled.value = getBoolean(KEY_LANES_VIEW_ENABLED, LANES_VIEW_ENABLED_DEFAULT_VALUE)
+            signpostType = getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE
+            signpostLayout = when (signpostType) {
                 SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
                 SignpostType.SIMPLIFIED -> R.layout.layout_signpost_simplified_view_stub
             }
@@ -168,8 +174,10 @@ class NavigationFragmentViewModel internal constructor(
         }
     }
 
+    fun isLanesViewEmbedded() = signpostEnabled.value!! && signpostType == SignpostType.FULL
+
     override fun onStart(owner: LifecycleOwner) {
-        locationManager.positionOnMapEnabled = !previewMode.value!!
+        locationManager.positionOnMapEnabled = !previewMode.value!! || routeDemonstrationManager.demonstrationState.value == DemonstrationState.ACTIVE
         cameraModel.addModeChangedListener(this)
         navigationManager.addOnRouteChangedListener(this)
     }

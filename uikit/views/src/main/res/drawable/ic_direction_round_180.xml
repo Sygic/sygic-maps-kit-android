@@ -40,7 +40,7 @@
                 6.285714 0 3.471504 2.8142102 6.285714 6.2857143 6.285714z" />
 
         <path
-            android:fillColor="@color/directionForeground"
+            android:fillColor="?attr/navigationTextColorTertiary"
             android:pathData="@string/round_180_path_data" />
     </group>
 </vector>
