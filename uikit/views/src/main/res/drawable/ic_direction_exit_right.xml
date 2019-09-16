@@ -29,7 +29,7 @@
     android:viewportHeight="48.0">
 
     <path
-        android:fillColor="@color/directionForeground"
+        android:fillColor="?attr/navigationTextColorTertiary"
         android:pathData="M14 0L14 40 0 40 10 0 14 0ZM42 0L38.4375 16.25 34.1875 12 32.125 14.125c-0.833338
             0.833338 -1.531247 1.739578 -2.09375 2.71875 -0.562503 0.979172 -0.989582 2.010411 -1.28125 3.09375
             -0.541669 1.875009 -0.645835 3.833323 -0.3125 5.875L32 40 18 40 18 0l4 0 3.25 13.125c0.708337

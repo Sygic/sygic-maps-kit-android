@@ -26,12 +26,12 @@
 <resources>
 
     <attr name="sygicMapSkin" format="string" />
-    <attr name="signpostTintColor" format="reference" />
     <attr name="navigationBackgroundColor" format="reference" />
     <attr name="navigationTextColorPrimary" format="reference" />
     <attr name="navigationTextColorSecondary" format="reference" />
+    <attr name="navigationTextColorTertiary" format="reference" />
 
-    <declare-styleable name="Theme">
+    <declare-styleable name="ThemeAttributes">
         <attr name="compassStyle" format="reference"/>
         <attr name="infoBarStyle" format="reference" />
         <attr name="positionLockFabStyle" format="reference" />
@@ -40,6 +40,7 @@
         <attr name="searchToolbarStyle" format="reference" />
         <attr name="searchResultListStyle" format="reference" />
         <attr name="signpostViewStyle" format="reference" />
+        <attr name="lanesViewStyle" format="reference" />
         <attr name="zoomControlsMenuStyle" format="reference"/>
     </declare-styleable>
 
@@ -102,6 +103,14 @@
 
     <declare-styleable name="SignpostView">
         <attr name="android:background" format="reference" />
+        <attr name="android:layout_margin" format="dimension" />
+        <attr name="android:layout_marginTop" format="dimension" />
+        <attr name="android:layout_marginBottom" format="dimension" />
+        <attr name="android:layout_marginStart" format="dimension" />
+        <attr name="android:layout_marginEnd" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SimpleLanesView">
         <attr name="android:layout_margin" format="dimension" />
         <attr name="android:layout_marginTop" format="dimension" />
         <attr name="android:layout_marginBottom" format="dimension" />

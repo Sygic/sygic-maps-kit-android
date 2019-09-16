@@ -33,10 +33,10 @@
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
 
-        <item name="signpostTintColor">@color/white</item>
         <item name="navigationBackgroundColor">@color/navigationBackgroundColor</item>
         <item name="navigationTextColorPrimary">@color/navigationTextColorPrimary</item>
         <item name="navigationTextColorSecondary">@color/navigationTextColorSecondary</item>
+        <item name="navigationTextColorTertiary">@color/white</item>
     </style>
 
     <style name="Theme.Sygic.Colored" parent="Theme.Sygic.Light.DarkActionBar">

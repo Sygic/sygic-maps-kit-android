@@ -75,6 +75,14 @@
         <item name="android:layout_marginTop">@dimen/signpostViewLayoutMargin</item>
     </style>
 
+    <style name="SygicLanesViewStyle">
+        <item name="android:background">@drawable/bg_signpost_rounded</item>
+        <item name="android:layout_marginBottom">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/lanesViewLayoutMargin</item>
+    </style>
+
     <style name="SygicZoomControlsMenuStyle">
         <item name="android:elevation">4dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>

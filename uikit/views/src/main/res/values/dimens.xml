@@ -43,6 +43,8 @@
     <dimen name="navigationComponentElevation">6dp</dimen>
     <dimen name="infobarLayoutMargin">16dp</dimen>
     <dimen name="signpostViewLayoutMargin">16dp</dimen>
+    <dimen name="lanesViewLayoutMargin">16dp</dimen>
+    <dimen name="simpleLaneSize">24dp</dimen>
     <dimen name="routePreviewControlsLayoutMargin">16dp</dimen>
 
     <!-- Others -->
