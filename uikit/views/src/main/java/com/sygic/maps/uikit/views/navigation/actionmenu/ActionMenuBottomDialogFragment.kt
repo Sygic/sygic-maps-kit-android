@@ -42,7 +42,7 @@ import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
 import com.sygic.maps.uikit.views.navigation.actionmenu.viewmodel.ActionMenuInternalViewModel
 
-const val DEFAULT_SPAN_COUNT = 3
+internal const val DEFAULT_SPAN_COUNT = 3
 private const val ACTION_MENU_DATA = "action_menu_data"
 private const val ACTION_MENU_SPAN_COUNT = "action_menu_span_count"
 

@@ -24,9 +24,11 @@
 
 package com.sygic.maps.uikit.views.navigation.actionmenu.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.actionmenu.DEFAULT_SPAN_COUNT
 import com.sygic.maps.uikit.views.navigation.actionmenu.adapter.ActionMenuAdapter
@@ -36,7 +38,7 @@ import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemC
 internal class ActionMenuInternalViewModel : ViewModel() {
 
     val adapter = ActionMenuAdapter()
-    val titleText: MutableLiveData<TextHolder> = MutableLiveData(TextHolder.from(EMPTY_STRING))
+    val titleText: LiveData<TextHolder> = MutableLiveData(TextHolder.from(EMPTY_STRING))
     val spanCount: MutableLiveData<Int> = MutableLiveData(DEFAULT_SPAN_COUNT)
 
     var listener: ActionMenuItemClickListener? = null
@@ -47,7 +49,7 @@ internal class ActionMenuInternalViewModel : ViewModel() {
     var actionMenuData: ActionMenuData = ActionMenuData.empty
         set(value) {
             field = value
-            titleText.value = value.menuTitle
+            titleText.asMutable().value = value.menuTitle
             adapter.items = value.menuItems
         }
 

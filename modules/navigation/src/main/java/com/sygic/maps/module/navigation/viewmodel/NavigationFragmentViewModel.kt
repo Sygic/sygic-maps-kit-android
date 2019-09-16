@@ -148,7 +148,7 @@ class NavigationFragmentViewModel internal constructor(
         override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
 
-    private val navigationDefaultActionMenuData = ActionMenuData(
+    private var actionMenuData: ActionMenuData = ActionMenuData(
         TextHolder.from(R.string.action_menu),
         listOf(
             SoundsOnActionMenuItem(),
@@ -156,7 +156,8 @@ class NavigationFragmentViewModel internal constructor(
         )
     )
 
-    private val navigationDefaultActionMenuItemClickListener = object : ActionMenuItemClickListener {
+    var actionMenuItemClickListener: ActionMenuItemClickListener =
+        object : ActionMenuItemClickListener {
             override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
                 when (actionMenuItem) {
                     is SoundsOnActionMenuItem -> {
@@ -175,9 +176,6 @@ class NavigationFragmentViewModel internal constructor(
                 actionMenuHideObservable.asSingleEvent().call()
             }
         }
-
-    private var actionMenuData: ActionMenuData = navigationDefaultActionMenuData
-    var actionMenuItemClickListener: ActionMenuItemClickListener = navigationDefaultActionMenuItemClickListener
         private set
 
     var distanceUnit: DistanceUnit
