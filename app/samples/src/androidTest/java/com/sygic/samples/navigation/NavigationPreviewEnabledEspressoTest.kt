@@ -46,6 +46,16 @@ class NavigationPreviewEnabledEspressoTest : BaseTest(NavigationPreviewEnabledAc
     }
 
     @Test
+    fun onRoutePreviewControlsClick() {
+        navigation(activity) {
+            isViewDisplayed(R.id.routePreviewControls)
+            clickOnView(R.id.routePreviewControlsPlayPauseButton)
+            clickOnView(R.id.routePreviewControlsSpeedButton)
+            clickOnView(R.id.routePreviewControlsStopButton)
+        }
+    }
+
+    @Test
     fun clickOnInfobar_rightButtonClick() {
         navigation(activity) {
             isViewDisplayed(R.id.infobar)
@@ -55,17 +65,10 @@ class NavigationPreviewEnabledEspressoTest : BaseTest(NavigationPreviewEnabledAc
     }
 
     @Test
-    fun clickOnInfobar_leftButtonClick() { //todo
+    fun clickOnInfobar_leftButtonClick() { //todo: waiting for PR: Feature - Navigation Part 4.2
         navigation(activity) {
             isViewDisplayed(R.id.infobar)
             clickOnView(R.id.infobarLeftButton)
         }
     }
-
-    /*@Test
-    fun clickOnRoutePreviewControls_pause() { //todo
-        navigation(activity) {
-
-        }
-    }*/
 }
