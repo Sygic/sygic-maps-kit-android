@@ -40,7 +40,7 @@
                 -9 -9 -9 -4.970563 0 -9 4.029437 -9 9 0 4.970563 4.029437 9 9 9z" />
 
         <path
-            android:fillColor="@color/directionForeground"
+            android:fillColor="?attr/navigationTextColorTertiary"
             android:pathData="@string/round_225_path_data" />
     </group>
 </vector>

@@ -59,13 +59,25 @@
 
         <ViewStub
             android:id="@+id/signpostView"
-            android:layout_width="344dp"
+            android:layout_width="@dimen/signpostViewWidth"
             android:layout_height="wrap_content"
             android:inflatedId="@id/signpostView"
             android:layout="@{navigationFragmentViewModel.signpostLayout}"
             android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:navigationFragmentViewModel="@{navigationFragmentViewModel}" />
+
+        <ViewStub
+            android:id="@+id/lanesView"
+            android:layout_width="@dimen/lanesViewWidth"
+            android:layout_height="wrap_content"
+            android:inflatedId="@id/lanesView"
+            android:layout="@layout/layout_lanes_view_stub"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.lanesViewEnabled) &amp;&amp; (!navigationFragmentViewModel.lanesViewEmbedded) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="@id/signpostView"
+            app:layout_constraintStart_toStartOf="@id/signpostView"
+            app:layout_constraintTop_toBottomOf="@id/signpostView"
             app:navigationFragmentViewModel="@{navigationFragmentViewModel}" />
 
         <com.sygic.maps.uikit.views.navigation.infobar.Infobar

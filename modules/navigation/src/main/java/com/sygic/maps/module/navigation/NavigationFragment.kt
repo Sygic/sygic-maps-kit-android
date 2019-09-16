@@ -41,13 +41,13 @@ import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextType
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextDataWrapper
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextType
+import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
@@ -57,8 +57,10 @@ import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.finish
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
+import com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
@@ -70,6 +72,7 @@ const val NAVIGATION_FRAGMENT_TAG = "navigation_fragment_tag"
 internal const val KEY_DISTANCE_UNITS = "distance_units"
 internal const val KEY_SIGNPOST_ENABLED = "signpost_enabled"
 internal const val KEY_SIGNPOST_TYPE = "signpost_type"
+internal const val KEY_LANES_VIEW_ENABLED = "lanes_view_enabled"
 internal const val KEY_PREVIEW_CONTROLS_ENABLED = "preview_controls_enabled"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_INFOBAR_ENABLED = "infobar_enabled"
@@ -152,6 +155,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
             arguments = Bundle(arguments).apply { putBoolean(KEY_PREVIEW_MODE, value) }
             if (::fragmentViewModel.isInitialized) {
                 fragmentViewModel.previewMode.value = value
+            }
+        }
+
+    /**
+     * A *[lanesViewEnabled]* modifies the [SimpleLanesView] visibility.
+     *
+     * @param [Boolean] true to enable the [SimpleLanesView], false otherwise.
+     *
+     * @return whether the [SimpleLanesView] is on or off.
+     */
+    var lanesViewEnabled: Boolean
+    get() = if (::fragmentViewModel.isInitialized) {
+        fragmentViewModel.lanesViewEnabled.value!!
+    } else arguments.getBoolean(KEY_LANES_VIEW_ENABLED, LANES_VIEW_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_LANES_VIEW_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.lanesViewEnabled.value = value
             }
         }
 
@@ -274,13 +295,28 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
 
             signpostView.setOnInflateListener { _, view ->
                 DataBindingUtil.bind<ViewDataBinding>(view)?.let {
-                    it.setVariable(
-                        BR.signpostViewModel, when (view) {
-                            is FullSignpostView -> viewModelOf(FullSignpostViewModel::class.java)
-                            is SimplifiedSignpostView -> viewModelOf(SimplifiedSignpostViewModel::class.java)
-                            else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
+                    when (view) {
+                        is FullSignpostView -> {
+                            it.setVariable(
+                                BR.signpostViewModel, viewModelOf(FullSignpostViewModel::class.java)
+                            )
+                            it.setVariable(
+                                BR.lanesViewModel, viewModelOf(LanesViewModel::class.java)
+                            )
                         }
-                    )
+                        is SimplifiedSignpostView -> it.setVariable(
+                            BR.signpostViewModel, viewModelOf(SimplifiedSignpostViewModel::class.java)
+                        )
+                        else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
+                    }
+
+                    it.lifecycleOwner = this@NavigationFragment
+                }
+            }
+
+            lanesView.setOnInflateListener {_, view ->
+                DataBindingUtil.bind<ViewDataBinding>(view)?.let {
+                    it.setVariable(BR.lanesViewModel, viewModelOf(LanesViewModel::class.java))
                     it.lifecycleOwner = this@NavigationFragment
                 }
             }
@@ -333,6 +369,13 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
                         DISTANCE_UNITS_DEFAULT_VALUE.ordinal
                     )
                 )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_lanes_view_enabled)) {
+                lanesViewEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_lanes_view_enabled,
+                        LANES_VIEW_ENABLED_DEFAULT_VALUE
+                    )
             }
             if (hasValue(R.styleable.NavigationFragment_sygic_signpost_enabled)) {
                 signpostEnabled =
