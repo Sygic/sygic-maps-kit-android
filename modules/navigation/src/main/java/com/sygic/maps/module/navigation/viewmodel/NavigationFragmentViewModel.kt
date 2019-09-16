@@ -174,14 +174,15 @@ class NavigationFragmentViewModel internal constructor(
             }
         }
 
+    private var actionMenuData: ActionMenuData = navigationDefaultActionMenuData
+    var actionMenuItemClickListener: ActionMenuItemClickListener = navigationDefaultActionMenuItemClickListener
+        private set
+
     var distanceUnit: DistanceUnit
         get() = regionalManager.distanceUnit.value!!
         set(value) {
             regionalManager.distanceUnit.value = value
         }
-
-    var actionMenuData: ActionMenuData = navigationDefaultActionMenuData
-    var actionMenuItemClickListener: ActionMenuItemClickListener = navigationDefaultActionMenuItemClickListener
 
     init {
         with(arguments) {

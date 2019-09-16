@@ -36,6 +36,6 @@ data class ActionMenuData(
 ) : Parcelable {
 
     companion object {
-        val empty = ActionMenuData(TextHolder.from(EMPTY_STRING), listOf())
+        val empty = ActionMenuData(TextHolder.from(EMPTY_STRING), emptyList())
     }
 }
