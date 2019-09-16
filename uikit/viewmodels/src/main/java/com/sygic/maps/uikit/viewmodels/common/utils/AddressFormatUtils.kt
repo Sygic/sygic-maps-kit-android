@@ -61,7 +61,7 @@ fun getStreetWithHouseNumber(street: String?, houseNumber: String?): String? {
         if (streetIsEmpty) return houseNumber
         if (houseNumberIsEmpty) return street
 
-        return String.format("%s %s", street, houseNumber)
+        return "$street $houseNumber"
     }
 
     return null
@@ -78,7 +78,7 @@ fun getCityWithPostal(city: String?, postal: String?): String? {
         if (cityIsEmpty) return postal
         if (postalIsEmpty) return city
 
-        return String.format("%s %s", postal, city)
+        return "$postal $city"
     }
 
     return null

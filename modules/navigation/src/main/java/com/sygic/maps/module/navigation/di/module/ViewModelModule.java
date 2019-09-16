@@ -29,6 +29,8 @@ import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel;
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModelFactory;
 import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModelFactory;
 import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel;
 import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModelFactory;
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel;
@@ -73,4 +75,9 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RoutePreviewControlsViewModel.class)
     abstract ViewModelCreatorFactory putRoutePreviewControlsViewModelFactory(RoutePreviewControlsViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(InfobarViewModel.class)
+    abstract ViewModelCreatorFactory putInfobarViewModelFactory(InfobarViewModelFactory factory);
 }

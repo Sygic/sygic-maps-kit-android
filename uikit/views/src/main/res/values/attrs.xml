@@ -33,6 +33,7 @@
 
     <declare-styleable name="ThemeAttributes">
         <attr name="compassStyle" format="reference"/>
+        <attr name="infoBarStyle" format="reference" />
         <attr name="positionLockFabStyle" format="reference" />
         <attr name="routePreviewControlsStyle" format="reference" />
         <attr name="searchFabStyle" format="reference" />
@@ -53,6 +54,24 @@
 
     <declare-styleable name="EmptyRecyclerView">
         <attr name="emptyView" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="Infobar">
+        <attr name="android:background" format="reference" />
+        <attr name="android:elevation" format="dimension" />
+        <attr name="android:layout_margin" format="dimension" />
+        <attr name="android:layout_marginTop" format="dimension" />
+        <attr name="android:layout_marginBottom" format="dimension" />
+        <attr name="android:layout_marginStart" format="dimension" />
+        <attr name="android:layout_marginEnd" format="dimension" />
+        <attr name="leftButtonIcon" format="reference" />
+        <attr name="leftButtonIconTint" format="reference" />
+        <attr name="leftButtonBackground" format="reference" />
+        <attr name="leftButtonBackgroundTint" format="reference" />
+        <attr name="rightButtonIcon" format="reference" />
+        <attr name="rightButtonIconTint" format="reference" />
+        <attr name="rightButtonBackground" format="reference" />
+        <attr name="rightButtonBackgroundTint" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="PositionLockFab">

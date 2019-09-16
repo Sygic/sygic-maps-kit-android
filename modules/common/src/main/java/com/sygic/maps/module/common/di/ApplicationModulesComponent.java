@@ -27,20 +27,24 @@ package com.sygic.maps.module.common.di;
 import android.app.Application;
 
 import com.sygic.maps.module.common.di.module.AppModule;
+import com.sygic.maps.module.common.di.module.DateTimeManagerModule;
 import com.sygic.maps.module.common.di.module.LocationModule;
 import com.sygic.maps.module.common.di.module.NavigationManagerModule;
 import com.sygic.maps.module.common.di.module.PermissionsModule;
 import com.sygic.maps.module.common.di.module.PoiDataManagerModule;
+import com.sygic.maps.module.common.di.module.PositionManagerModule;
 import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerModule;
 import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
 import com.sygic.maps.module.common.di.module.SearchModule;
 import com.sygic.maps.module.common.poi.manager.PoiDataManager;
+import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
 import com.sygic.sdk.navigation.NavigationManager;
+import com.sygic.sdk.position.PositionManager;
 
 import javax.inject.Singleton;
 
@@ -50,22 +54,26 @@ import dagger.Component;
 @Component(
         modules = {
                 AppModule.class,
-                PoiDataManagerModule.class,
-                SdkInitializationManagerModule.class,
-                PermissionsModule.class,
+                DateTimeManagerModule.class,
                 LocationModule.class,
-                SearchModule.class,
                 NavigationManagerModule.class,
-                RouteDemonstrationManagerModule.class
+                PermissionsModule.class,
+                PoiDataManagerModule.class,
+                PositionManagerModule.class,
+                RouteDemonstrationManagerModule.class,
+                SearchModule.class,
+                SdkInitializationManagerModule.class
         }
 )
 public interface ApplicationModulesComponent {
-    PoiDataManager getPoiDataManager();
-    SdkInitializationManager getSdkInitializationManager();
-    PermissionsManager getPermissionsManager();
-    LocationManager getLocationManager();
-    SearchManager getSearchManager();
     Application getApplication();
+    DateTimeManager getDateTimeManager();
+    LocationManager getLocationManager();
     NavigationManager getNavigationManager();
+    PermissionsManager getPermissionsManager();
+    PoiDataManager getPoiDataManager();
+    PositionManager getPositionManager();
     RouteDemonstrationManager getRouteDemonstrationManager();
+    SearchManager getSearchManager();
+    SdkInitializationManager getSdkInitializationManager();
 }
