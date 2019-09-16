@@ -34,6 +34,7 @@ import androidx.annotation.CallSuper
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.ToggleImageButton
 import com.sygic.maps.uikit.views.databinding.LayoutRoutePreviewControlsInternalBinding
+import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls.OnPlayPauseStateChangedListener
 import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 
 /**
@@ -87,7 +88,7 @@ open class RoutePreviewControls @JvmOverloads constructor(
                 defStyleAttr,
                 defStyleRes
             ).also {
-                layoutMargin = it.getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_margin, 0)
+                layoutMargin = it.getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_margin, -1)
                 layoutMarginTop = it.getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginTop, 0)
                 layoutMarginBottom = it.getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginBottom, 0)
                 layoutMarginStart = it.getDimensionPixelSize(R.styleable.RoutePreviewControls_android_layout_marginStart, 0)
@@ -101,7 +102,7 @@ open class RoutePreviewControls @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         with((layoutParams as MarginLayoutParams)) {
-            if (layoutMargin != 0) {
+            if (layoutMargin >= 0) {
                 setMargins(layoutMargin, layoutMargin, layoutMargin, layoutMargin)
             } else {
                 setMargins(layoutMarginStart, layoutMarginTop, layoutMarginEnd, layoutMarginBottom)
