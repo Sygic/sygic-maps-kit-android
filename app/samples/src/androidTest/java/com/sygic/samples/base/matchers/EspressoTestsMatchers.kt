@@ -22,22 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.samples.base.matchers
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
-import com.sygic.samples.base.BaseTest
-import com.sygic.samples.navigation.robot.navigation
-import org.junit.Test
-import org.junit.runner.RunWith
+import android.view.View
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import org.hamcrest.Matcher
 
-@RunWith(AndroidJUnit4::class)
-class NavigationSimplifiedSignpostEspressoTest : BaseTest(NavigationSimplifiedSignpostActivity::class.java) {
-
-    @Test
-    fun navigationFragmentDisplayed() {
-        navigation(activity) {
-            isViewDisplayed(SimplifiedSignpostView::class.java)
-        }
-    }
-}
+fun withDrawable(@DrawableRes resourceId: Int, @ColorInt tintColor: Int? = null): Matcher<View> =
+    DrawableMatcher(resourceId, tintColor)

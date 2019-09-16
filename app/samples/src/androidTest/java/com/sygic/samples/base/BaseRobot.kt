@@ -24,6 +24,8 @@
 
 package com.sygic.samples.base
 
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +36,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.base.matchers.withDrawable
 import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.not
 import org.hamcrest.core.AllOf.allOf
@@ -56,12 +59,16 @@ abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes priv
         onView(allOf(withId(viewId), withParent(withId(parentViewId)))).check(matches(isDisplayed()))
     }
 
+    fun isViewDisplayed(viewClass: Class<*>) {
+        onView(allOf(instanceOf(viewClass), withParent(withId(parentViewId)))).check(matches(isDisplayed()))
+    }
+
     fun isViewNotDisplayed(@IdRes viewId: Int) {
         onView(allOf(withId(viewId), withParent(withId(parentViewId)))).check(matches(not(isDisplayed())))
     }
 
-    fun isViewDisplayed(viewClass: Class<*>) {
-        onView(allOf(instanceOf(viewClass), withParent(withId(parentViewId)))).check(matches(isDisplayed()))
+    fun isViewNotDisplayed(viewClass: Class<*>) {
+        onView(allOf(instanceOf(viewClass), withParent(withId(parentViewId)))).check(matches(not(isDisplayed())))
     }
 
     fun isToastVisible() {
@@ -87,6 +94,10 @@ abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes priv
 
     fun pressImeActionButton(@IdRes viewId: Int) {
         onView(withId(viewId)).perform(pressImeActionButton())
+    }
+
+    fun imageViewContainsDrawable(@IdRes viewId: Int, @DrawableRes drawableId: Int, @ColorInt tintColor: Int? = null) {
+        onView(withId(viewId)).check(matches(withDrawable(drawableId, tintColor)))
     }
 
     fun isActivityFinishing() {

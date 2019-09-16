@@ -25,19 +25,20 @@
 package com.sygic.samples.navigation
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
+import com.sygic.samples.R
 import com.sygic.samples.base.BaseTest
 import com.sygic.samples.navigation.robot.navigation
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class NavigationSimplifiedSignpostEspressoTest : BaseTest(NavigationSimplifiedSignpostActivity::class.java) {
+class NavigationInfobarCustomListenerEspressoTest : BaseTest(NavigationInfobarCustomClickListenerActivity::class.java) {
 
     @Test
-    fun navigationFragmentDisplayed() {
+    fun infobarLeftButtonDrawable() {
         navigation(activity) {
-            isViewDisplayed(SimplifiedSignpostView::class.java)
+            isViewDisplayed(R.id.infobar)
+            imageViewContainsDrawable(R.id.infobarLeftButton, R.drawable.ic_play, R.color.white)
         }
     }
 }
