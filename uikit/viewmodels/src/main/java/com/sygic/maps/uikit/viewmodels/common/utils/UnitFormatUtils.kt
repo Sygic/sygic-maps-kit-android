@@ -156,9 +156,6 @@ object Speed {
         DistanceUnit.MILES_YARDS, DistanceUnit.MILES_FEETS -> IMPERIALS_SPEED_UNIT
     }
 
-    fun convertValue(speedValue: Int, targetDistanceUnit: DistanceUnit) =
-        convertValue(speedValue, DistanceUnit.KILOMETERS, targetDistanceUnit)
-
     fun convertValue(speedValue: Int, currentDistanceUnit: DistanceUnit, targetDistanceUnit: DistanceUnit): Int {
         if (currentDistanceUnit == targetDistanceUnit) {
             return speedValue

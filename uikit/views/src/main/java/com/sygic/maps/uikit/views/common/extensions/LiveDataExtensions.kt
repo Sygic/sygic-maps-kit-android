@@ -61,25 +61,25 @@ fun <A, B> LiveData<A>.combineLatest(with: LiveData<B>): LiveData<Pair<A, B>> {
 
 fun <A, B, C> combineLatest(a: LiveData<A>, b: LiveData<B>, c: LiveData<C>): LiveData<Triple<A?, B?, C?>> {
 
-    fun Triple<A?, B?, C?>?.copyWithFirst(first: A?): Triple<A?, B?, C?> {
-        if (this@copyWithFirst == null) return Triple(first, null, null)
-        return this@copyWithFirst.copy(first = first)
+    fun Triple<A?, B?, C?>?.replaceFirst(first: A?): Triple<A?, B?, C?> {
+        if (this@replaceFirst == null) return Triple(first, null, null)
+        return this@replaceFirst.copy(first = first)
     }
 
-    fun Triple<A?, B?, C?>?.copyWithSecond(second: B?): Triple<A?, B?, C?> {
-        if (this@copyWithSecond == null) return Triple(null, second, null)
-        return this@copyWithSecond.copy(second = second)
+    fun Triple<A?, B?, C?>?.replaceSecond(second: B?): Triple<A?, B?, C?> {
+        if (this@replaceSecond == null) return Triple(null, second, null)
+        return this@replaceSecond.copy(second = second)
     }
 
-    fun Triple<A?, B?, C?>?.copyWithThird(third: C?): Triple<A?, B?, C?> {
-        if (this@copyWithThird == null) return Triple(null, null, third)
-        return this@copyWithThird.copy(third = third)
+    fun Triple<A?, B?, C?>?.replaceThird(third: C?): Triple<A?, B?, C?> {
+        if (this@replaceThird == null) return Triple(null, null, third)
+        return this@replaceThird.copy(third = third)
     }
 
     return MediatorLiveData<Triple<A?, B?, C?>>().apply {
-        addSource(a) { value = value.copyWithFirst(it) }
-        addSource(b) { value = value.copyWithSecond(it) }
-        addSource(c) { value = value.copyWithThird(it) }
+        addSource(a) { value = value.replaceFirst(it) }
+        addSource(b) { value = value.replaceSecond(it) }
+        addSource(c) { value = value.replaceThird(it) }
     }
 }
 

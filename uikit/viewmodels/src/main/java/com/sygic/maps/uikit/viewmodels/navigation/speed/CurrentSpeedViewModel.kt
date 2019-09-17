@@ -24,12 +24,14 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation.speed
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.utils.Speed
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
@@ -52,36 +54,36 @@ open class CurrentSpeedViewModel internal constructor(
     private val positionManager: PositionManager
 ) : ViewModel(), NavigationManager.OnSpeedLimitListener, PositionManager.PositionChangeListener {
 
-    val speeding: MutableLiveData<Boolean> = MutableLiveData(false)
-    val speedValue: MutableLiveData<Int> = MutableLiveData(0)
-    val speedUnit: MutableLiveData<String> = MutableLiveData(Speed.getUnitFromDistanceUnit(DistanceUnit.KILOMETERS))
+    val speeding: LiveData<Boolean> = MutableLiveData(false)
+    val speedValue: LiveData<Int> = MutableLiveData(0)
+    val speedUnit: LiveData<String> = MutableLiveData(Speed.getUnitFromDistanceUnit(DistanceUnit.KILOMETERS))
 
     private var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
     private val distanceUnitObserver = Observer<DistanceUnit> {
-        speedValue.value = Speed.convertValue(speedValue.value!!, currentDistanceUnit = distanceUnit, targetDistanceUnit = it)
-        speedUnit.value = Speed.getUnitFromDistanceUnit(it)
+        speedValue.asMutable().value = Speed.convertValue(speedValue.value!!, currentDistanceUnit = distanceUnit, targetDistanceUnit = it)
+        speedUnit.asMutable().value = Speed.getUnitFromDistanceUnit(it)
         distanceUnit = it
     }
 
-    private val currentSpeedObserver: MutableLiveData<Int> = MutableLiveData()
-    private val speedLimitInfoObserver: MutableLiveData<SpeedLimitInfo> = MutableLiveData()
+    private val currentSpeed = MutableLiveData<Int>()
+    private val speedLimitInfo = MutableLiveData<SpeedLimitInfo>()
 
     init {
         navigationManager.addOnSpeedLimitListener(this)
         positionManager.addPositionChangeListener(this)
         regionalManager.distanceUnit.observeForever(distanceUnitObserver)
-        currentSpeedObserver.combineLatest(speedLimitInfoObserver).observeForever {
-            speeding.value = Speed.isSpeeding(it.first, it.second, distanceUnit)
-            speedValue.value = Speed.convertValue(it.first, targetDistanceUnit = distanceUnit)
+        currentSpeed.combineLatest(speedLimitInfo).observeForever {
+            speeding.asMutable().value = Speed.isSpeeding(it.first, it.second, distanceUnit)
+            speedValue.asMutable().value = Speed.convertValue(it.first, DistanceUnit.KILOMETERS, distanceUnit)
         }
     }
 
     override fun onSpeedLimitInfoChanged(speedLimitInfo: SpeedLimitInfo) {
-        speedLimitInfoObserver.value = speedLimitInfo
+        this.speedLimitInfo.value = speedLimitInfo
     }
 
     override fun onPositionChanged(geoPosition: GeoPosition) {
-        currentSpeedObserver.value = geoPosition.speed.roundToInt()
+        currentSpeed.value = geoPosition.speed.roundToInt()
     }
 
     override fun onCleared() {

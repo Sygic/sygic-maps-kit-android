@@ -33,8 +33,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.getColor
 import com.sygic.maps.uikit.views.common.extensions.getColorFromAttr
 import com.sygic.maps.uikit.views.databinding.LayoutCurrentSpeedInternalBinding
 
@@ -63,9 +63,13 @@ open class CurrentSpeedView @JvmOverloads constructor(
     private var layoutMarginEnd: Int = 0
 
     @ColorInt
-    private val whiteColor = ContextCompat.getColor(context, R.color.white)
+    private val whiteColor = getColor(R.color.white)
     @ColorInt
-    private val redColor = ContextCompat.getColor(context, R.color.brick_red)
+    private val redColor = getColor(R.color.brick_red)
+    @ColorInt
+    private val navigationBackgroundColor = getColorFromAttr(R.attr.navigationBackgroundColor)
+    @ColorInt
+    private val navigationTextColorPrimary = getColorFromAttr(R.attr.navigationTextColorPrimary)
 
     init {
         isClickable = true
@@ -126,8 +130,8 @@ open class CurrentSpeedView @JvmOverloads constructor(
      * @param isSpeeding [Boolean] true to sets if currently speeding, false otherwise.
      */
     fun setIsSpeeding(isSpeeding: Boolean) {
-        binding.currentSpeedValueTextView.setTextColor(if (isSpeeding) whiteColor else getColorFromAttr(R.attr.navigationTextColorPrimary))
-        binding.currentSpeedUnitTextView.setTextColor(if (isSpeeding) whiteColor else getColorFromAttr(R.attr.navigationTextColorPrimary))
-        backgroundTintList = ColorStateList.valueOf(if (isSpeeding) redColor else getColorFromAttr(R.attr.navigationBackgroundColor))
+        binding.currentSpeedValueTextView.setTextColor(if (isSpeeding) whiteColor else navigationTextColorPrimary)
+        binding.currentSpeedUnitTextView.setTextColor(if (isSpeeding) whiteColor else navigationTextColorPrimary)
+        backgroundTintList = ColorStateList.valueOf(if (isSpeeding) redColor else navigationBackgroundColor)
     }
 }

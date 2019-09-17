@@ -28,6 +28,7 @@ import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 
@@ -42,11 +43,11 @@ open class RoutePreviewControlsViewModel internal constructor(
     private val routeDemonstrationManager: RouteDemonstrationManager
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    val playPauseButtonState: MutableLiveData<PlayPauseButtonState> = MutableLiveData(PlayPauseButtonState.PLAY)
+    val playPauseButtonState: LiveData<PlayPauseButtonState> = MutableLiveData(PlayPauseButtonState.PLAY)
 
     override fun onCreate(owner: LifecycleOwner) {
         routeDemonstrationManager.demonstrationState.observe(owner, Observer { state ->
-            playPauseButtonState.value =
+            playPauseButtonState.asMutable().value =
                 if (state == DemonstrationState.ACTIVE) PlayPauseButtonState.PAUSE else PlayPauseButtonState.PLAY
         })
     }
