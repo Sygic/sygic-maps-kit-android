@@ -25,16 +25,16 @@
 package com.sygic.samples.base.idling
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
 import com.sygic.samples.app.activities.CommonSampleActivity
 
-class PoiDetailVisibilityIdlingResource(
+class ActionMenuVisibilityIdlingResource(
     activity: CommonSampleActivity,
     @BottomSheetBehavior.State expectedBottomSheetState: Int
 ) : BottomDialogFragmentVisibilityIdlingResource(
     activity,
     expectedBottomSheetState,
-    PoiDetailBottomDialogFragment.TAG
+    ActionMenuBottomDialogFragment.TAG
 ) {
-    override fun getName(): String = "PoiDetailVisibilityIdlingResource"
+    override fun getName(): String = "ActionMenuVisibilityIdlingResource"
 }

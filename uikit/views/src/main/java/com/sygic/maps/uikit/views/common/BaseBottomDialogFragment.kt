@@ -22,19 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.base.idling
+package com.sygic.maps.uikit.views.common
 
+import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.samples.app.activities.CommonSampleActivity
 
-class PoiDetailVisibilityIdlingResource(
-    activity: CommonSampleActivity,
-    @BottomSheetBehavior.State expectedBottomSheetState: Int
-) : BottomDialogFragmentVisibilityIdlingResource(
-    activity,
-    expectedBottomSheetState,
-    PoiDetailBottomDialogFragment.TAG
-) {
-    override fun getName(): String = "PoiDetailVisibilityIdlingResource"
+abstract class BaseBottomDialogFragment : AppCompatDialogFragment() {
+
+    /**
+     * A *[currentState]* reflects the current [BaseBottomDialogFragment] state.
+     *
+     * @return current [BottomSheetBehavior.State].
+     */
+    @get:BottomSheetBehavior.State
+    val currentState
+        get() = dialog.behavior?.state
+
+    override fun getDialog(): BottomSheetDialog = super.getDialog() as BottomSheetDialog
+
+    protected fun setState(@BottomSheetBehavior.State state: Int) {
+        dialog.behavior?.state = state
+    }
 }

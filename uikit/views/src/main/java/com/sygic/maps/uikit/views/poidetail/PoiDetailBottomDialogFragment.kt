@@ -30,12 +30,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.BaseBottomDialogFragment
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
@@ -57,7 +56,7 @@ private const val POI_DETAIL_DATA = "poi_detail_data"
  * Content colors can be changed with the standard _colorBackground_, _textColorPrimary_, _textColorSecondary_ or
  * _colorAccent_ attribute.
  */
-open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
+open class PoiDetailBottomDialogFragment : BaseBottomDialogFragment() {
 
     private var viewModel: PoiDetailInternalViewModel? = null
 
@@ -90,15 +89,6 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         }
 
     /**
-     * A *[currentState]* reflects the current [PoiDetailBottomDialogFragment] state.
-     *
-     * @return current [BottomSheetBehavior.State].
-     */
-    @get:BottomSheetBehavior.State
-    val currentState
-        get() = dialog.behavior?.state
-
-    /**
      * @see PoiDetailBottomDialogFragment
      */
     companion object {
@@ -118,8 +108,6 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
                 }
             }
     }
-
-    override fun getDialog(): BottomSheetDialog = super.getDialog() as BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,10 +154,6 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         super.onResume()
 
         viewModel?.let { dialog.behavior?.addStateListener(it) }
-    }
-
-    private fun setState(@BottomSheetBehavior.State state: Int) {
-        dialog.behavior?.state = state
     }
 
     override fun onDestroy() {

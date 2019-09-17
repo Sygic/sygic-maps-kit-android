@@ -24,6 +24,7 @@
 
 package com.sygic.samples.navigation
 
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.samples.R
@@ -65,10 +66,13 @@ class NavigationPreviewEnabledEspressoTest : BaseTest(NavigationPreviewEnabledAc
     }
 
     @Test
-    fun clickOnInfobar_leftButtonClick() { //todo: waiting for PR: Feature - Navigation Part 4.2
+    fun clickOnInfobar_leftButtonClick() {
         navigation(activity) {
             isViewDisplayed(R.id.infobar)
             clickOnView(R.id.infobarLeftButton)
+            isActionMenuVisible()
+            pressBack()
+            isActionMenuHidden()
         }
     }
 }

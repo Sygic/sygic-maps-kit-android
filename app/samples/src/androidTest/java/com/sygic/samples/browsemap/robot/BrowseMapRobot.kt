@@ -97,9 +97,7 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) : BaseRobot(act
     fun isPoiDetailHidden() {
         PoiDetailVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_HIDDEN).let {
             IdlingRegistry.getInstance().register(it)
-
             onView(withId(R.id.poiDetailContainer)).check(doesNotExist())
-
             IdlingRegistry.getInstance().unregister(it)
         }
     }
@@ -107,9 +105,7 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) : BaseRobot(act
     fun isPoiDetailVisible() {
         PoiDetailVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_COLLAPSED).let {
             IdlingRegistry.getInstance().register(it)
-
             onView(withId(R.id.poiDetailContainer)).check(matches(isDisplayed()))
-
             IdlingRegistry.getInstance().unregister(it)
         }
     }

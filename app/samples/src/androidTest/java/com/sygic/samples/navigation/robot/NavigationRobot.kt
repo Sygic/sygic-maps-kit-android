@@ -24,9 +24,17 @@
 
 package com.sygic.samples.navigation.robot
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.base.BaseRobot
+import com.sygic.samples.base.idling.ActionMenuVisibilityIdlingResource
 
 fun navigation(commonSampleActivity: CommonSampleActivity, func: NavigationRobot.() -> Unit) =
     NavigationRobot(commonSampleActivity).apply { func() }
@@ -34,4 +42,19 @@ fun navigation(commonSampleActivity: CommonSampleActivity, func: NavigationRobot
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class NavigationRobot(private val activity: CommonSampleActivity) : BaseRobot(activity, R.id.navigationFragment) {
 
+    fun isActionMenuHidden() {
+        ActionMenuVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_HIDDEN).let {
+            IdlingRegistry.getInstance().register(it)
+            onView(withId(R.id.actionMenuContainer)).check(doesNotExist())
+            IdlingRegistry.getInstance().unregister(it)
+        }
+    }
+
+    fun isActionMenuVisible() {
+        ActionMenuVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_EXPANDED).let {
+            IdlingRegistry.getInstance().register(it)
+            onView(withId(R.id.actionMenuContainer)).check(matches(isDisplayed()))
+            IdlingRegistry.getInstance().unregister(it)
+        }
+    }
 }

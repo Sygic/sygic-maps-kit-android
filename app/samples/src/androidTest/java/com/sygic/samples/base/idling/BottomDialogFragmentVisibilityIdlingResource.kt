@@ -25,16 +25,22 @@
 package com.sygic.samples.base.idling
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.common.BaseBottomDialogFragment
 import com.sygic.samples.app.activities.CommonSampleActivity
 
-class PoiDetailVisibilityIdlingResource(
+abstract class BottomDialogFragmentVisibilityIdlingResource(
     activity: CommonSampleActivity,
-    @BottomSheetBehavior.State expectedBottomSheetState: Int
-) : BottomDialogFragmentVisibilityIdlingResource(
-    activity,
-    expectedBottomSheetState,
-    PoiDetailBottomDialogFragment.TAG
-) {
-    override fun getName(): String = "PoiDetailVisibilityIdlingResource"
+    @BottomSheetBehavior.State private val expectedBottomSheetState: Int,
+    private val fragmentTag: String
+) : BaseIdlingResource(activity) {
+
+    override fun isIdle(): Boolean {
+        with(activity.supportFragmentManager?.findFragmentByTag(fragmentTag)) {
+            if (this == null && expectedBottomSheetState == BottomSheetBehavior.STATE_HIDDEN) {
+                return true
+            }
+
+            return (this as? BaseBottomDialogFragment)?.currentState == expectedBottomSheetState
+        }
+    }
 }
