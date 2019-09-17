@@ -23,26 +23,35 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="160dp"
+    android:layout_height="160dp"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_info_toast"
+    android:gravity="center"
+    android:minWidth="160dp"
+    android:minHeight="160dp"
+    android:orientation="vertical"
+    tools:background="@color/shuttle_gray">
 
-    <data>
+    <ImageView
+        android:id="@+id/infoToastImageView"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:tint="@color/white"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_book" />
 
-        <variable
-            name="samplesListViewModel"
-            type="com.sygic.samples.app.viewmodels.SamplesListViewModel" />
-
-    </data>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sampleListRecyclerView"
+    <TextView
+        android:id="@+id/infoToastTextDesc"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        app:hasFixedSize="@{true}"
-        app:layoutManager="LinearLayoutManager"
-        app:setAdapter="@{samplesListViewModel.adapter}"
-        tools:listitem="@layout/layout_card_item" />
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:padding="16dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/fontSizeExtraSmall"
+        tools:text="TEXT WHICH SPANS a lot of lines Lorem" />
 
-</layout>
+</LinearLayout>

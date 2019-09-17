@@ -22,35 +22,31 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.viewmodels
+package com.sygic.maps.uikit.views.navigation.actionmenu.listener
 
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.app.adapters.SamplesRecyclerViewAdapter
-import com.sygic.samples.app.models.Sample
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
 
-class SamplesListViewModel(samples: List<Sample>) : ViewModel(), SamplesRecyclerViewAdapter.ClickListener {
+/**
+ * Interface definition for a callback to be invoked when a click to the action menu item has been made.
+ */
+@FunctionalInterface
+interface ActionMenuItemClickListener {
 
-    val adapter = SamplesRecyclerViewAdapter()
-    val startActivityObservable: LiveData<Class<out CommonSampleActivity>> = SingleLiveEvent()
+    /**
+     * Called when a click to the action menu item has been made.
+     */
+    fun onActionMenuItemClick(actionMenuItem: ActionMenuItem)
+}
 
-    init {
-        adapter.clickListener = this
-        adapter.items = samples
-    }
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface ActionMenuItemsProviderWrapper {
+    val actionMenuItemsProvider: LiveData<ProviderComponent>
 
-    override fun onSampleItemClick(sample: Sample) {
-        startActivityObservable.asSingleEvent().value = sample.target
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    class Factory(private val samples: List<Sample>): ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SamplesListViewModel(samples) as T
-        }
-    }
+    data class ProviderComponent(
+        val actionMenuData: ActionMenuData,
+        val actionMenuItemClickListener: ActionMenuItemClickListener
+    )
 }

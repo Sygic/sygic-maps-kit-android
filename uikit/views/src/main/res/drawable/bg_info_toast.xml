@@ -23,26 +23,8 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="samplesListViewModel"
-            type="com.sygic.samples.app.viewmodels.SamplesListViewModel" />
-
-    </data>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sampleListRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        app:hasFixedSize="@{true}"
-        app:layoutManager="LinearLayoutManager"
-        app:setAdapter="@{samplesListViewModel.adapter}"
-        tools:listitem="@layout/layout_card_item" />
-
-</layout>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/shuttle_gray_a80" />
+    <corners android:radius="8dp" />
+</shape>

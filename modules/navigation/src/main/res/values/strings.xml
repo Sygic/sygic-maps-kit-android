@@ -23,26 +23,10 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="samplesListViewModel"
-            type="com.sygic.samples.app.viewmodels.SamplesListViewModel" />
-
-    </data>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sampleListRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        app:hasFixedSize="@{true}"
-        app:layoutManager="LinearLayoutManager"
-        app:setAdapter="@{samplesListViewModel.adapter}"
-        tools:listitem="@layout/layout_card_item" />
-
-</layout>
+<resources>
+    <string name="action_menu">Action menu</string>
+    <string name="sounds_on">Sounds on</string>
+    <string name="sounds_off">Sounds off</string>
+    <string name="sounds_enabled">Sounds enabled</string>
+    <string name="sounds_disabled">Sounds disabled</string>
+</resources>
