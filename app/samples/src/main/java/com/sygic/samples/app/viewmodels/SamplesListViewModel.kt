@@ -35,7 +35,7 @@ import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 
 class SamplesListViewModel(samples: List<Sample>) : ViewModel(), SamplesRecyclerViewAdapter.ClickListener {
 
-    val adapter: SamplesRecyclerViewAdapter = SamplesRecyclerViewAdapter()
+    val adapter = SamplesRecyclerViewAdapter()
     val startActivityObservable: LiveData<Class<out CommonSampleActivity>> = SingleLiveEvent()
 
     init {

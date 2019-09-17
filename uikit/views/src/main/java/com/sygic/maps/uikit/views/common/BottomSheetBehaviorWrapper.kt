@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail.behavior
+package com.sygic.maps.uikit.views.common
 
 import android.view.View
 import androidx.annotation.RestrictTo
