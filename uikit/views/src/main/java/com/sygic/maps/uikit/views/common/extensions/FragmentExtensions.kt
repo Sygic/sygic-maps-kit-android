@@ -31,11 +31,13 @@ import androidx.annotation.IdRes
 import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.utils.logWarning
 
 fun Fragment.showKeyboard(view: View) = context?.showKeyboard(view)
 fun Fragment.toggleKeyboard() = context?.toggleKeyboard()
 fun Fragment.hideKeyboard() = view?.let { context?.hideKeyboard(it) }
+fun Fragment.showInfoToast(infoToastComponent: InfoToastComponent, isLong: Boolean = false) = context?.showInfoToast(infoToastComponent, isLong)
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun Fragment.openFragment(fragment: Fragment) {

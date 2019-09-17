@@ -26,6 +26,7 @@
 <resources>
 
     <attr name="sygicMapSkin" format="string" />
+    <attr name="sygicVehicleSkin" format="string" />
     <attr name="navigationBackgroundColor" format="reference" />
     <attr name="navigationTextColorPrimary" format="reference" />
     <attr name="navigationTextColorSecondary" format="reference" />

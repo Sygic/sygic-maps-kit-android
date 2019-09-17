@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.navigation
 
+import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -53,11 +55,13 @@ import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
-import com.sygic.maps.uikit.views.common.extensions.asMutable
-import com.sygic.maps.uikit.views.common.extensions.finish
-import com.sygic.maps.uikit.views.common.extensions.getBoolean
-import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 import com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
@@ -88,7 +92,7 @@ internal const val KEY_ROUTE_INFO = "route_info"
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
-    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper {
+    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
@@ -98,6 +102,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
 
     override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
     override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
+    override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
@@ -270,6 +275,18 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
+            this.infoToastObservable.observe(
+                this@NavigationFragment,
+                Observer<InfoToastComponent> { showInfoToast(it) })
+            this.actionMenuShowObservable.observe(
+                this@NavigationFragment,
+                Observer<ActionMenuData> { showActionMenu(it) })
+            this.actionMenuHideObservable.observe(
+                this@NavigationFragment,
+                Observer<Any> { hideActionMenu() })
+            this.actionMenuItemClickListenerObservable.observe(
+                this@NavigationFragment,
+                Observer<ActionMenuItemClickListener> { setActionMenuItemClickListener(it) })
             this.activityFinishObservable.observe(
                 this@NavigationFragment,
                 Observer<Any> { finish() })
@@ -326,6 +343,39 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
             }
         }.root
 
+    private fun showActionMenu(actionMenuData: ActionMenuData) {
+        ActionMenuBottomDialogFragment.newInstance(actionMenuData).apply {
+            itemClickListener = fragmentViewModel.actionMenuItemClickListener
+        }.show(fragmentManager, ActionMenuBottomDialogFragment.TAG)
+    }
+
+    private fun setActionMenuItemClickListener(listener: ActionMenuItemClickListener) {
+        fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as ActionMenuBottomDialogFragment).itemClickListener = listener
+        }
+    }
+
+    private fun hideActionMenu() {
+        fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as DialogFragment).dismiss()
+        }
+    }
+
+    /**
+     * Set a custom [ActionMenuData] and [ActionMenuItemClickListener] for the [ActionMenuBottomDialogFragment] content fulfillment.
+     *
+     * @param actionMenuData [ActionMenuData] which will be used for fulfillment the [ActionMenuBottomDialogFragment] content.
+     * @param actionMenuItemClickListener [ActionMenuItemClickListener] callback to invoke action menu item click.
+     *
+     */
+    fun setActionMenuItems(
+        actionMenuData: ActionMenuData,
+        actionMenuItemClickListener: ActionMenuItemClickListener
+    ) {
+        actionMenuItemsProvider.asMutable().value =
+            ActionMenuItemsProviderWrapper.ProviderComponent(actionMenuData, actionMenuItemClickListener)
+    }
+
     /**
      * Register a custom callback to be invoked when a click to the infobar button has been made.
      *
@@ -360,8 +410,8 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
         lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 
-    override fun resolveAttributes(attributes: AttributeSet) {
-        with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
+    override fun resolveAttributes(context: Context, attributes: AttributeSet) {
+        with(context.obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
             if (hasValue(R.styleable.NavigationFragment_sygic_navigation_distanceUnit)) {
                 distanceUnit = DistanceUnit.atIndex(
                     getInt(

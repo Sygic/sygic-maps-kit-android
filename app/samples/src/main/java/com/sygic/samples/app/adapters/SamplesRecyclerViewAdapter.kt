@@ -45,13 +45,10 @@ class SamplesRecyclerViewAdapter : RecyclerView.Adapter<SamplesRecyclerViewAdapt
 
     override fun getItemCount(): Int = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SampleViewHolder {
-        return SampleViewHolder(LayoutCardItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        SampleViewHolder(LayoutCardItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: SampleViewHolder, position: Int) {
-        holder.update(items[position])
-    }
+    override fun onBindViewHolder(holder: SampleViewHolder, position: Int) = holder.update(items[position])
 
     inner class SampleViewHolder(private val binding: LayoutCardItemBinding) : RecyclerView.ViewHolder(binding.root) {
 

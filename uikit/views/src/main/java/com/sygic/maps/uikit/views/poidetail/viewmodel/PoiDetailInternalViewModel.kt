@@ -29,7 +29,7 @@ import android.content.Intent
 import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.common.extensions.*
-import com.sygic.maps.uikit.views.poidetail.behavior.BottomSheetBehaviorWrapper
+import com.sygic.maps.uikit.views.common.BottomSheetBehaviorWrapper
 import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData

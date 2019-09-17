@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail.dialog
+package com.sygic.maps.uikit.views.common
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -30,7 +30,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.Window
 import android.view.WindowManager
@@ -45,7 +44,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.google.android.material.R.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.maps.uikit.views.poidetail.behavior.BottomSheetBehaviorWrapper
 
 /**
  * Friendly and more usable alternative to the official material BottomSheetDialog with available BottomSheetBehavior
@@ -78,7 +76,7 @@ class BottomSheetDialog @JvmOverloads constructor(
         window?.let {
             it.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             it.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            it.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            it.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         }
     }
 
