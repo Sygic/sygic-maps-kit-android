@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.browsemap
 
+import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -278,20 +279,19 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
 
     private fun showPoiDetail() {
         PoiDetailBottomDialogFragment.newInstance().apply {
-            setListener(fragmentViewModel.dialogFragmentListener)
-            showNow(this@BrowseMapFragment.fragmentManager, PoiDetailBottomDialogFragment.TAG)
-        }
+            listener = fragmentViewModel.dialogFragmentListener
+        }.showNow(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
     private fun setPoiDetailListener(listener: DialogFragmentListener) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setListener(listener)
+            (fragment as PoiDetailBottomDialogFragment).listener = listener
         }
     }
 
     private fun setPoiDetailData(data: PoiDetailData) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setData(data)
+            (fragment as PoiDetailBottomDialogFragment).data = data
         }
     }
 
@@ -304,8 +304,8 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
         lifecycle.removeObserver(zoomControlsViewModel)
     }
 
-    override fun resolveAttributes(attributes: AttributeSet) {
-        with(requireContext().obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)) {
+    override fun resolveAttributes(context: Context, attributes: AttributeSet) {
+        with(context.obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)) {
             if (hasValue(R.styleable.BrowseMapFragment_sygic_map_selectionMode)) {
                 mapSelectionMode =
                     getInt(

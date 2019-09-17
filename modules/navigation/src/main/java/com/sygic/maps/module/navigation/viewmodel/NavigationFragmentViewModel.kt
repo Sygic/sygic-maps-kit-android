@@ -33,6 +33,8 @@ import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.module.navigation.*
 import com.sygic.maps.module.navigation.R
+import com.sygic.maps.module.navigation.actionmenu.SoundsOffActionMenuItem
+import com.sygic.maps.module.navigation.actionmenu.SoundsOnActionMenuItem
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.infobar.InternalLeftInfobarClickListener
 import com.sygic.maps.module.navigation.infobar.NavigationDefaultLeftInfobarButton
@@ -56,8 +58,14 @@ import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButton
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
 import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
@@ -65,6 +73,8 @@ import com.sygic.sdk.map.MapCenter
 import com.sygic.sdk.map.MapCenterSettings
 import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.navigation.NavigationManager
+import com.sygic.sdk.navigation.listeners.NoAudioInstructionListener
+import com.sygic.sdk.navigation.listeners.NoAudioWarningListener
 import com.sygic.sdk.route.RouteInfo
 
 private const val DEFAULT_NAVIGATION_TILT = 60f
@@ -114,13 +124,17 @@ class NavigationFragmentViewModel internal constructor(
     val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
+    val infoToastObservable: LiveData<InfoToastComponent> = SingleLiveEvent()
+    val actionMenuShowObservable: LiveData<ActionMenuData> = SingleLiveEvent()
+    val actionMenuHideObservable: LiveData<Any> = SingleLiveEvent()
+    val actionMenuItemClickListenerObservable: LiveData<ActionMenuItemClickListener> = SingleLiveEvent()
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
 
     private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
 
     private val navigationDefaultLeftInfobarClickListener = object : InternalLeftInfobarClickListener() {
         override val button = NavigationDefaultLeftInfobarButton()
-        override fun onButtonClick() { /*todo: MS-6218*/  }
+        override fun onButtonClick() { actionMenuShowObservable.asSingleEvent().value = actionMenuData }
     }
 
     private val navigationUnlockedLeftInfobarClickListener = object : InternalLeftInfobarClickListener() {
@@ -135,6 +149,36 @@ class NavigationFragmentViewModel internal constructor(
         override val button = NavigationDefaultRightInfobarButton()
         override fun onButtonClick() = activityFinishObservable.asSingleEvent().call()
     }
+
+    private var actionMenuData: ActionMenuData = ActionMenuData(
+        TextHolder.from(R.string.action_menu),
+        listOf(
+            SoundsOnActionMenuItem(),
+            SoundsOffActionMenuItem()
+        )
+    )
+
+    var actionMenuItemClickListener: ActionMenuItemClickListener =
+        object : ActionMenuItemClickListener {
+            override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
+                when (actionMenuItem) {
+                    is SoundsOnActionMenuItem -> {
+                        navigationManager.removeAudioWarningListener()
+                        navigationManager.removeAudioInstructionListener()
+                        infoToastObservable.asSingleEvent().value =
+                            InfoToastComponent(R.drawable.ic_sounds_on, R.string.sounds_enabled)
+                    }
+                    is SoundsOffActionMenuItem -> {
+                        navigationManager.setAudioWarningListener(NoAudioWarningListener())
+                        navigationManager.setAudioInstructionListener(NoAudioInstructionListener())
+                        infoToastObservable.asSingleEvent().value =
+                            InfoToastComponent(R.drawable.ic_sounds_off, R.string.sounds_disabled)
+                    }
+                }
+                actionMenuHideObservable.asSingleEvent().call()
+            }
+        }
+        private set
 
     var distanceUnit: DistanceUnit
         get() = regionalManager.distanceUnit.value!!
@@ -176,6 +220,12 @@ class NavigationFragmentViewModel internal constructor(
                 updateInfobarListenersMap(it.infobarButtonType, it.onInfobarButtonClickListener)
             })
         }
+        if (owner is ActionMenuItemsProviderWrapper) {
+            owner.actionMenuItemsProvider.observe(owner, Observer {
+                actionMenuData = it.actionMenuData
+                actionMenuItemClickListener = it.actionMenuItemClickListener
+            })
+        }
     }
 
     fun isLanesViewEmbedded() = signpostEnabled.value!! && signpostType == SignpostType.FULL
@@ -184,6 +234,7 @@ class NavigationFragmentViewModel internal constructor(
         locationManager.positionOnMapEnabled = !previewMode.value!! || routeDemonstrationManager.demonstrationState.value == DemonstrationState.ACTIVE
         cameraModel.addModeChangedListener(this)
         navigationManager.addOnRouteChangedListener(this)
+        actionMenuItemClickListenerObservable.asSingleEvent().value = actionMenuItemClickListener
     }
 
     override fun onResume(owner: LifecycleOwner) {

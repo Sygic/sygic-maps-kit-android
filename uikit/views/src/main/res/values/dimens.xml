@@ -33,6 +33,7 @@
     <dimen name="fontSizeMediumLarge">20sp</dimen>
     <dimen name="fontSizeLarge">24sp</dimen>
     <dimen name="fontSizeExtraLarge">32sp</dimen>
+    <dimen name="fontSizeHuge">36sp</dimen>
 
     <!-- Navigation -->
     <dimen name="directionSize">48dp</dimen>
