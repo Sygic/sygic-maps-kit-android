@@ -35,6 +35,7 @@ import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
 import com.sygic.maps.uikit.viewmodels.common.utils.searchResultStateToErrorViewSwitcherIndex
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
@@ -61,8 +62,8 @@ open class SearchResultListViewModel @JvmOverloads internal constructor(
 
     val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
 
-    val errorViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND)
-    val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>>
+    val errorViewSwitcherIndex: LiveData<Int> = MutableLiveData(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND)
+    val activeAdapter: LiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>>
             = MutableLiveData(defaultStateAdapter)
 
     private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
@@ -72,8 +73,8 @@ open class SearchResultListViewModel @JvmOverloads internal constructor(
             resultListAdapter.items = it
         }
 
-        errorViewSwitcherIndex.value = searchResultStateToErrorViewSwitcherIndex(state)
-        activeAdapter.value = if (input.isNotEmpty()) resultListAdapter else defaultStateAdapter
+        errorViewSwitcherIndex.asMutable().value = searchResultStateToErrorViewSwitcherIndex(state)
+        activeAdapter.asMutable().value = if (input.isNotEmpty()) resultListAdapter else defaultStateAdapter
     }
 
     init {

@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
@@ -32,6 +33,7 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.roadSigns
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.holders.NaviSignInfoHolder
 import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
@@ -53,22 +55,22 @@ open class FullSignpostViewModel internal constructor(
     private val navigationManager: NavigationManager
 ) : BaseSignpostViewModel(regionalManager, navigationManager), NavigationManager.OnNaviSignListener {
 
-    val pictogram: MutableLiveData<Int> = MutableLiveData(EMPTY_PICTOGRAM)
-    val roadSigns: MutableLiveData<List<RoadSignData>> = MutableLiveData(listOf())
+    val pictogram: LiveData<Int> = MutableLiveData(EMPTY_PICTOGRAM)
+    val roadSigns: LiveData<List<RoadSignData>> = MutableLiveData(listOf())
 
-    private val naviSignInfoHolder: MutableLiveData<NaviSignInfoHolder> = MutableLiveData(NaviSignInfoHolder.empty)
+    private val naviSignInfoHolder = MutableLiveData<NaviSignInfoHolder>(NaviSignInfoHolder.empty)
 
     init {
         navigationManager.addOnNaviSignListener(this)
         directionInfo.combineLatest(naviSignInfoHolder)
-            .observeForever { instructionText.value = createInstructionText(it) }
+            .observeForever { instructionText.asMutable().value = createInstructionText(it) }
     }
 
     override fun onNaviSignChanged(naviSignInfoList: List<NaviSignInfo>) {
         with(naviSignInfoList.getNaviSignInfoOnRoute()) {
             naviSignInfoHolder.value = NaviSignInfoHolder.from(this)
-            roadSigns.value = this?.roadSigns() ?: listOf()
-            pictogram.value = this?.pictogramDrawableRes() ?: EMPTY_PICTOGRAM
+            roadSigns.asMutable().value = this?.roadSigns() ?: listOf()
+            pictogram.asMutable().value = this?.pictogramDrawableRes() ?: EMPTY_PICTOGRAM
         }
     }
 
