@@ -66,6 +66,10 @@ open class CurrentSpeedView @JvmOverloads constructor(
     private val whiteColor = getColor(R.color.white)
     @ColorInt
     private val redColor = getColor(R.color.brick_red)
+    @ColorInt
+    private val navigationBackgroundColor = getColorFromAttr(R.attr.navigationBackgroundColor)
+    @ColorInt
+    private val navigationTextColorPrimary = getColorFromAttr(R.attr.navigationTextColorPrimary)
 
     init {
         isClickable = true
@@ -137,8 +141,8 @@ open class CurrentSpeedView @JvmOverloads constructor(
      */
     fun setIsSpeeding(isSpeeding: Boolean) {
         binding.currentSpeedProgressView.visibility = if (isSpeeding) GONE else VISIBLE
-        binding.currentSpeedValueTextView.setTextColor(if (isSpeeding) whiteColor else getColorFromAttr(R.attr.navigationTextColorPrimary))
-        binding.currentSpeedUnitTextView.setTextColor(if (isSpeeding) whiteColor else getColorFromAttr(R.attr.navigationTextColorPrimary))
-        backgroundTintList = ColorStateList.valueOf(if (isSpeeding) redColor else getColorFromAttr(R.attr.navigationBackgroundColor))
+        binding.currentSpeedValueTextView.setTextColor(if (isSpeeding) whiteColor else navigationTextColorPrimary)
+        binding.currentSpeedUnitTextView.setTextColor(if (isSpeeding) whiteColor else navigationTextColorPrimary)
+        backgroundTintList = ColorStateList.valueOf(if (isSpeeding) redColor else navigationBackgroundColor)
     }
 }

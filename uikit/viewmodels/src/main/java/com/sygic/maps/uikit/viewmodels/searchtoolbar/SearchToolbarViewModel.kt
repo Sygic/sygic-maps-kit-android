@@ -64,10 +64,10 @@ open class SearchToolbarViewModel internal constructor(
     private val searchManager: SearchManager
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData(true)
+    val searchToolbarFocused = MutableLiveData<Boolean>(true)
     val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
 
-    val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
+    val iconStateSwitcherIndex = MutableLiveData<Int>(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
     val inputText: MutableLiveData<CharSequence> = UniqueMutableLiveData()
 
     var searchLocation: GeoCoordinates? = null

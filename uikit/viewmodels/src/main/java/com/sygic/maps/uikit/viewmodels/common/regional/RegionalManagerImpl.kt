@@ -30,5 +30,5 @@ import com.sygic.maps.uikit.views.common.units.DistanceUnit
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class RegionalManagerImpl : RegionalManager {
-    override val distanceUnit: MutableLiveData<DistanceUnit> = MutableLiveData(DistanceUnit.KILOMETERS)
+    override val distanceUnit = MutableLiveData<DistanceUnit>(DistanceUnit.KILOMETERS)
 }

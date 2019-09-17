@@ -111,17 +111,17 @@ class NavigationFragmentViewModel internal constructor(
 
     @LayoutRes
     val signpostLayout: Int
-    val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
-    val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
-    val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
-    val currentSpeedEnabled: MutableLiveData<Boolean> = MutableLiveData(CURRENT_SPEED_ENABLED_DEFAULT_VALUE)
-    val speedLimitEnabled: MutableLiveData<Boolean> = MutableLiveData(SPEED_LIMIT_ENABLED_DEFAULT_VALUE)
-    val lanesViewEnabled: MutableLiveData<Boolean> = MutableLiveData(LANES_VIEW_ENABLED_DEFAULT_VALUE)
+    val signpostEnabled = MutableLiveData<Boolean>(SIGNPOST_ENABLED_DEFAULT_VALUE)
+    val infobarEnabled = MutableLiveData<Boolean>(INFOBAR_ENABLED_DEFAULT_VALUE)
+    val previewControlsEnabled = MutableLiveData<Boolean>(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
+    val currentSpeedEnabled = MutableLiveData<Boolean>(CURRENT_SPEED_ENABLED_DEFAULT_VALUE)
+    val speedLimitEnabled = MutableLiveData<Boolean>(SPEED_LIMIT_ENABLED_DEFAULT_VALUE)
+    val lanesViewEnabled = MutableLiveData<Boolean>(LANES_VIEW_ENABLED_DEFAULT_VALUE)
 
-    val leftInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
-    val rightInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
+    val leftInfobarButton = MutableLiveData<InfobarButton?>()
+    val rightInfobarButton = MutableLiveData<InfobarButton?>()
 
-    val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
+    val previewMode = MutableLiveData<Boolean>(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
     val infoToastObservable: LiveData<InfoToastComponent> = SingleLiveEvent()

@@ -39,7 +39,7 @@ internal class ActionMenuInternalViewModel : ViewModel() {
 
     val adapter = ActionMenuAdapter()
     val titleText: LiveData<TextHolder> = MutableLiveData(TextHolder.from(EMPTY_STRING))
-    val spanCount: MutableLiveData<Int> = MutableLiveData(DEFAULT_SPAN_COUNT)
+    val spanCount = MutableLiveData<Int>(DEFAULT_SPAN_COUNT)
 
     var listener: ActionMenuItemClickListener? = null
         set(value) {

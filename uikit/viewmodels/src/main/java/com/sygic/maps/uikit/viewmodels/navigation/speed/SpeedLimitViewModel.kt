@@ -24,10 +24,12 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation.speed
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSpeedLimitType
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
 import com.sygic.maps.uikit.views.navigation.speed.limit.SpeedLimitType
 import com.sygic.sdk.navigation.NavigationManager
@@ -43,18 +45,18 @@ open class SpeedLimitViewModel internal constructor(
     private val navigationManager: NavigationManager
 ) : ViewModel(), NavigationManager.OnSpeedLimitListener {
 
-    val speedLimitType: MutableLiveData<SpeedLimitType> = MutableLiveData(SpeedLimitType.EU)
-    val speedLimitValue: MutableLiveData<Int> = MutableLiveData(0)
-    val speedLimitVisible: MutableLiveData<Boolean> = MutableLiveData(false)
+    val speedLimitType: LiveData<SpeedLimitType> = MutableLiveData(SpeedLimitType.EU)
+    val speedLimitValue: LiveData<Int> = MutableLiveData(0)
+    val speedLimitVisible: LiveData<Boolean> = MutableLiveData(false)
 
     init {
         navigationManager.addOnSpeedLimitListener(this)
     }
 
     override fun onSpeedLimitInfoChanged(speedLimitInfo: SpeedLimitInfo) {
-        speedLimitValue.value = speedLimitInfo.getSpeedLimit(speedLimitInfo.countrySpeedUnits)
-        speedLimitType.value = speedLimitInfo.countrySignage.toSpeedLimitType()
-        speedLimitVisible.value = speedLimitValue.value!! > 0
+        speedLimitValue.asMutable().value = speedLimitInfo.getSpeedLimit(speedLimitInfo.countrySpeedUnits)
+        speedLimitType.asMutable().value = speedLimitInfo.countrySignage.toSpeedLimitType()
+        speedLimitVisible.asMutable().value = speedLimitValue.value!! > 0
     }
 
     override fun onCleared() {
