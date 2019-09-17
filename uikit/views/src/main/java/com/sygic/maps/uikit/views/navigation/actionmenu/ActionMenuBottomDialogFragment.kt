@@ -136,8 +136,8 @@ open class ActionMenuBottomDialogFragment : AppCompatDialogFragment() {
                     this.spanCount.value = arguments.getInt(ACTION_MENU_SPAN_COUNT, DEFAULT_SPAN_COUNT)
                     this.actionMenuData = arguments.getParcelableValue(ACTION_MENU_DATA) ?: ActionMenuData.empty
                     this.listener = this@ActionMenuBottomDialogFragment.itemClickListener
+                    this@ActionMenuBottomDialogFragment.itemClickListener = null
                 }
-        this.itemClickListener = null
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
