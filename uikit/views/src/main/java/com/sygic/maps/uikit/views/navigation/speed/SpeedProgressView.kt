@@ -146,15 +146,16 @@ class SpeedProgressView @JvmOverloads constructor(
             getDefaultSize(suggestedMinimumWidth, widthMeasureSpec),
             getDefaultSize(suggestedMinimumHeight, heightMeasureSpec)
         )
-        setMeasuredDimension(min, min)
 
+        setMeasuredDimension(min, min)
         updateSegmentForegroundGradient(segmentForegroundColors)
 
-        val left = segmentThickness.toFloat() / 2
-        val top = segmentThickness.toFloat() / 2
-        val right = min - segmentThickness.toFloat() / 2
-        val bottom = min - segmentThickness.toFloat() / 2
-        oval.set(left, top, right, bottom)
+        oval.set(
+            segmentThickness.toFloat() / 2,
+            segmentThickness.toFloat() / 2,
+            min - segmentThickness.toFloat() / 2,
+            min - segmentThickness.toFloat() / 2
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -174,13 +175,13 @@ class SpeedProgressView @JvmOverloads constructor(
         }, backgroundPaint)
 
         if (segmentForegroundColors.isNotEmpty()) {
-            if (segmentForegroundColors.size >= 2) {
-                foregroundPaint.apply {
-                    shader = segmentForegroundGradient
+            foregroundPaint.apply {
+                segmentForegroundGradient?.let {
+                    shader = it
                     isAntiAlias = true
+                } ?: run {
+                    color = segmentForegroundColors.first()
                 }
-            } else {
-                foregroundPaint.color = segmentForegroundColors.first()
             }
 
             canvas.drawPath(foregroundPath.apply {
