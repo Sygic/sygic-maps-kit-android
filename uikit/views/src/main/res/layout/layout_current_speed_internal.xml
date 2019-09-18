@@ -52,7 +52,7 @@
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="?attr/navigationTextColorPrimary"
-            android:textSize="24sp"
+            android:textSize="@dimen/fontSizeLarge"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
