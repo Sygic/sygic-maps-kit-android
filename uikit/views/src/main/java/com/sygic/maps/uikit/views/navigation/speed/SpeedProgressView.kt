@@ -38,6 +38,7 @@ private const val ANGLE_MAX = 270f
 private const val ANGLE_START_POINT = 45f
 private const val ANGLE_END_POINT = ANGLE_START_POINT + ANGLE_MAX
 private const val MAX_PROGRESS = 100f
+private const val DRAW_TOLERANCE = 0.1f
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SpeedProgressView @JvmOverloads constructor(
@@ -166,12 +167,11 @@ class SpeedProgressView @JvmOverloads constructor(
         val rest = ANGLE_MAX.rem(stepWithSpacing)
         val startEndGap = rest / 2
         val drawStartPoint = ANGLE_START_POINT + startEndGap
-        val drawTolerance = 0.1f
 
         canvas.drawPath(backgroundPath.apply {
             reset()
             val drawEndPoint = ANGLE_END_POINT - startEndGap - stepWithSpacing
-            addArcs(oval, drawStartPoint, drawEndPoint, drawTolerance, stepAngle, stepWithSpacing, segmentAngle)
+            addArcs(oval, drawStartPoint, drawEndPoint, stepAngle, stepWithSpacing, segmentAngle)
         }, backgroundPaint)
 
         if (segmentForegroundColors.isNotEmpty()) {
@@ -189,7 +189,7 @@ class SpeedProgressView @JvmOverloads constructor(
                 val angle = ANGLE_MAX * progress / MAX_PROGRESS + ANGLE_START_POINT
                 var drawEndPoint = angle - startEndGap
                 if (progress == MAX_PROGRESS) drawEndPoint -= stepWithSpacing
-                addArcs(oval, drawStartPoint, drawEndPoint, drawTolerance, stepAngle, stepWithSpacing, segmentAngle)
+                addArcs(oval, drawStartPoint, drawEndPoint, stepAngle, stepWithSpacing, segmentAngle)
             }, foregroundPaint)
         }
     }
@@ -210,10 +210,10 @@ class SpeedProgressView @JvmOverloads constructor(
     }
 }
 
-private fun Path.addArcs(oval: RectF, drawStartPoint: Float, drawEndPoint: Float, drawTolerance: Float,
+private fun Path.addArcs(oval: RectF, drawStartPoint: Float, drawEndPoint: Float,
                          stepAngle: Float, stepWithSpacing: Float, segmentAngle: Float) {
     var i = drawStartPoint
-    while (i < drawEndPoint || i in (drawEndPoint - drawTolerance)..(drawEndPoint + drawTolerance)) {
+    while (i < drawEndPoint || i in (drawEndPoint - DRAW_TOLERANCE)..(drawEndPoint + DRAW_TOLERANCE)) {
         addArc(oval, i + (stepAngle / 2), segmentAngle)
         i += stepWithSpacing
     }
