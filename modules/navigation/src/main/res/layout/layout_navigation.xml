@@ -128,6 +128,7 @@
             app:isSpeeding="@{currentSpeedViewModel.speeding}"
             app:layout_constraintBottom_toTopOf="@id/infobar"
             app:layout_constraintEnd_toEndOf="parent"
+            app:speedProgress="@{currentSpeedViewModel.speedProgress}"
             app:speedUnit="@{currentSpeedViewModel.speedUnit}"
             app:speedValue="@{currentSpeedViewModel.speedValue}" />
 

@@ -40,9 +40,9 @@ buildscript {
         moduleBrowsemapVersion = '1.1.4'
         moduleSearchVersion = '1.3.5'
         moduleNavigationVersion = '1.4.0'
-        moduleCommonVersion = '1.3.5'
-        uikitViewsVersion = '2.8.0'
-        uikitViewmodelsVersion = '2.6.0'
+        moduleCommonVersion = '1.3.6'
+        uikitViewsVersion = '2.9.0'
+        uikitViewmodelsVersion = '2.6.1'
         toolsViewmodelFactoryVersion = '1.1.1'
 
         kotlinVersion = '1.3.50'

@@ -44,6 +44,9 @@
     <dimen name="currentSpeedViewLayoutMargin">16dp</dimen>
     <dimen name="speedLimitViewSize">56dp</dimen>
     <dimen name="speedLimitViewLayoutMargin">16dp</dimen>
+    <integer name="speedProgressViewSegmentAngle">8</integer>
+    <dimen name="speedProgressViewSegmentThickness">3dp</dimen>
+    <fraction name="speedProgressViewSegmentSpacing">30%</fraction>
     <dimen name="navigationComponentElevation">6dp</dimen>
     <dimen name="infobarLayoutMargin">16dp</dimen>
     <dimen name="signpostViewLayoutMargin">16dp</dimen>

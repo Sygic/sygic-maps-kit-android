@@ -171,4 +171,10 @@ object Speed {
         val speedLimitValue = speedLimitInfo.getSpeedLimitValue(distanceUnit)
         return speedLimitValue > 0 && speedValue > speedLimitValue * SPEEDING_THRESHOLD_TOLERANCE
     }
+
+    fun speedProgress(
+        speedValue: Int,
+        speedLimitInfo: SpeedLimitInfo,
+        distanceUnit: DistanceUnit
+    ): Float = speedValue * 100.0f / speedLimitInfo.getSpeedLimitValue(distanceUnit)
 }

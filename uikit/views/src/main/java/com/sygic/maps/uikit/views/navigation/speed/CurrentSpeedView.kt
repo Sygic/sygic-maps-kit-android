@@ -27,12 +27,11 @@ package com.sygic.maps.uikit.views.navigation.speed
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.LayoutInflater
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.getColor
 import com.sygic.maps.uikit.views.common.extensions.getColorFromAttr
@@ -40,7 +39,8 @@ import com.sygic.maps.uikit.views.databinding.LayoutCurrentSpeedInternalBinding
 
 /**
  * A [CurrentSpeedView] is designed to be used as an visual presentation component for the actual speed value. It
- * contains two [TextView] for speed value and unit.
+ * contains two [TextView] for speed value and unit. It also includes a [SpeedProgressView] that can be controlled
+ * using the [setSpeedProgress] method.
  *
  * The [CurrentSpeedView] design can be completely changed with the custom _currentSpeedViewStyle_ or the attributes
  * as _background_, _navigationTextColorPrimary_ or _navigationTextColorSecondary_ can be used.
@@ -51,7 +51,7 @@ open class CurrentSpeedView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.currentSpeedViewStyle,
     defStyleRes: Int = R.style.SygicCurrentSpeedViewStyle
-) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val binding: LayoutCurrentSpeedInternalBinding =
         LayoutCurrentSpeedInternalBinding.inflate(LayoutInflater.from(context), this, true)
@@ -73,8 +73,6 @@ open class CurrentSpeedView @JvmOverloads constructor(
 
     init {
         isClickable = true
-        orientation = VERTICAL
-        gravity = Gravity.CENTER
 
         attrs?.let { attributeSet ->
             @Suppress("Recycle")
@@ -84,6 +82,9 @@ open class CurrentSpeedView @JvmOverloads constructor(
                 defStyleAttr,
                 defStyleRes
             ).also {
+                setBackgroundResource(it.getResourceId(R.styleable.CurrentSpeedView_android_background,0))
+
+                elevation = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_elevation, 0).toFloat()
                 layoutMargin = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_margin, 0)
                 layoutMarginTop = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginTop, 0)
                 layoutMarginBottom = it.getDimensionPixelSize(R.styleable.CurrentSpeedView_android_layout_marginBottom, 0)
@@ -116,6 +117,15 @@ open class CurrentSpeedView @JvmOverloads constructor(
     }
 
     /**
+     * Sets the current speed progress.
+     *
+     * @param currentSpeedProgress [Float] the current speed progress.
+     */
+    fun setSpeedProgress(currentSpeedProgress: Float) {
+        binding.currentSpeedProgressView.progress = currentSpeedProgress
+    }
+
+    /**
      * Sets the current speed unit.
      *
      * @param currentSpeedUnit [String] the current speed unit.
@@ -130,6 +140,7 @@ open class CurrentSpeedView @JvmOverloads constructor(
      * @param isSpeeding [Boolean] true to sets if currently speeding, false otherwise.
      */
     fun setIsSpeeding(isSpeeding: Boolean) {
+        binding.currentSpeedProgressView.visibility = if (isSpeeding) GONE else VISIBLE
         binding.currentSpeedValueTextView.setTextColor(if (isSpeeding) whiteColor else navigationTextColorPrimary)
         binding.currentSpeedUnitTextView.setTextColor(if (isSpeeding) whiteColor else navigationTextColorPrimary)
         backgroundTintList = ColorStateList.valueOf(if (isSpeeding) redColor else navigationBackgroundColor)

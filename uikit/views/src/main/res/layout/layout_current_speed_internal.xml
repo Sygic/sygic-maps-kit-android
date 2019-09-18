@@ -24,17 +24,25 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <merge
         tools:background="@drawable/bg_current_speed_view"
         tools:elevation="@dimen/navigationComponentElevation"
-        tools:gravity="center"
         tools:layout_gravity="center"
         tools:layout_height="@dimen/currentSpeedViewSize"
         tools:layout_width="@dimen/currentSpeedViewSize"
-        tools:orientation="vertical"
-        tools:parentTag="android.widget.LinearLayout">
+        tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+        <com.sygic.maps.uikit.views.navigation.speed.SpeedProgressView
+            android:id="@+id/currentSpeedProgressView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/currentSpeedValueTextView"
@@ -44,19 +52,28 @@
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="?attr/navigationTextColorPrimary"
-            android:textSize="22sp"
+            android:textSize="@dimen/fontSizeLarge"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4"
             tools:text="32" />
 
         <TextView
             android:id="@+id/currentSpeedUnitTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:fontFamily="sans-serif"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="?attr/navigationTextColorSecondary"
             android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="km/h" />
 
     </merge>
