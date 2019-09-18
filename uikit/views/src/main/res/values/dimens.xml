@@ -40,6 +40,10 @@
     <dimen name="roadSignSpacing">6dp</dimen>
     <dimen name="roadSignTextSize">12sp</dimen>
     <dimen name="roadSignTextPadding">4dp</dimen>
+    <dimen name="currentSpeedViewSize">56dp</dimen>
+    <dimen name="currentSpeedViewLayoutMargin">16dp</dimen>
+    <dimen name="speedLimitViewSize">56dp</dimen>
+    <dimen name="speedLimitViewLayoutMargin">16dp</dimen>
     <dimen name="navigationComponentElevation">6dp</dimen>
     <dimen name="infobarLayoutMargin">16dp</dimen>
     <dimen name="signpostViewLayoutMargin">16dp</dimen>

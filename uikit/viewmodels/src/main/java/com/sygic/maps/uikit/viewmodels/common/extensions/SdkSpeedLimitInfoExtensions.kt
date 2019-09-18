@@ -22,28 +22,24 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.signpost
+package com.sygic.maps.uikit.viewmodels.common.extensions
 
-import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
-import com.sygic.maps.uikit.views.common.extensions.asMutable
-import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
-import com.sygic.sdk.navigation.NavigationManager
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.views.navigation.speed.limit.SpeedLimitType
+import com.sygic.sdk.map.MapView
+import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
 
-/**
- * A [SimplifiedSignpostViewModel] is a basic ViewModel implementation for the [SimplifiedSignpostView] class. It listens to
- * the Sygic SDK [NavigationManager.OnDirectionListener] and updates the distance, primaryDirection, secondaryDirection,
- * secondaryDirectionText and instructionText in the [SimplifiedSignpostView].
- */
-@AutoFactory
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SimplifiedSignpostViewModel internal constructor(
-    regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
+fun SpeedLimitInfo.getSpeedLimitValue(distanceUnit: DistanceUnit): Int = getSpeedLimit(
+    when (distanceUnit) {
+        DistanceUnit.KILOMETERS -> SpeedLimitInfo.SpeedUnits.Kilometers
+        DistanceUnit.MILES_YARDS, DistanceUnit.MILES_FEETS -> SpeedLimitInfo.SpeedUnits.Miles
+    }
+)
 
-    init {
-        directionInfo.observeForever { instructionText.asMutable().value = createInstructionText(it) }
+@MapView.CountrySignage
+internal fun Int.toSpeedLimitType(): SpeedLimitType {
+    return when (this) {
+        MapView.CountrySignage.America -> SpeedLimitType.US
+        else -> SpeedLimitType.EU
     }
 }

@@ -30,6 +30,15 @@
         <item name="android:background">@drawable/bg_compass</item>
     </style>
 
+    <style name="SygicCurrentSpeedViewStyle">
+        <item name="android:background">@drawable/bg_current_speed_view</item>
+        <item name="android:elevation">@dimen/navigationComponentElevation</item>
+        <item name="android:layout_marginBottom">@dimen/currentSpeedViewLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/currentSpeedViewLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/currentSpeedViewLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/currentSpeedViewLayoutMargin</item>
+    </style>
+
     <style name="SygicInfobarStyle">
         <item name="android:background">@drawable/bg_infobar_rounded</item>
         <item name="android:layout_marginBottom">@dimen/infobarLayoutMargin</item>
@@ -37,6 +46,14 @@
         <item name="android:layout_marginStart">@dimen/infobarLayoutMargin</item>
         <item name="android:layout_marginTop">@dimen/infobarLayoutMargin</item>
         <item name="android:elevation">@dimen/navigationComponentElevation</item>
+    </style>
+
+    <style name="SygicLanesViewStyle">
+        <item name="android:background">@drawable/bg_signpost_rounded</item>
+        <item name="android:layout_marginBottom">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/lanesViewLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/lanesViewLayoutMargin</item>
     </style>
 
     <style name="SygicPositionLockFabStyle">
@@ -75,12 +92,12 @@
         <item name="android:layout_marginTop">@dimen/signpostViewLayoutMargin</item>
     </style>
 
-    <style name="SygicLanesViewStyle">
-        <item name="android:background">@drawable/bg_signpost_rounded</item>
-        <item name="android:layout_marginBottom">@dimen/lanesViewLayoutMargin</item>
-        <item name="android:layout_marginEnd">@dimen/lanesViewLayoutMargin</item>
-        <item name="android:layout_marginStart">@dimen/lanesViewLayoutMargin</item>
-        <item name="android:layout_marginTop">@dimen/lanesViewLayoutMargin</item>
+    <style name="SygicSpeedLimitViewStyle">
+        <item name="android:elevation">4dp</item>
+        <item name="android:layout_marginBottom">@dimen/speedLimitViewLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/speedLimitViewLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/speedLimitViewLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/speedLimitViewLayoutMargin</item>
     </style>
 
     <style name="SygicZoomControlsMenuStyle">

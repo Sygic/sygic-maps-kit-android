@@ -111,15 +111,17 @@ class NavigationFragmentViewModel internal constructor(
 
     @LayoutRes
     val signpostLayout: Int
-    val signpostEnabled: MutableLiveData<Boolean> = MutableLiveData(SIGNPOST_ENABLED_DEFAULT_VALUE)
-    val infobarEnabled: MutableLiveData<Boolean> = MutableLiveData(INFOBAR_ENABLED_DEFAULT_VALUE)
-    val previewControlsEnabled: MutableLiveData<Boolean> = MutableLiveData(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
-    val lanesViewEnabled: MutableLiveData<Boolean> = MutableLiveData(LANES_VIEW_ENABLED_DEFAULT_VALUE)
+    val signpostEnabled = MutableLiveData<Boolean>(SIGNPOST_ENABLED_DEFAULT_VALUE)
+    val infobarEnabled = MutableLiveData<Boolean>(INFOBAR_ENABLED_DEFAULT_VALUE)
+    val previewControlsEnabled = MutableLiveData<Boolean>(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
+    val currentSpeedEnabled = MutableLiveData<Boolean>(CURRENT_SPEED_ENABLED_DEFAULT_VALUE)
+    val speedLimitEnabled = MutableLiveData<Boolean>(SPEED_LIMIT_ENABLED_DEFAULT_VALUE)
+    val lanesViewEnabled = MutableLiveData<Boolean>(LANES_VIEW_ENABLED_DEFAULT_VALUE)
 
-    val leftInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
-    val rightInfobarButton: MutableLiveData<InfobarButton?> = MutableLiveData()
+    val leftInfobarButton = MutableLiveData<InfobarButton?>()
+    val rightInfobarButton = MutableLiveData<InfobarButton?>()
 
-    val previewMode: MutableLiveData<Boolean> = MutableLiveData(false)
+    val previewMode = MutableLiveData<Boolean>(false)
     val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
     val infoToastObservable: LiveData<InfoToastComponent> = SingleLiveEvent()
@@ -192,6 +194,8 @@ class NavigationFragmentViewModel internal constructor(
             infobarEnabled.value = getBoolean(KEY_INFOBAR_ENABLED, INFOBAR_ENABLED_DEFAULT_VALUE)
             previewControlsEnabled.value =
                 getBoolean(KEY_PREVIEW_CONTROLS_ENABLED, PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
+            currentSpeedEnabled.value = getBoolean(KEY_CURRENT_SPEED_ENABLED, CURRENT_SPEED_ENABLED_DEFAULT_VALUE)
+            speedLimitEnabled.value = getBoolean(KEY_SPEED_LIMIT_ENABLED, SPEED_LIMIT_ENABLED_DEFAULT_VALUE)
             signpostEnabled.value = getBoolean(KEY_SIGNPOST_ENABLED, SIGNPOST_ENABLED_DEFAULT_VALUE)
             lanesViewEnabled.value = getBoolean(KEY_LANES_VIEW_ENABLED, LANES_VIEW_ENABLED_DEFAULT_VALUE)
             signpostType = getParcelableValue(KEY_SIGNPOST_TYPE) ?: SIGNPOST_TYPE_DEFAULT_VALUE

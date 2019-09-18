@@ -37,10 +37,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.annotation.StringRes
-import androidx.annotation.StyleRes
+import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
@@ -58,6 +55,9 @@ inline val Context.inputMethodManager: InputMethodManager?
 fun Context.applyStyle(@StyleRes resId: Int, force: Boolean = false) {
     theme.applyStyle(resId, force)
 }
+
+@ColorInt
+fun Context.getColorInt(@ColorRes colorResId: Int): Int = ContextCompat.getColor(this, colorResId)
 
 @ColorInt
 fun Context.getColorFromAttr(

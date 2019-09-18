@@ -43,6 +43,14 @@
             name="infobarViewModel"
             type="com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel" />
 
+        <variable
+            name="currentSpeedViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel" />
+
+        <variable
+            name="speedLimitViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,6 +119,31 @@
             tools:layout_height="32dp"
             tools:layout_margin="@dimen/routePreviewControlsLayoutMargin"
             tools:layout_width="164dp" />
+
+        <com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
+            android:id="@+id/currentSpeedView"
+            android:layout_width="@dimen/currentSpeedViewSize"
+            android:layout_height="@dimen/currentSpeedViewSize"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.currentSpeedEnabled) ? View.VISIBLE : View.GONE}"
+            app:isSpeeding="@{currentSpeedViewModel.speeding}"
+            app:layout_constraintBottom_toTopOf="@id/infobar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:speedUnit="@{currentSpeedViewModel.speedUnit}"
+            app:speedValue="@{currentSpeedViewModel.speedValue}" />
+
+        <com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
+            android:id="@+id/speedLimitView"
+            android:layout_width="@dimen/speedLimitViewSize"
+            android:layout_height="@dimen/speedLimitViewSize"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="46dp"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.speedLimitEnabled) &amp;&amp; safeUnbox(speedLimitViewModel.speedLimitVisible) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/currentSpeedView"
+            app:layout_constraintEnd_toEndOf="@id/currentSpeedView"
+            app:layout_constraintStart_toStartOf="@id/currentSpeedView"
+            app:limitType="@{speedLimitViewModel.speedLimitType}"
+            app:limitValue="@{speedLimitViewModel.speedLimitValue}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

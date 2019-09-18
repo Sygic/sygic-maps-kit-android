@@ -25,15 +25,13 @@
 package com.sygic.maps.uikit.viewmodels.compass
 
 import android.view.View
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.maps.uikit.viewmodels.common.sdk.DEFAULT_ANIMATION
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.compass.CompassView
 
 private const val NORTH_UP = 0f
@@ -48,7 +46,7 @@ open class CompassViewModel internal constructor(
     private val cameraModel: ExtendedCameraModel
 ) : ViewModel(), Camera.PositionChangedListener, DefaultLifecycleObserver {
 
-    val rotation: MutableLiveData<Float> = MutableLiveData(cameraModel.rotation)
+    val rotation: LiveData<Float> = MutableLiveData(cameraModel.rotation)
 
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addPositionChangedListener(this)
@@ -63,7 +61,7 @@ open class CompassViewModel internal constructor(
     }
 
     override fun onPositionChanged(geoCenter: GeoCoordinates, zoom: Float, rotation: Float, tilt: Float) {
-        this.rotation.value = rotation
+        this.rotation.asMutable().value = rotation
     }
 
     override fun onPositionChangeCompleted() {

@@ -22,28 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.signpost
+package com.sygic.maps.uikit.views.navigation.speed.limit
 
-import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
-import com.sygic.maps.uikit.views.common.extensions.asMutable
-import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
-import com.sygic.sdk.navigation.NavigationManager
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-/**
- * A [SimplifiedSignpostViewModel] is a basic ViewModel implementation for the [SimplifiedSignpostView] class. It listens to
- * the Sygic SDK [NavigationManager.OnDirectionListener] and updates the distance, primaryDirection, secondaryDirection,
- * secondaryDirectionText and instructionText in the [SimplifiedSignpostView].
- */
-@AutoFactory
-@Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SimplifiedSignpostViewModel internal constructor(
-    regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
-
-    init {
-        directionInfo.observeForever { instructionText.asMutable().value = createInstructionText(it) }
-    }
+@Parcelize
+enum class SpeedLimitType : Parcelable {
+    EU, US
 }
