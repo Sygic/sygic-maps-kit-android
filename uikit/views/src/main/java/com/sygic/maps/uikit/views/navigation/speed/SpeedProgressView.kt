@@ -33,11 +33,11 @@ import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.getColor
 import kotlin.math.min
 
-private const val angleShift = 90f
-private const val angleMax = 270f
-private const val angleStartPoint = 45f
-private const val angleEndPoint = angleStartPoint + angleMax
-private const val maxProgress = 100f
+private const val ANGLE_SHIFT = 90f
+private const val ANGLE_MAX = 270f
+private const val ANGLE_START_POINT = 45f
+private const val ANGLE_END_POINT = ANGLE_START_POINT + ANGLE_MAX
+private const val MAX_PROGRESS = 100f
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SpeedProgressView @JvmOverloads constructor(
@@ -55,7 +55,7 @@ class SpeedProgressView @JvmOverloads constructor(
 
     var progress = 0f
         set(value) {
-            field = if (value < 0f) 0f else if (value > maxProgress) maxProgress else value
+            field = if (value < 0f) 0f else if (value > MAX_PROGRESS) MAX_PROGRESS else value
             invalidate()
         }
 
@@ -73,7 +73,7 @@ class SpeedProgressView @JvmOverloads constructor(
     var segmentForegroundColors = intArrayOf()
         set(value) {
             field = value
-            segmentForegroundGradient = if (value.size >= 2) createForegroundGradient(value) else null
+            updateSegmentForegroundGradient(value)
             invalidate()
         }
 
@@ -122,7 +122,8 @@ class SpeedProgressView @JvmOverloads constructor(
                 )
                 segmentForegroundColors = resources.getIntArray(
                     it.getResourceId(
-                        R.styleable.SpeedProgressView_segmentForegroundColors, R.array.speedProgressForegroundColors
+                        R.styleable.SpeedProgressView_segmentForegroundColors,
+                        R.array.speedProgressForegroundColors
                     )
                 )
                 segmentAngle = it.getInt(
@@ -147,7 +148,7 @@ class SpeedProgressView @JvmOverloads constructor(
         )
         setMeasuredDimension(min, min)
 
-        segmentForegroundGradient = createForegroundGradient(segmentForegroundColors)
+        updateSegmentForegroundGradient(segmentForegroundColors)
 
         val left = segmentThickness.toFloat() / 2
         val top = segmentThickness.toFloat() / 2
@@ -157,18 +158,18 @@ class SpeedProgressView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.rotate(angleShift, width.toFloat() / 2, height.toFloat() / 2)
+        canvas.rotate(ANGLE_SHIFT, width.toFloat() / 2, height.toFloat() / 2)
 
         val stepAngle = segmentAngle * segmentSpacing
         val stepWithSpacing = segmentAngle + stepAngle
-        val rest = angleMax.rem(stepWithSpacing)
+        val rest = ANGLE_MAX.rem(stepWithSpacing)
         val startEndGap = rest / 2
-        val drawStartPoint = angleStartPoint + startEndGap
+        val drawStartPoint = ANGLE_START_POINT + startEndGap
         val drawTolerance = 0.1f
 
         canvas.drawPath(backgroundPath.apply {
             reset()
-            val drawEndPoint = angleEndPoint - startEndGap - stepWithSpacing
+            val drawEndPoint = ANGLE_END_POINT - startEndGap - stepWithSpacing
             addArcs(oval, drawStartPoint, drawEndPoint, drawTolerance, stepAngle, stepWithSpacing, segmentAngle)
         }, backgroundPaint)
 
@@ -184,20 +185,22 @@ class SpeedProgressView @JvmOverloads constructor(
 
             canvas.drawPath(foregroundPath.apply {
                 reset()
-                val angle = angleMax * progress / maxProgress + angleStartPoint
+                val angle = ANGLE_MAX * progress / MAX_PROGRESS + ANGLE_START_POINT
                 var drawEndPoint = angle - startEndGap
-                if (progress == maxProgress) drawEndPoint -= stepWithSpacing
+                if (progress == MAX_PROGRESS) drawEndPoint -= stepWithSpacing
                 addArcs(oval, drawStartPoint, drawEndPoint, drawTolerance, stepAngle, stepWithSpacing, segmentAngle)
             }, foregroundPaint)
         }
     }
 
-    private fun createForegroundGradient(colors: IntArray) = SweepGradient(
-        measuredWidth.toFloat() / 2,
-        measuredHeight.toFloat() / 2,
-        colors,
-        null
-    )
+    private fun updateSegmentForegroundGradient(colors: IntArray) {
+        segmentForegroundGradient = if (colors.size >= 2) SweepGradient(
+            measuredWidth.toFloat() / 2,
+            measuredHeight.toFloat() / 2,
+            colors,
+            null
+        ) else null
+    }
 
     inner class SegmentPaint : Paint(ANTI_ALIAS_FLAG) {
         init {
