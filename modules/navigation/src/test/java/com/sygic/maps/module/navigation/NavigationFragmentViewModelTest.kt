@@ -31,6 +31,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.navigation.types.SignpostType
@@ -47,6 +48,10 @@ import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButton
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.views.common.utils.TextHolder
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
 import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 import com.sygic.sdk.navigation.NavigationManager
@@ -220,7 +225,28 @@ class NavigationFragmentViewModelTest {
 
     @Test
     fun infobarActionMenuItemsTest() {
-        //todo
+        val actionMenuData = ActionMenuData(
+            TextHolder.from(R.string.follow_the_route),
+            listOf(
+                ActionMenuItem(R.drawable.ic_bus, TextHolder.from("Bus")),
+                ActionMenuItem(R.drawable.ic_train_station),
+                ActionMenuItem(R.drawable.ic_cafe, TextHolder.from(R.string.category)),
+                ActionMenuItem(R.drawable.ic_cake)
+            )
+        )
+        val actionMenuItemClickListener = spy(object : ActionMenuItemClickListener {
+            override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {}
+        })
+        val actionMenuItemsProviderComponent = ActionMenuItemsProviderWrapper.ProviderComponent(actionMenuData, actionMenuItemClickListener)
+        val testLifecycleOwner = NavigationTestLifecycleOwner()
+        testLifecycleOwner.actionMenuItemsProvider.asMutable().value = actionMenuItemsProviderComponent
+        testLifecycleOwner.onResume()
+
+        navigationFragmentViewModel.onCreate(testLifecycleOwner)
+        navigationFragmentViewModel.onLeftInfobarButtonClick()
+
+        navigationFragmentViewModel.actionMenuShowObservable.test().assertHasValue()
+        navigationFragmentViewModel.actionMenuShowObservable.test().assertValue(actionMenuData)
     }
 
 }
