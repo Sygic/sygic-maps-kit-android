@@ -37,6 +37,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
+import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
@@ -91,7 +92,7 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
+class NavigationFragment : MapFragmentWrapper<NavigationComponent, NavigationComponent.Builder, NavigationFragmentViewModel>(),
     OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
@@ -104,8 +105,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
     override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
     override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
 
-    override fun executeInjector() =
-        injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
+    override fun getModuleBuilder(): ModuleBuilder<NavigationComponent> = DaggerNavigationComponent.builder()
 
     /**
      * A *[distanceUnit]* defines all available [DistanceUnit]'s type.
