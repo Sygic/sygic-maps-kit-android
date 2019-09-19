@@ -34,6 +34,7 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.navigation.types.SignpostType
+import com.sygic.maps.module.navigation.utils.NavigationTestLifecycleOwner
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
@@ -41,12 +42,16 @@ import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
+import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.route.RouteInfo
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -96,7 +101,7 @@ class NavigationFragmentViewModelTest {
             }
         }
 
-        whenever(regionalManager.distanceUnit).thenReturn(MutableLiveData(DistanceUnit.KILOMETERS))
+        whenever(regionalManager.distanceUnit).thenReturn(MutableLiveData(DistanceUnit.KILOMETERS)) //todo
 
         val arguments = mock<Bundle>()
         whenever(arguments.getParcelable<RouteInfo>(eq(KEY_ROUTE_INFO))).thenReturn(mock()) //todo
@@ -138,249 +143,84 @@ class NavigationFragmentViewModelTest {
 
         verify(locationManager).requestToEnableGps(any(), any())
         verify(permissionsManager).checkPermissionGranted(anyString(), any())
+
+        assertEquals(R.drawable.ic_more, navigationFragmentViewModel.leftInfobarButton.value!!.imageResource)
+        assertEquals(R.color.white, navigationFragmentViewModel.leftInfobarButton.value!!.imageTintColor)
+        assertEquals(R.drawable.bg_infobar_button_rounded, navigationFragmentViewModel.leftInfobarButton.value!!.backgroundResource)
+        assertEquals(R.color.colorAccent, navigationFragmentViewModel.leftInfobarButton.value!!.backgroundTintColor)
+
+        assertEquals(R.drawable.ic_close, navigationFragmentViewModel.rightInfobarButton.value!!.imageResource)
+        assertEquals(R.color.white, navigationFragmentViewModel.rightInfobarButton.value!!.imageTintColor)
+        assertEquals(R.drawable.bg_infobar_button_rounded, navigationFragmentViewModel.rightInfobarButton.value!!.backgroundResource)
+        assertEquals(R.color.brick_red, navigationFragmentViewModel.rightInfobarButton.value!!.backgroundTintColor)
     }
 
     @Test
     fun onCreateTest() {
-        val inInfobarButtonClickListenerProviderComponent = mock<LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent>>()
+        val inInfobarButtonClickListenerProviderComponentMock = mock<LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent>>()
         val onInfobarButtonClickListenerWrapperLifecycleOwnerMock = mock<LifecycleOwner>(extraInterfaces = arrayOf(OnInfobarButtonClickListenerWrapper::class))
         whenever((onInfobarButtonClickListenerWrapperLifecycleOwnerMock as OnInfobarButtonClickListenerWrapper).infobarButtonClickListenerProvider).thenReturn(
-            inInfobarButtonClickListenerProviderComponent
+            inInfobarButtonClickListenerProviderComponentMock
         )
         navigationFragmentViewModel.onCreate(onInfobarButtonClickListenerWrapperLifecycleOwnerMock)
-        verify(inInfobarButtonClickListenerProviderComponent).observe(eq(onInfobarButtonClickListenerWrapperLifecycleOwnerMock), any())
+        verify(inInfobarButtonClickListenerProviderComponentMock).observe(eq(onInfobarButtonClickListenerWrapperLifecycleOwnerMock), any())
 
-        val actionMenuItemsProviderComponent = mock<LiveData<ActionMenuItemsProviderWrapper.ProviderComponent>>()
+        val actionMenuItemsProviderComponentMock = mock<LiveData<ActionMenuItemsProviderWrapper.ProviderComponent>>()
         val actionMenuItemsProviderWrapperLifecycleOwnerMock = mock<LifecycleOwner>(extraInterfaces = arrayOf(ActionMenuItemsProviderWrapper::class))
         whenever((actionMenuItemsProviderWrapperLifecycleOwnerMock as ActionMenuItemsProviderWrapper).actionMenuItemsProvider).thenReturn(
-            actionMenuItemsProviderComponent
+            actionMenuItemsProviderComponentMock
         )
         navigationFragmentViewModel.onCreate(actionMenuItemsProviderWrapperLifecycleOwnerMock)
-        verify(actionMenuItemsProviderComponent).observe(eq(actionMenuItemsProviderWrapperLifecycleOwnerMock), any())
-    }
-
-    /*
-    @Test
-    fun onStartTestPositionOnMapEnabled() {
-        whenever(locationManager.positionOnMapEnabled).thenReturn(true)
-        navigationFragmentViewModel.onStart(mock())
-        verify(locationManager).setSdkPositionUpdatingEnabled(true)
+        verify(actionMenuItemsProviderComponentMock).observe(eq(actionMenuItemsProviderWrapperLifecycleOwnerMock), any())
     }
 
     @Test
-    fun onStartTestPositionOnMapDisabled() {
-        whenever(locationManager.positionOnMapEnabled).thenReturn(false)
-        navigationFragmentViewModel.onStart(mock())
-        verify(locationManager, never()).setSdkPositionUpdatingEnabled(true)
+    fun onLeftInfobarButtonClickTest() {
+        val onInfobarButtonClickListener = spy(object : OnInfobarButtonClickListener {
+            override val button: InfobarButton = InfobarButton(R.drawable.ic_map_lock_full, R.drawable.bg_info_toast, R.color.black, R.color.white)
+            override fun onButtonClick() {}
+        })
+        val inInfobarButtonClickListenerProviderComponent = OnInfobarButtonClickListenerWrapper.ProviderComponent(onInfobarButtonClickListener, InfobarButtonType.LEFT)
+        val testLifecycleOwner = NavigationTestLifecycleOwner()
+        testLifecycleOwner.infobarButtonClickListenerProvider.asMutable().value = inInfobarButtonClickListenerProviderComponent
+        testLifecycleOwner.onResume()
+
+        navigationFragmentViewModel.onCreate(testLifecycleOwner)
+
+        assertEquals(R.drawable.ic_map_lock_full, navigationFragmentViewModel.leftInfobarButton.value!!.imageResource)
+        assertEquals(R.color.black, navigationFragmentViewModel.leftInfobarButton.value!!.imageTintColor)
+        assertEquals(R.drawable.bg_info_toast, navigationFragmentViewModel.leftInfobarButton.value!!.backgroundResource)
+        assertEquals(R.color.white, navigationFragmentViewModel.leftInfobarButton.value!!.backgroundTintColor)
+
+        navigationFragmentViewModel.onLeftInfobarButtonClick()
+        verify(inInfobarButtonClickListenerProviderComponent.onInfobarButtonClickListener!!).onButtonClick()
     }
 
     @Test
-    fun onMapObjectsRequestStartedTest() {
-        val tesViewObject = MapRoute.from(mock()).build()
+    fun onRightInfobarButtonClickTest() {
+        val onInfobarButtonClickListener = spy(object : OnInfobarButtonClickListener {
+            override val button: InfobarButton = InfobarButton(R.drawable.ic_location, R.drawable.bg_signpost_rounded, R.color.brick_red, R.color.black)
+            override fun onButtonClick() {}
+        })
+        val inInfobarButtonClickListenerProviderComponent = OnInfobarButtonClickListenerWrapper.ProviderComponent(onInfobarButtonClickListener, InfobarButtonType.RIGHT)
+        val testLifecycleOwner = NavigationTestLifecycleOwner()
+        testLifecycleOwner.infobarButtonClickListenerProvider.asMutable().value = inInfobarButtonClickListenerProviderComponent
+        testLifecycleOwner.onResume()
 
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(tesViewObject))
+        navigationFragmentViewModel.onCreate(testLifecycleOwner)
 
-        navigationFragmentViewModel.onMapObjectsRequestStarted()
-        verify(extendedMapDataModel).removeMapObject(anyOrNull<MapMarker>())
+        assertEquals(R.drawable.ic_location, navigationFragmentViewModel.rightInfobarButton.value!!.imageResource)
+        assertEquals(R.color.brick_red, navigationFragmentViewModel.rightInfobarButton.value!!.imageTintColor)
+        assertEquals(R.drawable.bg_signpost_rounded, navigationFragmentViewModel.rightInfobarButton.value!!.backgroundResource)
+        assertEquals(R.color.black, navigationFragmentViewModel.rightInfobarButton.value!!.backgroundTintColor)
+
+        navigationFragmentViewModel.onRightInfobarButtonClick()
+        verify(inInfobarButtonClickListenerProviderComponent.onInfobarButtonClickListener!!).onButtonClick()
     }
 
     @Test
-    fun onMapObjectsReceivedEmptyListTest() {
-        navigationFragmentViewModel.onMapObjectsReceived(listOf())
-        verify(poiDataManager, never()).getViewObjectData(any(), any())
+    fun infobarActionMenuItemsTest() {
+        //todo
     }
 
-    @Test
-    fun onMapObjectsReceivedSelectionModeNoneTest() {
-        val testMapMarker = MapMarker.at(48.143489, 17.150560).build()
-
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.NONE
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker, mock()))
-        verify(poiDataManager, never()).getViewObjectData(any(), any())
-    }
-
-    @Test
-    fun onMapObjectsReceivedSelectionModeMarkersOnlyCirclesListTest() {
-        val tesViewObject = MapCircle.at(48.143489, 17.150560).setRadius(60.0).build()
-
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.MARKERS_ONLY
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(tesViewObject))
-        verify(poiDataManager, never()).getViewObjectData(any(), any())
-    }
-
-    @Test
-    fun onMapObjectsReceivedSelectionModeMarkersOnlyMapMarkerListTest() {
-        val testMapMarker = MapMarker.at(48.143489, 17.150560).withPayload(BasicData("Test")).build()
-
-        val callback = argumentCaptor<PoiDataManager.Callback>()
-        whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
-            callback.firstValue.onDataLoaded(testMapMarker.data)
-        }
-
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.MARKERS_ONLY
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker, mock()))
-        verify(poiDataManager).getViewObjectData(eq(testMapMarker), any())
-        navigationFragmentViewModel.poiDetailDataObservable.test().assertValue(testMapMarker.data.toPoiDetailData())
-    }
-
-    @Test
-    fun onMapObjectsReceivedSelectionModeFullMapRouteTest() {
-        val tesViewObject = MapRoute.from(mock()).build()
-
-        argumentCaptor<PoiDataManager.Callback>().let { callback ->
-            whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(tesViewObject.data)
-            }
-        }
-
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(tesViewObject))
-        verify(poiDataManager).getViewObjectData(any(), any())
-        verify(extendedMapDataModel).addMapObject(any<MapMarker>())
-        navigationFragmentViewModel.poiDetailDataObservable.test().assertValue(tesViewObject.data.toPoiDetailData())
-    }
-
-    @Test
-    fun onMapObjectsReceivedSelectionModeFullMapMarkerTest() {
-        val testMapMarker = MapMarker.at(48.143489, 17.150560).withPayload(BasicData("Test")).build()
-
-        argumentCaptor<PoiDataManager.Callback>().let { callback ->
-            whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testMapMarker.data)
-            }
-        }
-
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker))
-        verify(poiDataManager).getViewObjectData(eq(testMapMarker), any())
-        navigationFragmentViewModel.poiDetailDataObservable.test().assertValue(testMapMarker.data.toPoiDetailData())
-    }
-
-    @Test
-    fun customOnMapClickListenerOnMapClickTrueTest() {
-        val testViewObject = ProxyPoi.create(48.143489, 17.150560, byteArrayOf()).withPayload(BasicData("Test")).build()
-        val testMapMarker = mock<MapMarker>()
-        val onMapClickListener = mock<OnMapClickListener>()
-
-        whenever(testMapMarker.data).thenReturn(mock())
-        whenever(onMapClickListener.onMapClick(any(), any(), any())).thenReturn(true)
-        whenever(onMapClickListener.showDetailsView()).thenReturn(true)
-        whenever(onMapClickListener.getClickMapMarker(any(), any())).thenReturn(testMapMarker)
-        argumentCaptor<PoiDataManager.Callback>().let { callback ->
-            whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testViewObject.data)
-            }
-        }
-
-        navigationFragmentViewModel.onMapClickListener = onMapClickListener
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
-        verify(extendedMapDataModel).addMapObject(any<MapMarker>())
-        verify(poiDataManager).getViewObjectData(any(), any())
-        verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
-        verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
-        navigationFragmentViewModel.poiDetailDataObservable.test().assertHasValue()
-    }
-
-    @Test
-    fun customOnMapClickListenerOnMapClickFalseTest() {
-        val testPosition = GeoCoordinates(48.143489, 17.150560)
-        val testViewObject = ProxyPoi.create(testPosition.latitude, testPosition.latitude, byteArrayOf()).withPayload(BasicData("Test")).build()
-        val onMapClickListener = mock<OnMapClickListener>()
-
-        whenever(onMapClickListener.onMapClick(any(), any(), any())).thenReturn(false)
-
-        navigationFragmentViewModel.onMapClickListener = onMapClickListener
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
-        verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
-        verify(poiDataManager, never()).getViewObjectData(any(), any())
-        verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
-        verify(onMapClickListener, never()).onMapDataReceived(any())
-        navigationFragmentViewModel.poiDetailDataObservable.test().assertNoValue()
-    }
-
-    @Test
-    fun customOnMapClickListenerShowDetailsViewFalseTest() {
-        val testViewObject = ProxyPoi.create(48.143489, 17.150560, byteArrayOf()).withPayload(BasicData("Test")).build()
-        val testMapMarker = mock<MapMarker>()
-        val onMapClickListener = mock<OnMapClickListener>()
-
-        whenever(testMapMarker.data).thenReturn(mock())
-        whenever(onMapClickListener.onMapClick(any(), any(), any())).thenReturn(true)
-        whenever(onMapClickListener.showDetailsView()).thenReturn(false)
-        whenever(onMapClickListener.getClickMapMarker(any(), any())).thenReturn(testMapMarker)
-        argumentCaptor<PoiDataManager.Callback>().let { callback ->
-            whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testViewObject.data)
-            }
-        }
-
-        navigationFragmentViewModel.onMapClickListener = onMapClickListener
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
-        verify(extendedMapDataModel).addMapObject(any<MapMarker>())
-        verify(poiDataManager).getViewObjectData(any(), any())
-        verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
-        verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
-        navigationFragmentViewModel.poiDetailDataObservable.test().assertNoValue()
-    }
-
-    @Test
-    fun customOnMapClickListenerGetClickMapMarkerNullTest() {
-        val testPosition = GeoCoordinates(48.143489, 17.150560)
-        val testViewObject = ProxyPoi.create(testPosition.latitude, testPosition.latitude, byteArrayOf()).withPayload(BasicData("Test")).build()
-        val onMapClickListener = mock<OnMapClickListener>()
-
-        whenever(onMapClickListener.onMapClick(any(), any(), any())).thenReturn(true)
-        whenever(onMapClickListener.getClickMapMarker(any(), any())).thenReturn(null)
-        argumentCaptor<PoiDataManager.Callback>().let { callback ->
-            whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testViewObject.data)
-            }
-        }
-
-        navigationFragmentViewModel.onMapClickListener = onMapClickListener
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
-        verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
-        verify(poiDataManager).getViewObjectData(any(), any())
-        verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
-        verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
-        navigationFragmentViewModel.poiDetailDataObservable.test().assertNoValue()
-    }
-
-    @Test
-    fun poiDetailsViewTest() {
-        val testMapMarker = MapMarker.at(48.143489, 17.150560).withPayload(BasicData("Test")).build()
-        val detailsViewFactory = mock<DetailsViewFactory>()
-
-        argumentCaptor<PoiDataManager.Callback>().let { callback ->
-            whenever(poiDataManager.getViewObjectData(any(), callback.capture())).then {
-                callback.firstValue.onDataLoaded(testMapMarker.data)
-            }
-        }
-
-        navigationFragmentViewModel.detailsViewFactory = detailsViewFactory
-        navigationFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
-        navigationFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker))
-        verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
-        verify(poiDataManager).getViewObjectData(eq(testMapMarker), any())
-        verify(extendedMapDataModel).addMapObject(any())
-        navigationFragmentViewModel.poiDetailDataObservable.test().assertNoValue()
-    }
-
-    @Test
-    fun onStopTest() {
-        navigationFragmentViewModel.onStop(mock())
-        verify(locationManager).setSdkPositionUpdatingEnabled(false)
-    }
-
-    @Test
-    fun onDestroyTest() {
-        navigationFragmentViewModel.onDestroy(mock())
-        assertEquals(navigationFragmentViewModel.onMapClickListener, null)
-        assertEquals(navigationFragmentViewModel.detailsViewFactory, null)
-    }*/
 }
