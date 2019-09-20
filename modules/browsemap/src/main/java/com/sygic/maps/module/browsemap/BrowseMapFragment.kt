@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.browsemap
 
+import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -85,8 +86,8 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
-    override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData<ModuleConnectionProvider>()
-    override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData<OnMapClickListener>()
+    override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData()
+    override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
 
     override fun executeInjector() =
         injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
@@ -230,19 +231,17 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
         lifecycle.addObserver(zoomControlsViewModel)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: LayoutBrowseMapBinding = LayoutBrowseMapBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.browseMapFragmentViewModel = fragmentViewModel
-        binding.compassViewModel = compassViewModel
-        binding.positionLockFabViewModel = positionLockFabViewModel
-        binding.zoomControlsViewModel = zoomControlsViewModel
-        val root = binding.root as ViewGroup
-        super.onCreateView(inflater, root, savedInstanceState)?.let {
-            root.addView(it, 0)
-        }
-        return root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        LayoutBrowseMapBinding.inflate(inflater, container, false).apply {
+            browseMapFragmentViewModel = fragmentViewModel
+            compassViewModel = this@BrowseMapFragment.compassViewModel
+            positionLockFabViewModel = this@BrowseMapFragment.positionLockFabViewModel
+            zoomControlsViewModel = this@BrowseMapFragment.zoomControlsViewModel
+            lifecycleOwner = this@BrowseMapFragment
+            with(root as ViewGroup) {
+                super.onCreateView(inflater, this, savedInstanceState)?.let { addView(it, 0) }
+            }
+        }.root
 
     /**
      * Register a custom callback to be invoked when a click to the map has been made. If null, default callback
@@ -280,20 +279,19 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
 
     private fun showPoiDetail() {
         PoiDetailBottomDialogFragment.newInstance().apply {
-            setListener(fragmentViewModel.dialogFragmentListener)
-            showNow(this@BrowseMapFragment.fragmentManager, PoiDetailBottomDialogFragment.TAG)
-        }
+            listener = fragmentViewModel.dialogFragmentListener
+        }.showNow(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
     private fun setPoiDetailListener(listener: DialogFragmentListener) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setListener(listener)
+            (fragment as PoiDetailBottomDialogFragment).listener = listener
         }
     }
 
     private fun setPoiDetailData(data: PoiDetailData) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).setData(data)
+            (fragment as PoiDetailBottomDialogFragment).data = data
         }
     }
 
@@ -306,8 +304,8 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
         lifecycle.removeObserver(zoomControlsViewModel)
     }
 
-    override fun resolveAttributes(attributes: AttributeSet) {
-        with(requireContext().obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)) {
+    override fun resolveAttributes(context: Context, attributes: AttributeSet) {
+        with(context.obtainStyledAttributes(attributes, R.styleable.BrowseMapFragment)) {
             if (hasValue(R.styleable.BrowseMapFragment_sygic_map_selectionMode)) {
                 mapSelectionMode =
                     getInt(

@@ -37,6 +37,7 @@ import com.sygic.samples.app.fragments.BrowseMapSampleListFragment
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.samples.app.fragments.BaseSamplesListFragment
+import com.sygic.samples.app.fragments.NavigationSampleListFragment
 import com.sygic.samples.app.fragments.SearchSampleListFragment
 
 private const val GITHUB_WIKI_COMPASS = "${BuildConfig.GITHUB_WIKI}UiKit-Compass"
@@ -63,6 +64,7 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
         when (item.itemId) {
             R.id.nav_browse_map_module -> samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSampleListFragment()
             R.id.nav_search_module -> samplesListFragmentsObservable.asSingleEvent().value = SearchSampleListFragment()
+            R.id.nav_navigation_module -> samplesListFragmentsObservable.asSingleEvent().value = NavigationSampleListFragment()
             R.id.nav_ui_kit_compass -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_COMPASS
             R.id.nav_ui_kit_poi_detail -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_POI_DETAIL
             R.id.nav_ui_kit_position_lock_fab -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_POSITION_LOCK_FAB

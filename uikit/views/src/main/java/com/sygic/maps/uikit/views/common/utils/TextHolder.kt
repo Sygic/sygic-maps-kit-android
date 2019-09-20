@@ -25,21 +25,21 @@
 package com.sygic.maps.uikit.views.common.utils
 
 import android.content.Context
+import android.os.Parcelable
 import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.NO_ID
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 open class TextHolder private constructor(
     @StringRes private var textResource: Int = NO_ID,
     private var textString: String = EMPTY_STRING
-) {
+) : Parcelable {
 
     companion object {
 
-        @JvmStatic
-        fun empty(): TextHolder {
-            return TextHolder()
-        }
+        val empty = TextHolder()
 
         @JvmStatic
         fun from(@StringRes resId: Int): TextHolder {
@@ -50,9 +50,23 @@ open class TextHolder private constructor(
         fun from(text: String): TextHolder {
             return TextHolder(textString = text)
         }
+
+        @JvmStatic
+        fun from(@StringRes resId: Int, text: String): TextHolder {
+            return TextHolder(textResource = resId, textString = text)
+        }
+
+        @JvmStatic
+        fun from(@StringRes resId: Int, number: Int): TextHolder {
+            return TextHolder(textResource = resId, textString = number.toString())
+        }
     }
 
     open fun getText(context: Context): String {
+        if (textResource != NO_ID && textString.isNotEmpty()) {
+            return String.format(context.getString(textResource), textString)
+        }
+
         if (textResource != NO_ID) {
             return context.getString(textResource)
         }

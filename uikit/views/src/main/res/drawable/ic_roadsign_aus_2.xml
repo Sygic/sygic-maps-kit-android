@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="64.0"
+    android:viewportHeight="64.0">
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M32.55,62.33C32.21,62.48 36.55,60.69 38.37,59.86C41.58,58.41 44.57,56.84 47.39,
+            55.05C57.61,48.56 63.75,40.4 63.75,30.11C63.75,24.03 62.33,19.18 59.93,15.46C59.07,14.13 58.14,13.04
+            57.21,12.17C56.62,11.62 56.13,11.25 55.8,11.05L55.32,10.75L9.23,10.75L8.77,11.01C8.42,11.2 7.9,11.56
+            7.25,12.1C6.22,12.97 5.2,14.06 4.25,15.39C1.58,19.11 0,24 0,30.11C0,40.41 6.1,48.57 16.23,55.06C19.03,56.85
+            21.99,58.42 25.16,59.86C26.31,60.38 27.4,60.85 28.65,61.38C28.87,61.47 29.09,61.56 29.36,61.67C29.68,61.8
+            29.86,61.87 29.98,61.93C30.44,62.11 30.72,62.23 30.95,62.33L31.75,62.68L32.55,62.33Z" />
+
+    <path
+        android:fillColor="#59ABFC"
+        android:pathData="M31.75,60.57C26.77,58.4 2,49.72 2,30.18C2,17.16 9.75,12.82 9.75,12.82L54.75,12.82C54.75,12.82
+            61.75,17.16 61.75,30.18C61.75,49.72 36.73,58.4 31.75,60.57Z" />
+</vector>

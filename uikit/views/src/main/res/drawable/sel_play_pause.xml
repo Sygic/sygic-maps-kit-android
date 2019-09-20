@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:constantSize="true">
+
+    <item
+        android:id="@+id/pauseState"
+        android:drawable="@drawable/ic_pause_to_play"
+        android:state_checked="true" />
+    <item
+        android:id="@+id/playState"
+        android:drawable="@drawable/ic_play_to_pause" />
+
+    <transition
+        android:fromId="@id/playState"
+        android:toId="@id/pauseState">
+
+        <animated-vector android:drawable="@drawable/ic_play_to_pause">
+
+            <target
+                android:name="play_to_pause"
+                android:animation="@anim/play_to_pause" />
+        </animated-vector>
+
+    </transition>
+
+    <transition
+        android:fromId="@id/pauseState"
+        android:toId="@id/playState">
+
+        <animated-vector android:drawable="@drawable/ic_pause_to_play">
+
+            <target
+                android:name="pause_to_play"
+                android:animation="@anim/pause_to_play" />
+        </animated-vector>
+
+    </transition>
+
+</animated-selector>

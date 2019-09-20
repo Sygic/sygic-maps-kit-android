@@ -28,13 +28,19 @@ import android.app.Application
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getApiKey
+import com.sygic.maps.uikit.views.common.utils.SingletonHolder
 import com.sygic.sdk.SygicEngine
 import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SdkInitializationManagerImpl(
+class SdkInitializationManagerImpl private constructor(
     private val app: Application
 ) : SdkInitializationManager, SygicEngine.OnInitListener {
+
+    companion object : SingletonHolder<SdkInitializationManagerImpl>() {
+        @JvmStatic
+        fun getInstance(app: Application): SdkInitializationManagerImpl = getInstance { SdkInitializationManagerImpl(app) }
+    }
 
     @InitializationState
     override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED

@@ -35,4 +35,8 @@ fun Bundle?.getString(key: String): String? = this?.getString(key)
 
 fun Bundle?.getString(key: String, defaultValue: String): String = this?.getString(key) ?: defaultValue
 
+fun Bundle?.getCharSequence(key: String): CharSequence? = this?.getCharSequence(key)
+
+fun Bundle?.getCharSequence(key: String, defaultValue: CharSequence): CharSequence = this?.getCharSequence(key) ?: defaultValue
+
 fun <T: Parcelable> Bundle?.getParcelableValue(key: String): T? = this?.getParcelable(key)

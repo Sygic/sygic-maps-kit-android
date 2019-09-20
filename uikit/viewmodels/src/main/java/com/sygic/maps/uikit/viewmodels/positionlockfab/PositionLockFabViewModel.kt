@@ -24,10 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.positionlockfab
 
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.sdk.map.Camera
 import com.sygic.maps.uikit.viewmodels.common.sdk.DEFAULT_ANIMATION
@@ -35,6 +32,7 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.positionlockfab.LockState
 import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 
@@ -59,11 +57,7 @@ open class PositionLockFabViewModel internal constructor(
     Camera.ModeChangedListener,
     DefaultLifecycleObserver {
 
-    val currentState: MutableLiveData<Int> = MutableLiveData()
-
-    init {
-        setState(LockState.UNLOCKED)
-    }
+    val currentState: LiveData<Int> = MutableLiveData(LockState.UNLOCKED)
 
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
@@ -72,13 +66,9 @@ open class PositionLockFabViewModel internal constructor(
         }
     }
 
-    override fun onRotationModeChanged(@Camera.RotationMode mode: Int) {
-        modeChanged()
-    }
+    override fun onRotationModeChanged(@Camera.RotationMode mode: Int) = modeChanged()
 
-    override fun onMovementModeChanged(@Camera.MovementMode mode: Int) {
-        modeChanged()
-    }
+    override fun onMovementModeChanged(@Camera.MovementMode mode: Int) = modeChanged()
 
     private fun modeChanged() {
         when {
@@ -113,7 +103,7 @@ open class PositionLockFabViewModel internal constructor(
 
     private fun setState(@LockState state: Int) {
         if (currentState.value != state) {
-            currentState.value = state
+            currentState.asMutable().value = state
         }
     }
 

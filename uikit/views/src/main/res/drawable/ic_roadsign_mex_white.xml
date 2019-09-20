@@ -1,0 +1,56 @@
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="64.0"
+    android:viewportHeight="64.0">
+
+    <path
+        android:fillColor="@color/roadSignStroke"
+        android:pathData="M0,18C0,20.09 0,20 0,21.33C0.87,26.19 3.15,28.89 3.15,33.31C3.15,39.12 0.02,39.53
+            0,43.48C-0.05,56.55 32.05,64 32.05,64C32.05,64 63.94,56.55 63.99,43.48C64.01,39.96 60.75,39.12 60.75,
+            33.31C60.75,28.9 63.1,26.18 63.99,21.33C63.99,20 64.01,20.1 63.99,18C35.2,18 28.75,18 0,18Z" />
+
+    <path
+        android:fillColor="@color/roadSignStroke"
+        android:pathData="M0,18.67L0,4.27L5,0.88C5,0.88 9.25,2.8 17,2.81C24.75,2.83 32.17,0 32.17,0C32.17,0 40.48,2.81
+            47.13,2.81C53.77,2.81 59,0.88 59,0.88L64,4.27L64,18.67L0,18.67Z" />
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M2,18.81C2,18.81 2,20.75 2,22C2.82,26.56 5,29.09 5,33.23C5,38.68 2.01,40.17 2,43.88C1.96,
+            54.59 32.05,62 32.05,62C32.05,62 61.96,54.54 62,43.88C62.01,40.57 59.06,40.02 59.06,33.23C59.06,29.1
+            61.16,26.54 62,22C62,20.75 62.01,20.78 62,18.81C35,18.81 28.95,18.81 2,18.81Z" />
+
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M2,17L2,5.06L5.06,3.09C5.06,3.09 9.73,5.05 17,5.06C24.27,5.07 32.16,2 32.16,2C32.16,2
+            40.83,5.06 47.06,5.06C53.29,5.06 59,3.09 59,3.09L62,5.06L62,17L2,17ZM38.56,8L40.41,10.78L38.38,13.81L40.41,
+            13.81L41.58,11.94L42.74,13.81L44.79,13.81L42.79,10.81L44.62,8L42.63,8L41.62,9.79L40.57,8L38.56,8ZM30.75,
+            8L30.75,13.81L37.17,13.81L37.17,12.49L33.11,12.49L33.11,11.35L36.77,11.35L36.77,10.16L33.11,10.16L33.11,
+            9.24L37.05,9.24L37.05,8L30.75,8ZM19.13,8L19.13,13.81L21.29,13.81L21.29,9.38L22.96,13.81L24.92,13.81L26.59,
+            9.38L26.59,13.81L28.75,13.81L28.75,8L25.29,8L23.95,11.53L22.61,8L19.13,8Z" />
+</vector>
