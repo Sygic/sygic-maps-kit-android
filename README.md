@@ -182,7 +182,7 @@ First read the [Wiki][2] page, then try to search on [Stackoverflow][9] or visit
 [5]: https://www.sygic.com/enterprise/maps-navigation-sdk-api-developers
 [6]: https://www.sygic.com/enterprise/get-api-key/
 [7]: https://developer.android.com/studio/build/configure-apk-splits
-[8]: https://github.com/Sygic/sygic-maps-kit-android/
+[8]: https://travis-ci.com/Sygic/sygic-maps-kit-android
 [9]: https://stackoverflow.com/questions/tagged/android+sygic
 [10]: https://github.com/bio007
 [11]: https://github.com/TomasValenta
