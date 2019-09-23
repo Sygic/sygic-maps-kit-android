@@ -29,7 +29,6 @@ import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
@@ -106,10 +105,10 @@ class NavigationFragmentViewModelTest {
             }
         }
 
-        whenever(regionalManager.distanceUnit).thenReturn(MutableLiveData(DistanceUnit.KILOMETERS)) //todo
+        whenever(regionalManager.distanceUnit).thenReturn(mock())
 
         val arguments = mock<Bundle>()
-        whenever(arguments.getParcelable<RouteInfo>(eq(KEY_ROUTE_INFO))).thenReturn(mock()) //todo
+        whenever(arguments.getParcelable<RouteInfo>(eq(KEY_ROUTE_INFO))).thenReturn(mock())
         whenever(arguments.getBoolean(eq(KEY_PREVIEW_MODE), any())).thenReturn(false)
         whenever(arguments.getBoolean(eq(KEY_INFOBAR_ENABLED), any())).thenReturn(true)
         whenever(arguments.getBoolean(eq(KEY_PREVIEW_CONTROLS_ENABLED), any())).thenReturn(true)
@@ -144,7 +143,6 @@ class NavigationFragmentViewModelTest {
         assertEquals(true, navigationFragmentViewModel.currentSpeedEnabled.value)
         assertEquals(true, navigationFragmentViewModel.speedLimitEnabled.value)
         assertEquals(true, navigationFragmentViewModel.lanesViewEnabled.value)
-        assertEquals(DistanceUnit.KILOMETERS, navigationFragmentViewModel.distanceUnit)
 
         verify(locationManager).requestToEnableGps(any(), any())
         verify(permissionsManager).checkPermissionGranted(anyString(), any())
