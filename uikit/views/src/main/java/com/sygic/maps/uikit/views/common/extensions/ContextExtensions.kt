@@ -31,16 +31,17 @@ import android.location.LocationManager
 import android.net.Uri
 import android.text.TextUtils
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.annotation.StringRes
-import androidx.annotation.StyleRes
+import androidx.annotation.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 
 inline val Context.locationManager: LocationManager?
     get() = getSystemService(LOCATION_SERVICE) as? LocationManager
@@ -54,6 +55,9 @@ inline val Context.inputMethodManager: InputMethodManager?
 fun Context.applyStyle(@StyleRes resId: Int, force: Boolean = false) {
     theme.applyStyle(resId, force)
 }
+
+@ColorInt
+fun Context.getColorInt(@ColorRes colorResId: Int): Int = ContextCompat.getColor(this, colorResId)
 
 @ColorInt
 fun Context.getColorFromAttr(
@@ -149,6 +153,17 @@ fun Context.shortToast(@StringRes text: Int) = Toast.makeText(this, text, Toast.
 fun Context.shortToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 fun Context.longToast(@StringRes text: Int) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 fun Context.longToast(text: String) = Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+
+fun Context.showInfoToast(infoToastComponent: InfoToastComponent, isLong: Boolean = false) {
+    Toast(this).apply {
+        this.view = View.inflate(this@showInfoToast, R.layout.layout_info_toast, null).apply {
+            findViewById<TextView>(R.id.infoToastTextDesc).setText(infoToastComponent.titleResId)
+            findViewById<ImageView>(R.id.infoToastImageView).setImageResource(infoToastComponent.iconResId)
+        }
+        setGravity(Gravity.CENTER, 0, 0)
+        duration = if (isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+    }.show()
+}
 
 fun Context.showKeyboard(view: View) = inputMethodManager?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
 fun Context.toggleKeyboard() = inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)

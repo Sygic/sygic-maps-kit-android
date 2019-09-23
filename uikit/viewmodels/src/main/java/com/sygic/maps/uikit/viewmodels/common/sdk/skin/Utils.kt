@@ -30,3 +30,10 @@ fun isMapSkinValid(it: String): Boolean {
 
     return false
 }
+
+fun isVehicleSkinValid(it: String): Boolean {
+    if (it.isEmpty()) return false
+    if (it == VehicleSkin.CAR || it == VehicleSkin.CAR_NO_SIGNAL || it == VehicleSkin.PEDESTRIAN || it == VehicleSkin.PEDESTRIAN_NO_SIGNAL) return true
+
+    return false
+}

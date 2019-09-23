@@ -79,7 +79,7 @@
                     android:singleLine="true"
                     android:text="@{poiDetailInternalViewModel.titleText}"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/fontSizeMediumLarge"
                     tools:text="Sygic" />
 
                 <TextView
@@ -90,7 +90,7 @@
                     android:singleLine="true"
                     android:text="@{poiDetailInternalViewModel.subtitleText}"
                     android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/fontSizeSmall"
                     tools:text="Mlynské nivy 16, 821 09 Bratislava" />
 
             </LinearLayout>

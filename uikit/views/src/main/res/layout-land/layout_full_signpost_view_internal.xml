@@ -44,8 +44,8 @@
             android:layout_marginEnd="16dp"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:textColor="?attr/signpostTintColor"
-            android:textSize="36sp"
+            android:textColor="?attr/navigationTextColorTertiary"
+            android:textSize="@dimen/fontSizeHuge"
             app:layout_constraintBottom_toTopOf="@+id/signpostInstructionTextView"
             app:layout_constraintEnd_toStartOf="@+id/signpostPrimaryDirectionImageView"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,8 +77,8 @@
             android:gravity="center_vertical"
             android:maxLines="2"
             android:minHeight="48dp"
-            android:textColor="?attr/signpostTintColor"
-            android:textSize="16sp"
+            android:textColor="?attr/navigationTextColorTertiary"
+            android:textSize="@dimen/fontSizeSmall"
             app:layout_constraintBottom_toTopOf="@+id/signpostRoadSignsView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,43 +113,56 @@
             app:layout_goneMarginStart="16dp"
             tools:src="@drawable/ic_pictogram_airport" />
 
-        <LinearLayout
+        <ViewSwitcher
             android:id="@+id/signpostSecondaryDirectionContainer"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:background="@drawable/bg_signpost_full_sub_container_rounded"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/signpostRoadSignsView">
 
-            <TextView
-                android:id="@+id/signpostSecondaryDirectionTextView"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:textColor="?attr/signpostTintColor"
-                android:textSize="14sp"
-                tools:text="Then"
-                tools:textColor="@color/white" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
-            <ImageView
-                android:id="@+id/signpostSecondaryDirectionImageView"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                tools:src="@drawable/ic_direction_left_45" />
+                <TextView
+                    android:id="@+id/signpostSecondaryDirectionTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif"
+                    android:textColor="?attr/navigationTextColorTertiary"
+                    tools:text="Then"
+                    tools:textColor="@color/white" />
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/signpostSecondaryDirectionImageView"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    tools:src="@drawable/ic_direction_left_45" />
+
+            </LinearLayout>
+
+            <com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
+                android:id="@+id/signpostLanesView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:background="@color/transparent" />
+
+        </ViewSwitcher>
 
     </merge>
 </layout>

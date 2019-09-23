@@ -29,6 +29,6 @@
     android:viewportHeight="24.0">
 
     <path
-        android:fillColor="@color/directionForeground"
+        android:fillColor="?attr/navigationTextColorTertiary"
         android:pathData="@string/ic_pin_path_data" />
 </vector>

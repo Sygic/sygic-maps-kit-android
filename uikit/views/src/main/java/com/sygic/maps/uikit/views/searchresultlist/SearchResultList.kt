@@ -28,12 +28,11 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.AdvancedInfoView
@@ -68,10 +67,6 @@ open class SearchResultList @JvmOverloads constructor(
     private var itemLayoutId: Int = R.layout.layout_search_item_result_internal
 
     init {
-        binding.searchResultListRecyclerView.setHasFixedSize(true)
-        binding.searchResultListRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.searchResultListRecyclerView.itemAnimator = DefaultItemAnimator()
-
         attrs?.let { attributeSet ->
             @Suppress("Recycle")
             context.obtainStyledAttributes(
@@ -148,7 +143,7 @@ open class SearchResultList @JvmOverloads constructor(
     /**
      * Register a callback to be invoked when [SearchResultList] error view with action button is clicked.
      *
-     * @param listener [OnClickListener] callback to invoke on [SearchResultList] error view with action button click.
+     * @param listener [View.OnClickListener] callback to invoke on [SearchResultList] error view with action button click.
      */
     fun setOnErrorViewWithActionListener(listener: OnClickListener) {
         binding.searchResultListErrorViewWithAction.setOnClickListener(listener)

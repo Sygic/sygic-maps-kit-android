@@ -37,8 +37,8 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
 
     private var routeDemonstrateSimulator: RouteDemonstrateSimulator? = null
 
-    override var speedMultiplier: MutableLiveData<Float> = MutableLiveData(DEFAULT_SPEED)
-    override val demonstrationState: MutableLiveData<DemonstrationState> = MutableLiveData(DemonstrationState.INACTIVE)
+    override var speedMultiplier = MutableLiveData<Float>(DEFAULT_SPEED)
+    override val demonstrationState = MutableLiveData<DemonstrationState>(DemonstrationState.INACTIVE)
 
     init {
         speedMultiplier.observeForever { routeDemonstrateSimulator?.setSpeedMultiplier(it) }

@@ -33,8 +33,9 @@ import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.regional.units.DistanceUnit
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.navigation.NavigationManager
@@ -42,26 +43,26 @@ import com.sygic.sdk.navigation.warnings.DirectionInfo
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class BaseSignpostViewModel(
-    private val regionalManager: RegionalManager,
+    regionalManager: RegionalManager,
     private val navigationManager: NavigationManager
 ) : ViewModel(), NavigationManager.OnDirectionListener {
 
-    val distance: MutableLiveData<String> = MutableLiveData()
-    val primaryDirection: MutableLiveData<Int> = MutableLiveData()
-    val secondaryDirection: MutableLiveData<Int> = MutableLiveData()
+    val distance: LiveData<String> = MutableLiveData()
+    val primaryDirection: LiveData<Int> = MutableLiveData()
+    val secondaryDirection: LiveData<Int> = MutableLiveData()
     val secondaryDirectionText: Int = R.string.then
-    val secondaryDirectionContainerVisible: MutableLiveData<Boolean> = MutableLiveData(false)
-    val instructionText: MutableLiveData<TextHolder> = MutableLiveData(TextHolder.empty)
+    val secondaryDirectionContainerVisible: LiveData<Boolean> = MutableLiveData(false)
+    val instructionText: LiveData<TextHolder> = MutableLiveData(TextHolder.empty)
 
     protected val directionInfo: MutableLiveData<DirectionInfo> = MutableLiveData()
     private val directionInfoWithDistanceUnit: LiveData<Pair<DirectionInfo, DistanceUnit>> =
         directionInfo.withLatestFrom(regionalManager.distanceUnit)
 
     private val directionInfoObserver = Observer<Pair<DirectionInfo, DistanceUnit>> {
-        distance.value = it.first.getDistanceWithUnits(it.second)
-        primaryDirection.value = it.first.getDirectionDrawable(DirectionManeuverType.PRIMARY)
-        secondaryDirection.value = it.first.getDirectionDrawable(DirectionManeuverType.SECONDARY)
-        secondaryDirectionContainerVisible.value = it.first.secondary.isValid
+        distance.asMutable().value = it.first.getDistanceWithUnits(it.second)
+        primaryDirection.asMutable().value = it.first.getDirectionDrawable(DirectionManeuverType.PRIMARY)
+        secondaryDirection.asMutable().value = it.first.getDirectionDrawable(DirectionManeuverType.SECONDARY)
+        secondaryDirectionContainerVisible.asMutable().value = it.first.secondary.isValid
     }
 
     init {

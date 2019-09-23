@@ -33,6 +33,10 @@
         </attr>
         <attr name="sygic_navigation_previewMode" format="boolean" />
         <attr name="sygic_previewControls_enabled" format="boolean" />
+        <attr name="sygic_infobar_enabled" format="boolean" />
+        <attr name="sygic_current_speed_enabled" format="boolean" />
+        <attr name="sygic_speed_limit_enabled" format="boolean" />
+        <attr name="sygic_lanes_view_enabled" format="boolean" />
         <attr name="sygic_signpost_enabled" format="boolean" />
         <attr name="sygic_signpost_type" format="enum">
             <enum name="full" value="0" />

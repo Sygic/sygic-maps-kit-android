@@ -65,6 +65,8 @@
     <string name="browse_map_markers_summary">Browse Map module with own custom map markers</string>
     <string name="browse_map_modes">Browse Map - Modes</string>
     <string name="browse_map_modes_summary">Browse Map module with all available modes</string>
+    <string name="browse_map_vehicle_map_skin">Browse Map - Vehicle and Map skin</string>
+    <string name="browse_map_vehicle_map_skin_summary">Custom vehicle and map skin fragment attribute</string>
     <string name="selection_mode">Selection mode</string>
     <string name="selection_mode_is">Selection mode is</string>
     <string name="none">None</string>
@@ -88,4 +90,6 @@
     <string name="navigation_preview_enabled_summary">Navigation module with preview mode enabled</string>
     <string name="navigation_simplified_signpost">Navigation - Simplified signpost</string>
     <string name="navigation_simplified_signpost_summary">Navigation module with the simplified signpost view</string>
+    <string name="navigation_infobar_custom_click_listener">Navigation - Infobar custom listener</string>
+    <string name="navigation_infobar_custom_click_listener_summary">Navigation module with custom infobar click listener</string>
 </resources>

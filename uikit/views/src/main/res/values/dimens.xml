@@ -33,14 +33,25 @@
     <dimen name="fontSizeMediumLarge">20sp</dimen>
     <dimen name="fontSizeLarge">24sp</dimen>
     <dimen name="fontSizeExtraLarge">32sp</dimen>
+    <dimen name="fontSizeHuge">36sp</dimen>
 
     <!-- Navigation -->
     <dimen name="directionSize">48dp</dimen>
     <dimen name="roadSignSpacing">6dp</dimen>
     <dimen name="roadSignTextSize">12sp</dimen>
     <dimen name="roadSignTextPadding">4dp</dimen>
+    <dimen name="currentSpeedViewSize">56dp</dimen>
+    <dimen name="currentSpeedViewLayoutMargin">16dp</dimen>
+    <dimen name="speedLimitViewSize">56dp</dimen>
+    <dimen name="speedLimitViewLayoutMargin">16dp</dimen>
+    <integer name="speedProgressViewSegmentAngle">8</integer>
+    <dimen name="speedProgressViewSegmentThickness">3dp</dimen>
+    <fraction name="speedProgressViewSegmentSpacing">30%</fraction>
     <dimen name="navigationComponentElevation">6dp</dimen>
+    <dimen name="infobarLayoutMargin">16dp</dimen>
     <dimen name="signpostViewLayoutMargin">16dp</dimen>
+    <dimen name="lanesViewLayoutMargin">16dp</dimen>
+    <dimen name="simpleLaneSize">24dp</dimen>
     <dimen name="routePreviewControlsLayoutMargin">16dp</dimen>
 
     <!-- Others -->

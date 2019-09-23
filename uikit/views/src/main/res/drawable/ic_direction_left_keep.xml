@@ -32,6 +32,6 @@
         android:fillColor="@color/directionBackground"
         android:pathData="@string/left_keep_sec_path_data" />
     <path
-        android:fillColor="@color/directionForeground"
+        android:fillColor="?attr/navigationTextColorTertiary"
         android:pathData="@string/left_keep_path_data" />
 </vector>

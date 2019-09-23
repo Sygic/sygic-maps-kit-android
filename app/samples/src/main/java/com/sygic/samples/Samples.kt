@@ -27,6 +27,7 @@ package com.sygic.samples
 import com.sygic.samples.browsemap.*
 import com.sygic.samples.app.models.Sample
 import com.sygic.samples.navigation.NavigationDefaultActivity
+import com.sygic.samples.navigation.NavigationInfobarCustomClickListenerActivity
 import com.sygic.samples.navigation.NavigationPreviewEnabledActivity
 import com.sygic.samples.navigation.NavigationSimplifiedSignpostActivity
 import com.sygic.samples.search.SearchDefaultActivity
@@ -66,6 +67,10 @@ object Samples {
             R.string.browse_map_split, R.string.browse_map_split_summary
         ),
         Sample(
+            BrowseMapVehicleMapSkinActivity::class.java, R.drawable.preview_browsemap_vehicle_map_skin,
+            R.string.browse_map_vehicle_map_skin, R.string.browse_map_vehicle_map_skin_summary
+        ),
+        Sample(
             BrowseMapThemesActivity::class.java, R.drawable.preview_browsemap_themes,
             R.string.browse_map_themes, R.string.browse_map_themes_summary
         )
@@ -102,6 +107,10 @@ object Samples {
         Sample(
             NavigationSimplifiedSignpostActivity::class.java, R.drawable.preview_navigation_simplified_signpost,
             R.string.navigation_simplified_signpost, R.string.navigation_simplified_signpost_summary
+        ),
+        Sample(
+            NavigationInfobarCustomClickListenerActivity::class.java, R.drawable.preview_navigation_infobar_custom_click_listener,
+            R.string.navigation_infobar_custom_click_listener, R.string.navigation_infobar_custom_click_listener_summary
         )
     )
 }
