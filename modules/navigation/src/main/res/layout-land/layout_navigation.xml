@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="navigationFragmentViewModel"
+            type="com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel" />
+
+        <variable
+            name="routePreviewControlsViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel" />
+
+        <variable
+            name="infobarViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel" />
+
+        <variable
+            name="currentSpeedViewModel"
+            type="com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:clipChildren="false"
+        android:focusable="true">
+
+        <ViewStub
+            android:id="@+id/signpostView"
+            android:layout_width="@dimen/signpostViewWidth"
+            android:layout_height="wrap_content"
+            android:inflatedId="@id/signpostView"
+            android:layout="@{navigationFragmentViewModel.signpostLayout}"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.signpostEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationFragmentViewModel="@{navigationFragmentViewModel}" />
+
+        <ViewStub
+            android:id="@+id/lanesView"
+            android:layout_width="@dimen/lanesViewWidth"
+            android:layout_height="wrap_content"
+            android:inflatedId="@id/lanesView"
+            android:layout="@layout/layout_lanes_view_stub"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.lanesViewEnabled) &amp;&amp; (!navigationFragmentViewModel.lanesViewEmbedded) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="@id/signpostView"
+            app:layout_constraintStart_toStartOf="@id/signpostView"
+            app:layout_constraintTop_toBottomOf="@id/signpostView"
+            app:navigationFragmentViewModel="@{navigationFragmentViewModel}" />
+
+        <com.sygic.maps.uikit.views.navigation.infobar.Infobar
+            android:id="@+id/infobar"
+            android:layout_width="344dp"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.infobarEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:leftButton="@{navigationFragmentViewModel.leftInfobarButton}"
+            app:onLeftButtonClickListener="@{() -> navigationFragmentViewModel.onLeftInfobarButtonClick()}"
+            app:onRightButtonClickListener="@{() -> navigationFragmentViewModel.onRightInfobarButtonClick()}"
+            app:primaryTextData="@{infobarViewModel.textDataPrimary}"
+            app:rightButton="@{navigationFragmentViewModel.rightInfobarButton}"
+            app:secondaryTextData="@{infobarViewModel.textDataSecondary}"
+            tools:background="@drawable/bg_infobar_rounded"
+            tools:layout_height="64dp"
+            tools:layout_margin="@dimen/routePreviewControlsLayoutMargin" />
+
+        <com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
+            android:id="@+id/routePreviewControls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.previewMode) &amp;&amp; safeUnbox(navigationFragmentViewModel.previewControlsEnabled) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/infobar"
+            app:layout_constraintEnd_toEndOf="@id/infobar"
+            app:layout_constraintStart_toStartOf="@id/infobar"
+            app:onPlayPauseButtonClickListener="@{() -> routePreviewControlsViewModel.onPlayPauseButtonClick()}"
+            app:onSpeedButtonClickListener="@{() -> routePreviewControlsViewModel.onSpeedButtonClick()}"
+            app:onStopButtonClickListener="@{() -> routePreviewControlsViewModel.onStopButtonClick()}"
+            app:playPauseButtonState="@{routePreviewControlsViewModel.playPauseButtonState}"
+            tools:background="@drawable/bg_navigation_rounded"
+            tools:layout_height="32dp"
+            tools:layout_margin="@dimen/routePreviewControlsLayoutMargin"
+            tools:layout_width="164dp" />
+
+        <com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
+            android:id="@+id/currentSpeedView"
+            android:layout_width="@dimen/currentSpeedViewSize"
+            android:layout_height="@dimen/currentSpeedViewSize"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.currentSpeedEnabled) ? View.VISIBLE : View.GONE}"
+            app:isSpeeding="@{currentSpeedViewModel.speeding}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:speedProgress="@{currentSpeedViewModel.speedProgress}"
+            app:speedUnit="@{currentSpeedViewModel.speedUnit}"
+            app:speedValue="@{currentSpeedViewModel.speedValue}" />
+
+        <com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
+            android:id="@+id/speedLimitView"
+            android:layout_width="@dimen/speedLimitViewSize"
+            android:layout_height="@dimen/speedLimitViewSize"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="46dp"
+            android:visibility="@{safeUnbox(navigationFragmentViewModel.speedLimitEnabled) &amp;&amp; safeUnbox(speedLimitViewModel.speedLimitVisible) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/currentSpeedView"
+            app:layout_constraintEnd_toEndOf="@id/currentSpeedView"
+            app:layout_constraintStart_toStartOf="@id/currentSpeedView"
+            app:limitType="@{speedLimitViewModel.speedLimitType}"
+            app:limitValue="@{speedLimitViewModel.speedLimitValue}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

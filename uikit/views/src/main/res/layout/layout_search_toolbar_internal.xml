@@ -31,7 +31,7 @@
         android:id="@+id/searchToolbarContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbarHeight"
-        android:background="@drawable/search_toolbar_background"
+        android:background="@drawable/bg_search_toolbar"
         android:elevation="4dp"
         android:focusable="true"
         android:minHeight="@dimen/toolbarHeight">
@@ -82,7 +82,7 @@
             android:textAlignment="viewStart"
             android:textColor="?android:attr/textColorPrimary"
             android:textColorHint="?android:attr/textColorSecondary"
-            android:textSize="16sp"
+            android:textSize="@dimen/fontSizeSmall"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/searchToolbarClearButton"
             app:layout_constraintStart_toEndOf="@+id/searchToolbarIconStateSwitcher"

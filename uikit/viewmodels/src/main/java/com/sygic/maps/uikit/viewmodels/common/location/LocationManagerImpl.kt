@@ -24,7 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.common.location
 
-import android.app.Activity
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -33,7 +32,7 @@ import com.sygic.maps.uikit.viewmodels.common.location.livedata.LocationProvider
 import com.sygic.maps.uikit.viewmodels.common.location.livedata.LocationRequestLiveEvent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class LocationManagerImpl : LocationManager {
+class LocationManagerImpl(private val positionManager: PositionManager) : LocationManager {
 
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 
@@ -52,7 +51,7 @@ class LocationManagerImpl : LocationManager {
     }
 
     override fun setSdkPositionUpdatingEnabled(enabled: Boolean) =
-        PositionManager.getInstance().run { if (enabled) startPositionUpdating() else stopPositionUpdating() }
+        positionManager.run { if (enabled) startPositionUpdating() else stopPositionUpdating() }
 
     /**
      * Returns the current enabled/disabled status of the GPS provider.
@@ -88,10 +87,11 @@ class LocationManagerImpl : LocationManager {
             locationRequest.value = object : LocationManager.LocationRequesterCallback {
                 override fun onActivityResult(requestCode: Int, resultCode: Int) {
                     when (requestCode) {
-                        GOOGLE_API_CLIENT_REQUEST_CODE -> enableGpsCallback.onResult(if (resultCode == Activity.RESULT_OK) EnableGpsResult.ENABLED else EnableGpsResult.DENIED)
-                        SETTING_ACTIVITY_REQUEST_CODE -> checkGpsEnabled(Observer { gpsEnabled ->
-                            enableGpsCallback.onResult(if (gpsEnabled) EnableGpsResult.ENABLED else EnableGpsResult.DENIED)
-                        })
+                        GOOGLE_API_CLIENT_REQUEST_CODE, SETTING_ACTIVITY_REQUEST_CODE -> {
+                            checkGpsEnabled(Observer { gpsEnabled ->
+                                enableGpsCallback.onResult(if (gpsEnabled) EnableGpsResult.ENABLED else EnableGpsResult.DENIED)
+                            })
+                        }
                     }
                 }
             }

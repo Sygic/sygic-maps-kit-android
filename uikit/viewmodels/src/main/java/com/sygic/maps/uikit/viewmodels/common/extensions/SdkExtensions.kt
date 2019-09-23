@@ -24,23 +24,40 @@
 
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
+import android.app.Activity
+import android.app.Application
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
-import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
+import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
+import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
+import com.sygic.maps.uikit.views.common.utils.Distance
+import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.utils.TextHolder
+import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
-import com.sygic.sdk.places.LocationInfo
-import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.`object`.MapObject
-import com.sygic.sdk.map.`object`.ProxyObject
-import com.sygic.sdk.map.`object`.ViewObject
+import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.`object`.*
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
+import com.sygic.sdk.map.data.SimpleMapDataModel
+import com.sygic.sdk.navigation.warnings.DirectionInfo
+import com.sygic.sdk.navigation.warnings.NaviSignInfo
+import com.sygic.sdk.navigation.warnings.NaviSignInfo.SignElement.SignElementType
+import com.sygic.sdk.places.LocationInfo
+import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.position.GeoPosition
+import com.sygic.sdk.position.PositionManager
+import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.RoutePlan
+import com.sygic.sdk.route.Router
 import com.sygic.sdk.search.*
 import java.util.*
 
@@ -109,6 +126,46 @@ fun MapMarker.getCopyWithPayload(payload: Parcelable): MapMarker {
         .build()
 }
 
+fun MapView.MapDataModel.addMapMarker(marker: MapMarker) {
+    addMapObject(marker)
+}
+
+fun MapView.MapDataModel.removeMapMarker(marker: MapMarker?) {
+    marker?.let { removeMapObject(it) }
+}
+
+fun MapView.MapDataModel.addMapRoute(mapRoute: MapRoute) {
+    addMapObject(mapRoute)
+}
+
+fun MapView.MapDataModel.setMapRoute(mapRoute: MapRoute) {
+    removeAllMapRoutes()
+    addMapRoute(mapRoute)
+}
+
+fun MapView.MapDataModel.removeMapRoute(mapRoute: MapRoute) {
+    removeMapObject(mapRoute)
+}
+
+fun MapView.MapDataModel.removeAllMapMarkers() = removeAllMapObjects<MapMarker>()
+
+fun MapView.MapDataModel.removeAllMapRoutes() = removeAllMapObjects<MapRoute>()
+
+private inline fun <reified T : MapObject<*>> MapView.MapDataModel.removeAllMapObjects() = with(getMapObjects(this)) {
+    forEach { mapObject ->
+        if (mapObject is T) {
+            removeMapObject(mapObject)
+        }
+    }
+}
+
+//todo: MS-6338 remove with next version (v16) of SDK
+private fun getMapObjects(model: MapView.MapDataModel): Set<MapObject<*>> {
+    val m = SimpleMapDataModel::class.java.getDeclaredMethod("getMapObjects")
+    m.isAccessible = true
+    return m.invoke(model) as Set<MapObject<*>>
+}
+
 fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
     return when (this) {
         is MapSearchResult -> {
@@ -130,8 +187,131 @@ fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
     }
 }
 
-fun List<SearchResult>.toSearchResultList() : List<SearchResultItem<out SearchResult>> = mapNotNull { it.toSearchResultItem() }
+fun List<SearchResult>.toSearchResultList(): List<SearchResultItem<out SearchResult>> =
+    mapNotNull { it.toSearchResultItem() }
 
-fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList() : List<SearchResult> = mapNotNull { it.dataPayload }
+fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList(): List<SearchResult> = mapNotNull { it.dataPayload }
 
-fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) = Search().loadDetails(this, DetailRequest(), callback)
+fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) =
+    Search().loadDetails(this, DetailRequest(), callback)
+
+fun Activity.getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) =
+    application.getLastValidLocation(lastValidLocationCallback)
+
+fun Application.getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
+    SdkInitializationManagerImpl.getInstance(this).onReady {
+        with(PositionManager.getInstance()) {
+            addPositionChangeListener(object : PositionManager.PositionChangeListener {
+                override fun onPositionChanged(position: GeoPosition) {
+                    if (position.isValid) {
+                        removePositionChangeListener(this)
+                        lastValidLocationCallback.invoke(position.coordinates)
+                    }
+                }
+            })
+            startPositionUpdating()
+        }
+    }
+}
+
+fun Activity.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: (route: RouteInfo) -> Unit) =
+    application.computePrimaryRoute(routePlan, routeComputeCallback)
+
+fun Application.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: (route: RouteInfo) -> Unit) {
+    //ToDo: Remove when MS-5678 is done
+    SdkInitializationManagerImpl.getInstance(this).onReady {
+        Router().computeRoute(routePlan, object : Router.RouteComputeAdapter() {
+            override fun onPrimaryComputeFinished(router: Router, route: RouteInfo) = routeComputeCallback.invoke(route)
+        })
+    }
+}
+
+fun List<NaviSignInfo.SignElement>.concatItems(): String = StringBuilder().apply {
+    this@concatItems.forEach {
+        if (isNotEmpty()) append(", ")
+        append(it.text)
+    }
+}.toString()
+
+fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
+    this.filter { it.isOnRoute }.let { isOnRouteList ->
+        if (isOnRouteList.isEmpty()) {
+            return null
+        }
+
+        //ToDo: Use NaviSignInfo "priority" when ready
+        return isOnRouteList.firstOrNull { it.backgroundColor != 0 }?.let { it } ?: isOnRouteList[0]
+    }
+}
+
+fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
+    return signElements
+        .asSequence()
+        .filter { it.elementType == SignElementType.RouteNumber }
+        .filter { it.routeNumberFormat.insideNumber.isNotEmpty() }
+        .take(if (signElements.hasPictogram()) maxRoadSignsCount - 1 else maxRoadSignsCount)
+        .toList()
+        .toRoadSignDataList()
+}
+
+fun NaviSignInfo.createInstructionText(): TextHolder {
+    val acceptedSignElements = signElements
+        .filter { element ->
+            element.elementType.let {
+                it == SignElementType.ExitNumber || it == SignElementType.PlaceName || it == SignElementType.OtherDestination
+            }
+        }
+        // The sort is stable, so it will only move the ExitNumbers to the top and leave the others as they are.
+        .sortedByDescending { it.elementType == SignElementType.ExitNumber }
+
+    return if (acceptedSignElements.any { it.elementType == SignElementType.ExitNumber }) {
+        TextHolder.from(R.string.exit_number, acceptedSignElements.concatItems())
+    } else {
+        TextHolder.from(acceptedSignElements.concatItems())
+    }
+}
+
+fun List<NaviSignInfo.SignElement>.hasPictogram(): Boolean = any { it.elementType == SignElementType.Pictogram }
+
+fun List<NaviSignInfo.SignElement>.toRoadSignDataList(): List<RoadSignData> {
+    return map {
+        with(it.routeNumberFormat) {
+            RoadSignData(roadSignBackgroundDrawableRes(), insideNumber, roadSignForegroundColorRes())
+        }
+    }
+}
+
+fun DirectionInfo.getDistanceWithUnits(distanceUnit: DistanceUnit): String =
+    Distance.getFormattedDistance(distanceUnit, distance)
+
+@DrawableRes
+fun DirectionInfo.getDirectionDrawable(directionManeuverType: DirectionManeuverType): Int {
+    val routeManeuver = when (directionManeuverType) {
+        DirectionManeuverType.PRIMARY -> primary
+        DirectionManeuverType.SECONDARY -> secondary
+    }
+
+    return if (routeManeuver.isValid) routeManeuver.getDirectionDrawable() else 0
+}
+
+fun DirectionInfo.createInstructionText(): TextHolder {
+    with(primary) {
+        if (!isValid) {
+            return TextHolder.empty
+        }
+
+        if (isRoundabout()) {
+            return getDirectionInstruction().let {
+                if (it != 0) TextHolder.from(it, roundaboutExit) else TextHolder.empty
+            }
+        }
+
+        with(nextRoadText()) {
+            if (isNotEmpty()) return TextHolder.from(this)
+        }
+
+        getDirectionInstruction().let {
+            return if (it != 0) TextHolder.from(it) else TextHolder.empty
+        }
+    }
+}

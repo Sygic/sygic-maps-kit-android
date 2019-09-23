@@ -24,34 +24,30 @@
 
 package com.sygic.maps.module.common
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.os.Bundle
-import android.provider.Settings
 import android.util.AttributeSet
-import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.sygic.maps.module.common.delegate.ModulesComponentDelegate
+import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
+import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
 import com.sygic.maps.module.common.di.util.ModuleBuilder
+import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest
+import com.sygic.maps.module.common.extensions.isGooglePlayServicesAvailable
+import com.sygic.maps.module.common.extensions.showGenericNoGpsDialog
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
-import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.theme.ThemeManager
-import com.sygic.maps.module.common.theme.ThemeSupportedViewModel
+import com.sygic.maps.module.common.utils.BackingCameraDataModel
+import com.sygic.maps.module.common.utils.BackingMapDataModel
+import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
+import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
@@ -63,7 +59,11 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.MapSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isMapSkinValid
+import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isVehicleSkinValid
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.getString
 import com.sygic.maps.uikit.views.common.extensions.getStringFromAttr
+import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.MapMarker
@@ -76,17 +76,17 @@ import javax.inject.Inject
 abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected abstract fun executeInjector()
-    protected abstract fun resolveAttributes(attributes: AttributeSet)
-
-    protected val modulesComponent = ModulesComponentDelegate()
+    protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
     @Inject
-    internal lateinit var poiDataManager: PoiDataManager
-    @Inject
     internal lateinit var mapInteractionManager: MapInteractionManager
+    @Inject
+    internal lateinit var mapDataModel: ExtendedMapDataModel
+    @Inject
+    internal lateinit var cameraDataModel: ExtendedCameraModel
     @Inject
     internal lateinit var sdkInitializationManager: SdkInitializationManager
     @Inject
@@ -99,13 +99,17 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
-    protected var injected = false
+    private val backingMapDataModel = lazy { BackingMapDataModel() }
+    private val backingCameraModel = lazy { BackingCameraDataModel() }
 
+    protected var injected = false
     protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
         if (!injected) {
             block(
                 builder
-                    .plus(modulesComponent.getInstance(this))
+                    .plus(
+                        FragmentsComponentDelegate.getComponent(this, ApplicationComponentDelegate)
+                    )
                     .build()
             )
         }
@@ -124,18 +128,26 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         getMapAsync(this)
     }
 
-    final override fun getMapDataModel() = ExtendedMapDataModel
-    final override fun getCameraDataModel() = ExtendedCameraModel
+    final override fun getMapDataModel() = if (::mapDataModel.isInitialized) mapDataModel else backingMapDataModel.value
+    final override fun getCameraDataModel() = if(::cameraDataModel.isInitialized) cameraDataModel else backingCameraModel.value
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         executeInjector()
         super.onInflate(context, attrs, savedInstanceState)
-        resolveAttributes(attrs)
+        resolveAttributesInternal(context, attrs)
     }
 
+    @CallSuper
     override fun onAttach(context: Context) {
         executeInjector()
         super.onAttach(context)
+
+        if (backingMapDataModel.isInitialized()) {
+            backingMapDataModel.value.dumpToModel(mapDataModel)
+        }
+        if (backingCameraModel.isInitialized()) {
+            backingCameraModel.value.dumpToModel(cameraDataModel)
+        }
 
         sdkInitializationManager.initialize(this)
         permissionManager.observe(this, Observer {
@@ -145,13 +157,14 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         locationManager.observe(this, Observer {
             locationRequesterCallback = it
             if (isGooglePlayServicesAvailable()) {
-                createGoogleApiLocationRequest()
+                createGoogleApiLocationRequest(GOOGLE_API_CLIENT_REQUEST_CODE)
             } else {
-                showNoGoogleApiDialog()
+                showGenericNoGpsDialog(SETTING_ACTIVITY_REQUEST_CODE)
             }
         })
 
-        context.getStringFromAttr(R.attr.sygicMapSkin).let { if (isMapSkinValid(it)) setMapSkin(it) }
+        context.getStringFromAttr(R.attr.sygicMapSkin).let { if (it.isNotEmpty()) setMapSkin(it) }
+        context.getStringFromAttr(R.attr.sygicVehicleSkin).let { if (it.isNotEmpty()) setVehicleSkin(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,68 +189,6 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         /* Currently do nothing */
     }
 
-    private fun isGooglePlayServicesAvailable(): Boolean {
-        return context?.let {
-            GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
-        } ?: false
-    }
-
-    private fun createGoogleApiLocationRequest() {
-        activity?.let {
-            val locationRequest = LocationRequest.create()
-            locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
-            val locationSettingsRequestBuilder = LocationSettingsRequest.Builder()
-                .setAlwaysShow(true)
-                .addLocationRequest(locationRequest)
-
-            val responseTask = LocationServices.getSettingsClient(it)
-                .checkLocationSettings(locationSettingsRequestBuilder.build())
-            responseTask.addOnCompleteListener(it) { task ->
-                try {
-                    task.getResult(ApiException::class.java)
-                } catch (exception: ApiException) {
-                    when (exception.statusCode) {
-                        LocationSettingsStatusCodes.RESOLUTION_REQUIRED ->
-                            try {
-                                startIntentSenderForResult(
-                                    (exception as ResolvableApiException).resolution.intentSender,
-                                    GOOGLE_API_CLIENT_REQUEST_CODE,
-                                    null,
-                                    0,
-                                    0,
-                                    0,
-                                    null
-                                )
-                            } catch (ignored: IntentSender.SendIntentException) {
-                                Log.e("RequesterWrapper", "SendIntentException")
-                            } catch (ignored: ClassCastException) {
-                                Log.e("RequesterWrapper", "ClassCastException")
-                            }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showNoGoogleApiDialog() {
-        context.let {
-            AlertDialog.Builder(it)
-                .setTitle(R.string.enable_gps_dialog_title)
-                .setMessage(R.string.enable_gps_dialog_text)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(
-                    R.string.settings
-                ) { _, _ ->
-                    startActivityForResult(
-                        Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
-                        SETTING_ACTIVITY_REQUEST_CODE
-                    )
-                }
-                .show()
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -259,7 +210,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to be added.
      */
     fun addMapMarker(marker: MapMarker) {
-        mapDataModel.addMapMarker(marker)
+        getMapDataModel().addMapMarker(marker)
     }
 
     /**
@@ -269,7 +220,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param marker [MapMarker] object to remove.
      */
     fun removeMapMarker(marker: MapMarker) {
-        mapDataModel.removeMapMarker(marker)
+        getMapDataModel().removeMapMarker(marker)
     }
 
     /**
@@ -286,7 +237,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * Remove all [MapMarker]-s from the map at once. This is useful if you want to remove all objects from the map.
      */
     fun removeAllMapMarkers() {
-        mapDataModel.removeAllMapMarkers()
+        getMapDataModel().removeAllMapMarkers()
     }
 
     /**
@@ -295,6 +246,11 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param mapSkin [MapSkin] to be applied to the map.
      */
     fun setMapSkin(@MapSkin mapSkin: String) {
+        if (!isMapSkinValid(mapSkin)) {
+            logWarning("MapSkin \"$mapSkin\" is not valid.")
+            return
+        }
+
         arguments = Bundle(arguments).apply { putString(ThemeManager.SkinLayer.DayNight.toString(), mapSkin) }
         try {
             fragmentViewModel.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, mapSkin)
@@ -307,6 +263,11 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param vehicleSkin [VehicleSkin] to be applied to the vehicle indicator.
      */
     fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
+        if (!isVehicleSkinValid(vehicleSkin)) {
+            logWarning("VehicleSkin \"$vehicleSkin\" is not valid.")
+            return
+        }
+
         arguments = Bundle(arguments).apply { putString(ThemeManager.SkinLayer.Vehicle.toString(), vehicleSkin) }
         try {
             fragmentViewModel.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, vehicleSkin)
@@ -318,5 +279,20 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
 
         lifecycle.removeObserver(mapDataModel)
         lifecycle.removeObserver(cameraDataModel)
+    }
+
+    private fun resolveAttributesInternal(context: Context, attrs: AttributeSet) {
+        with(context.obtainStyledAttributes(attrs, R.styleable.MapFragmentWrapper)) {
+            if (hasValue(R.styleable.MapFragmentWrapper_sygic_map_skin)) {
+                setMapSkin(getString(R.styleable.MapFragmentWrapper_sygic_map_skin, EMPTY_STRING))
+            }
+            if (hasValue(R.styleable.MapFragmentWrapper_sygic_vehicle_skin)) {
+                setVehicleSkin(getString(R.styleable.MapFragmentWrapper_sygic_vehicle_skin, EMPTY_STRING))
+            }
+
+            recycle()
+        }
+
+        resolveAttributes(context, attrs)
     }
 }

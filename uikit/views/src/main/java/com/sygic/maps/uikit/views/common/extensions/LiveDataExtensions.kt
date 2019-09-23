@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.views.common.extensions
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 
@@ -37,4 +38,65 @@ fun <T : Any> LiveData<T>.asSingleEvent(): SingleLiveEvent<T> {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <T : Any> LiveData<T>.asMutable(): MutableLiveData<T> {
     return if (this is MutableLiveData<T>) this else throw IllegalArgumentException("$this is not an instance of MutableLiveData!")
+}
+
+fun <A, B> LiveData<A>.combineLatest(with: LiveData<B>): LiveData<Pair<A, B>> {
+    return MediatorLiveData<Pair<A, B>>().apply {
+        var lastA: A? = null
+        var lastB: B? = null
+
+        addSource(this@combineLatest) {
+            if (it == null && value != null) value = null
+            lastA = it
+            if (lastA != null && lastB != null) value = lastA!! to lastB!!
+        }
+
+        addSource(with) {
+            if (it == null && value != null) value = null
+            lastB = it
+            if (lastA != null && lastB != null) value = lastA!! to lastB!!
+        }
+    }
+}
+
+fun <A, B, C> combineLatest(a: LiveData<A>, b: LiveData<B>, c: LiveData<C>): LiveData<Triple<A?, B?, C?>> {
+
+    fun Triple<A?, B?, C?>?.replaceFirst(first: A?): Triple<A?, B?, C?> {
+        if (this@replaceFirst == null) return Triple(first, null, null)
+        return this@replaceFirst.copy(first = first)
+    }
+
+    fun Triple<A?, B?, C?>?.replaceSecond(second: B?): Triple<A?, B?, C?> {
+        if (this@replaceSecond == null) return Triple(null, second, null)
+        return this@replaceSecond.copy(second = second)
+    }
+
+    fun Triple<A?, B?, C?>?.replaceThird(third: C?): Triple<A?, B?, C?> {
+        if (this@replaceThird == null) return Triple(null, null, third)
+        return this@replaceThird.copy(third = third)
+    }
+
+    return MediatorLiveData<Triple<A?, B?, C?>>().apply {
+        addSource(a) { value = value.replaceFirst(it) }
+        addSource(b) { value = value.replaceSecond(it) }
+        addSource(c) { value = value.replaceThird(it) }
+    }
+}
+
+fun <A, B> LiveData<A>.withLatestFrom(from: LiveData<B>): LiveData<Pair<A, B>> {
+    return MediatorLiveData<Pair<A, B>>().apply {
+        var lastA: A? = null
+        var lastFrom: B? = null
+
+        addSource(from) {
+            if (lastFrom == null && lastA != null) value = lastA!! to it
+            lastFrom = it
+        }
+
+        addSource(this@withLatestFrom) {
+            if (it == null && value != null) value = null
+            lastA = it
+            if (lastFrom != null && it != null) value = it to lastFrom!!
+        }
+    }
 }

@@ -26,7 +26,7 @@ package com.sygic.maps.module.browsemap.di;
 
 import com.sygic.maps.module.browsemap.BrowseMapFragment;
 import com.sygic.maps.module.browsemap.di.module.ViewModelModule;
-import com.sygic.maps.module.common.di.ModulesComponent;
+import com.sygic.maps.module.common.di.FragmentModulesComponent;
 import com.sygic.maps.module.common.di.util.ModuleBuilder;
 import dagger.Component;
 
@@ -44,7 +44,7 @@ import java.lang.annotation.RetentionPolicy;
                 ViewModelModule.class
         },
         dependencies = {
-                ModulesComponent.class
+                FragmentModulesComponent.class
         }
 )
 public interface BrowseMapComponent {

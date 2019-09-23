@@ -42,6 +42,7 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATI
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
@@ -63,18 +64,11 @@ open class SearchToolbarViewModel internal constructor(
     private val searchManager: SearchManager
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    val searchToolbarFocused: MutableLiveData<Boolean> = MutableLiveData()
+    val searchToolbarFocused = MutableLiveData<Boolean>(true)
     val onActionSearchClickObservable: LiveData<TextView> = SingleLiveEvent()
 
-    val iconStateSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
-    val inputText: MutableLiveData<CharSequence> = object: MutableLiveData<CharSequence>() {
-        override fun setValue(value: CharSequence) {
-            if (value != this.value) {
-                super.setValue(value)
-                search(value.toString())
-            }
-        }
-    }
+    val iconStateSwitcherIndex = MutableLiveData<Int>(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
+    val inputText: MutableLiveData<CharSequence> = UniqueMutableLiveData()
 
     var searchLocation: GeoCoordinates? = null
     var searchDelay: Long = DEFAULT_SEARCH_DELAY
@@ -90,7 +84,7 @@ open class SearchToolbarViewModel internal constructor(
 
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
     private var searchCoroutineJob: Job? = null
-    private var lastSearchedString: String = EMPTY_STRING
+    private var lastSearchedString: CharSequence = EMPTY_STRING
 
     init {
         with(arguments) {
@@ -99,19 +93,17 @@ open class SearchToolbarViewModel internal constructor(
             maxResultsCount = getInt(KEY_SEARCH_MAX_RESULTS_COUNT, MAX_RESULTS_COUNT_DEFAULT_VALUE)
         }
 
-        searchToolbarFocused.value = true
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
-
+        inputText.observeForever(::search)
         searchManager.addSearchResultsListener(searchResultsListener)
     }
 
-    private fun search(input: String) {
+    private fun search(input: CharSequence) {
         lastSearchedString = input
         searchCoroutineJob?.cancel()
         searchCoroutineJob = scope.launch {
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
             if (input.isNotEmpty()) delay(searchDelay)
-            searchManager.searchText(input, searchLocation)
+            searchManager.searchText(input.toString(), searchLocation)
         }
     }
 

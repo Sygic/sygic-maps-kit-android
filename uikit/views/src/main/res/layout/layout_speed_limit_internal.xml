@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~
+  ~ This project is licensed under the MIT License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <merge
+        tools:elevation="4dp"
+        tools:layout_gravity="center"
+        tools:layout_height="@dimen/speedLimitViewSize"
+        tools:layout_width="@dimen/speedLimitViewSize"
+        tools:parentTag="android.widget.ViewSwitcher">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/euSpeedLimitTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_speed_limit_sign_eu"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:padding="6dp"
+            android:textColor="?attr/navigationTextColorPrimary"
+            app:autoSizeMaxTextSize="28sp"
+            app:autoSizeTextType="uniform"
+            tools:text="50" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_speed_limit_sign_us"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/limit"
+                android:textColor="?attr/navigationTextColorPrimary"
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/usSpeedLimitTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="?attr/navigationTextColorPrimary"
+                app:autoSizeMaxTextSize="24sp"
+                app:autoSizeTextType="uniform"
+                tools:text="50" />
+
+        </LinearLayout>
+
+    </merge>
+
+</layout>

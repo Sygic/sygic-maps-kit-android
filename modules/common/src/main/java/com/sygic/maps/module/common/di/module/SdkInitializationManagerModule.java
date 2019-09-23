@@ -39,6 +39,6 @@ public class SdkInitializationManagerModule {
     @Singleton
     @Provides
     SdkInitializationManager provideSdkInitializationManager(@NonNull final Application application) {
-        return new SdkInitializationManagerImpl(application);
+        return SdkInitializationManagerImpl.getInstance(application);
     }
 }

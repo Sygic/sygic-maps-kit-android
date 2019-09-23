@@ -30,10 +30,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
+import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
 import com.sygic.maps.uikit.viewmodels.common.utils.searchResultStateToErrorViewSwitcherIndex
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
@@ -52,34 +54,31 @@ import com.sygic.sdk.search.SearchResult
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SearchResultListViewModel internal constructor(
-    private val searchManager: SearchManager
+open class SearchResultListViewModel @JvmOverloads internal constructor(
+    private val searchManager: SearchManager,
+    @Assisted private val resultListAdapter: SearchResultListAdapter<SearchResult>,
+    @Assisted private val defaultStateAdapter: DefaultStateAdapter<SearchResult> = DefaultStateAdapter()
 ) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener<SearchResult> {
 
     val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
-    val searchResultListDataChangedObservable: LiveData<List<SearchResultItem<out SearchResult>>> = SingleLiveEvent()
 
-    val errorViewSwitcherIndex: MutableLiveData<Int> = MutableLiveData()
-    val activeAdapter: MutableLiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> = MutableLiveData()
-
-    private val defaultStateAdapter = DefaultStateAdapter<SearchResult>()
-    private val resultListAdapter = SearchResultListAdapter(this)
+    val errorViewSwitcherIndex: LiveData<Int> = MutableLiveData(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND)
+    val activeAdapter: LiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>>
+            = MutableLiveData(defaultStateAdapter)
 
     private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
 
     private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
         results.toSearchResultList().let {
             resultListAdapter.items = it
-            searchResultListDataChangedObservable.asSingleEvent().value = it
         }
 
-        errorViewSwitcherIndex.value = searchResultStateToErrorViewSwitcherIndex(state)
-        activeAdapter.value = if (input.isNotEmpty()) resultListAdapter else defaultStateAdapter
+        errorViewSwitcherIndex.asMutable().value = searchResultStateToErrorViewSwitcherIndex(state)
+        activeAdapter.asMutable().value = if (input.isNotEmpty()) resultListAdapter else defaultStateAdapter
     }
 
     init {
-        activeAdapter.value = defaultStateAdapter
-        errorViewSwitcherIndex.value = SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND
+        resultListAdapter.clickListener = this
         searchManager.addSearchResultsListener(searchResultsListener)
     }
 

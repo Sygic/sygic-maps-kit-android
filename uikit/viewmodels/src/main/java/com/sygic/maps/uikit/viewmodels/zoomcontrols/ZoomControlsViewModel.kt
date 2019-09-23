@@ -25,10 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.zoomcontrols
 
 import android.graphics.PointF
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapAnimation
@@ -36,6 +33,7 @@ import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.maps.uikit.viewmodels.common.sdk.DEFAULT_ANIMATION
 import com.sygic.maps.uikit.viewmodels.common.sdk.ZOOM_ANIMATION
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.zoomcontrols.TiltType
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomType
@@ -68,7 +66,7 @@ open class ZoomControlsViewModel internal constructor(
     private val cameraModel: ExtendedCameraModel
 ) : ViewModel(), ZoomControlsMenu.InteractionListener, Camera.PositionChangedListener, DefaultLifecycleObserver {
 
-    val tiltType: MutableLiveData<Int> = MutableLiveData()
+    val tiltType: LiveData<Int> = MutableLiveData(getTiltType(cameraModel.tilt))
 
     /**
      * A *[zoomBaseLine]* defines the zoom base line value. The default value is [DEFAULT_ZOOM_BASE_LINE].
@@ -123,10 +121,6 @@ open class ZoomControlsViewModel internal constructor(
 
     private var zoomFlowJob: Job? = null
 
-    init {
-        tiltType.value = getTiltType(cameraModel.tilt)
-    }
-
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addPositionChangedListener(this)
     }
@@ -166,7 +160,7 @@ open class ZoomControlsViewModel internal constructor(
     override fun onPositionChanged(geoCenter: GeoCoordinates, zoom: Float, rotation: Float, tilt: Float) {
         @TiltType val tiltType = getTiltType(tilt)
         if (this.tiltType.value != tiltType) {
-            this.tiltType.value = tiltType
+            this.tiltType.asMutable().value = tiltType
         }
     }
 

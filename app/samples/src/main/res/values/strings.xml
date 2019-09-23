@@ -29,6 +29,7 @@
     <string name="search">Search</string>
     <string name="search_samples">Search samples</string>
     <string name="navigation">Navigation</string>
+    <string name="navigation_samples">Navigation samples</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Bringing life to maps</string>
@@ -64,6 +65,8 @@
     <string name="browse_map_markers_summary">Browse Map module with own custom map markers</string>
     <string name="browse_map_modes">Browse Map - Modes</string>
     <string name="browse_map_modes_summary">Browse Map module with all available modes</string>
+    <string name="browse_map_vehicle_map_skin">Browse Map - Vehicle and Map skin</string>
+    <string name="browse_map_vehicle_map_skin_summary">Custom vehicle and map skin fragment attribute</string>
     <string name="selection_mode">Selection mode</string>
     <string name="selection_mode_is">Selection mode is</string>
     <string name="none">None</string>
@@ -71,6 +74,8 @@
     <string name="full">Full</string>
     <string name="browse_map_themes">Browse Map - Themes</string>
     <string name="browse_map_themes_summary">Browse Map module with custom theme</string>
+    <string name="browse_map_split">Browse Map - Split</string>
+    <string name="browse_map_split_summary">Browse Map module with map split</string>
     <string name="search_default">Search - Default</string>
     <string name="search_default_summary">Search module with no configuration</string>
     <string name="search_from_browse_map">Search - From Browse Map</string>
@@ -79,4 +84,12 @@
     <string name="search_from_browse_map_pins_summary">Search module integrated into the Browse Map module with pins</string>
     <string name="search_pre_filled_input">Search - Pre-filled input</string>
     <string name="search_pre_filled_input_summary">Search module with a pre-filled input</string>
+    <string name="navigation_default">Navigation - Default</string>
+    <string name="navigation_default_summary">Navigation module with no configuration</string>
+    <string name="navigation_preview_enabled">Navigation - Preview enabled</string>
+    <string name="navigation_preview_enabled_summary">Navigation module with preview mode enabled</string>
+    <string name="navigation_simplified_signpost">Navigation - Simplified signpost</string>
+    <string name="navigation_simplified_signpost_summary">Navigation module with the simplified signpost view</string>
+    <string name="navigation_infobar_custom_click_listener">Navigation - Infobar custom listener</string>
+    <string name="navigation_infobar_custom_click_listener_summary">Navigation module with custom infobar click listener</string>
 </resources>
