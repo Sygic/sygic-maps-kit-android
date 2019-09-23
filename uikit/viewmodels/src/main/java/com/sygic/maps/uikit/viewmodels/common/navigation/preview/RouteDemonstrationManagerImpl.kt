@@ -30,7 +30,7 @@ import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.Demonstra
 import com.sygic.sdk.route.RouteInfo
 import com.sygic.sdk.route.simulator.RouteDemonstrateSimulator
 
-private const val DEFAULT_SPEED = 1F
+const val DEFAULT_SPEED = 1F
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
