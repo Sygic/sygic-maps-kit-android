@@ -64,32 +64,32 @@ class SpeedLimitViewModelTest {
 
     @Test
     fun onSpeedLimitInfoChangedTest() {
-        val speedLimitInfo = mock<SpeedLimitInfo>()
+        val speedLimitInfoMock = mock<SpeedLimitInfo>()
         val speedLimitValue50 = 50
-        whenever(speedLimitInfo.getSpeedLimit(speedLimitInfo.countrySpeedUnits)).thenReturn(speedLimitValue50)
-        whenever(speedLimitInfo.countrySignage).thenReturn(MapView.CountrySignage.World)
-        speedLimitViewModel.onSpeedLimitInfoChanged(speedLimitInfo)
+        whenever(speedLimitInfoMock.getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)).thenReturn(speedLimitValue50)
+        whenever(speedLimitInfoMock.countrySignage).thenReturn(MapView.CountrySignage.World)
+        speedLimitViewModel.onSpeedLimitInfoChanged(speedLimitInfoMock)
 
-        verify(speedLimitInfo, times(2)).getSpeedLimit(speedLimitInfo.countrySpeedUnits)
-        verify(speedLimitInfo).countrySignage
+        verify(speedLimitInfoMock, times(2)).getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)
+        verify(speedLimitInfoMock).countrySignage
 
         speedLimitViewModel.speedLimitType.test().assertValue(SpeedLimitType.EU)
         speedLimitViewModel.speedLimitValue.test().assertValue(speedLimitValue50)
         speedLimitViewModel.speedLimitVisible.test().assertValue(true)
 
         val speedLimitValue0 = 0
-        whenever(speedLimitInfo.getSpeedLimit(speedLimitInfo.countrySpeedUnits)).thenReturn(speedLimitValue0)
-        whenever(speedLimitInfo.countrySignage).thenReturn(MapView.CountrySignage.World)
-        speedLimitViewModel.onSpeedLimitInfoChanged(speedLimitInfo)
+        whenever(speedLimitInfoMock.getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)).thenReturn(speedLimitValue0)
+        whenever(speedLimitInfoMock.countrySignage).thenReturn(MapView.CountrySignage.World)
+        speedLimitViewModel.onSpeedLimitInfoChanged(speedLimitInfoMock)
 
         speedLimitViewModel.speedLimitType.test().assertValue(SpeedLimitType.EU)
         speedLimitViewModel.speedLimitValue.test().assertValue(speedLimitValue0)
         speedLimitViewModel.speedLimitVisible.test().assertValue(false)
 
         val speedLimitValue100 = 100
-        whenever(speedLimitInfo.getSpeedLimit(speedLimitInfo.countrySpeedUnits)).thenReturn(speedLimitValue100)
-        whenever(speedLimitInfo.countrySignage).thenReturn(MapView.CountrySignage.America)
-        speedLimitViewModel.onSpeedLimitInfoChanged(speedLimitInfo)
+        whenever(speedLimitInfoMock.getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)).thenReturn(speedLimitValue100)
+        whenever(speedLimitInfoMock.countrySignage).thenReturn(MapView.CountrySignage.America)
+        speedLimitViewModel.onSpeedLimitInfoChanged(speedLimitInfoMock)
 
         speedLimitViewModel.speedLimitType.test().assertValue(SpeedLimitType.US)
         speedLimitViewModel.speedLimitValue.test().assertValue(speedLimitValue100)
