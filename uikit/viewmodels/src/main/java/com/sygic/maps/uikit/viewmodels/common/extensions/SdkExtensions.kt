@@ -32,13 +32,13 @@ import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
-import com.sygic.maps.uikit.views.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.views.common.utils.Distance
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
@@ -159,7 +159,7 @@ private inline fun <reified T : MapObject<*>> MapView.MapDataModel.removeAllMapO
     }
 }
 
-//todo: MS-6338 remove with next version (v16) of SDK
+//todo: MS-6338 remove with next version (v15) of SDK
 private fun getMapObjects(model: MapView.MapDataModel): Set<MapObject<*>> {
     val m = SimpleMapDataModel::class.java.getDeclaredMethod("getMapObjects")
     m.isAccessible = true

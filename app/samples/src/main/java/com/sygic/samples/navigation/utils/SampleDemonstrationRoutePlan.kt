@@ -31,7 +31,7 @@ import com.sygic.sdk.route.RoutingOptions
 class SampleDemonstrationRoutePlan : RoutePlan() {
 
     init {
-        setStart(GeoCoordinates(48.144722, 17.112778))
+        setStart(GeoCoordinates(48.139946, 17.109026))
         setDestination(GeoCoordinates(41.893056, 12.482778))
         routingOptions = RoutingOptions().apply {
             transportMode = RoutingOptions.TransportMode.Car

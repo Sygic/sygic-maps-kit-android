@@ -29,13 +29,12 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.sygic.maps.module.browsemap.databinding.LayoutBrowseMapBinding
-import com.sygic.maps.module.browsemap.di.BrowseMapComponent
-import com.sygic.maps.module.browsemap.di.DaggerBrowseMapComponent
+import com.sygic.maps.module.browsemap.di.module.mapModule
+import com.sygic.maps.module.browsemap.di.module.regionalModule
+import com.sygic.maps.module.browsemap.di.module.themeModule
 import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.common.component.*
@@ -51,7 +50,6 @@ import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.getBoolean
 import com.sygic.maps.uikit.views.common.extensions.getInt
-import com.sygic.maps.uikit.views.common.extensions.openFragment
 import com.sygic.maps.uikit.views.compass.CompassView
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
@@ -60,6 +58,7 @@ import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 import com.sygic.maps.uikit.views.searchfab.SearchFab
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.sdk.map.`object`.MapMarker
+import org.koin.core.context.loadKoinModules
 
 const val BROWSE_MAP_FRAGMENT_TAG = "browse_map_fragment_tag"
 internal const val KEY_DETAILS_VIEW_FACTORY = "details_view_factory"
@@ -88,8 +87,12 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
     override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData()
     override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
 
-    override fun executeInjector() =
-        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
+    override fun executeInjector() {
+        loadKoinModules(listOf(mapModule, regionalModule, themeModule))
+    }
+
+    /*override fun executeInjector() =
+        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }*/
 
     /**
      * A *[MapSelectionMode]* defines the three available [BrowseMapFragment] selection modes.
@@ -205,7 +208,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, arguments).apply {
+        /*fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, arguments).apply {
             this.poiDetailObservable.observe(
                 this@BrowseMapFragment,
                 Observer<Any> { showPoiDetail() })
@@ -227,15 +230,15 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(compassViewModel)
         lifecycle.addObserver(positionLockFabViewModel)
-        lifecycle.addObserver(zoomControlsViewModel)
+        lifecycle.addObserver(zoomControlsViewModel)*/
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         LayoutBrowseMapBinding.inflate(inflater, container, false).apply {
-            browseMapFragmentViewModel = fragmentViewModel
+            /*browseMapFragmentViewModel = fragmentViewModel
             compassViewModel = this@BrowseMapFragment.compassViewModel
             positionLockFabViewModel = this@BrowseMapFragment.positionLockFabViewModel
-            zoomControlsViewModel = this@BrowseMapFragment.zoomControlsViewModel
+            zoomControlsViewModel = this@BrowseMapFragment.zoomControlsViewModel*/
             lifecycleOwner = this@BrowseMapFragment
             with(root as ViewGroup) {
                 super.onCreateView(inflater, this, savedInstanceState)?.let { addView(it, 0) }
@@ -298,10 +301,10 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
     override fun onDestroy() {
         super.onDestroy()
 
-        lifecycle.removeObserver(fragmentViewModel)
+        /*lifecycle.removeObserver(fragmentViewModel)
         lifecycle.removeObserver(compassViewModel)
         lifecycle.removeObserver(positionLockFabViewModel)
-        lifecycle.removeObserver(zoomControlsViewModel)
+        lifecycle.removeObserver(zoomControlsViewModel)*/
     }
 
     override fun resolveAttributes(attributes: AttributeSet) {

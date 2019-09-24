@@ -55,7 +55,7 @@ buildscript {
         annotationsVersion = '1.1.0'
         playServicesLocationVersion = '17.0.0'
         sygicSdkVersion = '14.0.3'
-        daggerVersion = '2.24'
+        koinVersion = '2.0.1'
         javaxInjectVersion = '1'
         javaPoetVersion = '1.11.1'
         junitVersion = '4.12'

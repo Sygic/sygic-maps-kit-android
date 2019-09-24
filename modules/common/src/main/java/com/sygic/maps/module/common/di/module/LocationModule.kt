@@ -24,21 +24,10 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import android.app.Application;
-import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
-import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
+import com.sygic.maps.uikit.viewmodels.common.location.LocationManagerImpl
+import org.koin.dsl.module
 
-import javax.inject.Singleton;
-
-@Module
-public class DateTimeManagerModule {
-
-    @Singleton
-    @Provides
-    DateTimeManager provideDateTimeManager(@NonNull final Application application) {
-        return DateTimeManagerImpl.getInstance(application);
-    }
+val locationModule = module {
+    single<LocationManager> { LocationManagerImpl(get()) }
 }

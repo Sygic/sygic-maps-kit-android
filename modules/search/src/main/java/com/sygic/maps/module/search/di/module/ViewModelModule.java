@@ -24,20 +24,7 @@
 
 package com.sygic.maps.module.search.di.module;
 
-import com.sygic.maps.module.common.di.util.ViewModelKey;
-import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
-import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel;
-import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModelFactory;
-import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
-import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel;
-import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModelFactory;
-import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel;
-import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModelFactory;
-import dagger.Binds;
-import dagger.Module;
-import dagger.multibindings.IntoMap;
-
-@Module(
+/*@Module(
     includes = {
             ViewModelModuleBase.class
     }
@@ -58,4 +45,4 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SearchResultListViewModel.class)
     abstract ViewModelCreatorFactory putSearchResultListViewModelFactory(SearchResultListViewModelFactory factory);
-}
+}*/

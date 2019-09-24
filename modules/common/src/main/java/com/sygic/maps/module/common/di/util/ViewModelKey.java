@@ -25,7 +25,6 @@
 package com.sygic.maps.module.common.di.util;
 
 import androidx.lifecycle.ViewModel;
-import dagger.MapKey;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,7 +33,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@MapKey
+//@MapKey
 public @interface ViewModelKey {
     Class<? extends ViewModel> value();
 }

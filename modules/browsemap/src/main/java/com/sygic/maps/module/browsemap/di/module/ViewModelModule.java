@@ -24,22 +24,7 @@
 
 package com.sygic.maps.module.browsemap.di.module;
 
-import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel;
-import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModelFactory;
-import com.sygic.maps.module.common.di.util.ViewModelKey;
-import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
-import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
-import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel;
-import com.sygic.maps.uikit.viewmodels.compass.CompassViewModelFactory;
-import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel;
-import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModelFactory;
-import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel;
-import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModelFactory;
-import dagger.Binds;
-import dagger.Module;
-import dagger.multibindings.IntoMap;
-
-@Module(
+/*@Module(
     includes = {
             ViewModelModuleBase.class
     }
@@ -65,4 +50,4 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ZoomControlsViewModel.class)
     abstract ViewModelCreatorFactory putZoomControlsViewModelFactory(ZoomControlsViewModelFactory factory);
-}
+}*/

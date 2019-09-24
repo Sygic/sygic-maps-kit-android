@@ -38,11 +38,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
-import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
-import com.sygic.maps.module.search.di.DaggerSearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
@@ -60,7 +58,7 @@ import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.SearchResult
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 
@@ -72,10 +70,9 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
 
-    @Inject
+    //@Inject
     lateinit var viewModelFactory: ViewModelFactory
-    @Inject
-    internal lateinit var sdkInitializationManager: SdkInitializationManager
+    private val sdkInitializationManager: SdkInitializationManager by inject()
 
     private lateinit var fragmentViewModel: SearchFragmentViewModel
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
@@ -83,7 +80,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
 
     override val searchResultCallbackProvider: LiveData<SearchResultCallback> = MutableLiveData()
 
-    private var injected = false
+    /*private var injected = false
     private fun inject() {
         if (!injected) {
             DaggerSearchComponent
@@ -95,7 +92,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
                 .inject(this)
             injected = true
         }
-    }
+    }*/
 
     /**
      * If *[searchInput]* is defined, then it will be used as input text.
@@ -155,17 +152,17 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
         if (arguments == null) {
             arguments = Bundle.EMPTY
         }
+
+        ApplicationComponentDelegate.startKoin()
     }
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
-        inject()
         super.onInflate(context, attrs, savedInstanceState)
         resolveAttributes(attrs)
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        inject()
         sdkInitializationManager.initialize(this)
     }
 

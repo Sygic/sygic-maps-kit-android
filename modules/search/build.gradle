@@ -68,8 +68,6 @@ dependencies {
     annotationProcessor project(':tool-annotation-processor')
 
     // libraries
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     // test libraries
     testImplementation "junit:junit:$junitVersion"

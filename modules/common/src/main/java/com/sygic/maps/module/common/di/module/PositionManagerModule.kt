@@ -24,25 +24,9 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import android.app.Application;
-import androidx.fragment.app.Fragment;
-import dagger.Module;
-import dagger.Provides;
+import com.sygic.sdk.position.PositionManager
+import org.koin.dsl.module
 
-import javax.inject.Singleton;
-
-@Module
-public class AppModule {
-
-    private final Application app;
-
-    public AppModule(final Fragment fragment) {
-        app = fragment.requireActivity().getApplication();
-    }
-
-    @Singleton
-    @Provides
-    Application provideApplication() {
-        return app;
-    }
+val positionManagerModule = module {
+    single<PositionManager> { PositionManager.getInstance() }
 }

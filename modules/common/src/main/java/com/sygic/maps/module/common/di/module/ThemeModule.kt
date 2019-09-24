@@ -24,19 +24,8 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerImpl;
-import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Singleton;
-
-@Module
-public class RouteDemonstrationManagerModule {
-
-    @Singleton
-    @Provides
-    RouteDemonstrationManager provideRouteDemonstrationManager() {
-        return RouteDemonstrationManagerImpl.INSTANCE;
+/*val themeModule = module {
+    scope(named("com.sygic.maps.module.browsemap.BrowseMapFragment")) {
+        scoped<ThemeManager> { ThemeManagerImpl(get(), get()) }
     }
-}
+}*/

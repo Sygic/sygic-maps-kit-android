@@ -1,18 +1,14 @@
 /*
  * Copyright (c) 2019 Sygic a.s. All rights reserved.
- *
  * This project is licensed under the MIT License.
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,35 +18,33 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.module.browsemap.di.module
 
-import com.sygic.maps.module.common.di.scope.FragmentScope;
-import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager;
-import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManagerImpl;
-import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel;
-import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel;
+import com.sygic.maps.module.browsemap.BrowseMapFragment
+import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
+import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManagerImpl
+import com.sygic.maps.module.common.theme.ThemeManager
+import com.sygic.maps.module.common.theme.ThemeManagerImpl
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManagerImpl
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
-import dagger.Module;
-import dagger.Provides;
 
-@Module
-public class MapModule {
-
-    @FragmentScope
-    @Provides
-    ExtendedMapDataModel provideDataModel() {
-        return new ExtendedMapDataModel();
+val mapModule = module {
+    scope(named<BrowseMapFragment>()) {
+        scoped<MapInteractionManager> { MapInteractionManagerImpl() }
     }
+}
 
-    @FragmentScope
-    @Provides
-    ExtendedCameraModel provideCameraModel() {
-        return new ExtendedCameraModel();
+val regionalModule = module {
+    scope(named<BrowseMapFragment>()) {
+        scoped<RegionalManager> { RegionalManagerImpl() }
     }
+}
 
-    @FragmentScope
-    @Provides
-    MapInteractionManager provideMapInteractionManager() {
-        return new MapInteractionManagerImpl();
+val themeModule = module {
+    scope(named<BrowseMapFragment>()) {
+        scoped<ThemeManager> { ThemeManagerImpl(get(), get()) }
     }
 }

@@ -28,9 +28,9 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.annotation.MainThread
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.sygic.maps.uikit.viewmodels.common.extensions.activity
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveData
 
 open class PermissionCheckLiveEvent : SingleLiveData<String>() {
@@ -43,11 +43,7 @@ open class PermissionCheckLiveEvent : SingleLiveData<String>() {
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in String>) {
         super.observe(owner, Observer { data ->
-            val activity: Activity? = when (owner) {
-                is Activity -> owner
-                is Fragment -> owner.activity
-                else -> throw  NotImplementedError("Unexpected LifecycleOwner ${owner::class}! Only Activity and Fragment are supported as LifecycleOwner by now.")
-            }
+            val activity: Activity? = owner.activity()
 
             this.observer.onChanged(evaluate(activity, value))
             observer.onChanged(data)

@@ -24,12 +24,11 @@
 
 package com.sygic.maps.uikit.viewmodels.common.location.livedata
 
-import android.app.Activity
 import android.content.Context
 import androidx.annotation.MainThread
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.sygic.maps.uikit.viewmodels.common.extensions.context
 import com.sygic.maps.uikit.views.common.extensions.locationManager
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveData
 
@@ -43,11 +42,7 @@ class LocationProviderCheckLiveEvent : SingleLiveData<String>() {
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in String>) {
         super.observe(owner, Observer { data ->
-            val context: Context? = when (owner) {
-                is Activity -> owner
-                is Fragment -> owner.context
-                else -> throw  NotImplementedError("Unexpected LifecycleOwner ${owner::class}! Only Activity and Fragment are supported as LifecycleOwner by now.")
-            }
+            val context: Context? = owner.context()
 
             this.observer.onChanged(evaluate(context, value))
             observer.onChanged(data)

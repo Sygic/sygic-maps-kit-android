@@ -24,19 +24,41 @@
 
 package com.sygic.maps.module.common.delegate
 
-import androidx.fragment.app.Fragment
-import com.sygic.maps.module.common.di.ApplicationModulesComponent
-import com.sygic.maps.module.common.di.DaggerApplicationModulesComponent
-import com.sygic.maps.module.common.di.module.AppModule
-
-private var applicationModulesComponent: ApplicationModulesComponent? = null
+import android.content.Context
+import com.sygic.maps.module.common.di.module.*
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.KoinApplication
+import org.koin.core.context.startKoin
 
 object ApplicationComponentDelegate {
 
-    fun getComponent(fragment: Fragment): ApplicationModulesComponent = applicationModulesComponent?.let { it }
-        ?: DaggerApplicationModulesComponent
-            .builder()
-            .appModule(AppModule(fragment))
-            .build()
-            .also { applicationModulesComponent = it }
+    private lateinit var koinApplication: KoinApplication
+
+    fun startKoin() {
+        if (!::koinApplication.isInitialized) {
+            koinApplication = startKoin {
+                androidLogger()
+                modules(
+                    listOf(
+                        dateTimeManagerModule,
+                        locationModule,
+                        navigationManagerModule,
+                        permissionsModule,
+                        poiDataManagerModule,
+                        positionManagerModule,
+                        routeDemonstrationManagerModule,
+                        sdkInitializationManagerModule,
+                        searchModule
+                    )
+                )
+            }
+        }
+    }
+
+    fun setupContext(context: Context) {
+        if (koinApplication.koin.getOrNull<Context>() == null) {
+            koinApplication.androidContext(context.applicationContext)
+        }
+    }
 }

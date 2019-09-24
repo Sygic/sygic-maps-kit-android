@@ -24,17 +24,7 @@
 
 package com.sygic.maps.module.common.di.util;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
-import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory;
-import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Provider;
-import java.util.Map;
-
+/*
 @Module
 public class ViewModelModuleBase {
 
@@ -47,4 +37,4 @@ public class ViewModelModuleBase {
     ViewModelProvider.Factory bindViewModelFactory(final ViewModelFactory factory) {
         return factory;
     }
-}
+}*/

@@ -24,27 +24,7 @@
 
 package com.sygic.maps.module.navigation.di.module;
 
-import com.sygic.maps.module.common.di.util.ViewModelKey;
-import com.sygic.maps.module.common.di.util.ViewModelModuleBase;
-import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel;
-import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModelFactory;
-import com.sygic.maps.tools.viewmodel.factory.ViewModelCreatorFactory;
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel;
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModelFactory;
-import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel;
-import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModelFactory;
-import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel;
-import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModelFactory;
-import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel;
-import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModelFactory;
-import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel;
-import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModelFactory;
-
-import dagger.Binds;
-import dagger.Module;
-import dagger.multibindings.IntoMap;
-
-@Module(
+/*@Module(
     includes = {
             ViewModelModuleBase.class
     }
@@ -80,4 +60,4 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(InfobarViewModel.class)
     abstract ViewModelCreatorFactory putInfobarViewModelFactory(InfobarViewModelFactory factory);
-}
+}*/

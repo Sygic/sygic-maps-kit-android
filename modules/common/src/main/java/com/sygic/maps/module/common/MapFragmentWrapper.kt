@@ -34,20 +34,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
-import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
-import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest
 import com.sygic.maps.module.common.extensions.isGooglePlayServicesAvailable
 import com.sygic.maps.module.common.extensions.showGenericNoGpsDialog
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.theme.ThemeManager
-import com.sygic.maps.module.common.utils.BackingCameraDataModel
-import com.sygic.maps.module.common.utils.BackingMapDataModel
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
-import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
-import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
-import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
+import com.sygic.maps.uikit.viewmodels.common.extensions.*
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
@@ -65,40 +59,39 @@ import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.online.OnlineManager
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
+abstract class MapFragmentWrapper<T : ThemeSupportedViewModel> : MapFragment(),
+    SdkInitializationManager.Callback, OnMapInitListener {
+
+    //always first initializer block
+    init {
+        ApplicationComponentDelegate.startKoin()
+        executeInjector()
+    }
 
     protected abstract fun executeInjector()
     protected abstract fun resolveAttributes(attributes: AttributeSet)
 
-    @Inject
+    //@Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    @Inject
-    internal lateinit var mapInteractionManager: MapInteractionManager
-    @Inject
-    internal lateinit var mapDataModel: ExtendedMapDataModel
-    @Inject
-    internal lateinit var cameraDataModel: ExtendedCameraModel
-    @Inject
-    internal lateinit var sdkInitializationManager: SdkInitializationManager
-    @Inject
-    internal lateinit var permissionManager: PermissionsManager
-    @Inject
-    internal lateinit var locationManager: LocationManager
+    private val mapInteractionManager: MapInteractionManager by injectExtended()
+    private val sdkInitializationManager: SdkInitializationManager by inject()
+    private val permissionManager: PermissionsManager by inject()
+    private val locationManager: LocationManager by inject()
 
     protected abstract var fragmentViewModel: T
+
+    private val mapDataModelField: ExtendedMapDataModel by injectExtendedOrDeclare { ExtendedMapDataModel() }
+    private val cameraDataModelField: ExtendedCameraModel by injectExtendedOrDeclare { ExtendedCameraModel() }
 
     private var locationRequesterCallback: LocationManager.LocationRequesterCallback? = null
     private var permissionsRequesterCallback: PermissionsManager.PermissionsRequesterCallback? = null
 
-    private val backingMapDataModel = lazy { BackingMapDataModel() }
-    private val backingCameraModel = lazy { BackingCameraDataModel() }
-
-    protected var injected = false
+    /*protected var injected = false
     protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
         if (!injected) {
             block(
@@ -110,12 +103,15 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
             )
         }
         injected = true
-    }
+    }*/
 
     protected inline fun <reified T : ViewModel> viewModelOf(
         viewModelClass: Class<out T>,
         vararg assistedParams: Any? = emptyArray()
     ) = ViewModelProviders.of(this, viewModelFactory.with(*assistedParams))[viewModelClass]
+
+    final override fun getMapDataModel() = mapDataModelField
+    final override fun getCameraDataModel() = cameraDataModelField
 
     init {
         if (arguments == null) {
@@ -124,26 +120,15 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
         getMapAsync(this)
     }
 
-    final override fun getMapDataModel() = if (::mapDataModel.isInitialized) mapDataModel else backingMapDataModel.value
-    final override fun getCameraDataModel() = if(::cameraDataModel.isInitialized) cameraDataModel else backingCameraModel.value
-
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
-        executeInjector()
         super.onInflate(context, attrs, savedInstanceState)
         resolveAttributes(attrs)
     }
 
     @CallSuper
     override fun onAttach(context: Context) {
-        executeInjector()
+        ApplicationComponentDelegate.setupContext(context)
         super.onAttach(context)
-
-        if (backingMapDataModel.isInitialized()) {
-            backingMapDataModel.value.dumpToModel(mapDataModel)
-        }
-        if (backingCameraModel.isInitialized()) {
-            backingCameraModel.value.dumpToModel(cameraDataModel)
-        }
 
         sdkInitializationManager.initialize(this)
         permissionManager.observe(this, Observer {
@@ -158,8 +143,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
                 showGenericNoGpsDialog(SETTING_ACTIVITY_REQUEST_CODE)
             }
         })
-
-        context.getStringFromAttr(R.attr.sygicMapSkin).let { if (isMapSkinValid(it)) setMapSkin(it) }
+        context.getStringFromAttr(R.attr.sygicMapSkin)
+            .let { if (isMapSkinValid(it)) setMapSkin(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

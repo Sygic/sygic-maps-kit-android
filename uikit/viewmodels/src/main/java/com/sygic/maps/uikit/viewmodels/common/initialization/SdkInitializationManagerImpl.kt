@@ -26,7 +26,6 @@ package com.sygic.maps.uikit.viewmodels.common.initialization
 
 import android.app.Application
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getApiKey
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
 import com.sygic.sdk.SygicEngine
@@ -64,8 +63,8 @@ class SdkInitializationManagerImpl private constructor(
 
         app.getApiKey()?.let { key ->
             SygicEngine.Builder(app)
-                .setKeyAndSecret(app.packageName, key)
-                .setOnlineRoutingServiceKey(app.getString(R.string.online_routing_service_key))
+                .setKeyAndSecret("sdk-test", "rPMNrPw6PKiZiWmc17gHu7IVzOnjdAkqGUwqXPr+IG69ExNDMJZ/M7NfSg7itsuvRbcJlcTp6vX6R/bvF4MEWw==")
+                .setOnlineRoutingServiceKey("sdk-hardcoded-key-tomtom-kluc-nepouzivam-v-produkcii")
                 .setInitListener(this)
                 .init()
         }

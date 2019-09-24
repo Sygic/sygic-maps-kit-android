@@ -24,18 +24,10 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import com.sygic.sdk.position.PositionManager;
-import dagger.Module;
-import dagger.Provides;
+import com.sygic.sdk.navigation.NavigationManager
+import org.koin.dsl.module
 
-import javax.inject.Singleton;
 
-@Module
-public class PositionManagerModule {
-
-    @Singleton
-    @Provides
-    PositionManager providePositionManager() {
-        return PositionManager.getInstance();
-    }
+val navigationManagerModule = module {
+    single<NavigationManager> { NavigationManager.getInstance() }
 }

@@ -20,15 +20,11 @@
 
 package com.sygic.maps.module.common.delegate
 
-import androidx.fragment.app.Fragment
-import com.sygic.maps.module.common.di.DaggerFragmentModulesComponent
-import com.sygic.maps.module.common.di.FragmentModulesComponent
-
 private const val COMPONENT_FRAGMENT_TAG = "FragmentsComponentFragmentTag"
 
 object FragmentsComponentDelegate {
 
-    fun getComponent(
+    /*fun getComponent(
         fragment: Fragment,
         delegate: ApplicationComponentDelegate
     ): FragmentModulesComponent {
@@ -45,12 +41,12 @@ object FragmentsComponentDelegate {
             }
 
         return (retainInstance as ComponentHolderFragment).component
-    }
+    }*/
 
-    class ComponentHolderFragment(internal val component: FragmentModulesComponent) : Fragment() {
+    /*class ComponentHolderFragment(internal val component: FragmentModulesComponent) : Fragment() {
 
         init {
             retainInstance = true
         }
-    }
+    }*/
 }

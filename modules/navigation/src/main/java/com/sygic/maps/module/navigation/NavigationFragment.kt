@@ -37,8 +37,6 @@ import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
-import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
-import com.sygic.maps.module.navigation.di.NavigationComponent
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
@@ -90,8 +88,11 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
     override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
     override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
 
-    override fun executeInjector() =
-        injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
+    override fun executeInjector() {
+    }
+
+    /* override fun executeInjector() =
+        injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }*/
 
     /**
      * A *[distanceUnit]* defines all available [DistanceUnit]'s type.

@@ -24,18 +24,10 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import com.sygic.sdk.navigation.NavigationManager;
-import dagger.Module;
-import dagger.Provides;
+import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManagerImpl
+import org.koin.dsl.module
 
-import javax.inject.Singleton;
-
-@Module
-public class NavigationManagerModule {
-
-    @Singleton
-    @Provides
-    NavigationManager provideNavigationManager() {
-        return NavigationManager.getInstance();
-    }
+val permissionsModule = module {
+    single<PermissionsManager> { PermissionsManagerImpl() }
 }

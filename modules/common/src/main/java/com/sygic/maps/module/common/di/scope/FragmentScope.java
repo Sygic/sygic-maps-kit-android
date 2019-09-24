@@ -24,10 +24,13 @@
 
 package com.sygic.maps.module.common.di.scope;
 
-import javax.inject.Scope;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import javax.inject.Scope;
+
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FragmentScope { }
+public @interface FragmentScope {
+    String NAME = "FragmentScope";
+}

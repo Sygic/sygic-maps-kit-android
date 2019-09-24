@@ -24,18 +24,10 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import com.sygic.maps.module.common.di.scope.FragmentScope;
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager;
-import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import com.sygic.maps.module.common.poi.manager.PoiDataManager
+import com.sygic.maps.module.common.poi.manager.PoiDataManagerImpl
+import org.koin.dsl.module
 
-@Module
-public class RegionalModule {
-
-    @FragmentScope
-    @Provides
-    RegionalManager provideRegionalManager() {
-        return new RegionalManagerImpl();
-    }
+val poiDataManagerModule = module {
+    single<PoiDataManager> { PoiDataManagerImpl() }
 }

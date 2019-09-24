@@ -78,9 +78,8 @@ dependencies {
     compileOnly project(':tool-annotation-processor')
     annotationProcessor project(':tool-annotation-processor')
 
-    api "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-android-viewmodel:$koinVersion"
 
     // test libraries
     testImplementation "junit:junit:$junitVersion"
