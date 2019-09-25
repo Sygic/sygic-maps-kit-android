@@ -31,7 +31,6 @@ import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
-import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import org.junit.Before
