@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.navigation.di;
 
+import com.sygic.maps.module.common.di.BaseFragmentComponent;
 import com.sygic.maps.module.common.di.FragmentModulesComponent;
 import com.sygic.maps.module.navigation.NavigationFragment;
 import com.sygic.maps.module.navigation.di.module.ViewModelModule;
@@ -47,9 +48,7 @@ import java.lang.annotation.RetentionPolicy;
                 FragmentModulesComponent.class
         }
 )
-public interface NavigationComponent {
+public interface NavigationComponent extends BaseFragmentComponent<NavigationFragment> {
     @Component.Builder
     abstract class Builder implements ModuleBuilder<NavigationComponent> {}
-
-    void inject(NavigationFragment fragment);
 }
