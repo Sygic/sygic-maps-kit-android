@@ -41,7 +41,7 @@ import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.common.component.*
 import com.sygic.maps.module.common.detail.DetailsViewFactory
-import com.sygic.maps.module.common.di.util.ModuleBuilder
+import com.sygic.maps.module.common.extensions.executeInjector
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.listener.OnMapClickListenerWrapper
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
@@ -79,8 +79,8 @@ internal const val KEY_ZOOM_CONTROLS = "zoom_controls"
  * [PoiDetailBottomDialogFragment].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper<BrowseMapComponent, BrowseMapComponent.Builder,
-        BrowseMapFragmentViewModel>(), OnMapClickListenerWrapper, ModuleConnectionProviderWrapper {
+class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(),
+    OnMapClickListenerWrapper, ModuleConnectionProviderWrapper {
 
     override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
@@ -89,8 +89,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapComponent, BrowseMapCompon
 
     override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData()
     override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
-
-    override fun getModuleBuilder(): ModuleBuilder<BrowseMapComponent> = DaggerBrowseMapComponent.builder()
 
     /**
      * A *[MapSelectionMode]* defines the three available [BrowseMapFragment] selection modes.
@@ -202,6 +200,11 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapComponent, BrowseMapCompon
                 fragmentViewModel.zoomControlsEnabled.value = value
             }
         }
+
+    override fun onAttach(context: Context) {
+        executeInjector<BrowseMapFragment, BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder())
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

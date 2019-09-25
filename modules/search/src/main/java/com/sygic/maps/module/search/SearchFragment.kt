@@ -37,7 +37,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.maps.module.common.extensions.buildInjector
+import com.sygic.maps.module.common.extensions.executeInjector
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
@@ -149,7 +149,7 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     }
 
     override fun onAttach(context: Context?) {
-        buildInjector<SearchComponent, SearchComponent.Builder>(DaggerSearchComponent.builder()) { it.inject(this) } //todo
+        executeInjector<SearchFragment, SearchComponent, SearchComponent.Builder>(DaggerSearchComponent.builder())
         super.onAttach(context)
         sdkInitializationManager.initialize(this)
     }

@@ -22,33 +22,10 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.search.di;
+package com.sygic.maps.module.common.di;
 
-import com.sygic.maps.module.common.di.BaseFragmentComponent;
-import com.sygic.maps.module.common.di.FragmentModulesComponent;
-import com.sygic.maps.module.common.di.util.ModuleBuilder;
-import com.sygic.maps.module.search.SearchFragment;
-import com.sygic.maps.module.search.di.module.ViewModelModule;
-import dagger.Component;
+import androidx.fragment.app.Fragment;
 
-import javax.inject.Scope;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-@interface Search { }
-
-@Search
-@Component(
-        modules = {
-                ViewModelModule.class
-        },
-        dependencies = {
-                FragmentModulesComponent.class
-        }
-)
-public interface SearchComponent extends BaseFragmentComponent<SearchFragment> {
-    @Component.Builder
-    abstract class Builder implements ModuleBuilder<SearchComponent> {}
+public interface BaseFragmentComponent<T extends Fragment> {
+    void inject(T fragment);
 }
