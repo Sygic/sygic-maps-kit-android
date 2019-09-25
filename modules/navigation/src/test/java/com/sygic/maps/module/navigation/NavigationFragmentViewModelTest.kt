@@ -46,6 +46,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonTy
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
@@ -175,6 +176,17 @@ class NavigationFragmentViewModelTest {
         )
         navigationFragmentViewModel.onCreate(actionMenuItemsProviderWrapperLifecycleOwnerMock)
         verify(actionMenuItemsProviderComponentMock).observe(eq(actionMenuItemsProviderWrapperLifecycleOwnerMock), any())
+    }
+
+    @Test
+    fun onStartTest() {
+        reset(locationManager)
+        navigationFragmentViewModel.onStart(mock())
+
+        verify(locationManager).positionOnMapEnabled = any()
+        verify(extendedCameraModel).addModeChangedListener(navigationFragmentViewModel)
+        verify(navigationManager).addOnRouteChangedListener(navigationFragmentViewModel)
+        navigationFragmentViewModel.actionMenuItemClickListenerObservable.asSingleEvent().test().assertValue(navigationFragmentViewModel.actionMenuItemClickListener)
     }
 
     @Test
