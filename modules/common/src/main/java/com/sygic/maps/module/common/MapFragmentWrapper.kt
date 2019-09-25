@@ -74,10 +74,10 @@ import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, B : ModuleBuilder<C>, T : ThemeSupportedViewModel>
+abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>
     : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
-    protected abstract fun getModuleBuilder(): B
+    protected abstract fun getModuleBuilder(): M
     protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
 
     @Inject
