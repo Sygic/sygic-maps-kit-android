@@ -37,7 +37,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
-import com.sygic.maps.module.common.extensions.executeInjector
+import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
@@ -92,7 +92,7 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
+class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComponent, ModuleBuilder<NavigationComponent>, NavigationFragmentViewModel>(),
     OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
@@ -104,6 +104,8 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
     override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
     override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
     override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
+
+    override fun getModuleBuilder(): ModuleBuilder<NavigationComponent> = DaggerNavigationComponent.builder()
 
     /**
      * A *[distanceUnit]* defines all available [DistanceUnit]'s type.
@@ -269,11 +271,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
             }
         }
 
-    override fun onAttach(context: Context) {
-        executeInjector<NavigationFragment, NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder())
-        super.onAttach(context)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -317,16 +314,10 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
                 DataBindingUtil.bind<ViewDataBinding>(view)?.let {
                     when (view) {
                         is FullSignpostView -> {
-                            it.setVariable(
-                                BR.signpostViewModel, viewModelOf(FullSignpostViewModel::class.java)
-                            )
-                            it.setVariable(
-                                BR.lanesViewModel, viewModelOf(LanesViewModel::class.java)
-                            )
+                            it.setVariable(BR.signpostViewModel, viewModelOf(FullSignpostViewModel::class.java))
+                            it.setVariable(BR.lanesViewModel, viewModelOf(LanesViewModel::class.java))
                         }
-                        is SimplifiedSignpostView -> it.setVariable(
-                            BR.signpostViewModel, viewModelOf(SimplifiedSignpostViewModel::class.java)
-                        )
+                        is SimplifiedSignpostView -> it.setVariable(BR.signpostViewModel, viewModelOf(SimplifiedSignpostViewModel::class.java))
                         else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
                     }
 

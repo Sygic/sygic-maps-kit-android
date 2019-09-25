@@ -30,10 +30,14 @@ import android.os.Bundle
 import android.util.AttributeSet
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import com.sygic.maps.module.common.di.BaseFragmentComponent
+import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest
+import com.sygic.maps.module.common.extensions.executeInjector
 import com.sygic.maps.module.common.extensions.isGooglePlayServicesAvailable
 import com.sygic.maps.module.common.extensions.showGenericNoGpsDialog
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
@@ -70,9 +74,10 @@ import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(),
-    SdkInitializationManager.Callback, OnMapInitListener {
+abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, B : ModuleBuilder<C>, T : ThemeSupportedViewModel>
+    : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
+    protected abstract fun getModuleBuilder(): B
     protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
 
     @Inject
@@ -120,7 +125,9 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(),
     }
 
     @CallSuper
+    @Suppress("UNCHECKED_CAST")
     override fun onAttach(context: Context) {
+        (this as F).executeInjector(getModuleBuilder())
         super.onAttach(context)
 
         if (backingMapDataModel.isInitialized()) {

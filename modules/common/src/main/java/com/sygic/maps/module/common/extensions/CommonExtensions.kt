@@ -54,7 +54,7 @@ import com.sygic.sdk.map.`object`.ViewObject
 fun OnMapClickListener.onMapClick(viewObject: ViewObject<*>): Boolean =
     onMapClick(viewObject.getSelectionType(), viewObject.position.latitude, viewObject.position.longitude)
 
-inline fun <reified F : Fragment, C : BaseFragmentComponent<F>, B : ModuleBuilder<C>> F.executeInjector(builder: B) {
+fun <F : Fragment, C : BaseFragmentComponent<F>, B : ModuleBuilder<C>> F.executeInjector(builder: B) {
     builder
         .plus(
             FragmentsComponentDelegate.getComponent(this, ApplicationComponentDelegate)
