@@ -95,7 +95,6 @@ class CurrentSpeedViewModelTest {
         val speedLimitInfoMock = mock<SpeedLimitInfo>()
         val currentSpeedValue30 = 30.0
         val speedLimitValue = 50
-        whenever(geoPositionMock.coordinates).thenReturn(GeoCoordinates(50.14, 9.22))
         whenever(geoPositionMock.speed).thenReturn(currentSpeedValue30)
         whenever(speedLimitInfoMock.getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)).thenReturn(speedLimitValue)
         currentSpeedViewModel.onPositionChanged(geoPositionMock)

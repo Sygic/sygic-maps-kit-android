@@ -95,7 +95,6 @@ class FullSignpostViewModelTest {
         whenever(directionInfoMock.distance).thenReturn(100)
         whenever(naviSignInfoMock.isOnRoute).thenReturn(true)
         whenever(naviSignInfoMock.signElements).thenReturn(naviSignElements)
-        whenever(placeNaviSignInfoSignElementMock.pictogramType).thenReturn(NaviSignInfo.SignElement.PictogramType.Airport)
         whenever(placeNaviSignInfoSignElementMock.elementType).thenReturn(NaviSignInfo.SignElement.SignElementType.PlaceName)
         whenever(placeNaviSignInfoSignElementMock.text).thenReturn(placeName)
         whenever(pictogramNaviSignInfoSignElementMock.pictogramType).thenReturn(NaviSignInfo.SignElement.PictogramType.Airport)
