@@ -30,13 +30,14 @@ import android.os.Bundle
 import android.util.AttributeSet
 import androidx.annotation.CallSuper
 import androidx.annotation.RestrictTo
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
-import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
+import com.sygic.maps.module.common.di.BaseFragmentComponent
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest
+import com.sygic.maps.module.common.extensions.executeInjector
 import com.sygic.maps.module.common.extensions.isGooglePlayServicesAvailable
 import com.sygic.maps.module.common.extensions.showGenericNoGpsDialog
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
@@ -73,9 +74,10 @@ import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
+abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>
+    : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
-    protected abstract fun executeInjector()
+    protected abstract fun getModuleBuilder(): M
     protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
 
     @Inject
@@ -102,20 +104,6 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     private val backingMapDataModel = lazy { BackingMapDataModel() }
     private val backingCameraModel = lazy { BackingCameraDataModel() }
 
-    protected var injected = false
-    protected inline fun <reified T, B : ModuleBuilder<T>> injector(builder: B, block: (T) -> Unit) {
-        if (!injected) {
-            block(
-                builder
-                    .plus(
-                        FragmentsComponentDelegate.getComponent(this, ApplicationComponentDelegate)
-                    )
-                    .build()
-            )
-        }
-        injected = true
-    }
-
     protected inline fun <reified T : ViewModel> viewModelOf(
         viewModelClass: Class<out T>,
         vararg assistedParams: Any? = emptyArray()
@@ -132,14 +120,14 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     final override fun getCameraDataModel() = if(::cameraDataModel.isInitialized) cameraDataModel else backingCameraModel.value
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
-        executeInjector()
         super.onInflate(context, attrs, savedInstanceState)
         resolveAttributesInternal(context, attrs)
     }
 
     @CallSuper
+    @Suppress("UNCHECKED_CAST")
     override fun onAttach(context: Context) {
-        executeInjector()
+        (this as F).executeInjector(getModuleBuilder())
         super.onAttach(context)
 
         if (backingMapDataModel.isInitialized()) {
