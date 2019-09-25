@@ -79,7 +79,6 @@
         <activity
             android:name=".browsemap.BrowseMapSplitActivity"
             android:label="@string/browse_map_split"
-            android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
             android:name=".browsemap.BrowseMapVehicleMapSkinActivity"
