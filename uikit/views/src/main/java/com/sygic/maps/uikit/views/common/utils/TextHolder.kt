@@ -25,14 +25,17 @@
 package com.sygic.maps.uikit.views.common.utils
 
 import android.content.Context
+import android.os.Parcelable
 import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.NO_ID
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 open class TextHolder private constructor(
     @StringRes private var textResource: Int = NO_ID,
     private var textString: String = EMPTY_STRING
-) {
+) : Parcelable {
 
     companion object {
 

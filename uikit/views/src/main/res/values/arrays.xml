@@ -42,4 +42,16 @@
         <item>x86</item>
         <item>x86_64</item>
     </string-array>
+    <array name="speedProgressForegroundColors">
+        <item>@color/speedProgressForegroundStartColor</item>
+        <item>@color/speedProgressForegroundEndColor</item>
+    </array>
+    <array name="sygicSpeedProgressForegroundColors">
+        <item>@color/speedProgressForegroundStartColor</item>
+        <item>@color/speedProgressForegroundStartColor</item>
+        <item>@color/speedProgressForegroundStartColor</item>
+        <item>@color/speedProgressForegroundStartColor</item>
+        <item>@color/orange</item>
+        <item>@color/orange</item>
+    </array>
 </resources>

@@ -80,6 +80,10 @@
             android:name=".browsemap.BrowseMapSplitActivity"
             android:label="@string/browse_map_split"
             android:theme="@style/AppTheme.NoExitAnimation" />
+        <activity
+            android:name=".browsemap.BrowseMapVehicleMapSkinActivity"
+            android:label="@string/browse_map_vehicle_map_skin"
+            android:theme="@style/AppTheme.NoExitAnimation" />
 
         <activity
             android:name=".search.SearchDefaultActivity"

@@ -39,6 +39,10 @@ import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModelFactory;
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel;
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModelFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModelFactory;
+import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel;
+import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModelFactory;
 
 import dagger.Binds;
 import dagger.Module;
@@ -80,4 +84,14 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(InfobarViewModel.class)
     abstract ViewModelCreatorFactory putInfobarViewModelFactory(InfobarViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CurrentSpeedViewModel.class)
+    abstract ViewModelCreatorFactory putCurrentSpeedViewModelFactory(CurrentSpeedViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SpeedLimitViewModel.class)
+    abstract ViewModelCreatorFactory putSpeedLimitViewModelFactory(SpeedLimitViewModelFactory factory);
 }

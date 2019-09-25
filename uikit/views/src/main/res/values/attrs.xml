@@ -26,6 +26,7 @@
 <resources>
 
     <attr name="sygicMapSkin" format="string" />
+    <attr name="sygicVehicleSkin" format="string" />
     <attr name="navigationBackgroundColor" format="reference" />
     <attr name="navigationTextColorPrimary" format="reference" />
     <attr name="navigationTextColorSecondary" format="reference" />
@@ -33,14 +34,17 @@
 
     <declare-styleable name="ThemeAttributes">
         <attr name="compassStyle" format="reference"/>
+        <attr name="currentSpeedViewStyle" format="reference"/>
         <attr name="infoBarStyle" format="reference" />
+        <attr name="lanesViewStyle" format="reference" />
         <attr name="positionLockFabStyle" format="reference" />
         <attr name="routePreviewControlsStyle" format="reference" />
         <attr name="searchFabStyle" format="reference" />
         <attr name="searchToolbarStyle" format="reference" />
         <attr name="searchResultListStyle" format="reference" />
         <attr name="signpostViewStyle" format="reference" />
-        <attr name="lanesViewStyle" format="reference" />
+        <attr name="speedLimitViewStyle" format="reference" />
+        <attr name="speedProgressViewStyle" format="reference" />
         <attr name="zoomControlsMenuStyle" format="reference"/>
     </declare-styleable>
 
@@ -50,6 +54,16 @@
         <attr name="titleText" />
         <attr name="suggestionText"/>
         <attr name="actionButtonText"/>
+    </declare-styleable>
+
+    <declare-styleable name="CurrentSpeedView">
+        <attr name="android:background" format="reference" />
+        <attr name="android:elevation" format="dimension" />
+        <attr name="android:layout_margin" format="dimension" />
+        <attr name="android:layout_marginTop" format="dimension" />
+        <attr name="android:layout_marginBottom" format="dimension" />
+        <attr name="android:layout_marginStart" format="dimension" />
+        <attr name="android:layout_marginEnd" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="EmptyRecyclerView">
@@ -116,6 +130,24 @@
         <attr name="android:layout_marginBottom" format="dimension" />
         <attr name="android:layout_marginStart" format="dimension" />
         <attr name="android:layout_marginEnd" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SpeedLimitView">
+        <attr name="android:elevation" format="dimension" />
+        <attr name="android:layout_margin" format="dimension" />
+        <attr name="android:layout_marginTop" format="dimension" />
+        <attr name="android:layout_marginBottom" format="dimension" />
+        <attr name="android:layout_marginStart" format="dimension" />
+        <attr name="android:layout_marginEnd" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SpeedProgressView">
+        <attr name="roundSegmentEdges" format="boolean" />
+        <attr name="segmentBackgroundColor" format="color" />
+        <attr name="segmentForegroundColors" format="reference" />
+        <attr name="segmentAngle" format="integer" />
+        <attr name="segmentThickness" format="dimension" />
+        <attr name="segmentSpacing" format="fraction" />
     </declare-styleable>
 
 </resources>

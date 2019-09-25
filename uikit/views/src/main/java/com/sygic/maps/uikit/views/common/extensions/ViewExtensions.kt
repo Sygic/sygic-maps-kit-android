@@ -24,10 +24,15 @@
 
 package com.sygic.maps.uikit.views.common.extensions
 
+import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 
@@ -37,6 +42,14 @@ fun View.hideKeyboard() = context?.hideKeyboard(this)
 fun View.visible(visible: Boolean, invisibleValue: Int = View.GONE) {
     visibility = if (visible) View.VISIBLE else invisibleValue
 }
+
+@ColorInt
+fun View.getColor(@ColorRes colorResId: Int): Int = context.getColorInt(colorResId)
+
+fun View.getColorFromAttr(@AttrRes resId: Int, typedValue: TypedValue = TypedValue(), resolveRefs: Boolean = true) =
+    context.getColorFromAttr(resId, typedValue, resolveRefs)
+
+fun View.getDrawable(@DrawableRes drawableResId: Int): Drawable? = context.getDrawable(drawableResId)
 
 fun TextView.text(textHolder: TextHolder) {
     text = textHolder.getText(context)

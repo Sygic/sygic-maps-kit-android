@@ -59,7 +59,11 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.MapSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isMapSkinValid
+import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isVehicleSkinValid
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.getString
 import com.sygic.maps.uikit.views.common.extensions.getStringFromAttr
+import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.MapMarker
@@ -72,7 +76,7 @@ import javax.inject.Inject
 abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
     protected abstract fun executeInjector()
-    protected abstract fun resolveAttributes(attributes: AttributeSet)
+    protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -130,7 +134,7 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         executeInjector()
         super.onInflate(context, attrs, savedInstanceState)
-        resolveAttributes(attrs)
+        resolveAttributesInternal(context, attrs)
     }
 
     @CallSuper
@@ -159,7 +163,8 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
             }
         })
 
-        context.getStringFromAttr(R.attr.sygicMapSkin).let { if (isMapSkinValid(it)) setMapSkin(it) }
+        context.getStringFromAttr(R.attr.sygicMapSkin).let { if (it.isNotEmpty()) setMapSkin(it) }
+        context.getStringFromAttr(R.attr.sygicVehicleSkin).let { if (it.isNotEmpty()) setVehicleSkin(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -241,6 +246,11 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param mapSkin [MapSkin] to be applied to the map.
      */
     fun setMapSkin(@MapSkin mapSkin: String) {
+        if (!isMapSkinValid(mapSkin)) {
+            logWarning("MapSkin \"$mapSkin\" is not valid.")
+            return
+        }
+
         arguments = Bundle(arguments).apply { putString(ThemeManager.SkinLayer.DayNight.toString(), mapSkin) }
         try {
             fragmentViewModel.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, mapSkin)
@@ -253,6 +263,11 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
      * @param vehicleSkin [VehicleSkin] to be applied to the vehicle indicator.
      */
     fun setVehicleSkin(@VehicleSkin vehicleSkin: String) {
+        if (!isVehicleSkinValid(vehicleSkin)) {
+            logWarning("VehicleSkin \"$vehicleSkin\" is not valid.")
+            return
+        }
+
         arguments = Bundle(arguments).apply { putString(ThemeManager.SkinLayer.Vehicle.toString(), vehicleSkin) }
         try {
             fragmentViewModel.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, vehicleSkin)
@@ -264,5 +279,20 @@ abstract class MapFragmentWrapper<T: ThemeSupportedViewModel> : MapFragment(), S
 
         lifecycle.removeObserver(mapDataModel)
         lifecycle.removeObserver(cameraDataModel)
+    }
+
+    private fun resolveAttributesInternal(context: Context, attrs: AttributeSet) {
+        with(context.obtainStyledAttributes(attrs, R.styleable.MapFragmentWrapper)) {
+            if (hasValue(R.styleable.MapFragmentWrapper_sygic_map_skin)) {
+                setMapSkin(getString(R.styleable.MapFragmentWrapper_sygic_map_skin, EMPTY_STRING))
+            }
+            if (hasValue(R.styleable.MapFragmentWrapper_sygic_vehicle_skin)) {
+                setVehicleSkin(getString(R.styleable.MapFragmentWrapper_sygic_vehicle_skin, EMPTY_STRING))
+            }
+
+            recycle()
+        }
+
+        resolveAttributes(context, attrs)
     }
 }

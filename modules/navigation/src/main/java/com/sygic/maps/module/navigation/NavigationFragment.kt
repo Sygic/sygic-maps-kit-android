@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.navigation
 
+import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -51,17 +53,23 @@ import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
-import com.sygic.maps.uikit.views.common.extensions.asMutable
-import com.sygic.maps.uikit.views.common.extensions.finish
-import com.sygic.maps.uikit.views.common.extensions.getBoolean
-import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
+import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
+import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
+import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
+import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
+import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 import com.sygic.maps.uikit.views.navigation.lanes.SimpleLanesView
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
+import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
+import com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
 import com.sygic.sdk.route.RouteInfo
 
 const val NAVIGATION_FRAGMENT_TAG = "navigation_fragment_tag"
@@ -72,23 +80,29 @@ internal const val KEY_LANES_VIEW_ENABLED = "lanes_view_enabled"
 internal const val KEY_PREVIEW_CONTROLS_ENABLED = "preview_controls_enabled"
 internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_INFOBAR_ENABLED = "infobar_enabled"
+internal const val KEY_CURRENT_SPEED_ENABLED = "current_speed_enabled"
+internal const val KEY_SPEED_LIMIT_ENABLED = "speed_limit_enabled"
 internal const val KEY_ROUTE_INFO = "route_info"
 
 /**
  * A *[NavigationFragment]* is the core component for any navigation operation. It can be easily used for the navigation
  * purposes. By setting the [routeInfo] object will start the navigation process. Any pre build-in element such as
- * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [CurrentSpeed] or [SpeedLimit] may be activated or deactivated and styled.
+ * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [RoutePreviewControls], [CurrentSpeedView] or [SpeedLimitView]
+ * may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
-    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper {
+    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
     private lateinit var infobarViewModel: InfobarViewModel
+    private lateinit var currentSpeedViewModel: CurrentSpeedViewModel
+    private lateinit var speedLimitViewModel: SpeedLimitViewModel
 
     override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
     override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
+    override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
 
     override fun executeInjector() =
         injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
@@ -204,6 +218,42 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
         }
 
     /**
+     * A *[currentSpeedEnabled]* modifies the [CurrentSpeedView] visibility.
+     *
+     * @param [Boolean] true to enable the [CurrentSpeedView], false otherwise.
+     *
+     * @return whether the [CurrentSpeedView] is on or off.
+     */
+    var currentSpeedEnabled: Boolean
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.currentSpeedEnabled.value!!
+        } else arguments.getBoolean(KEY_CURRENT_SPEED_ENABLED, CURRENT_SPEED_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_CURRENT_SPEED_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.currentSpeedEnabled.value = value
+            }
+        }
+
+    /**
+     * A *[speedLimitEnabled]* modifies the [SpeedLimitView] visibility.
+     *
+     * @param [Boolean] true to enable the [SpeedLimitView], false otherwise.
+     *
+     * @return whether the [SpeedLimitView] is on or off.
+     */
+    var speedLimitEnabled: Boolean
+        get() = if (::fragmentViewModel.isInitialized) {
+            fragmentViewModel.speedLimitEnabled.value!!
+        } else arguments.getBoolean(KEY_SPEED_LIMIT_ENABLED, SPEED_LIMIT_ENABLED_DEFAULT_VALUE)
+        set(value) {
+            arguments = Bundle(arguments).apply { putBoolean(KEY_SPEED_LIMIT_ENABLED, value) }
+            if (::fragmentViewModel.isInitialized) {
+                fragmentViewModel.speedLimitEnabled.value = value
+            }
+        }
+
+    /**
      * If not-null *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
      *
      * @param [RouteInfo] route info object to be processed.
@@ -225,12 +275,27 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
+            this.infoToastObservable.observe(
+                this@NavigationFragment,
+                Observer<InfoToastComponent> { showInfoToast(it) })
+            this.actionMenuShowObservable.observe(
+                this@NavigationFragment,
+                Observer<ActionMenuData> { showActionMenu(it) })
+            this.actionMenuHideObservable.observe(
+                this@NavigationFragment,
+                Observer<Any> { hideActionMenu() })
+            this.actionMenuItemClickListenerObservable.observe(
+                this@NavigationFragment,
+                Observer<ActionMenuItemClickListener> { setActionMenuItemClickListener(it) })
             this.activityFinishObservable.observe(
                 this@NavigationFragment,
                 Observer<Any> { finish() })
         }
         infobarViewModel = viewModelOf(InfobarViewModel::class.java)
         routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
+        currentSpeedViewModel = viewModelOf(CurrentSpeedViewModel::class.java)
+        speedLimitViewModel = viewModelOf(SpeedLimitViewModel::class.java)
+
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(infobarViewModel)
         lifecycle.addObserver(routePreviewControlsViewModel)
@@ -241,6 +306,8 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
             navigationFragmentViewModel = fragmentViewModel
             infobarViewModel = this@NavigationFragment.infobarViewModel
             routePreviewControlsViewModel = this@NavigationFragment.routePreviewControlsViewModel
+            currentSpeedViewModel = this@NavigationFragment.currentSpeedViewModel
+            speedLimitViewModel = this@NavigationFragment.speedLimitViewModel
             lifecycleOwner = this@NavigationFragment
 
             signpostView.setOnInflateListener { _, view ->
@@ -276,6 +343,39 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
             }
         }.root
 
+    private fun showActionMenu(actionMenuData: ActionMenuData) {
+        ActionMenuBottomDialogFragment.newInstance(actionMenuData).apply {
+            itemClickListener = fragmentViewModel.actionMenuItemClickListener
+        }.show(fragmentManager, ActionMenuBottomDialogFragment.TAG)
+    }
+
+    private fun setActionMenuItemClickListener(listener: ActionMenuItemClickListener) {
+        fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as ActionMenuBottomDialogFragment).itemClickListener = listener
+        }
+    }
+
+    private fun hideActionMenu() {
+        fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as DialogFragment).dismiss()
+        }
+    }
+
+    /**
+     * Set a custom [ActionMenuData] and [ActionMenuItemClickListener] for the [ActionMenuBottomDialogFragment] content fulfillment.
+     *
+     * @param actionMenuData [ActionMenuData] which will be used for fulfillment the [ActionMenuBottomDialogFragment] content.
+     * @param actionMenuItemClickListener [ActionMenuItemClickListener] callback to invoke action menu item click.
+     *
+     */
+    fun setActionMenuItems(
+        actionMenuData: ActionMenuData,
+        actionMenuItemClickListener: ActionMenuItemClickListener
+    ) {
+        actionMenuItemsProvider.asMutable().value =
+            ActionMenuItemsProviderWrapper.ProviderComponent(actionMenuData, actionMenuItemClickListener)
+    }
+
     /**
      * Register a custom callback to be invoked when a click to the infobar button has been made.
      *
@@ -310,8 +410,8 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
         lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 
-    override fun resolveAttributes(attributes: AttributeSet) {
-        with(requireContext().obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
+    override fun resolveAttributes(context: Context, attributes: AttributeSet) {
+        with(context.obtainStyledAttributes(attributes, R.styleable.NavigationFragment)) {
             if (hasValue(R.styleable.NavigationFragment_sygic_navigation_distanceUnit)) {
                 distanceUnit = DistanceUnit.atIndex(
                     getInt(
@@ -365,6 +465,20 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
                     getBoolean(
                         R.styleable.NavigationFragment_sygic_infobar_enabled,
                         INFOBAR_ENABLED_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_current_speed_enabled)) {
+                currentSpeedEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_current_speed_enabled,
+                        CURRENT_SPEED_ENABLED_DEFAULT_VALUE
+                    )
+            }
+            if (hasValue(R.styleable.NavigationFragment_sygic_speed_limit_enabled)) {
+                speedLimitEnabled =
+                    getBoolean(
+                        R.styleable.NavigationFragment_sygic_speed_limit_enabled,
+                        SPEED_LIMIT_ENABLED_DEFAULT_VALUE
                     )
             }
 
