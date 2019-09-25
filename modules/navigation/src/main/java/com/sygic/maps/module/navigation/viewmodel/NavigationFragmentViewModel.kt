@@ -253,15 +253,9 @@ class NavigationFragmentViewModel internal constructor(
         if (infobarButtonListenersMap[InfobarButtonType.LEFT] is InternalLeftInfobarClickListener) {
             when (mode) {
                 Camera.MovementMode.Free ->
-                    updateInfobarListenersMap(
-                        InfobarButtonType.LEFT,
-                        navigationUnlockedLeftInfobarClickListener
-                    )
+                    updateInfobarListenersMap(InfobarButtonType.LEFT, navigationUnlockedLeftInfobarClickListener)
                 Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
-                    updateInfobarListenersMap(
-                        InfobarButtonType.LEFT,
-                        navigationDefaultLeftInfobarClickListener
-                    )
+                    updateInfobarListenersMap(InfobarButtonType.LEFT, navigationDefaultLeftInfobarClickListener)
             }
         }
     }

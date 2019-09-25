@@ -106,6 +106,8 @@ class NavigationFragmentViewModelTest {
             }
         }
 
+        whenever(app.resources).thenReturn(mock())
+        whenever(app.resources.configuration).thenReturn(mock())
         whenever(regionalManager.distanceUnit).thenReturn(mock())
 
         val arguments = mock<Bundle>()
@@ -190,6 +192,13 @@ class NavigationFragmentViewModelTest {
     }
 
     @Test
+    fun onResumeTest() {
+        navigationFragmentViewModel.onResume(mock())
+
+        verify(extendedCameraModel).mapCenterSettings = any()
+    }
+
+    @Test
     fun onLeftInfobarButtonClickTest() {
         val onInfobarButtonClickListener = spy(object : OnInfobarButtonClickListener {
             override val button: InfobarButton = InfobarButton(R.drawable.ic_map_lock_full, R.drawable.bg_info_toast, R.color.black, R.color.white)
@@ -259,4 +268,26 @@ class NavigationFragmentViewModelTest {
         navigationFragmentViewModel.actionMenuShowObservable.test().assertValue(actionMenuData)
     }
 
+    /*//todo: MS-6336 uncomment with next version (v15) of SDK
+    @Test
+    fun onRouteChangedTest() {
+        val routeInfoMock = mock<RouteInfo>()
+
+        whenever(extendedMapDataModel.getMapObjects()).thenReturn(setOf())
+
+        navigationFragmentViewModel.onRouteChanged(routeInfoMock)
+
+        verify(extendedMapDataModel).removeAllMapRoutes()
+        verify(extendedMapDataModel).addMapRoute(any())
+        navigationFragmentViewModel.routeInfo.test().assertValue(routeInfoMock)
+    }*/
+
+    @Test
+    fun onStopTest() {
+        navigationFragmentViewModel.onStop(mock())
+
+        verify(locationManager).positionOnMapEnabled = false
+        verify(extendedCameraModel).removeModeChangedListener(navigationFragmentViewModel)
+        verify(navigationManager).removeOnRouteChangedListener(navigationFragmentViewModel)
+    }
 }
