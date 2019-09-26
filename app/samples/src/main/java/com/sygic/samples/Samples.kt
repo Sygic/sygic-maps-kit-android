@@ -26,6 +26,7 @@ package com.sygic.samples
 
 import com.sygic.samples.browsemap.*
 import com.sygic.samples.app.models.Sample
+import com.sygic.samples.demos.ComplexDemoActivity
 import com.sygic.samples.navigation.NavigationDefaultActivity
 import com.sygic.samples.navigation.NavigationInfobarCustomClickListenerActivity
 import com.sygic.samples.navigation.NavigationPreviewEnabledActivity
@@ -36,6 +37,13 @@ import com.sygic.samples.search.SearchFromBrowseMapWithPinsActivity
 import com.sygic.samples.search.SearchPreFilledInputActivity
 
 object Samples {
+
+    val demoList: List<Sample> = listOf(
+        Sample(
+            ComplexDemoActivity::class.java, R.drawable.preview_complex_demo,
+            R.string.complex_demo, R.string.complex_demo_summary
+        )
+    )
 
     val browseMapSampleList: List<Sample> = listOf(
         Sample(

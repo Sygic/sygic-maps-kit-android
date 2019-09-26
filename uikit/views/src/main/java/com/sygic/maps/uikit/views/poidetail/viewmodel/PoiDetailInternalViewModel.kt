@@ -113,8 +113,10 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
         listener = null
     }
 
-    class ViewModelFactory(private val app: Application, private val preferencesManager: PreferencesManager) :
-        ViewModelProvider.NewInstanceFactory() {
+    class Factory(
+        private val app: Application,
+        private val preferencesManager: PreferencesManager
+    ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")

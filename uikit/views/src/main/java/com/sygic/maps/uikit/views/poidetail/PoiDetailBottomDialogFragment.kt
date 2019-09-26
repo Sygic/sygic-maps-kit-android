@@ -127,7 +127,7 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         preferencesManager = PreferencesManager(requireContext())
 
         viewModel = ViewModelProviders.of(
-            this, PoiDetailInternalViewModel.ViewModelFactory(requireActivity().application, preferencesManager)
+            this, PoiDetailInternalViewModel.Factory(requireActivity().application, preferencesManager)
         )[PoiDetailInternalViewModel::class.java].apply {
             this.dialogStateObservable.observe(
                 this@PoiDetailBottomDialogFragment,

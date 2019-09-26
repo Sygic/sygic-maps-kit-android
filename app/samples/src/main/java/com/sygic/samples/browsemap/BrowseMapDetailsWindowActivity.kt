@@ -34,7 +34,7 @@ import com.sygic.sdk.map.`object`.MapMarker
 
 class BrowseMapDetailsWindowActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Browse-Map#browse-map---details-view"
+    override val wikiModulePath = "Module-Browse-Map#browse-map---details-view"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

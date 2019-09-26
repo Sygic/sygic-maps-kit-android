@@ -35,7 +35,7 @@ import com.sygic.sdk.map.factory.DrawableFactory
 
 class BrowseMapMarkersActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Browse-Map#browse-map---markers"
+    override val wikiModulePath = "Module-Browse-Map#browse-map---markers"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

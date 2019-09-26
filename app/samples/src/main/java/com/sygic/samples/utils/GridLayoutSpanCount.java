@@ -22,19 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.browsemap
+package com.sygic.samples.utils;
 
-import android.os.Bundle
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
+import androidx.annotation.IntDef;
 
-class BrowseMapVehicleMapSkinActivity : CommonSampleActivity() {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    override val wikiModulePath = "Module-Browse-Map#browse-map---vehicle-and-map-skin"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_browsemap_vehicle_map_skin)
-    }
+@IntDef({GridLayoutSpanCount.PORTRAIT,
+        GridLayoutSpanCount.LANDSCAPE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface GridLayoutSpanCount {
+    int PORTRAIT = 1;
+    int LANDSCAPE = 2;
 }

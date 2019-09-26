@@ -30,7 +30,7 @@ import com.sygic.samples.app.activities.CommonSampleActivity
 
 class SearchDefaultActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Search#search---default"
+    override val wikiModulePath = "Module-Search#search---default"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

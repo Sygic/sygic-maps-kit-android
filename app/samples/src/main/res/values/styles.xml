@@ -37,6 +37,13 @@
         <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>
     </style>
 
+    <style name="AppTheme.NoExitAnimation.TransparentStatusAndNavigation">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
     <style name="WindowAnimationStyle" parent="@android:style/Animation.Activity">
         <item name="android:windowExitAnimation">@anim/no_animation</item>
         <item name="android:activityCloseExitAnimation">@anim/no_animation</item>

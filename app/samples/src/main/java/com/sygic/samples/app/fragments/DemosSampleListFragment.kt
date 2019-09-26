@@ -22,19 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.browsemap
+package com.sygic.samples.app.fragments
 
-import android.os.Bundle
 import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.Samples
+import com.sygic.samples.app.models.Sample
 
-class BrowseMapVehicleMapSkinActivity : CommonSampleActivity() {
+class DemosSampleListFragment : BaseSamplesListFragment() {
 
-    override val wikiModulePath = "Module-Browse-Map#browse-map---vehicle-and-map-skin"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_browsemap_vehicle_map_skin)
-    }
+    override val title: Int = R.string.demos
+    override val items: List<Sample> = Samples.demoList
 }

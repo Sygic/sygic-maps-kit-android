@@ -53,25 +53,21 @@ class SamplesActivity : AppCompatActivity() {
         initDrawerToggle()
 
         samplesActivityViewModel = ViewModelProviders.of(this).get(SamplesActivityViewModel::class.java).apply {
-            this.closeDrawerLayoutObservable.observe(
+            this.setDrawerLayoutOpenedObservable.observe(
                 this@SamplesActivity,
-                Observer<Any> { binding.drawerLayout.closeDrawer(GravityCompat.START) })
+                Observer<Boolean> { setDrawerLayoutOpened(it) })
             this.drawerItemCheckObservable.observe(
                 this@SamplesActivity,
                 Observer<Int> { binding.navigationView.setCheckedItem(it) })
             this.samplesListFragmentsObservable.observe(
                 this@SamplesActivity,
-                Observer<BaseSamplesListFragment> {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, it).commit()
-                })
+                Observer<BaseSamplesListFragment> { placeFragment(it) })
             this.openLinkInBrowserObservable.observe(
                 this@SamplesActivity,
                 Observer<String> { openUrl(it) })
             this.openDialogFragmentObservable.observe(
                 this@SamplesActivity,
-                Observer<Class<out AppCompatDialogFragment>> {
-                    it.newInstance().show(supportFragmentManager, null)
-                })
+                Observer<Class<out AppCompatDialogFragment>> { it.newInstance().show(supportFragmentManager, null) })
         }
         binding.samplesActivityViewModel = samplesActivityViewModel
         lifecycle.addObserver(samplesActivityViewModel)
@@ -85,6 +81,17 @@ class SamplesActivity : AppCompatActivity() {
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
     }
+
+    private fun setDrawerLayoutOpened(opened: Boolean) {
+        if (opened) {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        } else {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        }
+    }
+
+    private fun placeFragment(fragment: BaseSamplesListFragment) =
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
 
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {

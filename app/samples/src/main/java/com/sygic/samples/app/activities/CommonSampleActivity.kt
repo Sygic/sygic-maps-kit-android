@@ -33,10 +33,10 @@ import com.sygic.samples.R
 
 abstract class CommonSampleActivity : AppCompatActivity() {
 
-    abstract val wikiModulePath: String
+    abstract val wikiModulePath: String?
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        wikiModulePath?.let { menuInflater.inflate(R.menu.toolbar_menu, menu) }
         return super.onCreateOptionsMenu(menu)
     }
 

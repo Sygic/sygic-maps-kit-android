@@ -33,12 +33,9 @@ import com.google.android.material.navigation.NavigationView
 import com.sygic.samples.BuildConfig
 import com.sygic.samples.R
 import com.sygic.samples.app.dialogs.AboutDialog
-import com.sygic.samples.app.fragments.BrowseMapSampleListFragment
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.samples.app.fragments.BaseSamplesListFragment
-import com.sygic.samples.app.fragments.NavigationSampleListFragment
-import com.sygic.samples.app.fragments.SearchSampleListFragment
+import com.sygic.samples.app.fragments.*
 
 private const val GITHUB_WIKI_COMPASS = "${BuildConfig.GITHUB_WIKI}UiKit-Compass"
 private const val GITHUB_WIKI_POI_DETAIL = "${BuildConfig.GITHUB_WIKI}UiKit-Poi-Detail"
@@ -49,19 +46,21 @@ private const val GITHUB_WIKI_SEARCH_RESULT_LIST = "${BuildConfig.GITHUB_WIKI}Ui
 
 class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, NavigationView.OnNavigationItemSelectedListener {
 
-    val closeDrawerLayoutObservable: LiveData<Any> = SingleLiveEvent()
+    val setDrawerLayoutOpenedObservable: LiveData<Boolean> = SingleLiveEvent()
     val drawerItemCheckObservable: LiveData<Int> = SingleLiveEvent()
     val samplesListFragmentsObservable: LiveData<BaseSamplesListFragment> = SingleLiveEvent()
     val openLinkInBrowserObservable: LiveData<String> = SingleLiveEvent()
     val openDialogFragmentObservable: LiveData<Class<out AppCompatDialogFragment>> = SingleLiveEvent()
 
     init {
-        drawerItemCheckObservable.asSingleEvent().value = R.id.nav_browse_map_module
-        samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSampleListFragment()
+        drawerItemCheckObservable.asSingleEvent().value = R.id.nav_demos
+        samplesListFragmentsObservable.asSingleEvent().value = DemosSampleListFragment()
+        setDrawerLayoutOpenedObservable.asSingleEvent().value = true
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.nav_demos -> samplesListFragmentsObservable.asSingleEvent().value = DemosSampleListFragment()
             R.id.nav_browse_map_module -> samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSampleListFragment()
             R.id.nav_search_module -> samplesListFragmentsObservable.asSingleEvent().value = SearchSampleListFragment()
             R.id.nav_navigation_module -> samplesListFragmentsObservable.asSingleEvent().value = NavigationSampleListFragment()
@@ -76,7 +75,7 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
             R.id.nav_qa -> openLinkInBrowserObservable.asSingleEvent().value = BuildConfig.STACK_OVERFLOW
         }
 
-        closeDrawerLayoutObservable.asSingleEvent().call()
+        setDrawerLayoutOpenedObservable.asSingleEvent().value = false
         return true
     }
 
