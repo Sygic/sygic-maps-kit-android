@@ -51,7 +51,7 @@
         <activity
             android:name=".demos.ComplexDemoActivity"
             android:label="@string/complex_demo"
-            android:theme="@style/AppTheme.NoExitAnimation.TransparentStatusAndNavigation" />
+            android:theme="@style/AppTheme.NoExitAnimation.NoActionBar" />
         <activity
             android:name=".browsemap.BrowseMapDefaultActivity"
             android:label="@string/browse_map_default"
