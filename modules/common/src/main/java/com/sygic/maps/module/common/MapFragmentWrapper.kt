@@ -35,9 +35,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.common.di.BaseFragmentComponent
+import com.sygic.maps.module.common.di.manager.InjectionManager
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest
-import com.sygic.maps.module.common.extensions.executeInjector
 import com.sygic.maps.module.common.extensions.isGooglePlayServicesAvailable
 import com.sygic.maps.module.common.extensions.showGenericNoGpsDialog
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
@@ -74,11 +74,12 @@ import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>
+abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>(moduleBuilder: M)
     : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
 
-    protected abstract fun getModuleBuilder(): M
     protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
+
+    private val injectionManager = InjectionManager(moduleBuilder)
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -120,14 +121,14 @@ abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M 
     final override fun getCameraDataModel() = if(::cameraDataModel.isInitialized) cameraDataModel else backingCameraModel.value
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
+        injectionManager.inject(this)
         super.onInflate(context, attrs, savedInstanceState)
         resolveAttributesInternal(context, attrs)
     }
 
     @CallSuper
-    @Suppress("UNCHECKED_CAST")
     override fun onAttach(context: Context) {
-        (this as F).executeInjector(getModuleBuilder())
+        injectionManager.inject(this)
         super.onAttach(context)
 
         if (backingMapDataModel.isInitialized()) {

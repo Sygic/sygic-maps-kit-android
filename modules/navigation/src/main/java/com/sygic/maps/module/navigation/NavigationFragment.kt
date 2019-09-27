@@ -92,7 +92,7 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComponent, ModuleBuilder<NavigationComponent>, NavigationFragmentViewModel>(),
+class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComponent, ModuleBuilder<NavigationComponent>, NavigationFragmentViewModel>(DaggerNavigationComponent.builder()),
     OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
@@ -104,8 +104,6 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
     override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
     override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
     override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
-
-    override fun getModuleBuilder(): ModuleBuilder<NavigationComponent> = DaggerNavigationComponent.builder()
 
     /**
      * A *[distanceUnit]* defines all available [DistanceUnit]'s type.

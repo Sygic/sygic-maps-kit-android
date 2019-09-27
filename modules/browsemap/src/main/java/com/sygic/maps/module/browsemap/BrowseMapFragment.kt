@@ -79,7 +79,7 @@ internal const val KEY_ZOOM_CONTROLS = "zoom_controls"
  * [PoiDetailBottomDialogFragment].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapComponent, ModuleBuilder<BrowseMapComponent>, BrowseMapFragmentViewModel>(),
+class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapComponent, ModuleBuilder<BrowseMapComponent>, BrowseMapFragmentViewModel>(DaggerBrowseMapComponent.builder()),
     OnMapClickListenerWrapper, ModuleConnectionProviderWrapper {
 
     override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
@@ -89,8 +89,6 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
 
     override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData()
     override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
-
-    override fun getModuleBuilder(): ModuleBuilder<BrowseMapComponent> = DaggerBrowseMapComponent.builder()
 
     /**
      * A *[MapSelectionMode]* defines the three available [BrowseMapFragment] selection modes.
