@@ -27,6 +27,7 @@ package com.sygic.samples.demos.viewmodels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
+import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.module.search.SearchFragment
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
@@ -47,7 +48,26 @@ import com.sygic.sdk.search.detail.DetailPoiCategoryGroup
 
 private const val MARGIN = 80
 
-class ComplexDemoActivityViewModel : ViewModel(), ModuleConnectionProvider {
+class ComplexDemoActivityViewModel : ViewModel() {
+
+    val searchModuleConnectionProvider = object : ModuleConnectionProvider {
+        override val fragment: Fragment
+            get() {
+                val searchFragment = SearchFragment()
+                searchFragment.searchLocation = cameraDataModel?.position
+                searchFragment.setResultCallback(callback)
+                return searchFragment
+            }
+    }
+
+    val navigationModuleConnectionProvider = object : ModuleConnectionProvider {
+        override val fragment: Fragment
+            get() {
+                val navigationFragment = NavigationFragment()
+                //todo
+                return navigationFragment
+            }
+    }
 
     var mapDataModel: SimpleMapDataModel? = null
     var cameraDataModel: SimpleCameraDataModel? = null
@@ -88,14 +108,6 @@ class ComplexDemoActivityViewModel : ViewModel(), ModuleConnectionProvider {
             }
         }
     }
-
-    override val fragment: Fragment
-        get() {
-            val searchFragment = SearchFragment()
-            searchFragment.searchLocation = cameraDataModel?.position
-            searchFragment.setResultCallback(callback)
-            return searchFragment
-        }
 
     private fun addMapMarker(position: GeoCoordinates) {
         mapDataModel?.addMapMarker(MapMarker.at(position).build())
