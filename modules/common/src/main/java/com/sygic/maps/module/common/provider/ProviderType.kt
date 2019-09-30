@@ -24,25 +24,10 @@
 
 package com.sygic.maps.module.common.provider
 
-import androidx.annotation.RestrictTo
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-/**
- * Interface definition designed for a independent module connection.
- */
-interface ModuleConnectionProvider {
-
-    /**
-     * A *[fragment]* to be used as a target for the transaction.
-     *
-     * @param [Fragment] target fragment.
-     *
-     */
-    val fragment: Fragment
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ModuleConnectionProviderWrapper {
-    val moduleConnectionProvidersMap: LiveData<Map<ProviderType, ModuleConnectionProvider?>>
+@Parcelize
+enum class ProviderType : Parcelable {
+    SEARCH, NAVIGATION
 }
