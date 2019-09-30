@@ -137,8 +137,8 @@ class BrowseMapFragmentViewModel internal constructor(
             })
         }
         if (owner is ModuleConnectionProviderWrapper) {
-            owner.moduleConnectionProvidersMap.observe(owner, Observer { moduleConnectionProvidersList ->
-                updateModuleConnectionProvidersMap(moduleConnectionProvidersList)
+            owner.moduleConnectionProvidersMap.observe(owner, Observer { map ->
+                map.forEach { updateModuleConnectionProvidersMap(it.key, it.value) }
             })
         }
         poiDetailListenerObservable.asSingleEvent().value = this
@@ -263,13 +263,14 @@ class BrowseMapFragmentViewModel internal constructor(
         })
     }
 
-    private fun updateModuleConnectionProvidersMap(map: Map<ProviderType, ModuleConnectionProvider?>) {
-        map.forEach {
-            (moduleConnectionProvidersMap as MutableMap)[it.key] = it.value
-            when (it.key) {
-                ProviderType.SEARCH -> searchEnabled.value = it.value?.let { true } ?: false
-                ProviderType.NAVIGATION -> navigationButtonEnabled.value = it.value?.let { true } ?: false
-            }
+    private fun updateModuleConnectionProvidersMap(
+        type: ProviderType,
+        provider: ModuleConnectionProvider?
+    ) {
+        (moduleConnectionProvidersMap as MutableMap)[type] = provider
+        when (type) {
+            ProviderType.SEARCH -> searchEnabled.value = provider?.let { true } ?: false
+            ProviderType.NAVIGATION -> navigationButtonEnabled.value = provider?.let { true } ?: false
         }
     }
 

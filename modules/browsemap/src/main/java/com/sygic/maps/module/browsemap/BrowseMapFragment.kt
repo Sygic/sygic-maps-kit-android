@@ -52,10 +52,7 @@ import com.sygic.maps.module.common.provider.ProviderType
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
-import com.sygic.maps.uikit.views.common.extensions.asMutable
-import com.sygic.maps.uikit.views.common.extensions.getBoolean
-import com.sygic.maps.uikit.views.common.extensions.getInt
-import com.sygic.maps.uikit.views.common.extensions.openFragment
+import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.compass.CompassView
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
@@ -273,7 +270,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
      * @param provider [ModuleConnectionProvider] a search component connection provider.
      */
     fun setSearchConnectionProvider(provider: ModuleConnectionProvider?) {
-        (moduleConnectionProvidersMap.asMutable().value!! as MutableMap)[ProviderType.SEARCH] = provider
+        moduleConnectionProvidersMap.asMutable().put(ProviderType.SEARCH, provider)
     }
 
     /**
@@ -283,7 +280,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
      * @param provider [ModuleConnectionProvider] a search module connection provider.
      */
     fun setNavigationConnectionProvider(provider: ModuleConnectionProvider?) {
-        (moduleConnectionProvidersMap.asMutable().value!! as MutableMap)[ProviderType.NAVIGATION] = provider
+        moduleConnectionProvidersMap.asMutable().put(ProviderType.NAVIGATION, provider)
     }
 
     private fun showPoiDetail() {

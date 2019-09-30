@@ -30,10 +30,5 @@ import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface InfobarTextDataWrapper {
-    val infobarTextDataProvider: LiveData<ProviderComponent>
-
-    data class ProviderComponent(
-        val textData: InfobarTextData,
-        val textType: InfobarTextType
-    )
+    val infobarTextDataProvider: LiveData<Map<InfobarTextType, InfobarTextData>>
 }
