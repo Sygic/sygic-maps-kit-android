@@ -49,10 +49,5 @@ interface OnInfobarButtonClickListener {
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface OnInfobarButtonClickListenerWrapper {
-    val infobarButtonClickListenerProvider: LiveData<ProviderComponent>
-
-    data class ProviderComponent(
-        val onInfobarButtonClickListener: OnInfobarButtonClickListener?,
-        val infobarButtonType: InfobarButtonType
-    )
+    val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>>
 }
