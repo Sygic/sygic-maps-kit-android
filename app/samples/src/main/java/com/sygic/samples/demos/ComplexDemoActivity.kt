@@ -24,16 +24,35 @@
 
 package com.sygic.samples.demos
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
+import com.sygic.maps.module.common.extensions.*
+import com.sygic.maps.module.navigation.NAVIGATION_FRAGMENT_TAG
+import com.sygic.maps.module.navigation.NavigationFragment
+import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
+import com.sygic.maps.uikit.viewmodels.common.extensions.getLastValidLocation
+import com.sygic.maps.uikit.views.common.extensions.isPermissionNotGranted
+import com.sygic.maps.uikit.views.common.extensions.longToast
+import com.sygic.maps.uikit.views.common.extensions.requestPermission
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.demos.states.BrowseMapDemoDefaultState
 import com.sygic.samples.demos.viewmodels.ComplexDemoActivityViewModel
+import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.RoutePlan
+import com.sygic.sdk.route.RoutingOptions
+
+private const val REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION = 7001
+private const val REQUEST_CODE_GOOGLE_API_CLIENT = 7002
+private const val REQUEST_CODE_SETTING_ACTIVITY = 7003
 
 class ComplexDemoActivity : CommonSampleActivity() {
 
@@ -51,6 +70,9 @@ class ComplexDemoActivity : CommonSampleActivity() {
             this.showPoiDetailObservable.observe(
                 this@ComplexDemoActivity,
                 Observer<PoiDetailComponent> { browseMapFragment.showPoiDetail(it) })
+            this.computePrimaryRouteObservable.observe(
+                this@ComplexDemoActivity,
+                Observer<GeoCoordinates> { createRoutePlanAndComputeRoute(it) })
         }
 
         browseMapFragment = if (savedInstanceState == null) {
@@ -59,6 +81,7 @@ class ComplexDemoActivity : CommonSampleActivity() {
             supportFragmentManager.findFragmentByTag(BROWSE_MAP_FRAGMENT_TAG) as BrowseMapFragment
         }
 
+        browseMapFragment.setOnMapClickListener(viewModel.onMapClickListener)
         browseMapFragment.setSearchConnectionProvider(viewModel.searchModuleConnectionProvider)
         browseMapFragment.setNavigationConnectionProvider(viewModel.navigationModuleConnectionProvider)
     }
@@ -76,4 +99,72 @@ class ComplexDemoActivity : CommonSampleActivity() {
                 }
                 ?.commit()
         }
+
+    private fun createRoutePlanAndComputeRoute(destination: GeoCoordinates) {
+        requestLastValidLocation { lastValidLocation ->
+            val routePlan = RoutePlan().apply {
+                setStart(lastValidLocation)
+                setDestination(destination)
+                routingOptions = RoutingOptions().apply {
+                    transportMode = RoutingOptions.TransportMode.Car
+                    routingType = RoutingOptions.RoutingType.Economic
+                }
+            }
+
+            computePrimaryRoute(routePlan) { setRouteToNavigationFragment(it) }
+        }
+    }
+
+    private fun setRouteToNavigationFragment(route: RouteInfo) {
+        (supportFragmentManager.findFragmentByTag(NAVIGATION_FRAGMENT_TAG) as? NavigationFragment)?.routeInfo = route
+    }
+
+    private fun requestLastValidLocation(currentLocationCallback: (GeoCoordinates) -> Unit) {
+        if (isPermissionNotGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            requestPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION
+            )
+            return
+        }
+
+        if (isGpsNotEnabled()) {
+            if (isGooglePlayServicesAvailable()) {
+                createGoogleApiLocationRequest(REQUEST_CODE_GOOGLE_API_CLIENT)
+            } else {
+                showGenericNoGpsDialog(REQUEST_CODE_SETTING_ACTIVITY)
+            }
+            return
+        }
+
+        getLastValidLocation(currentLocationCallback)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    viewModel.lastDestination?.let { createRoutePlanAndComputeRoute(it) }
+                } else {
+                    longToast("Sorry, location permission is needed!")
+                    finish()
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            REQUEST_CODE_SETTING_ACTIVITY, REQUEST_CODE_GOOGLE_API_CLIENT -> {
+                if (isGpsEnabled()) {
+                    viewModel.lastDestination?.let { createRoutePlanAndComputeRoute(it) }
+                } else {
+                    longToast("GPS module is not enabled :(")
+                    finish()
+                }
+            }
+        }
+    }
 }

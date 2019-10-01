@@ -27,8 +27,11 @@ package com.sygic.samples.demos.viewmodels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
+import com.sygic.maps.module.navigation.NAVIGATION_FRAGMENT_TAG
 import com.sygic.maps.module.navigation.NavigationFragment
+import com.sygic.maps.module.search.SEARCH_FRAGMENT_TAG
 import com.sygic.maps.module.search.SearchFragment
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
@@ -44,6 +47,7 @@ import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapRectangle
 import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.data.SimpleCameraDataModel
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.sdk.position.GeoBoundingBox
@@ -59,7 +63,16 @@ private const val MARGIN = 80
 
 class ComplexDemoActivityViewModel : ViewModel() {
 
+    var lastDestination: GeoCoordinates? = null
+
     val showPoiDetailObservable: LiveData<PoiDetailComponent> = SingleLiveEvent()
+    val computePrimaryRouteObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
+
+    val onMapClickListener = object : OnMapClickListener {
+        override fun onMapDataReceived(data: ViewObjectData) {
+            lastDestination = data.position
+        }
+    }
 
     val searchModuleConnectionProvider = object : ModuleConnectionProvider {
         override val fragment: Fragment
@@ -69,17 +82,20 @@ class ComplexDemoActivityViewModel : ViewModel() {
                 searchFragment.setResultCallback(callback)
                 return searchFragment
             }
+
+        override fun getFragmentTag() = SEARCH_FRAGMENT_TAG
     }
 
     val navigationModuleConnectionProvider = object : ModuleConnectionProvider {
         override val fragment: Fragment
             get() {
                 mapDataModel?.removeAllMapMarkers()
-
-                //todo:
-                val navigationFragment = NavigationFragment()
-                return navigationFragment
+                computePrimaryRouteObservable.asSingleEvent().value = lastDestination
+                //todo: show and hide progress
+                return NavigationFragment()
             }
+
+        override fun getFragmentTag() = NAVIGATION_FRAGMENT_TAG
     }
 
     var mapDataModel: SimpleMapDataModel? = null
@@ -112,6 +128,7 @@ class ComplexDemoActivityViewModel : ViewModel() {
                         if (geoCoordinatesList.size == 1) {
                             with(geoCoordinatesList.first()) {
                                 addMapMarker(this)
+                                lastDestination = this
                                 cameraDataModel?.position = this
                                 cameraDataModel?.zoomLevel = 10F
                                 searchResultList.first().toPoiDetailComponent()?.let {
