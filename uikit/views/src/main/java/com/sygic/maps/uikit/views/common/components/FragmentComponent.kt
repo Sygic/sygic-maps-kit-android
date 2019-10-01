@@ -22,35 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.provider
+package com.sygic.maps.uikit.views.common.components
 
-import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 
-/**
- * Interface definition designed for a independent module connection.
- */
-interface ModuleConnectionProvider {
-
-    /**
-     * A *[fragment]* to be used as a target for the transaction.
-     *
-     * @param [Fragment] target fragment.
-     *
-     */
-    val fragment: Fragment
-
-    /**
-     * A *[getFragmentTag]* to be used as a target tag for the transaction.
-     *
-     * @param [String] target tag.
-     *
-     */
-    fun getFragmentTag(): String? = null
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ModuleConnectionProviderWrapper {
-    val moduleConnectionProvidersMap: LiveData<Map<ProviderType, ModuleConnectionProvider?>>
-}
+class FragmentComponent(val fragment: Fragment, val fragmentTag: String?)
