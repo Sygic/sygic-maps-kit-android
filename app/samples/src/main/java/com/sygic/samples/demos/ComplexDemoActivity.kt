@@ -25,9 +25,11 @@
 package com.sygic.samples.demos
 
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
 import com.sygic.maps.module.browsemap.BrowseMapFragment
+import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.demos.states.BrowseMapDemoDefaultState
@@ -45,7 +47,11 @@ class ComplexDemoActivity : CommonSampleActivity() {
 
         setContentView(R.layout.activity_complex_demo)
 
-        viewModel = ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
+            this.showPoiDetailObservable.observe(
+                this@ComplexDemoActivity,
+                Observer<PoiDetailComponent> { browseMapFragment.showPoiDetail(it) })
+        }
 
         browseMapFragment = if (savedInstanceState == null) {
             placeBrowseMapFragment().apply { BrowseMapDemoDefaultState.setTo(this) }

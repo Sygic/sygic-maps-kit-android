@@ -25,14 +25,23 @@
 package com.sygic.samples.demos.viewmodels
 
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.module.search.SearchFragment
+import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
+import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
 import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logInfo
+import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapRectangle
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.data.SimpleCameraDataModel
@@ -50,6 +59,8 @@ private const val MARGIN = 80
 
 class ComplexDemoActivityViewModel : ViewModel() {
 
+    val showPoiDetailObservable: LiveData<PoiDetailComponent> = SingleLiveEvent()
+
     val searchModuleConnectionProvider = object : ModuleConnectionProvider {
         override val fragment: Fragment
             get() {
@@ -63,8 +74,10 @@ class ComplexDemoActivityViewModel : ViewModel() {
     val navigationModuleConnectionProvider = object : ModuleConnectionProvider {
         override val fragment: Fragment
             get() {
+                mapDataModel?.removeAllMapMarkers()
+
+                //todo:
                 val navigationFragment = NavigationFragment()
-                //todo
                 return navigationFragment
             }
     }
@@ -76,6 +89,11 @@ class ComplexDemoActivityViewModel : ViewModel() {
         mapDataModel?.removeAllMapMarkers()
 
         if (searchResultList.isNotEmpty()) {
+            cameraDataModel?.apply {
+                movementMode = Camera.MovementMode.Free
+                rotationMode = Camera.RotationMode.Free
+            }
+
             if (searchResultList.isCategoryResult()) {
                 (searchResultList.first() as MapSearchResult).loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
                     if (state == SearchResult.ResultState.Success) {
@@ -92,9 +110,14 @@ class ComplexDemoActivityViewModel : ViewModel() {
                     if (geoCoordinatesList.isNotEmpty()) {
 
                         if (geoCoordinatesList.size == 1) {
-                            addMapMarker(geoCoordinatesList.first())
-                            cameraDataModel?.position = geoCoordinatesList.first()
-                            cameraDataModel?.zoomLevel = 10F
+                            with(geoCoordinatesList.first()) {
+                                addMapMarker(this)
+                                cameraDataModel?.position = this
+                                cameraDataModel?.zoomLevel = 10F
+                                searchResultList.first().toPoiDetailComponent()?.let {
+                                    showPoiDetailObservable.asSingleEvent().value = it
+                                }
+                            }
                         } else {
                             val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
                             geoCoordinatesList.forEach { geoCoordinates ->
@@ -135,4 +158,22 @@ private fun List<SearchResult>.isCategoryResult(): Boolean {
     return size == 1 && firstSearchResult is MapSearchResult
             && (firstSearchResult.dataType == MapSearchResult.DataType.PoiCategoryGroup
             || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory)
+}
+
+private fun SearchResult.toPoiDetailComponent(): PoiDetailComponent? {
+    return when (this) {
+        is CoordinateSearchResult -> PoiDetailComponent(PoiDetailData(this.position.getFormattedLocation(), EMPTY_STRING), true)
+        is MapSearchResult -> {
+            val poiData = PoiData(
+                name = this.poiName.text,
+                street = this.street.text,
+                city = this.city.text)
+
+            PoiDetailComponent(PoiDetailData(poiData.title, poiData.description), true)
+        }
+        else -> {
+            logInfo("${this.javaClass.simpleName} class conversion is not implemented yet.")
+            null
+        }
+    }
 }
