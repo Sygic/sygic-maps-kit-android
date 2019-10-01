@@ -216,8 +216,8 @@ class NavigationFragmentViewModel internal constructor(
 
     override fun onCreate(owner: LifecycleOwner) {
         if (owner is OnInfobarButtonClickListenerWrapper) {
-            owner.infobarButtonClickListenerProvider.observe(owner, Observer {
-                updateInfobarListenersMap(it.infobarButtonType, it.onInfobarButtonClickListener)
+            owner.infobarButtonClickListenerProvidersMap.observe(owner, Observer { map ->
+                map.forEach { updateInfobarListenersMap(it.key, it.value) }
             })
         }
         if (owner is ActionMenuItemsProviderWrapper) {

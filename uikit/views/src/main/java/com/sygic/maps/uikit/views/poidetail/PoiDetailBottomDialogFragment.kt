@@ -38,21 +38,21 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
-import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.common.BottomSheetDialog
+import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.poidetail.manager.PreferencesManager
 import com.sygic.maps.uikit.views.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
 import com.sygic.maps.uikit.views.poidetail.viewmodel.PoiDetailInternalViewModel
 import com.sygic.maps.uikit.views.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
-private const val POI_DETAIL_DATA = "poi_detail_data"
+private const val POI_DETAIL_COMPONENT = "poi_detail_component"
 
 /**
  * A [PoiDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
- * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiDetailData] object.
+ * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiDetailComponent] object.
  *
- * You can register an [DialogFragmentListener] using [setListener] method. Then you will be notified when dialog is dismissed.
+ * You can register an [Listener] using [setListener] method. Then you will be notified when dialog is dismissed.
  *
  * Content colors can be changed with the standard _colorBackground_, _textColorPrimary_, _textColorSecondary_ or
  * _colorAccent_ attribute.
@@ -65,24 +65,24 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
     private lateinit var binding: LayoutPoiDetailInternalBinding
 
     /**
-     * Set a [PoiDetailData] for [PoiDetailBottomDialogFragment] content generation. If null, the loading [ProgressBar] view
+     * Set a [PoiDetailComponent] for [PoiDetailBottomDialogFragment] content generation. If null, the loading [ProgressBar] view
      * will be displayed.
      *
-     * @param [PoiDetailData] which will be used for fulfillment the [PoiDetailBottomDialogFragment] content.
+     * @param [PoiDetailComponent] which will be used for fulfillment the [PoiDetailBottomDialogFragment] content.
      */
-    var data: PoiDetailData?
-        get() = arguments?.getParcelable(POI_DETAIL_DATA)
+    var component: PoiDetailComponent?
+        get() = arguments?.getParcelable(POI_DETAIL_COMPONENT)
         set(value) {
-            arguments?.putParcelable(POI_DETAIL_DATA, value)
-            viewModel?.onDataChanged(value)
+            arguments?.putParcelable(POI_DETAIL_COMPONENT, value)
+            viewModel?.onComponentChanged(value)
         }
 
     /**
      * Register a callback to be invoked when a [PoiDetailBottomDialogFragment] is dismissed.
      *
-     * @param [DialogFragmentListener] callback to invoke [PoiDetailBottomDialogFragment] dismiss.
+     * @param [PoiDetailBottomDialogFragment.Listener] callback to invoke [PoiDetailBottomDialogFragment] dismiss.
      */
-    var listener: DialogFragmentListener? = null
+    var listener: Listener? = null
         get() = viewModel?.listener ?: field
         set(value) {
             field = value
@@ -106,17 +106,21 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         const val TAG = "poi_detail_bottom_dialog_fragment"
 
         /**
-         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You can provide a [PoiDetailData] object.
+         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You can provide a [PoiDetailComponent] object.
          *
-         * @param poiDetailData [PoiDetailData] to be applied to the dialog content.
+         * @param component [PoiDetailComponent] to be applied to the dialog content.
          */
         @JvmStatic
-        fun newInstance(poiDetailData: PoiDetailData? = null): PoiDetailBottomDialogFragment =
+        fun newInstance(component: PoiDetailComponent? = null): PoiDetailBottomDialogFragment =
             PoiDetailBottomDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(POI_DETAIL_DATA, poiDetailData)
+                    putParcelable(POI_DETAIL_COMPONENT, component)
                 }
             }
+    }
+
+    interface Listener : DialogFragmentListener {
+        fun onNavigationButtonClick()
     }
 
     override fun getDialog(): BottomSheetDialog = super.getDialog() as BottomSheetDialog
@@ -127,13 +131,13 @@ open class PoiDetailBottomDialogFragment : AppCompatDialogFragment() {
         preferencesManager = PreferencesManager(requireContext())
 
         viewModel = ViewModelProviders.of(
-            this, PoiDetailInternalViewModel.ViewModelFactory(requireActivity().application, preferencesManager)
+            this, PoiDetailInternalViewModel.Factory(requireActivity().application, preferencesManager)
         )[PoiDetailInternalViewModel::class.java].apply {
             this.dialogStateObservable.observe(
                 this@PoiDetailBottomDialogFragment,
                 Observer<Int> { setState(it) })
 
-            this.onDataChanged(arguments.getParcelableValue(POI_DETAIL_DATA))
+            this.onComponentChanged(arguments.getParcelableValue(POI_DETAIL_COMPONENT))
             this.listener = this@PoiDetailBottomDialogFragment.listener
             this@PoiDetailBottomDialogFragment.listener = null
         }

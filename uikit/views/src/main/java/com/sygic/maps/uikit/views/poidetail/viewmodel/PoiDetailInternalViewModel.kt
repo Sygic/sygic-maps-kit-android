@@ -30,9 +30,9 @@ import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.BottomSheetBehaviorWrapper
-import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.maps.uikit.views.poidetail.manager.PreferencesManager
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
@@ -52,15 +52,20 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
     val phoneText: LiveData<String> = MutableLiveData()
     val coordinatesText: LiveData<String> = MutableLiveData()
     val contentViewSwitcherIndex: LiveData<Int> = MutableLiveData()
+    val navigationButtonEnabled: LiveData<Boolean> = MutableLiveData(false)
 
     val dialogStateObservable: LiveData<Int> = SingleLiveEvent()
 
-    var listener: DialogFragmentListener? = null
+    var listener: PoiDetailBottomDialogFragment.Listener? = null
 
     private var showcaseLaunch: Job? = null
 
     fun onHeaderClick() {
         dialogStateObservable.asSingleEvent().value = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    fun onNavigationButtonClick() {
+        listener?.onNavigationButtonClick()
     }
 
     fun onWebUrlClick() = urlText.value?.let { application.openUrl(it, Intent.FLAG_ACTIVITY_NEW_TASK) }
@@ -71,14 +76,15 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
 
     fun onCoordinatesClick() = coordinatesText.value?.let { application.copyToClipboard(it) }
 
-    fun onDataChanged(data: PoiDetailData?) {
-        data?.let {
-            titleText.asMutable().value = it.titleString
-            subtitleText.asMutable().value = it.subtitleString
-            urlText.asMutable().value = it.urlString
-            emailText.asMutable().value = it.emailString
-            phoneText.asMutable().value = it.phoneString
-            coordinatesText.asMutable().value = it.coordinatesString
+    fun onComponentChanged(component: PoiDetailComponent?) {
+        component?.let {
+            titleText.asMutable().value = it.data.titleString
+            subtitleText.asMutable().value = it.data.subtitleString
+            urlText.asMutable().value = it.data.urlString
+            emailText.asMutable().value = it.data.emailString
+            phoneText.asMutable().value = it.data.phoneString
+            coordinatesText.asMutable().value = it.data.coordinatesString
+            navigationButtonEnabled.asMutable().value = it.navigationButtonEnabled
             contentViewSwitcherIndex.asMutable().value = PoiDetailContentViewSwitcherIndex.CONTENT
         } ?: run {
             contentViewSwitcherIndex.asMutable().value = PoiDetailContentViewSwitcherIndex.PROGRESSBAR
@@ -113,8 +119,10 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
         listener = null
     }
 
-    class ViewModelFactory(private val app: Application, private val preferencesManager: PreferencesManager) :
-        ViewModelProvider.NewInstanceFactory() {
+    class Factory(
+        private val app: Application,
+        private val preferencesManager: PreferencesManager
+    ) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")

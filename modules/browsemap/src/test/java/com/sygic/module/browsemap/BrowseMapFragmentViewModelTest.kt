@@ -196,7 +196,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.MARKERS_ONLY
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker, mock()))
         verify(poiDataManager).getViewObjectData(eq(testMapMarker), any())
-        browseMapFragmentViewModel.poiDetailDataObservable.test().assertValue(testMapMarker.data.toPoiDetailData())
+        assertEquals(testMapMarker.data.toPoiDetailData(), browseMapFragmentViewModel.poiDetailComponentObservable.value!!.data)
     }
 
     @Test
@@ -213,7 +213,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(tesViewObject))
         verify(poiDataManager).getViewObjectData(any(), any())
         verify(extendedMapDataModel).addMapObject(any<MapMarker>())
-        browseMapFragmentViewModel.poiDetailDataObservable.test().assertValue(tesViewObject.data.toPoiDetailData())
+        assertEquals(tesViewObject.data.toPoiDetailData(), browseMapFragmentViewModel.poiDetailComponentObservable.value!!.data)
     }
 
     @Test
@@ -229,7 +229,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.mapSelectionMode = MapSelectionMode.FULL
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testMapMarker))
         verify(poiDataManager).getViewObjectData(eq(testMapMarker), any())
-        browseMapFragmentViewModel.poiDetailDataObservable.test().assertValue(testMapMarker.data.toPoiDetailData())
+        assertEquals(testMapMarker.data.toPoiDetailData(), browseMapFragmentViewModel.poiDetailComponentObservable.value!!.data)
     }
 
     @Test
@@ -255,7 +255,7 @@ class BrowseMapFragmentViewModelTest {
         verify(poiDataManager).getViewObjectData(any(), any())
         verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
-        browseMapFragmentViewModel.poiDetailDataObservable.test().assertHasValue()
+        browseMapFragmentViewModel.poiDetailComponentObservable.test().assertHasValue()
     }
 
     @Test
@@ -273,7 +273,7 @@ class BrowseMapFragmentViewModelTest {
         verify(poiDataManager, never()).getViewObjectData(any(), any())
         verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
         verify(onMapClickListener, never()).onMapDataReceived(any())
-        browseMapFragmentViewModel.poiDetailDataObservable.test().assertNoValue()
+        browseMapFragmentViewModel.poiDetailComponentObservable.test().assertNoValue()
     }
 
     @Test
@@ -299,7 +299,7 @@ class BrowseMapFragmentViewModelTest {
         verify(poiDataManager).getViewObjectData(any(), any())
         verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
-        browseMapFragmentViewModel.poiDetailDataObservable.test().assertNoValue()
+        browseMapFragmentViewModel.poiDetailComponentObservable.test().assertNoValue()
     }
 
     @Test
@@ -323,7 +323,7 @@ class BrowseMapFragmentViewModelTest {
         verify(poiDataManager).getViewObjectData(any(), any())
         verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
-        browseMapFragmentViewModel.poiDetailDataObservable.test().assertNoValue()
+        browseMapFragmentViewModel.poiDetailComponentObservable.test().assertNoValue()
     }
 
     @Test
@@ -343,7 +343,7 @@ class BrowseMapFragmentViewModelTest {
         verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
         verify(poiDataManager).getViewObjectData(eq(testMapMarker), any())
         verify(extendedMapDataModel).addMapObject(any())
-        browseMapFragmentViewModel.poiDetailDataObservable.test().assertNoValue()
+        browseMapFragmentViewModel.poiDetailComponentObservable.test().assertNoValue()
     }
 
     @Test

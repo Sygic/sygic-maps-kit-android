@@ -101,8 +101,8 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
     private lateinit var currentSpeedViewModel: CurrentSpeedViewModel
     private lateinit var speedLimitViewModel: SpeedLimitViewModel
 
-    override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
-    override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
+    override val infobarTextDataProvider: LiveData<Map<InfobarTextType, InfobarTextData>> = MutableLiveData(mutableMapOf())
+    override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> = MutableLiveData(mutableMapOf())
     override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
 
     /**
@@ -379,8 +379,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
         buttonType: InfobarButtonType,
         onClickListener: OnInfobarButtonClickListener?
     ) {
-        infobarButtonClickListenerProvider.asMutable().value =
-            OnInfobarButtonClickListenerWrapper.ProviderComponent(onClickListener, buttonType)
+        infobarButtonClickListenerProvidersMap.asMutable().put(buttonType, onClickListener)
     }
 
     /**
@@ -390,8 +389,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
      * @param textData [InfobarTextData] infobar text data with valid data, empty list otherwise.
      */
     fun setInfobarTextData(textType: InfobarTextType, textData: InfobarTextData) {
-        infobarTextDataProvider.asMutable().value =
-            InfobarTextDataWrapper.ProviderComponent(textData, textType)
+        infobarTextDataProvider.asMutable().put(textType, textData)
     }
 
     override fun onDestroy() {
