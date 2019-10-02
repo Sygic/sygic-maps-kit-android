@@ -29,5 +29,5 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 enum class DemonstrationState : Parcelable {
-    INACTIVE, ACTIVE, PAUSED
+    INACTIVE, ACTIVE, PAUSED, STOPPED
 }

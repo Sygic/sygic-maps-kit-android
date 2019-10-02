@@ -30,7 +30,7 @@ import com.sygic.samples.app.activities.CommonSampleActivity
 
 class BrowseMapFullActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Browse-Map#browse-map---full"
+    override val wikiModulePath = "Module-Browse-Map#browse-map---full"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

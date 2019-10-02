@@ -33,7 +33,7 @@ import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
 
 class NavigationSimplifiedSignpostActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---simplified-signpost"
+    override val wikiModulePath = "Module-Navigation#navigation---simplified-signpost"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

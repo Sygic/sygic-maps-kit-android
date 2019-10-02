@@ -40,6 +40,14 @@ interface ModuleConnectionProvider {
      *
      */
     val fragment: Fragment
+
+    /**
+     * The [Fragment] tag to be used as a target tag for the transaction.
+     *
+     * @param [String] target tag.
+     *
+     */
+    fun getFragmentTag(): String? = null
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

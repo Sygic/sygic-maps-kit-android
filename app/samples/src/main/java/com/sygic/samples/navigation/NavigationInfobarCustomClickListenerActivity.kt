@@ -39,8 +39,7 @@ import com.sygic.sdk.map.Camera
 
 class NavigationInfobarCustomClickListenerActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String =
-        "Module-Navigation#navigation---infobar-custom-click-listener"
+    override val wikiModulePath = "Module-Navigation#navigation---infobar-custom-click-listener"
 
     private var fanfareMediaPlayer: MediaPlayer? = null
     private lateinit var navigationFragment: NavigationFragment

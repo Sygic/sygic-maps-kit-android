@@ -27,7 +27,6 @@ package com.sygic.maps.module.browsemap.viewmodel
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.sygic.maps.module.browsemap.*
 import com.sygic.maps.module.browsemap.detail.PoiDetailsObject
@@ -54,6 +53,7 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logWarning
@@ -107,7 +107,7 @@ class BrowseMapFragmentViewModel internal constructor(
     val poiDetailVisibleObservable: LiveData<Boolean> = SingleLiveEvent()
     val poiDetailComponentObservable: LiveData<PoiDetailComponent> = SingleLiveEvent()
     val poiDetailListenerObservable: LiveData<PoiDetailBottomDialogFragment.Listener> = SingleLiveEvent()
-    val openFragmentObservable: LiveData<Fragment> = SingleLiveEvent()
+    val openFragmentObservable: LiveData<FragmentComponent> = SingleLiveEvent()
 
     private var poiDetailsView: UiObject? = null
     private var selectedMarker: MapMarker? = null
@@ -274,12 +274,15 @@ class BrowseMapFragmentViewModel internal constructor(
         }
     }
 
-    fun onSearchFabClick() =
-        moduleConnectionProvidersMap[ProviderType.SEARCH]?.let { openFragmentObservable.asSingleEvent().value = it.fragment }
+    fun onSearchFabClick() = moduleConnectionProvidersMap[ProviderType.SEARCH]?.let {
+        openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
+    }
 
     override fun onNavigationButtonClick() {
         poiDetailVisibleObservable.asSingleEvent().value = false
-        moduleConnectionProvidersMap[ProviderType.NAVIGATION]?.let { openFragmentObservable.asSingleEvent().value = it.fragment }
+        moduleConnectionProvidersMap[ProviderType.NAVIGATION]?.let {
+            openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
+        }
     }
 
     override fun onDismiss() = mapDataModel.removeMapMarker(selectedMarker)
