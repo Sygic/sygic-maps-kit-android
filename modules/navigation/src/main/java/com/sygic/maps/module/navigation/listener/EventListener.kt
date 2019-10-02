@@ -30,7 +30,7 @@ import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.sdk.route.RouteInfo
 
 /**
- * Interface definition for a callback to be invoked when a navigation event has been made.
+ * Interface definition for a callback to be invoked when a navigation event occurs.
  */
 interface EventListener {
 
@@ -49,7 +49,7 @@ interface EventListener {
     fun onNavigationStarted(routeInfo: RouteInfo?) {}
 
     /**
-     * Called when the SDK `onRouteChanged()` event occur.
+     * Called when the SDK `onRouteChanged()` event occurs.
      *
      * @param routeInfo [RouteInfo] the new route info object.
      *
@@ -62,13 +62,13 @@ interface EventListener {
     fun onRouteFinishReached() {}
 
     /**
-     * Called when navigation has been finished, including `onFinishReached()` and if the [NavigationFragment.previewMode]
-     * is set to true, then this event will also be called when the route preview has been finished.
+     * Called when navigation has been finished (including `onFinishReached()`) and if the [NavigationFragment.previewMode]
+     * is set to true, then this event will also be called when the route preview finished.
      */
     fun onNavigationFinished() {}
 
     /**
-     * Called when the [NavigationFragment] has done its work and is going to be destroyed.
+     * Called when the [NavigationFragment] has done its hard work and is going to be destroyed.
      */
     fun onNavigationDestroyed() {}
 }

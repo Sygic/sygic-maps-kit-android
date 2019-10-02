@@ -275,15 +275,13 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     fun onSearchFabClick() = moduleConnectionProvidersMap[ProviderType.SEARCH]?.let {
-        openFragmentObservable.asSingleEvent().value =
-            FragmentComponent(it.fragment, it.getFragmentTag())
+        openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
     }
 
     override fun onNavigationButtonClick() {
         poiDetailVisibleObservable.asSingleEvent().value = false
         moduleConnectionProvidersMap[ProviderType.NAVIGATION]?.let {
-            openFragmentObservable.asSingleEvent().value =
-                FragmentComponent(it.fragment, it.getFragmentTag())
+            openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
         }
     }
 
