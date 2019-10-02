@@ -53,7 +53,6 @@ import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
 import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.extensions.*
-import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.compass.CompassView
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
