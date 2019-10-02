@@ -38,7 +38,7 @@ import kotlinx.android.synthetic.main.activity_browsemap_modes.*
 
 class BrowseMapModesActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Browse-Map#browse-map---modes"
+    override val wikiModulePath = "Module-Browse-Map#browse-map---modes"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

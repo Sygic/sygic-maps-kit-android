@@ -22,19 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.browsemap
+package com.sygic.maps.uikit.views.common.components
 
-import android.os.Bundle
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
+import androidx.fragment.app.Fragment
 
-class BrowseMapVehicleMapSkinActivity : CommonSampleActivity() {
-
-    override val wikiModulePath = "Module-Browse-Map#browse-map---vehicle-and-map-skin"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_browsemap_vehicle_map_skin)
-    }
-}
+class FragmentComponent(val fragment: Fragment, val fragmentTag: String?)

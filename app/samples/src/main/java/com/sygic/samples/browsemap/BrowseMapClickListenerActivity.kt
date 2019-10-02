@@ -36,7 +36,7 @@ import com.sygic.sdk.map.`object`.data.ViewObjectData
 
 class BrowseMapClickListenerActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Browse-Map#browse-map---click-listener"
+    override val wikiModulePath = "Module-Browse-Map#browse-map---click-listener"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

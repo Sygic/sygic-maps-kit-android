@@ -31,7 +31,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -52,6 +51,7 @@ import com.sygic.maps.module.common.provider.ProviderType
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
+import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.compass.CompassView
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
@@ -214,7 +214,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
                 Observer<PoiDetailBottomDialogFragment.Listener> { setPoiDetailListener(it) })
             this.openFragmentObservable.observe(
                 this@BrowseMapFragment,
-                Observer<Fragment> { openFragment(it) })
+                Observer<FragmentComponent> { openFragment(it) })
         }
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
@@ -283,25 +283,25 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
         moduleConnectionProvidersMap.asMutable().put(ProviderType.NAVIGATION, provider)
     }
 
-    private fun showPoiDetail() {
-        PoiDetailBottomDialogFragment.newInstance().apply {
+    fun showPoiDetail(component: PoiDetailComponent? = null) {
+        PoiDetailBottomDialogFragment.newInstance(component).apply {
             listener = fragmentViewModel
         }.showNow(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
-    private fun hidePoiDetail() {
+    fun hidePoiDetail() {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as DialogFragment).dismiss()
         }
     }
 
-    private fun setPoiDetailListener(listener: PoiDetailBottomDialogFragment.Listener) {
+    fun setPoiDetailListener(listener: PoiDetailBottomDialogFragment.Listener) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as PoiDetailBottomDialogFragment).listener = listener
         }
     }
 
-    private fun setPoiDetailComponent(component: PoiDetailComponent) {
+    fun setPoiDetailComponent(component: PoiDetailComponent) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as PoiDetailBottomDialogFragment).component = component
         }

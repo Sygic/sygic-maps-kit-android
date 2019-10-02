@@ -42,6 +42,8 @@ import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
+import com.sygic.maps.module.navigation.listener.EventListener
+import com.sygic.maps.module.navigation.listener.EventListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
@@ -93,7 +95,7 @@ internal const val KEY_ROUTE_INFO = "route_info"
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComponent, ModuleBuilder<NavigationComponent>, NavigationFragmentViewModel>(DaggerNavigationComponent.builder()),
-    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
+    EventListenerWrapper, OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
@@ -104,6 +106,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
     override val infobarTextDataProvider: LiveData<Map<InfobarTextType, InfobarTextData>> = MutableLiveData(mutableMapOf())
     override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> = MutableLiveData(mutableMapOf())
     override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
+    override val eventListenerProvider: LiveData<EventListener> = MutableLiveData()
 
     /**
      * A *[distanceUnit]* defines all available [DistanceUnit]'s type.
@@ -351,6 +354,15 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
         fragmentManager?.findFragmentByTag(ActionMenuBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as DialogFragment).dismiss()
         }
+    }
+
+    /**
+     * Register a custom callback to be invoked when a navigation event has been made.
+     *
+     * @param eventListener [EventListener] callback to invoke [EventListener] event.
+     */
+    fun setEventListener(eventListener: EventListener?) {
+        eventListenerProvider.asMutable().value = eventListener
     }
 
     /**
