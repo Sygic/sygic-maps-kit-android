@@ -42,7 +42,7 @@ interface ModuleConnectionProvider {
     val fragment: Fragment
 
     /**
-     * A *[getFragmentTag]* to be used as a target tag for the transaction.
+     * The [Fragment] tag to be used as a target tag for the transaction.
      *
      * @param [String] target tag.
      *

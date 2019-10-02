@@ -53,9 +53,9 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
@@ -274,17 +274,14 @@ class BrowseMapFragmentViewModel internal constructor(
         }
     }
 
-    fun onSearchFabClick() =
-        moduleConnectionProvidersMap[ProviderType.SEARCH]?.let {
-            openFragmentObservable.asSingleEvent().value =
-                FragmentComponent(it.fragment, it.getFragmentTag())
-        }
+    fun onSearchFabClick() = moduleConnectionProvidersMap[ProviderType.SEARCH]?.let {
+        openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
+    }
 
     override fun onNavigationButtonClick() {
         poiDetailVisibleObservable.asSingleEvent().value = false
         moduleConnectionProvidersMap[ProviderType.NAVIGATION]?.let {
-            openFragmentObservable.asSingleEvent().value =
-                FragmentComponent(it.fragment, it.getFragmentTag())
+            openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
         }
     }
 

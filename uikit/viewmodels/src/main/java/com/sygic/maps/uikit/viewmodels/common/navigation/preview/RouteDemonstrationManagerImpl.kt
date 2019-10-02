@@ -81,6 +81,7 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
     override fun stop() {
         routeDemonstrateSimulator?.let {
             it.stop()
+            demonstrationState.value = DemonstrationState.STOPPED
             demonstrationState.value = DemonstrationState.INACTIVE
         }
     }

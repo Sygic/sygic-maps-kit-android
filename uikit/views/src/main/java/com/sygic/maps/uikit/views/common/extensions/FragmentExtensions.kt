@@ -31,6 +31,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.utils.logWarning
