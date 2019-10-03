@@ -26,10 +26,9 @@ package com.sygic.samples.app.fragments
 
 import com.sygic.samples.R
 import com.sygic.samples.Samples
-import com.sygic.samples.app.models.Sample
 
-class DemosSampleListFragment : BaseSamplesListFragment() {
+class DemoSampleListFragment : BaseSamplesListFragment() {
 
-    override val title: Int = R.string.demos
-    override val items: List<Sample> = Samples.demoList
+    override val title = R.string.demos
+    override val items = Samples.demoList
 }

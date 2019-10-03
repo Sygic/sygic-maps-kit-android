@@ -85,7 +85,7 @@ class ComplexDemoActivity : CommonSampleActivity() {
             this.computePrimaryRouteObservable.observe(
                 this@ComplexDemoActivity,
                 Observer<GeoCoordinates> { createRoutePlanAndComputeRoute(it) })
-            this.computeRouteProgressVisibilityObservable.observe(
+            this.routeComputeProgressVisibilityObservable.observe(
                 this@ComplexDemoActivity,
                 Observer<Int> { routeComputeProgressBarContainer.visibility = it })
             this.placeNavigationFragmentObservable.observe(
@@ -103,8 +103,6 @@ class ComplexDemoActivity : CommonSampleActivity() {
         browseMapFragment.setSearchConnectionProvider(viewModel.searchModuleConnectionProvider)
     }
 
-    // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
-    // performance or other issues may occur (https://stackoverflow.com/a/14810676/3796931).
     private fun placeBrowseMapFragment() =
         BrowseMapFragment().also {
             supportFragmentManager
@@ -172,7 +170,7 @@ class ComplexDemoActivity : CommonSampleActivity() {
         when (requestCode) {
             REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    viewModel.lastDestination?.let { createRoutePlanAndComputeRoute(it) }
+                    viewModel.targetPosition?.let { createRoutePlanAndComputeRoute(it) }
                 } else {
                     longToast("Sorry, location permission is needed!")
                     finish()
@@ -187,7 +185,7 @@ class ComplexDemoActivity : CommonSampleActivity() {
         when (requestCode) {
             REQUEST_CODE_SETTING_ACTIVITY, REQUEST_CODE_GOOGLE_API_CLIENT -> {
                 if (isGpsEnabled()) {
-                    viewModel.lastDestination?.let { createRoutePlanAndComputeRoute(it) }
+                    viewModel.targetPosition?.let { createRoutePlanAndComputeRoute(it) }
                 } else {
                     longToast("GPS module is not enabled :(")
                     finish()
