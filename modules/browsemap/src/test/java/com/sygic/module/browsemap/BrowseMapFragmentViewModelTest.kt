@@ -108,12 +108,12 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel = BrowseMapFragmentViewModel(
             app,
             arguments,
+            themeManager,
             extendedMapDataModel,
             poiDataManager,
             mapInteractionManager,
             locationManager,
-            permissionsManager,
-            themeManager
+            permissionsManager
         )
     }
 
