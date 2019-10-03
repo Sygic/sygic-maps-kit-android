@@ -35,11 +35,14 @@ import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.extensions.*
 import com.sygic.maps.module.navigation.NAVIGATION_FRAGMENT_TAG
 import com.sygic.maps.module.navigation.NavigationFragment
+import com.sygic.maps.module.navigation.listener.EventListener
 import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
 import com.sygic.maps.uikit.viewmodels.common.extensions.getLastValidLocation
+import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.views.common.extensions.isPermissionNotGranted
 import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.maps.uikit.views.common.extensions.requestPermission
+import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
@@ -73,13 +76,21 @@ class ComplexDemoActivity : CommonSampleActivity() {
                 Observer<Any> { BrowseMapDemoDefaultState.setTo(browseMapFragment) })
             this.showPoiDetailObservable.observe(
                 this@ComplexDemoActivity,
-                Observer<PoiDetailComponent> { browseMapFragment.showPoiDetail(it) })
+                Observer<Pair<PoiDetailComponent, PoiDetailBottomDialogFragment.Listener>> {
+                    browseMapFragment.showPoiDetail(it.first, it.second)
+                })
+            this.hidePoiDetailObservable.observe(
+                this@ComplexDemoActivity,
+                Observer<Any> { browseMapFragment.hidePoiDetail() })
             this.computePrimaryRouteObservable.observe(
                 this@ComplexDemoActivity,
                 Observer<GeoCoordinates> { createRoutePlanAndComputeRoute(it) })
             this.computeRouteProgressVisibilityObservable.observe(
                 this@ComplexDemoActivity,
                 Observer<Int> { routeComputeProgressBarContainer.visibility = it })
+            this.placeNavigationFragmentObservable.observe(
+                this@ComplexDemoActivity,
+                Observer<EventListener> { placeNavigationFragment(it) })
         }
 
         browseMapFragment = if (savedInstanceState == null) {
@@ -90,7 +101,6 @@ class ComplexDemoActivity : CommonSampleActivity() {
 
         browseMapFragment.setOnMapClickListener(viewModel.onMapClickListener)
         browseMapFragment.setSearchConnectionProvider(viewModel.searchModuleConnectionProvider)
-        browseMapFragment.setNavigationConnectionProvider(viewModel.navigationModuleConnectionProvider)
     }
 
     // Note: You can also create this Fragment just like in other examples directly in an XML layout file, but
@@ -104,6 +114,17 @@ class ComplexDemoActivity : CommonSampleActivity() {
                     viewModel.mapDataModel = it.mapDataModel
                     viewModel.cameraDataModel = it.cameraDataModel
                 }
+                ?.commit()
+        }
+
+    private fun placeNavigationFragment(eventListener: EventListener) =
+        NavigationFragment().also {
+            it.setVehicleSkin(VehicleSkin.CAR)
+            it.setEventListener(eventListener)
+            supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(R.id.fragmentContainer, it, NAVIGATION_FRAGMENT_TAG)
+                ?.addToBackStack(null)
                 ?.commit()
         }
 

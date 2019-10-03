@@ -30,21 +30,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.module.navigation.NAVIGATION_FRAGMENT_TAG
-import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.module.navigation.listener.EventListener
 import com.sygic.maps.module.search.SEARCH_FRAGMENT_TAG
 import com.sygic.maps.module.search.SearchFragment
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
-import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
-import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
-import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
-import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
-import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
+import com.sygic.maps.uikit.viewmodels.common.extensions.*
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logInfo
+import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.sdk.map.Camera
@@ -72,13 +67,44 @@ class ComplexDemoActivityViewModel : ViewModel() {
     var cameraDataModel: SimpleCameraDataModel? = null
 
     val restoreDefaultStateObservable: LiveData<Any> = SingleLiveEvent()
-    val showPoiDetailObservable: LiveData<PoiDetailComponent> = SingleLiveEvent()
+    val showPoiDetailObservable: LiveData<Pair<PoiDetailComponent, PoiDetailBottomDialogFragment.Listener>> = SingleLiveEvent()
+    val hidePoiDetailObservable: LiveData<Any> = SingleLiveEvent()
     val computePrimaryRouteObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
     val computeRouteProgressVisibilityObservable: LiveData<Int> = SingleLiveEvent()
+    val placeNavigationFragmentObservable: LiveData<EventListener> = SingleLiveEvent()
 
     val onMapClickListener = object : OnMapClickListener {
+        override fun showDetailsView() = false
         override fun onMapDataReceived(data: ViewObjectData) {
             lastDestination = data.position
+            showPoiDetailObservable.asSingleEvent().value = Pair(
+                PoiDetailComponent(data.toPoiDetailData(), true),
+                poiDetailListener
+            )
+        }
+    }
+
+    val poiDetailListener = object : PoiDetailBottomDialogFragment.Listener {
+        override fun onNavigationButtonClick() {
+            hidePoiDetailObservable.asSingleEvent().call()
+            computePrimaryRouteObservable.asSingleEvent().value = lastDestination
+            computeRouteProgressVisibilityObservable.asSingleEvent().value = View.VISIBLE
+            placeNavigationFragmentObservable.asSingleEvent().value = navigationEventListener
+        }
+
+        override fun onDismiss() {
+            mapDataModel?.removeAllMapMarkers()
+        }
+    }
+
+    val navigationEventListener = object : EventListener {
+        override fun onNavigationStarted(routeInfo: RouteInfo?) {
+            computeRouteProgressVisibilityObservable.asSingleEvent().value = View.GONE
+        }
+
+        override fun onNavigationDestroyed() {
+            restoreDefaultStateObservable.asSingleEvent().call()
+            computeRouteProgressVisibilityObservable.asSingleEvent().value = View.GONE
         }
     }
 
@@ -92,30 +118,6 @@ class ComplexDemoActivityViewModel : ViewModel() {
             }
 
         override fun getFragmentTag() = SEARCH_FRAGMENT_TAG
-    }
-
-    val navigationModuleConnectionProvider = object : ModuleConnectionProvider {
-        override val fragment: Fragment
-            get() {
-                mapDataModel?.removeAllMapMarkers()
-                computePrimaryRouteObservable.asSingleEvent().value = lastDestination
-                computeRouteProgressVisibilityObservable.asSingleEvent().value = View.VISIBLE
-                return NavigationFragment().apply {
-                    setVehicleSkin(VehicleSkin.CAR)
-                    setEventListener(object : EventListener {
-                        override fun onNavigationStarted(routeInfo: RouteInfo?) {
-                            computeRouteProgressVisibilityObservable.asSingleEvent().value = View.GONE
-                        }
-
-                        override fun onNavigationDestroyed() {
-                            restoreDefaultStateObservable.asSingleEvent().call()
-                            computeRouteProgressVisibilityObservable.asSingleEvent().value = View.GONE
-                        }
-                    })
-                }
-            }
-
-        override fun getFragmentTag() = NAVIGATION_FRAGMENT_TAG
     }
 
     private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
@@ -149,7 +151,7 @@ class ComplexDemoActivityViewModel : ViewModel() {
                                 cameraDataModel?.position = this
                                 cameraDataModel?.zoomLevel = 10F
                                 searchResultList.first().toPoiDetailComponent()?.let {
-                                    showPoiDetailObservable.asSingleEvent().value = it
+                                    showPoiDetailObservable.asSingleEvent().value = Pair(it, poiDetailListener)
                                 }
                             }
                         } else {
