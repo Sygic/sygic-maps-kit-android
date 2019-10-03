@@ -55,7 +55,7 @@ class SamplesActivity : AppCompatActivity() {
         samplesActivityViewModel = ViewModelProviders.of(this).get(SamplesActivityViewModel::class.java).apply {
             this.drawerOpenedObservable.observe(
                 this@SamplesActivity,
-                Observer<Boolean> { setDrawerLayoutOpened(it) })
+                Observer<Boolean> { setDrawerOpened(it) })
             this.drawerItemCheckObservable.observe(
                 this@SamplesActivity,
                 Observer<Int> { binding.navigationView.setCheckedItem(it) })
@@ -67,7 +67,7 @@ class SamplesActivity : AppCompatActivity() {
                 Observer<String> { openUrl(it) })
             this.openDialogFragmentObservable.observe(
                 this@SamplesActivity,
-                Observer<Class<out AppCompatDialogFragment>> { it.newInstance().show(supportFragmentManager, null) })
+                Observer<Class<out AppCompatDialogFragment>> { openDialog(it) })
         }
         binding.samplesActivityViewModel = samplesActivityViewModel
         lifecycle.addObserver(samplesActivityViewModel)
@@ -82,16 +82,14 @@ class SamplesActivity : AppCompatActivity() {
         toggle.syncState()
     }
 
-    private fun setDrawerLayoutOpened(opened: Boolean) {
-        if (opened) {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
-        } else {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        }
-    }
+    private fun setDrawerOpened(opened: Boolean) =
+        with(binding.drawerLayout) { if (opened) openDrawer(GravityCompat.START) else closeDrawer(GravityCompat.START) }
 
     private fun placeFragment(fragment: BaseSamplesListFragment) =
         supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
+
+    private fun openDialog(dialogClass: Class<out AppCompatDialogFragment>) =
+        dialogClass.newInstance().show(supportFragmentManager, null)
 
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
