@@ -53,7 +53,7 @@ class SamplesActivity : AppCompatActivity() {
         initDrawerToggle()
 
         samplesActivityViewModel = ViewModelProviders.of(this).get(SamplesActivityViewModel::class.java).apply {
-            this.setDrawerLayoutOpenedObservable.observe(
+            this.drawerOpenedObservable.observe(
                 this@SamplesActivity,
                 Observer<Boolean> { setDrawerLayoutOpened(it) })
             this.drawerItemCheckObservable.observe(

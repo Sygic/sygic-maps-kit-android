@@ -46,7 +46,7 @@ private const val GITHUB_WIKI_SEARCH_RESULT_LIST = "${BuildConfig.GITHUB_WIKI}Ui
 
 class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, NavigationView.OnNavigationItemSelectedListener {
 
-    val setDrawerLayoutOpenedObservable: LiveData<Boolean> = SingleLiveEvent()
+    val drawerOpenedObservable: LiveData<Boolean> = SingleLiveEvent()
     val drawerItemCheckObservable: LiveData<Int> = SingleLiveEvent()
     val samplesListFragmentsObservable: LiveData<BaseSamplesListFragment> = SingleLiveEvent()
     val openLinkInBrowserObservable: LiveData<String> = SingleLiveEvent()
@@ -55,7 +55,7 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
     init {
         drawerItemCheckObservable.asSingleEvent().value = R.id.nav_demos
         samplesListFragmentsObservable.asSingleEvent().value = DemosSampleListFragment()
-        setDrawerLayoutOpenedObservable.asSingleEvent().value = true
+        drawerOpenedObservable.asSingleEvent().value = true
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -75,7 +75,7 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
             R.id.nav_qa -> openLinkInBrowserObservable.asSingleEvent().value = BuildConfig.STACK_OVERFLOW
         }
 
-        setDrawerLayoutOpenedObservable.asSingleEvent().value = false
+        drawerOpenedObservable.asSingleEvent().value = false
         return true
     }
 
