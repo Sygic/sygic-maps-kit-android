@@ -54,12 +54,16 @@ abstract class BaseSamplesListFragment : Fragment() {
 
         toolbar?.setTitle(title)
         samplesListViewModel =
-            ViewModelProviders.of(this, SamplesListViewModel.Factory(items)).get(SamplesListViewModel::class.java)
+            ViewModelProviders.of(
+                this,
+                SamplesListViewModel.Factory(requireActivity().application, items))[SamplesListViewModel::class.java]
                 .apply {
                     this.startActivityObservable.observe(
                         this@BaseSamplesListFragment,
                         Observer<Class<out AppCompatActivity>> { requireContext().openActivity(it) })
                 }
+
+        lifecycle.addObserver(samplesListViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -67,4 +71,10 @@ abstract class BaseSamplesListFragment : Fragment() {
             samplesListViewModel = this@BaseSamplesListFragment.samplesListViewModel
             lifecycleOwner = this@BaseSamplesListFragment
         }.root
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        lifecycle.removeObserver(samplesListViewModel)
+    }
 }

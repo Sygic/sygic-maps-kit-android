@@ -22,13 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.app.fragments
+package com.sygic.samples.utils;
 
-import com.sygic.samples.R
-import com.sygic.samples.Samples
+import androidx.annotation.IntDef;
 
-class NavigationSampleListFragment : BaseSamplesListFragment() {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    override val title = R.string.navigation_samples
-    override val items = Samples.navigationSampleList
+@IntDef({GridLayoutSpanCount.PORTRAIT,
+        GridLayoutSpanCount.LANDSCAPE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface GridLayoutSpanCount {
+    int PORTRAIT = 1;
+    int LANDSCAPE = 2;
 }

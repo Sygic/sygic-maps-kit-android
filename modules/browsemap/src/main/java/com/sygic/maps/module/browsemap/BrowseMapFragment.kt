@@ -283,9 +283,10 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
         moduleConnectionProvidersMap.asMutable().put(ProviderType.NAVIGATION, provider)
     }
 
-    fun showPoiDetail(component: PoiDetailComponent? = null) {
+    fun showPoiDetail(component: PoiDetailComponent? = null,
+                      listener: PoiDetailBottomDialogFragment.Listener = fragmentViewModel) {
         PoiDetailBottomDialogFragment.newInstance(component).apply {
-            listener = fragmentViewModel
+            this.listener = listener
         }.showNow(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 

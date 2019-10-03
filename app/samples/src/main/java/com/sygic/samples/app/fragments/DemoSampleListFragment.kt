@@ -27,8 +27,8 @@ package com.sygic.samples.app.fragments
 import com.sygic.samples.R
 import com.sygic.samples.Samples
 
-class NavigationSampleListFragment : BaseSamplesListFragment() {
+class DemoSampleListFragment : BaseSamplesListFragment() {
 
-    override val title = R.string.navigation_samples
-    override val items = Samples.navigationSampleList
+    override val title = R.string.demos
+    override val items = Samples.demoList
 }

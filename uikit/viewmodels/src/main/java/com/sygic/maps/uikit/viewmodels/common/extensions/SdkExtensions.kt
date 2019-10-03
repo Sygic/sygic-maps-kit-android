@@ -43,6 +43,8 @@ import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
+import com.sygic.sdk.map.Camera
+import com.sygic.sdk.map.MapRectangle
 import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.*
 import com.sygic.sdk.map.`object`.data.ViewObjectData
@@ -52,6 +54,7 @@ import com.sygic.sdk.navigation.warnings.DirectionInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo
 import com.sygic.sdk.navigation.warnings.NaviSignInfo.SignElement.SignElementType
 import com.sygic.sdk.places.LocationInfo
+import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
@@ -130,6 +133,10 @@ fun MapView.MapDataModel.addMapMarker(marker: MapMarker) {
     addMapObject(marker)
 }
 
+fun MapView.MapDataModel.addMapMarker(position: GeoCoordinates) {
+    addMapObject(MapMarker.at(position).build())
+}
+
 fun MapView.MapDataModel.removeMapMarker(marker: MapMarker?) {
     marker?.let { removeMapObject(it) }
 }
@@ -164,6 +171,10 @@ private fun getMapObjects(model: MapView.MapDataModel): Set<MapObject<*>> {
     val m = SimpleMapDataModel::class.java.getDeclaredMethod("getMapObjects")
     m.isAccessible = true
     return m.invoke(model) as Set<MapObject<*>>
+}
+
+fun Camera.CameraModel.setMapRectangle(geoBoundingBox: GeoBoundingBox, margin: Int) {
+    mapRectangle = MapRectangle(geoBoundingBox, margin, margin, margin, margin)
 }
 
 fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
