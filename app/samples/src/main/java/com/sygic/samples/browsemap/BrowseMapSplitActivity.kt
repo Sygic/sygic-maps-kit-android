@@ -35,7 +35,7 @@ import com.sygic.sdk.position.GeoCoordinates
 
 class BrowseMapSplitActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Browse-Map#browse-map---split"
+    override val wikiModulePath = "Module-Browse-Map#browse-map---split"
 
     private lateinit var browseMapFragment: BrowseMapFragment
 

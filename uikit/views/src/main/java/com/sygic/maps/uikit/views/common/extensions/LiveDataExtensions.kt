@@ -40,6 +40,17 @@ fun <T : Any> LiveData<T>.asMutable(): MutableLiveData<T> {
     return if (this is MutableLiveData<T>) this else throw IllegalArgumentException("$this is not an instance of MutableLiveData!")
 }
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun <T : Any> MutableLiveData<T>.notifyObservers() {
+    this.value = this.value
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun <K, V> MutableLiveData<Map<K, V>>.put(key: K, newValue: V) {
+    (this.value as MutableMap)[key] = newValue
+    notifyObservers()
+}
+
 fun <A, B> LiveData<A>.combineLatest(with: LiveData<B>): LiveData<Pair<A, B>> {
     return MediatorLiveData<Pair<A, B>>().apply {
         var lastA: A? = null

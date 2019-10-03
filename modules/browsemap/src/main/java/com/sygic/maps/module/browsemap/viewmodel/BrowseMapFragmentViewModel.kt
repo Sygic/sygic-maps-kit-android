@@ -27,7 +27,6 @@ package com.sygic.maps.module.browsemap.viewmodel
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.sygic.maps.module.browsemap.*
 import com.sygic.maps.module.browsemap.detail.PoiDetailsObject
@@ -41,6 +40,7 @@ import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
 import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
+import com.sygic.maps.module.common.provider.ProviderType
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
 import com.sygic.maps.tools.annotations.Assisted
@@ -53,11 +53,12 @@ import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
+import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logWarning
-import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
-import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
+import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ProxyPoi
 import com.sygic.sdk.map.`object`.UiObject
@@ -69,13 +70,14 @@ import com.sygic.sdk.map.`object`.data.ViewObjectData
 class BrowseMapFragmentViewModel internal constructor(
     app: Application,
     @Assisted arguments: Bundle?,
+    themeManager: ThemeManager,
     private val mapDataModel: ExtendedMapDataModel,
     private val poiDataManager: PoiDataManager,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager,
-    private val themeManager: ThemeManager
-) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, MapInteractionManager.Listener {
+    private val permissionsManager: PermissionsManager
+) : ThemeSupportedViewModel(app, arguments, themeManager), DefaultLifecycleObserver, MapInteractionManager.Listener,
+    PoiDetailBottomDialogFragment.Listener {
 
     @MapSelectionMode
     var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
@@ -96,25 +98,16 @@ class BrowseMapFragmentViewModel internal constructor(
     val positionLockFabEnabled = MutableLiveData<Boolean>(POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
     val searchEnabled = MutableLiveData<Boolean>(SEARCH_ENABLED_DEFAULT_VALUE)
     val zoomControlsEnabled = MutableLiveData<Boolean>(ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
+    val navigationButtonEnabled = MutableLiveData<Boolean>(NAVIGATION_BUTTON_ENABLED_DEFAULT_VALUE)
 
     var onMapClickListener: OnMapClickListener? = null
     var detailsViewFactory: DetailsViewFactory? = null
-    var searchConnectionProvider: ModuleConnectionProvider? = null
-        set(value) {
-            field = value
-            searchEnabled.value = value?.let { true } ?: false
-        }
+    private val moduleConnectionProvidersMap: Map<ProviderType, ModuleConnectionProvider?> = mutableMapOf()
 
-    val poiDetailObservable: LiveData<Any> = SingleLiveEvent()
-    val poiDetailDataObservable: LiveData<PoiDetailData> = SingleLiveEvent()
-    val poiDetailListenerObservable: LiveData<DialogFragmentListener> = SingleLiveEvent()
-    val openFragmentObservable: LiveData<Fragment> = SingleLiveEvent()
-
-    val dialogFragmentListener: DialogFragmentListener = object : DialogFragmentListener {
-        override fun onDismiss() {
-            mapDataModel.removeMapMarker(selectedMarker)
-        }
-    }
+    val poiDetailVisibleObservable: LiveData<Boolean> = SingleLiveEvent()
+    val poiDetailComponentObservable: LiveData<PoiDetailComponent> = SingleLiveEvent()
+    val poiDetailListenerObservable: LiveData<PoiDetailBottomDialogFragment.Listener> = SingleLiveEvent()
+    val openFragmentObservable: LiveData<FragmentComponent> = SingleLiveEvent()
 
     private var poiDetailsView: UiObject? = null
     private var selectedMarker: MapMarker? = null
@@ -129,9 +122,6 @@ class BrowseMapFragmentViewModel internal constructor(
             compassHideIfNorthUp.value = getBoolean(KEY_COMPASS_HIDE_IF_NORTH, COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE)
             positionLockFabEnabled.value = getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
             zoomControlsEnabled.value = getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
-
-            getString(ThemeManager.SkinLayer.DayNight.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, skin) }
-            getString(ThemeManager.SkinLayer.Vehicle.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, skin) }
         }
 
         mapInteractionManager.addOnMapClickListener(this)
@@ -144,11 +134,11 @@ class BrowseMapFragmentViewModel internal constructor(
             })
         }
         if (owner is ModuleConnectionProviderWrapper) {
-            owner.moduleConnectionProvider.observe(owner, Observer { provider ->
-                searchConnectionProvider = provider
+            owner.moduleConnectionProvidersMap.observe(owner, Observer { map ->
+                map.forEach { updateModuleConnectionProvidersMap(it.key, it.value) }
             })
         }
-        poiDetailListenerObservable.asSingleEvent().value = dialogFragmentListener
+        poiDetailListenerObservable.asSingleEvent().value = this
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -249,7 +239,7 @@ class BrowseMapFragmentViewModel internal constructor(
     private fun getPoiDataAndNotifyObservers(viewObject: ViewObject<*>) {
         val showDetailsView = onMapClickListener?.showDetailsView() ?: true
         if (showDetailsView && detailsViewFactory == null) {
-            poiDetailObservable.asSingleEvent().call()
+            poiDetailVisibleObservable.asSingleEvent().value = true
         }
 
         poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
@@ -262,15 +252,37 @@ class BrowseMapFragmentViewModel internal constructor(
                             mapDataModel.addMapObject(view)
                         }
                     } ?: run {
-                        poiDetailDataObservable.asSingleEvent().value = data.toPoiDetailData()
+                        poiDetailComponentObservable.asSingleEvent().value =
+                            PoiDetailComponent(data.toPoiDetailData(), navigationButtonEnabled.value!!)
                     }
                 }
             }
         })
     }
 
-    fun onSearchFabClick() =
-        searchConnectionProvider?.let { openFragmentObservable.asSingleEvent().value = it.fragment }
+    private fun updateModuleConnectionProvidersMap(
+        type: ProviderType,
+        provider: ModuleConnectionProvider?
+    ) {
+        (moduleConnectionProvidersMap as MutableMap)[type] = provider
+        when (type) {
+            ProviderType.SEARCH -> searchEnabled.value = provider?.let { true } ?: false
+            ProviderType.NAVIGATION -> navigationButtonEnabled.value = provider?.let { true } ?: false
+        }
+    }
+
+    fun onSearchFabClick() = moduleConnectionProvidersMap[ProviderType.SEARCH]?.let {
+        openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
+    }
+
+    override fun onNavigationButtonClick() {
+        poiDetailVisibleObservable.asSingleEvent().value = false
+        moduleConnectionProvidersMap[ProviderType.NAVIGATION]?.let {
+            openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
+        }
+    }
+
+    override fun onDismiss() = mapDataModel.removeMapMarker(selectedMarker)
 
     override fun onStop(owner: LifecycleOwner) {
         locationManager.setSdkPositionUpdatingEnabled(false)
@@ -278,7 +290,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun onDestroy(owner: LifecycleOwner) {
         onMapClickListener = null
-        searchConnectionProvider = null
+        (moduleConnectionProvidersMap as MutableMap).clear()
     }
 
     override fun onCleared() {

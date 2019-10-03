@@ -37,7 +37,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.maps.module.common.extensions.executeInjector
+import com.sygic.maps.module.common.di.manager.InjectionManager
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
@@ -71,6 +71,8 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
+
+    private val injectionManager = InjectionManager(DaggerSearchComponent.builder())
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -144,12 +146,13 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     }
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
+        injectionManager.inject(this)
         super.onInflate(context, attrs, savedInstanceState)
         resolveAttributes(attrs)
     }
 
     override fun onAttach(context: Context?) {
-        executeInjector<SearchFragment, SearchComponent, SearchComponent.Builder>(DaggerSearchComponent.builder())
+        injectionManager.inject(this)
         super.onAttach(context)
         sdkInitializationManager.initialize(this)
     }

@@ -53,47 +53,86 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/headerContainer"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/poiDetailHeaderContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
-                android:orientation="vertical"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:paddingBottom="24dp">
 
                 <View
+                    android:id="@+id/poiDetailHandleView"
                     android:layout_width="48dp"
                     android:layout_height="8dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:background="@drawable/ic_drag_hint_shape" />
+                    android:background="@drawable/ic_drag_hint_shape"
+                    android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
+                    app:layout_constraintBottom_toTopOf="@id/poiDetailTitleTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/poiDetailHeaderGroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="poiDetailTitleTextView,poiDetailSubtitleTextView"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/poiDetailNavigationButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/poiDetailHandleView" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/poiDetailTitleTextView"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-medium"
+                    android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
                     android:singleLine="true"
                     android:text="@{poiDetailInternalViewModel.titleText}"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="@dimen/fontSizeMediumLarge"
+                    app:layout_constraintEnd_toStartOf="@id/poiDetailNavigationButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/poiDetailHandleView"
                     tools:text="Sygic" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/poiDetailSubtitleTextView"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:paddingTop="4dp"
                     android:ellipsize="end"
+                    android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
                     android:singleLine="true"
                     android:text="@{poiDetailInternalViewModel.subtitleText}"
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="@dimen/fontSizeSmall"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/poiDetailNavigationButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/poiDetailTitleTextView"
                     tools:text="Mlynské nivy 16, 821 09 Bratislava" />
 
-            </LinearLayout>
+                <ImageButton
+                    android:id="@+id/poiDetailNavigationButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:onClick="@{() -> poiDetailInternalViewModel.onNavigationButtonClick()}"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_navigation"
+                    android:visibility="@{safeUnbox(poiDetailInternalViewModel.navigationButtonEnabled) ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/poiDetailHeaderGroup" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 style="@style/PoiDetailItem"

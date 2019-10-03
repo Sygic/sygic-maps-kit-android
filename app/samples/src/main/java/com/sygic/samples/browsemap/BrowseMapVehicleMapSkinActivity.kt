@@ -30,7 +30,7 @@ import com.sygic.samples.app.activities.CommonSampleActivity
 
 class BrowseMapVehicleMapSkinActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Browse-Map#browse-map---vehicle-and-map-skin"
+    override val wikiModulePath = "Module-Browse-Map#browse-map---vehicle-and-map-skin"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

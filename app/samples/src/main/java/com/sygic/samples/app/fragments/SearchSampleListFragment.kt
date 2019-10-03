@@ -26,10 +26,9 @@ package com.sygic.samples.app.fragments
 
 import com.sygic.samples.R
 import com.sygic.samples.Samples
-import com.sygic.samples.app.models.Sample
 
 class SearchSampleListFragment : BaseSamplesListFragment() {
 
-    override val title: Int = R.string.search_samples
-    override val items: List<Sample> = Samples.searchSampleList
+    override val title = R.string.search_samples
+    override val items = Samples.searchSampleList
 }

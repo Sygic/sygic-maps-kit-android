@@ -47,7 +47,7 @@ private const val REQUEST_CODE_SETTING_ACTIVITY = 7003
 
 class NavigationDefaultActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---default"
+    override val wikiModulePath = "Module-Navigation#navigation---default"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

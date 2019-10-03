@@ -41,8 +41,9 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         app:hasFixedSize="@{true}"
-        app:layoutManager="LinearLayoutManager"
+        app:layoutManager="GridLayoutManager"
         app:setAdapter="@{samplesListViewModel.adapter}"
+        app:spanCount="@{samplesListViewModel.spanCount}"
         tools:listitem="@layout/layout_card_item" />
 
 </layout>

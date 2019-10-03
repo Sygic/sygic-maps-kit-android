@@ -88,8 +88,8 @@ open class InfobarViewModel internal constructor(
 
     override fun onCreate(owner: LifecycleOwner) {
         if (owner is InfobarTextDataWrapper) {
-            owner.infobarTextDataProvider.observe(owner, Observer {
-                setTextData(it.textType, it.textData)
+            owner.infobarTextDataProvider.observe(owner, Observer { map ->
+                map.forEach { setTextData(it.key, it.value) }
             })
         }
     }

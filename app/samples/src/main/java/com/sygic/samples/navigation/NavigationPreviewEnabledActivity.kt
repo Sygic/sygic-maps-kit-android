@@ -33,7 +33,7 @@ import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
 
 class NavigationPreviewEnabledActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---preview-enabled"
+    override val wikiModulePath = "Module-Navigation#navigation---preview-enabled"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
