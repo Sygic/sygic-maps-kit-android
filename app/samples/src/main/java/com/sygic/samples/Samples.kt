@@ -38,14 +38,14 @@ import com.sygic.samples.search.SearchPreFilledInputActivity
 
 object Samples {
 
-    val demoList: List<Sample> = listOf(
+    val demoList = listOf(
         Sample(
             ComplexDemoActivity::class.java, R.drawable.preview_complex_demo,
             R.string.complex_demo, R.string.complex_demo_summary
         )
     )
 
-    val browseMapSampleList: List<Sample> = listOf(
+    val browseMapSampleList = listOf(
         Sample(
             BrowseMapDefaultActivity::class.java, R.drawable.preview_browsemap_default,
             R.string.browse_map_default, R.string.browse_map_default_summary
@@ -84,7 +84,7 @@ object Samples {
         )
     )
 
-    val searchSampleList: List<Sample> = listOf(
+    val searchSampleList = listOf(
         Sample(
             SearchDefaultActivity::class.java, R.drawable.preview_search_default,
             R.string.search_default, R.string.search_default_summary
@@ -103,7 +103,7 @@ object Samples {
         )
     )
 
-    val navigationSampleList: List<Sample> = listOf(
+    val navigationSampleList = listOf(
         Sample(
             NavigationDefaultActivity::class.java, R.drawable.preview_navigation_default,
             R.string.navigation_default, R.string.navigation_default_summary
