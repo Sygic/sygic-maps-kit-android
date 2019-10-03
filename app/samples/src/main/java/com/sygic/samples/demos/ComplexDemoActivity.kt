@@ -49,6 +49,7 @@ import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.RouteInfo
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.RoutingOptions
+import kotlinx.android.synthetic.main.activity_complex_demo.*
 
 private const val REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION = 7001
 private const val REQUEST_CODE_GOOGLE_API_CLIENT = 7002
@@ -67,12 +68,18 @@ class ComplexDemoActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_complex_demo)
 
         viewModel = ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
+            this.restoreDefaultStateObservable.observe(
+                this@ComplexDemoActivity,
+                Observer<Any> { BrowseMapDemoDefaultState.setTo(browseMapFragment) })
             this.showPoiDetailObservable.observe(
                 this@ComplexDemoActivity,
                 Observer<PoiDetailComponent> { browseMapFragment.showPoiDetail(it) })
             this.computePrimaryRouteObservable.observe(
                 this@ComplexDemoActivity,
                 Observer<GeoCoordinates> { createRoutePlanAndComputeRoute(it) })
+            this.computeRouteProgressVisibilityObservable.observe(
+                this@ComplexDemoActivity,
+                Observer<Int> { routeComputeProgressBarContainer.visibility = it })
         }
 
         browseMapFragment = if (savedInstanceState == null) {

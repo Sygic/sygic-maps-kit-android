@@ -32,6 +32,7 @@ import com.sygic.sdk.map.MapAnimation
 import com.sygic.sdk.map.MapCenter
 import com.sygic.sdk.map.MapCenterSettings
 
+private const val TILT_2D = 0f
 private val SCREEN_CENTER = MapCenter(0.5f, 0.5f)
 private val MAP_CENTER_SETTINGS = MapCenterSettings(SCREEN_CENTER, SCREEN_CENTER, MapAnimation.NONE, MapAnimation.NONE)
 
@@ -49,9 +50,10 @@ class BrowseMapDemoDefaultState {
                 mapSelectionMode = MapSelectionMode.FULL
                 setVehicleSkin(VehicleSkin.PEDESTRIAN)
                 cameraDataModel.apply {
+                    tilt = TILT_2D
+                    mapCenterSettings = MAP_CENTER_SETTINGS
                     movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
                     rotationMode = Camera.RotationMode.Attitude
-                    mapCenterSettings = MAP_CENTER_SETTINGS
                 }
             }
         }
