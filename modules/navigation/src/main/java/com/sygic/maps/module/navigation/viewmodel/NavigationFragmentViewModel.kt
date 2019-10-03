@@ -109,7 +109,7 @@ class NavigationFragmentViewModel internal constructor(
     private val permissionsManager: PermissionsManager,
     private val navigationManager: NavigationManager,
     private val routeDemonstrationManager: RouteDemonstrationManager
-) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver,
+) : ThemeSupportedViewModel(app, arguments, themeManager), DefaultLifecycleObserver,
     NavigationManager.OnRouteChangedListener, NavigationManager.OnWaypointPassedListener, Camera.ModeChangedListener {
 
     @LayoutRes
