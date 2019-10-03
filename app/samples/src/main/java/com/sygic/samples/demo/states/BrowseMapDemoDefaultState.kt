@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.demos.states
+package com.sygic.samples.demo.states
 
 import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode

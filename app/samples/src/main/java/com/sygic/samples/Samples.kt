@@ -26,7 +26,7 @@ package com.sygic.samples
 
 import com.sygic.samples.browsemap.*
 import com.sygic.samples.app.models.Sample
-import com.sygic.samples.demos.ComplexDemoActivity
+import com.sygic.samples.demo.ComplexDemoActivity
 import com.sygic.samples.navigation.NavigationDefaultActivity
 import com.sygic.samples.navigation.NavigationInfobarCustomClickListenerActivity
 import com.sygic.samples.navigation.NavigationPreviewEnabledActivity

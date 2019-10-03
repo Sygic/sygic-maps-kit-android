@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.demos
+package com.sygic.samples.demo
 
 import android.Manifest
 import android.content.Intent
@@ -46,8 +46,8 @@ import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.demos.states.BrowseMapDemoDefaultState
-import com.sygic.samples.demos.viewmodels.ComplexDemoActivityViewModel
+import com.sygic.samples.demo.states.BrowseMapDemoDefaultState
+import com.sygic.samples.demo.viewmodels.ComplexDemoActivityViewModel
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.RouteInfo
 import com.sygic.sdk.route.RoutePlan

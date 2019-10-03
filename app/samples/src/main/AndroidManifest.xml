@@ -49,7 +49,7 @@
         </activity>
 
         <activity
-            android:name=".demos.ComplexDemoActivity"
+            android:name=".demo.ComplexDemoActivity"
             android:label="@string/complex_demo"
             android:theme="@style/AppTheme.NoExitAnimation.NoActionBar" />
         <activity

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.demos.viewmodels
+package com.sygic.samples.demo.viewmodels
 
 import android.view.View
 import androidx.fragment.app.Fragment
