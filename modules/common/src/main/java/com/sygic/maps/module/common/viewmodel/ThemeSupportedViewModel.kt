@@ -25,15 +25,25 @@
 package com.sygic.maps.module.common.viewmodel
 
 import android.app.Application
+import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.AndroidViewModel
 import com.sygic.maps.module.common.theme.ThemeManager
+import com.sygic.maps.uikit.views.common.extensions.getString
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class ThemeSupportedViewModel constructor(
     app: Application,
+    arguments: Bundle?,
     private val themeManager: ThemeManager
 ) : AndroidViewModel(app) {
+
+    init {
+        with(arguments) {
+            getString(ThemeManager.SkinLayer.DayNight.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, skin) }
+            getString(ThemeManager.SkinLayer.Vehicle.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, skin) }
+        }
+    }
 
     open fun setSkinAtLayer(layer: ThemeManager.SkinLayer, skin: String) = themeManager.setSkinAtLayer(layer, skin)
 }
