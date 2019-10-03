@@ -70,13 +70,13 @@ import com.sygic.sdk.map.`object`.data.ViewObjectData
 class BrowseMapFragmentViewModel internal constructor(
     app: Application,
     @Assisted arguments: Bundle?,
+    themeManager: ThemeManager,
     private val mapDataModel: ExtendedMapDataModel,
     private val poiDataManager: PoiDataManager,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager,
-    private val themeManager: ThemeManager
-) : ThemeSupportedViewModel(app, themeManager), DefaultLifecycleObserver, MapInteractionManager.Listener,
+    private val permissionsManager: PermissionsManager
+) : ThemeSupportedViewModel(app, arguments, themeManager), DefaultLifecycleObserver, MapInteractionManager.Listener,
     PoiDetailBottomDialogFragment.Listener {
 
     @MapSelectionMode
@@ -122,9 +122,6 @@ class BrowseMapFragmentViewModel internal constructor(
             compassHideIfNorthUp.value = getBoolean(KEY_COMPASS_HIDE_IF_NORTH, COMPASS_HIDE_IF_NORTH_UP_DEFAULT_VALUE)
             positionLockFabEnabled.value = getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
             zoomControlsEnabled.value = getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
-
-            getString(ThemeManager.SkinLayer.DayNight.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.DayNight, skin) }
-            getString(ThemeManager.SkinLayer.Vehicle.toString())?.let { skin -> themeManager.setSkinAtLayer(ThemeManager.SkinLayer.Vehicle, skin) }
         }
 
         mapInteractionManager.addOnMapClickListener(this)
