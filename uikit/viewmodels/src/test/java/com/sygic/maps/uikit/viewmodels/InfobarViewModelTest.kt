@@ -94,7 +94,7 @@ class InfobarViewModelTest {
 
     @Test
     fun onCreateTest() {
-        val infobarTextDataWrapperProviderComponentMock = mock<LiveData<InfobarTextDataWrapper.ProviderComponent>>()
+        val infobarTextDataWrapperProviderComponentMock = mock<LiveData<Map<InfobarTextType, InfobarTextData>>>()
         val infobarTextDataWrapperLifecycleOwnerMock = mock<LifecycleOwner>(extraInterfaces = arrayOf(InfobarTextDataWrapper::class))
         whenever((infobarTextDataWrapperLifecycleOwnerMock as InfobarTextDataWrapper).infobarTextDataProvider).thenReturn(
             infobarTextDataWrapperProviderComponentMock
