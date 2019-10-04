@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di;
+package com.sygic.maps.module.common.di.base;
 
 import androidx.fragment.app.Fragment;
 

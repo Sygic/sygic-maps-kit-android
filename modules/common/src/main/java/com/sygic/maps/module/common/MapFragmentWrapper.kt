@@ -34,7 +34,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.maps.module.common.di.BaseFragmentComponent
+import com.sygic.maps.module.common.di.base.BaseFragmentComponent
 import com.sygic.maps.module.common.di.manager.InjectionManager
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.extensions.createGoogleApiLocationRequest

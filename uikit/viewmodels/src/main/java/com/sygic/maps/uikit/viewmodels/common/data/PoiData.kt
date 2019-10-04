@@ -28,7 +28,7 @@ import com.sygic.maps.uikit.viewmodels.common.utils.appendOnNewLine
 import com.sygic.maps.uikit.viewmodels.common.utils.getCityWithPostal
 import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumber
 import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumberAndCityWithPostal
-import com.sygic.sdk.places.PoiInfo
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -42,8 +42,8 @@ data class PoiData(
     var phone: String? = null,
     var email: String? = null,
     var url: String? = null,
-    @PoiInfo.PoiGroup var poiGroup: Int = PoiInfo.PoiGroup.Unknown,
-    @PoiInfo.PoiCategory var poiCategory: Int = PoiInfo.PoiCategory.Unknown
+    var poiGroup: String = EMPTY_STRING,
+    var poiCategory: String = EMPTY_STRING
 ) : BasicData(createBasicDescription(name, street, houseNumber, city, postal)) {
 
     override fun toString(): String {
