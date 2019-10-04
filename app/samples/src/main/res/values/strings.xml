@@ -24,6 +24,7 @@
 
 <resources>
     <string name="app_name">Sygic Samples</string>
+    <string name="home">Home</string>
     <string name="browse_map">Browse Map</string>
     <string name="browse_map_samples">Browse Map samples</string>
     <string name="search">Search</string>
@@ -35,6 +36,7 @@
     <string name="nav_header_title">Bringing life to maps</string>
     <string name="nav_header_subtitle">http://www.sygic.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="demos">Demos</string>
     <string name="modules">Modules</string>
     <string name="ui_kit_components">Ui Kit components</string>
     <string name="compass">Compass</string>
@@ -52,6 +54,8 @@
     <string name="sample_app_version_code">Sample App Version Code:</string>
     <string name="sygic_sdk_version">Sygic SDK Version:</string>
     <string name="abi">ABI:</string>
+    <string name="complex_demo">Complex Demo</string>
+    <string name="complex_demo_summary">All available modules connected together</string>
     <string name="browse_map_click_listener">Browse Map - Click listener</string>
     <string name="browse_map_click_listener_summary">Browse Map module with own click listener</string>
     <string name="browse_map_default">Browse Map - Default</string>
@@ -92,4 +96,5 @@
     <string name="navigation_simplified_signpost_summary">Navigation module with the simplified signpost view</string>
     <string name="navigation_infobar_custom_click_listener">Navigation - Infobar custom listener</string>
     <string name="navigation_infobar_custom_click_listener_summary">Navigation module with custom infobar click listener</string>
+    <string name="computing_new_route">Computing new route…</string>
 </resources>

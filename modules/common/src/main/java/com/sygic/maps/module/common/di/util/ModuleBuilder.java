@@ -24,9 +24,10 @@
 
 package com.sygic.maps.module.common.di.util;
 
+import com.sygic.maps.module.common.di.BaseFragmentComponent;
 import com.sygic.maps.module.common.di.FragmentModulesComponent;
 
-public interface ModuleBuilder<T> {
+public interface ModuleBuilder<T extends BaseFragmentComponent> {
     ModuleBuilder<T> plus(final FragmentModulesComponent component);
     T build();
 }

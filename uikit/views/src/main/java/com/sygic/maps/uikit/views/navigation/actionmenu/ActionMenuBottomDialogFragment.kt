@@ -29,10 +29,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.maps.uikit.views.common.BaseBottomDialogFragment
 import com.sygic.maps.uikit.views.common.BottomSheetDialog
 import com.sygic.maps.uikit.views.common.extensions.getInt
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
@@ -55,7 +55,7 @@ private const val ACTION_MENU_SPAN_COUNT = "action_menu_span_count"
  * or directly inside the [ActionMenuItem].
  */
 @Suppress("MemberVisibilityCanBePrivate", "unused")
-open class ActionMenuBottomDialogFragment : AppCompatDialogFragment() {
+open class ActionMenuBottomDialogFragment : BaseBottomDialogFragment() {
 
     private var viewModel: ActionMenuInternalViewModel? = null
 
@@ -124,8 +124,6 @@ open class ActionMenuBottomDialogFragment : AppCompatDialogFragment() {
             }
         }
     }
-
-    override fun getDialog(): BottomSheetDialog = super.getDialog() as BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

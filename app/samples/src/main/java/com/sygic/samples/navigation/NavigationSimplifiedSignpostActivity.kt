@@ -33,7 +33,7 @@ import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
 
 class NavigationSimplifiedSignpostActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Navigation#navigation---simplified-signpost"
+    override val wikiModulePath = "Module-Navigation#navigation---simplified-signpost"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class NavigationSimplifiedSignpostActivity : CommonSampleActivity() {
 
         if (savedInstanceState == null) {
             computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as NavigationFragment).routeInfo = route
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
             }
         }
     }

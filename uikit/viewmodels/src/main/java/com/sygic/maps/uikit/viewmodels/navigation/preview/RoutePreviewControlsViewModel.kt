@@ -57,6 +57,7 @@ open class RoutePreviewControlsViewModel internal constructor(
             DemonstrationState.ACTIVE -> routeDemonstrationManager.pause()
             DemonstrationState.PAUSED -> routeDemonstrationManager.unPause()
             DemonstrationState.INACTIVE -> routeDemonstrationManager.restart()
+            DemonstrationState.STOPPED -> { /* do nothing */ }
         }
     }
 

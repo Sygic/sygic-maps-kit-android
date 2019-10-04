@@ -24,6 +24,7 @@
 
 package com.sygic.maps.module.search.di;
 
+import com.sygic.maps.module.common.di.BaseFragmentComponent;
 import com.sygic.maps.module.common.di.FragmentModulesComponent;
 import com.sygic.maps.module.common.di.util.ModuleBuilder;
 import com.sygic.maps.module.search.SearchFragment;
@@ -47,9 +48,7 @@ import java.lang.annotation.RetentionPolicy;
                 FragmentModulesComponent.class
         }
 )
-public interface SearchComponent {
+public interface SearchComponent extends BaseFragmentComponent<SearchFragment> {
     @Component.Builder
     abstract class Builder implements ModuleBuilder<SearchComponent> {}
-
-    void inject(SearchFragment fragment);
 }

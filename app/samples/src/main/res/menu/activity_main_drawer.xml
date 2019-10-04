@@ -27,6 +27,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <item android:title="@string/home">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_demos"
+                    android:icon="@drawable/ic_car"
+                    android:title="@string/demos" />
+            </group>
+        </menu>
+    </item>
+
     <item android:title="@string/modules">
         <menu>
             <group android:checkableBehavior="single">

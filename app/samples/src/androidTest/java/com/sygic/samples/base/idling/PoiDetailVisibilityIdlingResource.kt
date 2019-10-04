@@ -30,22 +30,11 @@ import com.sygic.samples.app.activities.CommonSampleActivity
 
 class PoiDetailVisibilityIdlingResource(
     activity: CommonSampleActivity,
-    @BottomSheetBehavior.State private val expectedBottomSheetState: Int
-) : BaseIdlingResource(activity) {
-
-    private val poiDetailBottomDialogFragment
-        get() = activity.supportFragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)
-
+    @BottomSheetBehavior.State expectedBottomSheetState: Int
+) : BottomDialogFragmentVisibilityIdlingResource(
+    activity,
+    expectedBottomSheetState,
+    PoiDetailBottomDialogFragment.TAG
+) {
     override fun getName(): String = "PoiDetailVisibilityIdlingResource"
-
-    override fun isIdle(): Boolean {
-        when (expectedBottomSheetState) {
-            BottomSheetBehavior.STATE_HIDDEN -> return poiDetailBottomDialogFragment == null
-            else -> poiDetailBottomDialogFragment?.let { fragment ->
-                return ((fragment as PoiDetailBottomDialogFragment).currentState == expectedBottomSheetState)
-            }
-        }
-
-        return false
-    }
 }

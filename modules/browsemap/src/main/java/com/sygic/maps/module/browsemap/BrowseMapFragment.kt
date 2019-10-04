@@ -30,7 +30,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -41,22 +41,21 @@ import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.common.component.*
 import com.sygic.maps.module.common.detail.DetailsViewFactory
+import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.listener.OnMapClickListenerWrapper
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
+import com.sygic.maps.module.common.provider.ProviderType
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
-import com.sygic.maps.uikit.views.common.extensions.asMutable
-import com.sygic.maps.uikit.views.common.extensions.getBoolean
-import com.sygic.maps.uikit.views.common.extensions.getInt
-import com.sygic.maps.uikit.views.common.extensions.openFragment
+import com.sygic.maps.uikit.views.common.components.FragmentComponent
+import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.compass.CompassView
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
-import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
+import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 import com.sygic.maps.uikit.views.searchfab.SearchFab
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
@@ -78,19 +77,16 @@ internal const val KEY_ZOOM_CONTROLS = "zoom_controls"
  * [PoiDetailBottomDialogFragment].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMapClickListenerWrapper,
-    ModuleConnectionProviderWrapper {
+class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapComponent, ModuleBuilder<BrowseMapComponent>, BrowseMapFragmentViewModel>(DaggerBrowseMapComponent.builder()),
+    OnMapClickListenerWrapper, ModuleConnectionProviderWrapper {
 
     override lateinit var fragmentViewModel: BrowseMapFragmentViewModel
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
 
-    override val moduleConnectionProvider: LiveData<ModuleConnectionProvider> = MutableLiveData()
     override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
-
-    override fun executeInjector() =
-        injector<BrowseMapComponent, BrowseMapComponent.Builder>(DaggerBrowseMapComponent.builder()) { it.inject(this) }
+    override val moduleConnectionProvidersMap: LiveData<Map<ProviderType, ModuleConnectionProvider?>> = MutableLiveData(mutableMapOf())
 
     /**
      * A *[MapSelectionMode]* defines the three available [BrowseMapFragment] selection modes.
@@ -207,18 +203,18 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, arguments).apply {
-            this.poiDetailObservable.observe(
+            this.poiDetailVisibleObservable.observe(
                 this@BrowseMapFragment,
-                Observer<Any> { showPoiDetail() })
-            this.poiDetailDataObservable.observe(
+                Observer<Boolean> { if (it) showPoiDetail() else hidePoiDetail() })
+            this.poiDetailComponentObservable.observe(
                 this@BrowseMapFragment,
-                Observer<PoiDetailData> { setPoiDetailData(it) })
+                Observer<PoiDetailComponent> { setPoiDetailComponent(it) })
             this.poiDetailListenerObservable.observe(
                 this@BrowseMapFragment,
-                Observer<DialogFragmentListener> { setPoiDetailListener(it) })
+                Observer<PoiDetailBottomDialogFragment.Listener> { setPoiDetailListener(it) })
             this.openFragmentObservable.observe(
                 this@BrowseMapFragment,
-                Observer<Fragment> { openFragment(it) })
+                Observer<FragmentComponent> { openFragment(it) })
         }
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
@@ -268,30 +264,47 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragmentViewModel>(), OnMa
     }
 
     /**
-     * Set a Search module connection provider to be used when a click to the [SearchFab] has been made. If not null,
+     * Set a Search component connection provider to be used when a click to the [SearchFab] has been made. If not null,
      * the [SearchFab] will be automatically displayed.
      *
-     * @param searchConnectionProvider [ModuleConnectionProvider] a search module connection provider.
+     * @param provider [ModuleConnectionProvider] a search component connection provider.
      */
-    fun setSearchConnectionProvider(searchConnectionProvider: ModuleConnectionProvider?) {
-        moduleConnectionProvider.asMutable().value = searchConnectionProvider
+    fun setSearchConnectionProvider(provider: ModuleConnectionProvider?) {
+        moduleConnectionProvidersMap.asMutable().put(ProviderType.SEARCH, provider)
     }
 
-    private fun showPoiDetail() {
-        PoiDetailBottomDialogFragment.newInstance().apply {
-            listener = fragmentViewModel.dialogFragmentListener
+    /**
+     * Set a Navigation component connection provider to be used when a click to the [Navigation] button has been made.
+     * If not null, the [Navigation] button will be automatically displayed.
+     *
+     * @param provider [ModuleConnectionProvider] a search module connection provider.
+     */
+    fun setNavigationConnectionProvider(provider: ModuleConnectionProvider?) {
+        moduleConnectionProvidersMap.asMutable().put(ProviderType.NAVIGATION, provider)
+    }
+
+    fun showPoiDetail(component: PoiDetailComponent? = null,
+                      listener: PoiDetailBottomDialogFragment.Listener = fragmentViewModel) {
+        PoiDetailBottomDialogFragment.newInstance(component).apply {
+            this.listener = listener
         }.showNow(fragmentManager, PoiDetailBottomDialogFragment.TAG)
     }
 
-    private fun setPoiDetailListener(listener: DialogFragmentListener) {
+    fun hidePoiDetail() {
+        fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as DialogFragment).dismiss()
+        }
+    }
+
+    fun setPoiDetailListener(listener: PoiDetailBottomDialogFragment.Listener) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as PoiDetailBottomDialogFragment).listener = listener
         }
     }
 
-    private fun setPoiDetailData(data: PoiDetailData) {
+    fun setPoiDetailComponent(component: PoiDetailComponent) {
         fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).data = data
+            (fragment as PoiDetailBottomDialogFragment).component = component
         }
     }
 

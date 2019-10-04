@@ -31,6 +31,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.utils.logWarning
 
@@ -40,14 +41,14 @@ fun Fragment.hideKeyboard() = view?.let { context?.hideKeyboard(it) }
 fun Fragment.showInfoToast(infoToastComponent: InfoToastComponent, isLong: Boolean = false) = context?.showInfoToast(infoToastComponent, isLong)
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun Fragment.openFragment(fragment: Fragment) {
+fun Fragment.openFragment(component: FragmentComponent) {
     if (isInLayout) {
         internalContainerId?.let {
-            fragmentManager?.beginTransaction()?.add(it, fragment)?.addToBackStack(null)?.commit()
+            fragmentManager?.beginTransaction()?.add(it, component.fragment, component.fragmentTag)?.addToBackStack(null)?.commit()
         }
         logWarning("Fragment that is statically placed in an XML layout file cannot be replaced, the addition is used instead (performance or other issues may occur).")
     } else {
-        containerId?.let { fragmentManager?.beginTransaction()?.replace(it, fragment)?.addToBackStack(null)?.commit() }
+        containerId?.let { fragmentManager?.beginTransaction()?.replace(it, component.fragment, component.fragmentTag)?.addToBackStack(null)?.commit() }
     }
 }
 

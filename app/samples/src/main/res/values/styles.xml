@@ -37,6 +37,11 @@
         <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>
     </style>
 
+    <style name="AppTheme.NoExitAnimation.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="WindowAnimationStyle" parent="@android:style/Animation.Activity">
         <item name="android:windowExitAnimation">@anim/no_animation</item>
         <item name="android:activityCloseExitAnimation">@anim/no_animation</item>

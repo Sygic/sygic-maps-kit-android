@@ -30,7 +30,7 @@ import com.sygic.samples.app.activities.CommonSampleActivity
 
 class SearchPreFilledInputActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Search#search---pre-filled-input"
+    override val wikiModulePath = "Module-Search#search---pre-filled-input"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

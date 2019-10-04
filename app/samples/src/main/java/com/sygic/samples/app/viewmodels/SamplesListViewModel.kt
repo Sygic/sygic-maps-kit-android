@@ -24,18 +24,24 @@
 
 package com.sygic.samples.app.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import android.app.Application
+import androidx.lifecycle.*
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.app.adapters.SamplesRecyclerViewAdapter
 import com.sygic.samples.app.models.Sample
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.isLandscape
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.samples.utils.GridLayoutSpanCount
 
-class SamplesListViewModel(samples: List<Sample>) : ViewModel(), SamplesRecyclerViewAdapter.ClickListener {
+class SamplesListViewModel(
+    app: Application,
+    samples: List<Sample>
+) : AndroidViewModel(app), DefaultLifecycleObserver, SamplesRecyclerViewAdapter.ClickListener {
 
     val adapter = SamplesRecyclerViewAdapter()
+    val spanCount: LiveData<Int> = MutableLiveData(GridLayoutSpanCount.PORTRAIT)
     val startActivityObservable: LiveData<Class<out CommonSampleActivity>> = SingleLiveEvent()
 
     init {
@@ -43,14 +49,18 @@ class SamplesListViewModel(samples: List<Sample>) : ViewModel(), SamplesRecycler
         adapter.items = samples
     }
 
+    override fun onCreate(owner: LifecycleOwner) {
+        spanCount.asMutable().value = if (isLandscape()) GridLayoutSpanCount.LANDSCAPE else GridLayoutSpanCount.PORTRAIT
+    }
+
     override fun onSampleItemClick(sample: Sample) {
         startActivityObservable.asSingleEvent().value = sample.target
     }
 
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val samples: List<Sample>): ViewModelProvider.Factory {
+    class Factory(private val app: Application, private val samples: List<Sample>) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SamplesListViewModel(samples) as T
+            return SamplesListViewModel(app, samples) as T
         }
     }
 }
