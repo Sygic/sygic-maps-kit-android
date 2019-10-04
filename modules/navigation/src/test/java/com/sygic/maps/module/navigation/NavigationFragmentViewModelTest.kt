@@ -47,6 +47,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButton
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.put
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
@@ -109,6 +110,7 @@ class NavigationFragmentViewModelTest {
         whenever(app.resources).thenReturn(mock())
         whenever(app.resources.configuration).thenReturn(mock())
         whenever(regionalManager.distanceUnit).thenReturn(mock())
+        whenever(routeDemonstrationManager.demonstrationState).thenReturn(mock())
 
         val arguments = mock<Bundle>()
         whenever(arguments.getParcelable<RouteInfo>(eq(KEY_ROUTE_INFO))).thenReturn(mock())
@@ -163,9 +165,9 @@ class NavigationFragmentViewModelTest {
 
     @Test
     fun onCreateTest() {
-        val inInfobarButtonClickListenerProviderComponentMock = mock<LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent>>()
+        val inInfobarButtonClickListenerProviderComponentMock = mock<LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>>>()
         val onInfobarButtonClickListenerWrapperLifecycleOwnerMock = mock<LifecycleOwner>(extraInterfaces = arrayOf(OnInfobarButtonClickListenerWrapper::class))
-        whenever((onInfobarButtonClickListenerWrapperLifecycleOwnerMock as OnInfobarButtonClickListenerWrapper).infobarButtonClickListenerProvider).thenReturn(
+        whenever((onInfobarButtonClickListenerWrapperLifecycleOwnerMock as OnInfobarButtonClickListenerWrapper).infobarButtonClickListenerProvidersMap).thenReturn(
             inInfobarButtonClickListenerProviderComponentMock
         )
         navigationFragmentViewModel.onCreate(onInfobarButtonClickListenerWrapperLifecycleOwnerMock)
@@ -200,13 +202,13 @@ class NavigationFragmentViewModelTest {
 
     @Test
     fun onLeftInfobarButtonClickTest() {
+        val infobarButtonType = InfobarButtonType.LEFT
         val onInfobarButtonClickListener = spy(object : OnInfobarButtonClickListener {
             override val button: InfobarButton = InfobarButton(R.drawable.ic_map_lock_full, R.drawable.bg_info_toast, R.color.black, R.color.white)
             override fun onButtonClick() {}
         })
-        val inInfobarButtonClickListenerProviderComponent = OnInfobarButtonClickListenerWrapper.ProviderComponent(onInfobarButtonClickListener, InfobarButtonType.LEFT)
         val testLifecycleOwner = NavigationTestLifecycleOwner()
-        testLifecycleOwner.infobarButtonClickListenerProvider.asMutable().value = inInfobarButtonClickListenerProviderComponent
+        testLifecycleOwner.infobarButtonClickListenerProvidersMap.asMutable().put(infobarButtonType, onInfobarButtonClickListener)
         testLifecycleOwner.onResume()
 
         navigationFragmentViewModel.onCreate(testLifecycleOwner)
@@ -217,18 +219,18 @@ class NavigationFragmentViewModelTest {
         assertEquals(R.color.white, navigationFragmentViewModel.leftInfobarButton.value!!.backgroundTintColor)
 
         navigationFragmentViewModel.onLeftInfobarButtonClick()
-        verify(inInfobarButtonClickListenerProviderComponent.onInfobarButtonClickListener!!).onButtonClick()
+        verify(onInfobarButtonClickListener).onButtonClick()
     }
 
     @Test
     fun onRightInfobarButtonClickTest() {
+        val infobarButtonType = InfobarButtonType.RIGHT
         val onInfobarButtonClickListener = spy(object : OnInfobarButtonClickListener {
             override val button: InfobarButton = InfobarButton(R.drawable.ic_location, R.drawable.bg_signpost_rounded, R.color.brick_red, R.color.black)
             override fun onButtonClick() {}
         })
-        val inInfobarButtonClickListenerProviderComponent = OnInfobarButtonClickListenerWrapper.ProviderComponent(onInfobarButtonClickListener, InfobarButtonType.RIGHT)
         val testLifecycleOwner = NavigationTestLifecycleOwner()
-        testLifecycleOwner.infobarButtonClickListenerProvider.asMutable().value = inInfobarButtonClickListenerProviderComponent
+        testLifecycleOwner.infobarButtonClickListenerProvidersMap.asMutable().put(infobarButtonType, onInfobarButtonClickListener)
         testLifecycleOwner.onResume()
 
         navigationFragmentViewModel.onCreate(testLifecycleOwner)
@@ -239,7 +241,7 @@ class NavigationFragmentViewModelTest {
         assertEquals(R.color.black, navigationFragmentViewModel.rightInfobarButton.value!!.backgroundTintColor)
 
         navigationFragmentViewModel.onRightInfobarButtonClick()
-        verify(inInfobarButtonClickListenerProviderComponent.onInfobarButtonClickListener!!).onButtonClick()
+        verify(onInfobarButtonClickListener).onButtonClick()
     }
 
     @Test
