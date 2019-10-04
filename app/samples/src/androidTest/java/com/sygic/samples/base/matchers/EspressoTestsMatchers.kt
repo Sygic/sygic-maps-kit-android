@@ -22,28 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.samples.base.matchers
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import android.view.View
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import org.hamcrest.Matcher
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
-
-    override val wikiModulePath = "Module-Navigation#navigation---preview-enabled"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
-            }
-        }
-    }
-}
+fun withDrawable(@DrawableRes resourceId: Int, @ColorInt tintColor: Int? = null): Matcher<View> =
+    DrawableMatcher(resourceId, tintColor)

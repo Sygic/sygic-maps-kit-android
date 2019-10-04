@@ -22,28 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.maps.uikit.views.common
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import androidx.appcompat.app.AppCompatDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+abstract class BaseBottomDialogFragment : AppCompatDialogFragment() {
 
-    override val wikiModulePath = "Module-Navigation#navigation---preview-enabled"
+    /**
+     * A *[currentState]* reflects the current [BaseBottomDialogFragment] state.
+     *
+     * @return current [BottomSheetBehavior.State].
+     */
+    @get:BottomSheetBehavior.State
+    val currentState
+        get() = dialog.behavior?.state
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun getDialog(): BottomSheetDialog = super.getDialog() as BottomSheetDialog
 
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
-            }
-        }
+    protected fun setState(@BottomSheetBehavior.State state: Int) {
+        dialog.behavior?.state = state
     }
 }

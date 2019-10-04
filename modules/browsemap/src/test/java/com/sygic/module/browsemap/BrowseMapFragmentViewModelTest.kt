@@ -355,7 +355,7 @@ class BrowseMapFragmentViewModelTest {
     @Test
     fun onDestroyTest() {
         browseMapFragmentViewModel.onDestroy(mock())
-        assertEquals(browseMapFragmentViewModel.onMapClickListener, null)
-        assertEquals(browseMapFragmentViewModel.detailsViewFactory, null)
+        assertEquals(null, browseMapFragmentViewModel.onMapClickListener)
+        assertEquals(null, browseMapFragmentViewModel.detailsViewFactory)
     }
 }

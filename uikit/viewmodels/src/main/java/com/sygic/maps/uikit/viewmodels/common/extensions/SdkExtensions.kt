@@ -166,7 +166,7 @@ private inline fun <reified T : MapObject<*>> MapView.MapDataModel.removeAllMapO
     }
 }
 
-//todo: MS-6338 remove with next version (v16) of SDK
+//todo: MS-6336 remove with next version (v15) of SDK
 private fun getMapObjects(model: MapView.MapDataModel): Set<MapObject<*>> {
     val m = SimpleMapDataModel::class.java.getDeclaredMethod("getMapObjects")
     m.isAccessible = true

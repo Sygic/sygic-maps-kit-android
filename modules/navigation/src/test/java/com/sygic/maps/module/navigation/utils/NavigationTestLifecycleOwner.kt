@@ -22,28 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.maps.module.navigation.utils
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import androidx.lifecycle.*
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
+import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+class NavigationTestLifecycleOwner : LifecycleOwner, OnInfobarButtonClickListenerWrapper, ActionMenuItemsProviderWrapper {
 
-    override val wikiModulePath = "Module-Navigation#navigation---preview-enabled"
+    override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> =
+        MutableLiveData(mutableMapOf())
+    override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val lifecycle = LifecycleRegistry(this)
 
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
-            }
-        }
+    fun onResume() {
+        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
     }
+
+    override fun getLifecycle() = lifecycle
 }

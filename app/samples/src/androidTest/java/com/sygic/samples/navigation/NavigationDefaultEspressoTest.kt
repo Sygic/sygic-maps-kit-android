@@ -24,26 +24,24 @@
 
 package com.sygic.samples.navigation
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.samples.R
-import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import com.sygic.samples.base.BaseTest
+import com.sygic.samples.navigation.robot.navigation
+import org.junit.Test
+import org.junit.runner.RunWith
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+@RunWith(AndroidJUnit4::class)
+class NavigationDefaultEspressoTest : BaseTest(NavigationDefaultActivity::class.java) {
 
-    override val wikiModulePath = "Module-Navigation#navigation---preview-enabled"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
-            }
+    @Test
+    fun navigationFragmentDisplayed() {
+        navigation(activity) {
+            isViewDisplayed(FullSignpostView::class.java)
+            isViewDisplayed(R.id.infobar)
+            isViewDisplayed(R.id.currentSpeedView)
+            isViewNotDisplayed(R.id.routePreviewControls)
         }
     }
 }

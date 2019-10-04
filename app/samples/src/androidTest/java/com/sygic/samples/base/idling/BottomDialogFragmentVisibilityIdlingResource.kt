@@ -22,28 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.samples.base.idling
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.samples.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.maps.uikit.views.common.BaseBottomDialogFragment
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
+abstract class BottomDialogFragmentVisibilityIdlingResource(
+    activity: CommonSampleActivity,
+    @BottomSheetBehavior.State private val expectedBottomSheetState: Int,
+    private val fragmentTag: String
+) : BaseIdlingResource(activity) {
 
-    override val wikiModulePath = "Module-Navigation#navigation---preview-enabled"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
+    override fun isIdle(): Boolean {
+        with(activity.supportFragmentManager?.findFragmentByTag(fragmentTag)) {
+            if (this == null && expectedBottomSheetState == BottomSheetBehavior.STATE_HIDDEN) {
+                return true
             }
+
+            return (this as? BaseBottomDialogFragment)?.currentState == expectedBottomSheetState
         }
     }
 }

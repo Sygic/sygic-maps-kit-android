@@ -22,28 +22,19 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.navigation
+package com.sygic.samples.base.idling
 
-import android.os.Bundle
-import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.samples.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
 
-class NavigationPreviewEnabledActivity : CommonSampleActivity() {
-
-    override val wikiModulePath = "Module-Navigation#navigation---preview-enabled"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_navigation_preview_enabled)
-
-        if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
-            }
-        }
-    }
+class ActionMenuVisibilityIdlingResource(
+    activity: CommonSampleActivity,
+    @BottomSheetBehavior.State expectedBottomSheetState: Int
+) : BottomDialogFragmentVisibilityIdlingResource(
+    activity,
+    expectedBottomSheetState,
+    ActionMenuBottomDialogFragment.TAG
+) {
+    override fun getName(): String = "ActionMenuVisibilityIdlingResource"
 }

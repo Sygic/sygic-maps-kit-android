@@ -114,6 +114,7 @@ class NavigationFragmentViewModel internal constructor(
 
     @LayoutRes
     val signpostLayout: Int
+    val signpostType: SignpostType
     val signpostEnabled = MutableLiveData<Boolean>(SIGNPOST_ENABLED_DEFAULT_VALUE)
     val infobarEnabled = MutableLiveData<Boolean>(INFOBAR_ENABLED_DEFAULT_VALUE)
     val previewControlsEnabled = MutableLiveData<Boolean>(PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE)
@@ -132,6 +133,9 @@ class NavigationFragmentViewModel internal constructor(
     val actionMenuHideObservable: LiveData<Any> = SingleLiveEvent()
     val actionMenuItemClickListenerObservable: LiveData<ActionMenuItemClickListener> = SingleLiveEvent()
     val activityFinishObservable: LiveData<Any> = SingleLiveEvent()
+
+    val isLanesViewEmbedded
+        get() = signpostEnabled.value!! && signpostType == SignpostType.FULL
 
     private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
 
@@ -191,8 +195,6 @@ class NavigationFragmentViewModel internal constructor(
             regionalManager.distanceUnit.value = value
         }
 
-    private val signpostType: SignpostType
-
     init {
         with(arguments) {
             previewMode.value = getBoolean(KEY_PREVIEW_MODE, PREVIEW_MODE_DEFAULT_VALUE)
@@ -249,8 +251,6 @@ class NavigationFragmentViewModel internal constructor(
         eventListener?.onNavigationCreated()
     }
 
-    fun isLanesViewEmbedded() = signpostEnabled.value!! && signpostType == SignpostType.FULL
-
     override fun onStart(owner: LifecycleOwner) {
         locationManager.positionOnMapEnabled = !previewMode.value!! || routeDemonstrationManager.demonstrationState.value == DemonstrationState.ACTIVE
         cameraModel.addModeChangedListener(this)
@@ -283,15 +283,9 @@ class NavigationFragmentViewModel internal constructor(
         if (infobarButtonListenersMap[InfobarButtonType.LEFT] is InternalLeftInfobarClickListener) {
             when (mode) {
                 Camera.MovementMode.Free ->
-                    updateInfobarListenersMap(
-                        InfobarButtonType.LEFT,
-                        navigationUnlockedLeftInfobarClickListener
-                    )
+                    updateInfobarListenersMap(InfobarButtonType.LEFT, navigationUnlockedLeftInfobarClickListener)
                 Camera.MovementMode.FollowGpsPosition, Camera.MovementMode.FollowGpsPositionWithAutozoom ->
-                    updateInfobarListenersMap(
-                        InfobarButtonType.LEFT,
-                        navigationDefaultLeftInfobarClickListener
-                    )
+                    updateInfobarListenersMap(InfobarButtonType.LEFT, navigationDefaultLeftInfobarClickListener)
             }
         }
     }
