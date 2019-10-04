@@ -41,6 +41,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.maps.module.common.R
+import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
+import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
+import com.sygic.maps.module.common.di.BaseFragmentComponent
+import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.uikit.viewmodels.common.extensions.getSelectionType
 import com.sygic.maps.uikit.views.common.extensions.locationManager
@@ -49,6 +53,15 @@ import com.sygic.sdk.map.`object`.ViewObject
 
 fun OnMapClickListener.onMapClick(viewObject: ViewObject<*>): Boolean =
     onMapClick(viewObject.getSelectionType(), viewObject.position.latitude, viewObject.position.longitude)
+
+fun <F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>> F.executeInjector(moduleBuilder: M) {
+    moduleBuilder
+        .plus(
+            FragmentsComponentDelegate.getComponent(this, ApplicationComponentDelegate)
+        )
+        .build()
+        .inject(this)
+}
 
 fun Fragment.isGooglePlayServicesAvailable(): Boolean = requireContext().isGooglePlayServicesAvailable()
 

@@ -25,45 +25,43 @@
 package com.sygic.samples.search.viewmodels
 
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.search.SearchFragment
+import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.uikit.views.common.utils.logInfo
-import com.sygic.sdk.map.MapRectangle
-import com.sygic.sdk.map.`object`.MapMarker
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
+import com.sygic.maps.uikit.viewmodels.common.extensions.setMapRectangle
+import com.sygic.samples.utils.isCategoryResult
+import com.sygic.samples.utils.toGeoCoordinatesList
+import com.sygic.sdk.map.data.SimpleCameraDataModel
+import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.sdk.position.GeoBoundingBox
-import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.*
+import com.sygic.sdk.search.MapSearchResult
+import com.sygic.sdk.search.Search
+import com.sygic.sdk.search.SearchResult
 import com.sygic.sdk.search.detail.DetailPoiCategory
 import com.sygic.sdk.search.detail.DetailPoiCategoryGroup
 
-private const val MARGIN = 80
+private const val CAMERA_RECTANGLE_MARGIN = 80
 
 class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), ModuleConnectionProvider {
 
-    val addMapMarkerObservable: LiveData<MapMarker> = SingleLiveEvent()
-    val removeAllMapMarkersObservable: LiveData<Any> = SingleLiveEvent()
-    val setCameraPositionObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
-    val setCameraRectangleObservable: LiveData<MapRectangle> = SingleLiveEvent()
-    val setCameraZoomLevelObservable: LiveData<Float> = SingleLiveEvent()
+    var mapDataModel: SimpleMapDataModel? = null
+    var cameraDataModel: SimpleCameraDataModel? = null
 
     private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
-        removeAllMapMarkersObservable.asSingleEvent().call()
+        mapDataModel?.removeAllMapMarkers()
 
         if (searchResultList.isNotEmpty()) {
             if (searchResultList.isCategoryResult()) {
                 (searchResultList.first() as MapSearchResult).loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
                     if (state == SearchResult.ResultState.Success) {
                         when (mapSearchDetail) {
-                            is DetailPoiCategory -> mapSearchDetail.poiList.forEach { addMapMarker(it.position) }
-                            is DetailPoiCategoryGroup -> mapSearchDetail.poiList.forEach { addMapMarker(it.position) }
+                            is DetailPoiCategory -> mapSearchDetail.poiList.forEach { mapDataModel?.addMapMarker(it.position) }
+                            is DetailPoiCategoryGroup -> mapSearchDetail.poiList.forEach { mapDataModel?.addMapMarker(it.position) }
                         }
-
-                        setCameraRectangle(mapSearchDetail.boundingBox)
+                        cameraDataModel?.setMapRectangle(mapSearchDetail.boundingBox, CAMERA_RECTANGLE_MARGIN)
                     }
                 })
             } else {
@@ -71,16 +69,16 @@ class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), ModuleConnect
                     if (geoCoordinatesList.isNotEmpty()) {
 
                         if (geoCoordinatesList.size == 1) {
-                            addMapMarker(geoCoordinatesList.first())
-                            setCameraPositionObservable.asSingleEvent().value = geoCoordinatesList.first()
-                            setCameraZoomLevelObservable.asSingleEvent().value = 10F
+                            mapDataModel?.addMapMarker(geoCoordinatesList.first())
+                            cameraDataModel?.position = geoCoordinatesList.first()
+                            cameraDataModel?.zoomLevel = 10F
                         } else {
                             val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
                             geoCoordinatesList.forEach { geoCoordinates ->
-                                addMapMarker(geoCoordinates)
+                                mapDataModel?.addMapMarker(geoCoordinates)
                                 geoBoundingBox.union(geoCoordinates)
                             }
-                            setCameraRectangle(geoBoundingBox)
+                            cameraDataModel?.setMapRectangle(geoBoundingBox, CAMERA_RECTANGLE_MARGIN)
                         }
                     }
                 }
@@ -91,35 +89,8 @@ class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), ModuleConnect
     override val fragment: Fragment
         get() {
             val searchFragment = SearchFragment()
+            searchFragment.searchLocation = cameraDataModel?.position
             searchFragment.setResultCallback(callback)
             return searchFragment
         }
-
-    private fun addMapMarker(position: GeoCoordinates) {
-        addMapMarkerObservable.asSingleEvent().value = MapMarker.at(position).build()
-    }
-
-    private fun setCameraRectangle(geoBoundingBox: GeoBoundingBox) {
-        setCameraRectangleObservable.asSingleEvent().value =
-            MapRectangle(geoBoundingBox, MARGIN, MARGIN, MARGIN, MARGIN)
-    }
-}
-
-private fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
-    val geoCoordinatesList = mutableListOf<GeoCoordinates>()
-    forEach { searchResult ->
-        when (searchResult) {
-            is CoordinateSearchResult -> geoCoordinatesList.add(searchResult.position)
-            is MapSearchResult -> geoCoordinatesList.add(searchResult.position)
-            else -> logInfo("${searchResult.javaClass.simpleName} class conversion is not implemented yet.")
-        }
-    }
-    return geoCoordinatesList
-}
-
-private fun List<SearchResult>.isCategoryResult(): Boolean {
-    val firstSearchResult = first()
-    return size == 1 && firstSearchResult is MapSearchResult
-            && (firstSearchResult.dataType == MapSearchResult.DataType.PoiCategoryGroup
-            || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory)
 }

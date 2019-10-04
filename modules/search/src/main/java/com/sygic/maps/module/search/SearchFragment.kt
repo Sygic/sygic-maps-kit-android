@@ -37,12 +37,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
-import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
+import com.sygic.maps.module.common.di.manager.InjectionManager
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
+import com.sygic.maps.module.search.di.SearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
@@ -72,6 +72,8 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
 
+    private val injectionManager = InjectionManager(DaggerSearchComponent.builder())
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
@@ -82,20 +84,6 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     private lateinit var searchResultListViewModel: SearchResultListViewModel
 
     override val searchResultCallbackProvider: LiveData<SearchResultCallback> = MutableLiveData()
-
-    private var injected = false
-    private fun inject() {
-        if (!injected) {
-            DaggerSearchComponent
-                .builder()
-                .plus(
-                    FragmentsComponentDelegate.getComponent(this, ApplicationComponentDelegate)
-                )
-                .build()
-                .inject(this)
-            injected = true
-        }
-    }
 
     /**
      * If *[searchInput]* is defined, then it will be used as input text.
@@ -158,14 +146,14 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     }
 
     override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
-        inject()
+        injectionManager.inject(this)
         super.onInflate(context, attrs, savedInstanceState)
         resolveAttributes(attrs)
     }
 
     override fun onAttach(context: Context?) {
+        injectionManager.inject(this)
         super.onAttach(context)
-        inject()
         sdkInitializationManager.initialize(this)
     }
 

@@ -37,10 +37,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.MapFragmentWrapper
+import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
 import com.sygic.maps.module.navigation.di.DaggerNavigationComponent
 import com.sygic.maps.module.navigation.di.NavigationComponent
+import com.sygic.maps.module.navigation.listener.EventListener
+import com.sygic.maps.module.navigation.listener.EventListenerWrapper
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
@@ -91,8 +94,8 @@ internal const val KEY_ROUTE_INFO = "route_info"
  * may be activated or deactivated and styled.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
-    OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
+class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComponent, ModuleBuilder<NavigationComponent>, NavigationFragmentViewModel>(DaggerNavigationComponent.builder()),
+    EventListenerWrapper, OnInfobarButtonClickListenerWrapper, InfobarTextDataWrapper, ActionMenuItemsProviderWrapper {
 
     override lateinit var fragmentViewModel: NavigationFragmentViewModel
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
@@ -100,12 +103,10 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
     private lateinit var currentSpeedViewModel: CurrentSpeedViewModel
     private lateinit var speedLimitViewModel: SpeedLimitViewModel
 
-    override val infobarTextDataProvider: LiveData<InfobarTextDataWrapper.ProviderComponent> = MutableLiveData()
-    override val infobarButtonClickListenerProvider: LiveData<OnInfobarButtonClickListenerWrapper.ProviderComponent> = MutableLiveData()
+    override val infobarTextDataProvider: LiveData<Map<InfobarTextType, InfobarTextData>> = MutableLiveData(mutableMapOf())
+    override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> = MutableLiveData(mutableMapOf())
     override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
-
-    override fun executeInjector() =
-        injector<NavigationComponent, NavigationComponent.Builder>(DaggerNavigationComponent.builder()) { it.inject(this) }
+    override val eventListenerProvider: LiveData<EventListener> = MutableLiveData()
 
     /**
      * A *[distanceUnit]* defines all available [DistanceUnit]'s type.
@@ -314,16 +315,10 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
                 DataBindingUtil.bind<ViewDataBinding>(view)?.let {
                     when (view) {
                         is FullSignpostView -> {
-                            it.setVariable(
-                                BR.signpostViewModel, viewModelOf(FullSignpostViewModel::class.java)
-                            )
-                            it.setVariable(
-                                BR.lanesViewModel, viewModelOf(LanesViewModel::class.java)
-                            )
+                            it.setVariable(BR.signpostViewModel, viewModelOf(FullSignpostViewModel::class.java))
+                            it.setVariable(BR.lanesViewModel, viewModelOf(LanesViewModel::class.java))
                         }
-                        is SimplifiedSignpostView -> it.setVariable(
-                            BR.signpostViewModel, viewModelOf(SimplifiedSignpostViewModel::class.java)
-                        )
+                        is SimplifiedSignpostView -> it.setVariable(BR.signpostViewModel, viewModelOf(SimplifiedSignpostViewModel::class.java))
                         else -> throw IllegalArgumentException("Unknown view in the SignpostView viewStub.")
                     }
 
@@ -362,6 +357,15 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
     }
 
     /**
+     * Register a custom callback to be invoked when a navigation event has been made.
+     *
+     * @param eventListener [EventListener] callback to invoke [EventListener] event.
+     */
+    fun setEventListener(eventListener: EventListener?) {
+        eventListenerProvider.asMutable().value = eventListener
+    }
+
+    /**
      * Set a custom [ActionMenuData] and [ActionMenuItemClickListener] for the [ActionMenuBottomDialogFragment] content fulfillment.
      *
      * @param actionMenuData [ActionMenuData] which will be used for fulfillment the [ActionMenuBottomDialogFragment] content.
@@ -387,8 +391,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
         buttonType: InfobarButtonType,
         onClickListener: OnInfobarButtonClickListener?
     ) {
-        infobarButtonClickListenerProvider.asMutable().value =
-            OnInfobarButtonClickListenerWrapper.ProviderComponent(onClickListener, buttonType)
+        infobarButtonClickListenerProvidersMap.asMutable().put(buttonType, onClickListener)
     }
 
     /**
@@ -398,8 +401,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragmentViewModel>(),
      * @param textData [InfobarTextData] infobar text data with valid data, empty list otherwise.
      */
     fun setInfobarTextData(textType: InfobarTextType, textData: InfobarTextData) {
-        infobarTextDataProvider.asMutable().value =
-            InfobarTextDataWrapper.ProviderComponent(textData, textType)
+        infobarTextDataProvider.asMutable().put(textType, textData)
     }
 
     override fun onDestroy() {

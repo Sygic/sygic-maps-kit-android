@@ -33,7 +33,7 @@ import com.sygic.sdk.map.`object`.MapMarker
 
 class BrowseMapThemesActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Browse-Map#browse-map---themes"
+    override val wikiModulePath = "Module-Browse-Map#browse-map---themes"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Sygic_Colored)

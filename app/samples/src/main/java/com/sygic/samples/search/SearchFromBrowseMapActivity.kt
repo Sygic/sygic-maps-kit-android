@@ -38,7 +38,7 @@ import com.sygic.sdk.position.GeoCoordinates
 
 class SearchFromBrowseMapActivity : CommonSampleActivity() {
 
-    override val wikiModulePath: String = "Module-Search#search---from-browse-map"
+    override val wikiModulePath = "Module-Search#search---from-browse-map"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

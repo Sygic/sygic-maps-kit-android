@@ -49,6 +49,10 @@
         </activity>
 
         <activity
+            android:name=".demo.ComplexDemoActivity"
+            android:label="@string/complex_demo"
+            android:theme="@style/AppTheme.NoExitAnimation.NoActionBar" />
+        <activity
             android:name=".browsemap.BrowseMapDefaultActivity"
             android:label="@string/browse_map_default"
             android:theme="@style/AppTheme.NoExitAnimation" />
@@ -79,7 +83,6 @@
         <activity
             android:name=".browsemap.BrowseMapSplitActivity"
             android:label="@string/browse_map_split"
-            android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme.NoExitAnimation" />
         <activity
             android:name=".browsemap.BrowseMapVehicleMapSkinActivity"
