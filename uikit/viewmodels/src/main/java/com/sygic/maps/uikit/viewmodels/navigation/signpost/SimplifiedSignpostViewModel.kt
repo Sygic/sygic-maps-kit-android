@@ -25,6 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
 import com.sygic.maps.uikit.views.common.extensions.asMutable
@@ -40,8 +41,8 @@ import com.sygic.sdk.navigation.NavigationManager
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SimplifiedSignpostViewModel internal constructor(
     regionalManager: RegionalManager,
-    navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager) {
+    navigationManagerClient: NavigationManagerClient
+) : BaseSignpostViewModel(regionalManager, navigationManagerClient) {
 
     init {
         directionInfo.observeForever { instructionText.asMutable().value = createInstructionText(it) }

@@ -54,7 +54,7 @@ private const val ACTION_MENU_SPAN_COUNT = "action_menu_span_count"
  * Content colors can be changed with the standard _colorBackground_, _textColorPrimary_, _textColorSecondary_ attribute
  * or directly inside the [ActionMenuItem].
  */
-@Suppress("MemberVisibilityCanBePrivate", "unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 open class ActionMenuBottomDialogFragment : BaseBottomDialogFragment() {
 
     private var viewModel: ActionMenuInternalViewModel? = null

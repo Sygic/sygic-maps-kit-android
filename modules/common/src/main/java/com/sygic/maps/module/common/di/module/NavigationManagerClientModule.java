@@ -24,18 +24,19 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import com.sygic.sdk.position.PositionManager;
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClientImpl;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
 @Module
-public class PositionManagerModule {
+public class NavigationManagerClientModule {
 
     @Singleton
     @Provides
-    PositionManager providePositionManager() {
-        return PositionManager.getInstance();
+    NavigationManagerClient provideNavigationManagerClient() {
+        return NavigationManagerClientImpl.INSTANCE;
     }
 }

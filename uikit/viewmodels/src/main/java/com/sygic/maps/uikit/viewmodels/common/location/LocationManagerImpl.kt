@@ -27,12 +27,12 @@ package com.sygic.maps.uikit.viewmodels.common.location
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.sygic.sdk.position.PositionManager
 import com.sygic.maps.uikit.viewmodels.common.location.livedata.LocationProviderCheckLiveEvent
 import com.sygic.maps.uikit.viewmodels.common.location.livedata.LocationRequestLiveEvent
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class LocationManagerImpl(private val positionManager: PositionManager) : LocationManager {
+class LocationManagerImpl(private val positionManagerClient: PositionManagerClient) : LocationManager {
 
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 
@@ -51,7 +51,7 @@ class LocationManagerImpl(private val positionManager: PositionManager) : Locati
     }
 
     override fun setSdkPositionUpdatingEnabled(enabled: Boolean) =
-        positionManager.run { if (enabled) startPositionUpdating() else stopPositionUpdating() }
+        positionManagerClient.setSdkPositionUpdatingEnabled(enabled)
 
     /**
      * Returns the current enabled/disabled status of the GPS provider.

@@ -22,23 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.viewmodels.common.sdk.holders
 
-import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
-import com.sygic.maps.uikit.viewmodels.common.location.LocationManagerImpl;
-import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
-import dagger.Module;
-import dagger.Provides;
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
 
-import javax.inject.Singleton;
+internal class SignpostInfoHolder(val signpostInfo: SignpostInfo? = null) {
 
-@Module
-public class LocationModule {
+    companion object {
 
-    @Singleton
-    @Provides
-    LocationManager provideLocationManager(@NonNull final PositionManagerClient positionManagerClient) {
-        return new LocationManagerImpl(positionManagerClient);
+        val empty = SignpostInfoHolder()
+
+        @JvmStatic
+        fun from(naviSignInfo: SignpostInfo?): SignpostInfoHolder {
+            return SignpostInfoHolder(signpostInfo = naviSignInfo)
+        }
     }
+
+    fun isEmpty() = signpostInfo == null
+    fun isNotEmpty() = !isEmpty()
 }

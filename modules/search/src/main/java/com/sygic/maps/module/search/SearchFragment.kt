@@ -31,7 +31,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -42,11 +41,10 @@ import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
-import com.sygic.maps.module.search.di.SearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
+import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager
 import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
@@ -57,7 +55,6 @@ import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
 import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
-import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.SearchResult
 import javax.inject.Inject
@@ -70,14 +67,14 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
  * several pre build-in elements such as [SearchToolbar] or [SearchResultList].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
+class SearchFragment : Fragment(), SearchResultCallbackWrapper {
 
     private val injectionManager = InjectionManager(DaggerSearchComponent.builder())
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
-    internal lateinit var sdkInitializationManager: SdkInitializationManager
+    internal lateinit var servicesManager: ServicesManager
 
     private lateinit var fragmentViewModel: SearchFragmentViewModel
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
@@ -154,7 +151,9 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     override fun onAttach(context: Context?) {
         injectionManager.inject(this)
         super.onAttach(context)
-        sdkInitializationManager.initialize(this)
+
+        servicesManager.initializeSdk()
+        servicesManager.enableOnlineMapStreaming()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -190,11 +189,6 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(searchToolbarViewModel)
         lifecycle.addObserver(searchResultListViewModel)
-    }
-
-    @CallSuper
-    override fun onSdkInitialized() {
-        OnlineManager.getInstance().enableOnlineMapStreaming(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

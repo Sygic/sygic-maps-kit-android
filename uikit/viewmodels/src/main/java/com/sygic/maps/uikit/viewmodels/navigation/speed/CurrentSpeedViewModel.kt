@@ -29,6 +29,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.AutoFactory
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.utils.Speed
 import com.sygic.maps.uikit.views.common.extensions.asMutable
@@ -36,7 +38,7 @@ import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import kotlin.math.roundToInt
@@ -50,8 +52,8 @@ import kotlin.math.roundToInt
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class CurrentSpeedViewModel internal constructor(
     private val regionalManager: RegionalManager,
-    private val navigationManager: NavigationManager,
-    private val positionManager: PositionManager
+    private val navigationManagerClient: NavigationManagerClient,
+    private val positionManagerClient: PositionManagerClient
 ) : ViewModel(), NavigationManager.OnSpeedLimitListener, PositionManager.PositionChangeListener {
 
     val speeding: LiveData<Boolean> = MutableLiveData(false)
@@ -70,8 +72,8 @@ open class CurrentSpeedViewModel internal constructor(
     private val speedLimitInfo = MutableLiveData<SpeedLimitInfo>()
 
     init {
-        navigationManager.addOnSpeedLimitListener(this)
-        positionManager.addPositionChangeListener(this)
+        navigationManagerClient.addOnSpeedLimitListener(this)
+        positionManagerClient.addPositionChangeListener(this)
         regionalManager.distanceUnit.observeForever(distanceUnitObserver)
         currentSpeed.combineLatest(speedLimitInfo).observeForever {
             speeding.asMutable().value = Speed.isSpeeding(it.first, it.second, distanceUnit)
@@ -91,8 +93,8 @@ open class CurrentSpeedViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
-        navigationManager.removeOnSpeedLimitListener(this)
-        positionManager.removePositionChangeListener(this)
+        navigationManagerClient.removeOnSpeedLimitListener(this)
+        positionManagerClient.removePositionChangeListener(this)
         regionalManager.distanceUnit.removeObserver(distanceUnitObserver)
     }
 }

@@ -22,22 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.holders
+package com.sygic.maps.module.common.di.module;
 
-import com.sygic.sdk.navigation.warnings.NaviSignInfo
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl;
 
-internal class NaviSignInfoHolder(val naviSignInfo: NaviSignInfo? = null) {
+import dagger.Module;
+import dagger.Provides;
 
-    companion object {
+import javax.inject.Singleton;
 
-        val empty = NaviSignInfoHolder()
+@Module
+public class PositionManagerClientModule {
 
-        @JvmStatic
-        fun from(naviSignInfo: NaviSignInfo?): NaviSignInfoHolder {
-            return NaviSignInfoHolder(naviSignInfo = naviSignInfo)
-        }
+    @Singleton
+    @Provides
+    PositionManagerClient providePositionManagerClient() {
+        return PositionManagerClientImpl.INSTANCE;
     }
-
-    fun isEmpty() = naviSignInfo == null
-    fun isNotEmpty() = !isEmpty()
 }

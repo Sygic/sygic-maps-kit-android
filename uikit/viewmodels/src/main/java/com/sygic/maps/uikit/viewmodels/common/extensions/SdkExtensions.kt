@@ -31,14 +31,14 @@ import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl
+import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManagerImpl
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
-import com.sygic.maps.uikit.views.common.utils.Distance
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.utils.Distance
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
@@ -49,18 +49,13 @@ import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.*
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
-import com.sygic.sdk.map.data.SimpleMapDataModel
-import com.sygic.sdk.navigation.warnings.DirectionInfo
-import com.sygic.sdk.navigation.warnings.NaviSignInfo
-import com.sygic.sdk.navigation.warnings.NaviSignInfo.SignElement.SignElementType
-import com.sygic.sdk.places.LocationInfo
+import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo.SignElement.SignElementType
 import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.position.GeoPosition
-import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.route.RouteInfo
 import com.sygic.sdk.route.RoutePlan
-import com.sygic.sdk.route.Router
 import com.sygic.sdk.search.*
 import java.util.*
 
@@ -158,20 +153,8 @@ fun MapView.MapDataModel.removeAllMapMarkers() = removeAllMapObjects<MapMarker>(
 
 fun MapView.MapDataModel.removeAllMapRoutes() = removeAllMapObjects<MapRoute>()
 
-private inline fun <reified T : MapObject<*>> MapView.MapDataModel.removeAllMapObjects() = with(getMapObjects(this)) {
-    forEach { mapObject ->
-        if (mapObject is T) {
-            removeMapObject(mapObject)
-        }
-    }
-}
-
-//todo: MS-6336 remove with next version (v15) of SDK
-private fun getMapObjects(model: MapView.MapDataModel): Set<MapObject<*>> {
-    val m = SimpleMapDataModel::class.java.getDeclaredMethod("getMapObjects")
-    m.isAccessible = true
-    return m.invoke(model) as Set<MapObject<*>>
-}
+private inline fun <reified T : MapObject<*>> MapView.MapDataModel.removeAllMapObjects() =
+    mapObjects.forEach { if (it is T) removeMapObject(it) }
 
 fun Camera.CameraModel.setMapRectangle(geoBoundingBox: GeoBoundingBox, margin: Int) {
     mapRectangle = MapRectangle(geoBoundingBox, margin, margin, margin, margin)
@@ -237,14 +220,14 @@ fun Application.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: 
     }
 }
 
-fun List<NaviSignInfo.SignElement>.concatItems(): String = StringBuilder().apply {
+fun List<SignpostInfo.SignElement>.concatItems(): String = StringBuilder().apply {
     this@concatItems.forEach {
         if (isNotEmpty()) append(", ")
         append(it.text)
     }
 }.toString()
 
-fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
+fun List<SignpostInfo>.getNaviSignInfoOnRoute(): SignpostInfo? {
     this.filter { it.isOnRoute }.let { isOnRouteList ->
         if (isOnRouteList.isEmpty()) {
             return null
@@ -255,17 +238,17 @@ fun List<NaviSignInfo>.getNaviSignInfoOnRoute(): NaviSignInfo? {
     }
 }
 
-fun NaviSignInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
+fun SignpostInfo.roadSigns(maxRoadSignsCount: Int = 3): List<RoadSignData> {
     return signElements
         .asSequence()
         .filter { it.elementType == SignElementType.RouteNumber }
-        .filter { it.routeNumberFormat.insideNumber.isNotEmpty() }
+        .filter { it.roadNumberFormat.insideNumber.isNotEmpty() }
         .take(if (signElements.hasPictogram()) maxRoadSignsCount - 1 else maxRoadSignsCount)
         .toList()
         .toRoadSignDataList()
 }
 
-fun NaviSignInfo.createInstructionText(): TextHolder {
+fun SignpostInfo.createInstructionText(): TextHolder {
     val acceptedSignElements = signElements
         .filter { element ->
             element.elementType.let {
@@ -282,11 +265,11 @@ fun NaviSignInfo.createInstructionText(): TextHolder {
     }
 }
 
-fun List<NaviSignInfo.SignElement>.hasPictogram(): Boolean = any { it.elementType == SignElementType.Pictogram }
+fun List<SignpostInfo.SignElement>.hasPictogram(): Boolean = any { it.elementType == SignElementType.Pictogram }
 
-fun List<NaviSignInfo.SignElement>.toRoadSignDataList(): List<RoadSignData> {
+fun List<SignpostInfo.SignElement>.toRoadSignDataList(): List<RoadSignData> {
     return map {
-        with(it.routeNumberFormat) {
+        with(it.roadNumberFormat) {
             RoadSignData(roadSignBackgroundDrawableRes(), insideNumber, roadSignForegroundColorRes())
         }
     }

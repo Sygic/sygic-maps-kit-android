@@ -29,7 +29,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.sygic.sdk.map.data.SimpleMapDataModel
 
-@Suppress("MemberVisibilityCanBePrivate", "unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class ExtendedMapDataModel : SimpleMapDataModel(), DefaultLifecycleObserver {
 
     override fun onDestroy(owner: LifecycleOwner) {

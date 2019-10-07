@@ -49,7 +49,6 @@ import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.location.GOOGLE_API_CLIENT_REQUEST_CODE
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.location.SETTING_ACTIVITY_REQUEST_CODE
@@ -61,21 +60,19 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.skin.MapSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isMapSkinValid
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.isVehicleSkinValid
+import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.getString
 import com.sygic.maps.uikit.views.common.extensions.getStringFromAttr
 import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.sdk.map.MapFragment
-import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.listeners.OnMapInitListener
-import com.sygic.sdk.online.OnlineManager
 import javax.inject.Inject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>(moduleBuilder: M)
-    : MapFragment(), SdkInitializationManager.Callback, OnMapInitListener {
+    : MapFragment() {
 
     protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
 
@@ -85,13 +82,13 @@ abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M 
     lateinit var viewModelFactory: ViewModelFactory
 
     @Inject
+    internal lateinit var servicesManager: ServicesManager
+    @Inject
     internal lateinit var mapInteractionManager: MapInteractionManager
     @Inject
     internal lateinit var mapDataModel: ExtendedMapDataModel
     @Inject
     internal lateinit var cameraDataModel: ExtendedCameraModel
-    @Inject
-    internal lateinit var sdkInitializationManager: SdkInitializationManager
     @Inject
     internal lateinit var permissionManager: PermissionsManager
     @Inject
@@ -114,7 +111,6 @@ abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M 
         if (arguments == null) {
             arguments = Bundle.EMPTY
         }
-        getMapAsync(this)
     }
 
     final override fun getMapDataModel() = if (::mapDataModel.isInitialized) mapDataModel else backingMapDataModel.value
@@ -138,7 +134,9 @@ abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M 
             backingCameraModel.value.dumpToModel(cameraDataModel)
         }
 
-        sdkInitializationManager.initialize(this)
+        servicesManager.initializeSdk()
+        servicesManager.enableOnlineMapStreaming()
+        mapInteractionManager.setMapGestureListenerProvider(this)
         permissionManager.observe(this, Observer {
             permissionsRequesterCallback = it.callback
             requestPermissions(it.permissions, PERMISSIONS_REQUEST_CODE)
@@ -161,21 +159,6 @@ abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M 
 
         lifecycle.addObserver(mapDataModel)
         lifecycle.addObserver(cameraDataModel)
-    }
-
-    @CallSuper
-    override fun onSdkInitialized() {
-        OnlineManager.getInstance().enableOnlineMapStreaming(true)
-    }
-
-    @CallSuper
-    override fun onMapReady(mapView: MapView) {
-        mapInteractionManager.onMapReady(mapView)
-    }
-
-    @CallSuper
-    override fun onMapInitializationInterrupted() {
-        /* Currently do nothing */
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

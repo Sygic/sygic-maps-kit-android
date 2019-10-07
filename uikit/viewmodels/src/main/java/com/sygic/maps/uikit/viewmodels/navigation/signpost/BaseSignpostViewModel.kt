@@ -32,6 +32,7 @@ import androidx.lifecycle.ViewModel
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDistanceWithUnits
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
@@ -39,12 +40,12 @@ import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.withLatestFrom
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.DirectionInfo
+import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class BaseSignpostViewModel(
     regionalManager: RegionalManager,
-    private val navigationManager: NavigationManager
+    private val navigationManagerClient: NavigationManagerClient
 ) : ViewModel(), NavigationManager.OnDirectionListener {
 
     val distance: LiveData<String> = MutableLiveData()
@@ -66,7 +67,7 @@ abstract class BaseSignpostViewModel(
     }
 
     init {
-        navigationManager.addOnDirectionListener(this)
+        navigationManagerClient.addOnDirectionListener(this)
         directionInfoWithDistanceUnit.observeForever(directionInfoObserver)
     }
 
@@ -78,7 +79,7 @@ abstract class BaseSignpostViewModel(
     override fun onCleared() {
         super.onCleared()
 
-        navigationManager.removeOnDirectionListener(this)
+        navigationManagerClient.removeOnDirectionListener(this)
         directionInfoWithDistanceUnit.removeObserver(directionInfoObserver)
     }
 }

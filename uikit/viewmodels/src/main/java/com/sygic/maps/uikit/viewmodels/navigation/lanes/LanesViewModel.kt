@@ -1,14 +1,18 @@
 /*
  * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ *
  * This project is licensed under the MIT License.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,25 +29,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.R
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.lanes.data.SimpleLanesData
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.LanesInfo
-import com.sygic.sdk.navigation.warnings.LanesInfo.Lane.Direction.*
+import com.sygic.sdk.navigation.routeeventnotifications.LaneInfo
+import com.sygic.sdk.navigation.routeeventnotifications.LaneInfo.Lane.Direction.*
 
 @AutoFactory
 class LanesViewModel internal constructor(
-    val navigationManager: NavigationManager
-) : ViewModel(), NavigationManager.OnLanesListener {
+    val navigationManagerClient: NavigationManagerClient
+) : ViewModel(), NavigationManager.OnLaneListener {
 
     val enabled: LiveData<Boolean> = MutableLiveData(false)
     val lanesData: LiveData<Array<SimpleLanesData>> = MutableLiveData(emptyArray())
 
     init {
-        navigationManager.addOnLanesListener(this)
+        navigationManagerClient.addOnLaneListener(this)
     }
 
-    override fun onLanesInfoChanged(info: LanesInfo) {
+    override fun onLaneInfoChanged(info: LaneInfo) {
         if (!info.isActive) {
             enabled.asMutable().value = false
             return
@@ -64,12 +69,12 @@ class LanesViewModel internal constructor(
 
     override fun onCleared() {
         super.onCleared()
-        navigationManager.removeOnLanesListener(this)
+        navigationManagerClient.removeOnLaneListener(this)
     }
 }
 
 /**
- * converts [LanesInfo.Lane.Direction] values to appropriate drawables
+ * converts [LaneInfo.Lane.Direction] values to appropriate drawables
  *
  */
 private val transformationDirections: (Int) -> Int = {

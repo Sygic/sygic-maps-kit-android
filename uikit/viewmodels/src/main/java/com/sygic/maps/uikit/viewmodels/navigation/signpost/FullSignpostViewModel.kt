@@ -30,21 +30,22 @@ import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
 import com.sygic.maps.uikit.viewmodels.common.extensions.pictogramDrawableRes
 import com.sygic.maps.uikit.viewmodels.common.extensions.roadSigns
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
-import com.sygic.maps.uikit.viewmodels.common.sdk.holders.NaviSignInfoHolder
+import com.sygic.maps.uikit.viewmodels.common.sdk.holders.SignpostInfoHolder
 import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.NaviSignInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
 
 private const val EMPTY_PICTOGRAM = 0
 
 /**
  * A [FullSignpostViewModel] is a basic ViewModel implementation for the [FullSignpostView] class. It listens to
- * the Sygic SDK [NavigationManager.OnDirectionListener] and [NavigationManager.OnNaviSignListener] and updates the
+ * the Sygic SDK [NavigationManager.OnDirectionListener] and [NavigationManager.OnSignpostListener] and updates the
  * distance, primaryDirection, secondaryDirection, secondaryDirectionText, instructionText, pictogram and roadSigns
  * in the [FullSignpostView].
  */
@@ -52,23 +53,23 @@ private const val EMPTY_PICTOGRAM = 0
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class FullSignpostViewModel internal constructor(
     regionalManager: RegionalManager,
-    private val navigationManager: NavigationManager
-) : BaseSignpostViewModel(regionalManager, navigationManager), NavigationManager.OnNaviSignListener {
+    private val navigationManagerClient: NavigationManagerClient
+) : BaseSignpostViewModel(regionalManager, navigationManagerClient), NavigationManager.OnSignpostListener {
 
     val pictogram: LiveData<Int> = MutableLiveData(EMPTY_PICTOGRAM)
     val roadSigns: LiveData<List<RoadSignData>> = MutableLiveData(listOf())
 
-    private val naviSignInfoHolder = MutableLiveData<NaviSignInfoHolder>(NaviSignInfoHolder.empty)
+    private val signpostInfoHolder = MutableLiveData<SignpostInfoHolder>(SignpostInfoHolder.empty)
 
     init {
-        navigationManager.addOnNaviSignListener(this)
-        directionInfo.combineLatest(naviSignInfoHolder)
+        navigationManagerClient.addOnSignpostListener(this)
+        directionInfo.combineLatest(signpostInfoHolder)
             .observeForever { instructionText.asMutable().value = createInstructionText(it) }
     }
 
-    override fun onNaviSignChanged(naviSignInfoList: List<NaviSignInfo>) {
-        with(naviSignInfoList.getNaviSignInfoOnRoute()) {
-            naviSignInfoHolder.value = NaviSignInfoHolder.from(this)
+    override fun onSignpostChanged(signpostInfoList: List<SignpostInfo>) {
+        with(signpostInfoList.getNaviSignInfoOnRoute()) {
+            signpostInfoHolder.value = SignpostInfoHolder.from(this)
             roadSigns.asMutable().value = this?.roadSigns() ?: listOf()
             pictogram.asMutable().value = this?.pictogramDrawableRes() ?: EMPTY_PICTOGRAM
         }
@@ -77,6 +78,6 @@ open class FullSignpostViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
-        navigationManager.removeOnNaviSignListener(this)
+        navigationManagerClient.removeOnSignpostListener(this)
     }
 }

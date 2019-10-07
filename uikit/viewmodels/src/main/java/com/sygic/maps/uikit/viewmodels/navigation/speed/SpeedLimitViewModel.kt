@@ -29,11 +29,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSpeedLimitType
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
 import com.sygic.maps.uikit.views.navigation.speed.limit.SpeedLimitType
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
 
 /**
  * A [SpeedLimitViewModel] is a basic ViewModel implementation for the [SpeedLimitView] view class. It listens
@@ -42,7 +43,7 @@ import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SpeedLimitViewModel internal constructor(
-    private val navigationManager: NavigationManager
+    private val navigationManagerClient: NavigationManagerClient
 ) : ViewModel(), NavigationManager.OnSpeedLimitListener {
 
     val speedLimitType: LiveData<SpeedLimitType> = MutableLiveData(SpeedLimitType.EU)
@@ -50,7 +51,7 @@ open class SpeedLimitViewModel internal constructor(
     val speedLimitVisible: LiveData<Boolean> = MutableLiveData(false)
 
     init {
-        navigationManager.addOnSpeedLimitListener(this)
+        navigationManagerClient.addOnSpeedLimitListener(this)
     }
 
     override fun onSpeedLimitInfoChanged(speedLimitInfo: SpeedLimitInfo) {
@@ -62,6 +63,6 @@ open class SpeedLimitViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
-        navigationManager.removeOnSpeedLimitListener(this)
+        navigationManagerClient.removeOnSpeedLimitListener(this)
     }
 }

@@ -24,18 +24,23 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import com.sygic.sdk.navigation.NavigationManager;
-import dagger.Module;
-import dagger.Provides;
+import androidx.annotation.NonNull;
+
+import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager;
+import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager;
+import com.sygic.maps.uikit.viewmodels.common.services.ServicesManagerImpl;
 
 import javax.inject.Singleton;
 
+import dagger.Module;
+import dagger.Provides;
+
 @Module
-public class NavigationManagerModule {
+public class ServicesManagerModule {
 
     @Singleton
     @Provides
-    NavigationManager provideNavigationManager() {
-        return NavigationManager.getInstance();
+    ServicesManager provideServicesManager(@NonNull final SdkInitializationManager sdkInitializationManager) {
+        return ServicesManagerImpl.getInstance(sdkInitializationManager);
     }
 }
