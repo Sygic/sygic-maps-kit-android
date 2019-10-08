@@ -22,12 +22,14 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.initialization
+package com.sygic.maps.uikit.viewmodels.common.initialization.sdk
 
 import android.app.Application
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.R
+import com.sygic.maps.uikit.viewmodels.common.remote.RemoteControlManager
 import com.sygic.maps.uikit.viewmodels.common.extensions.getApiKey
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
 import com.sygic.sdk.SygicEngine
 import java.util.*
@@ -35,25 +37,25 @@ import java.util.*
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SdkInitializationManagerImpl private constructor(
     private val app: Application
-) : SdkInitializationManager, SygicEngine.OnInitListener {
+) : SdkInitializationManager {
 
     companion object : SingletonHolder<SdkInitializationManagerImpl>() {
         @JvmStatic
-        fun getInstance(app: Application): SdkInitializationManagerImpl = getInstance { SdkInitializationManagerImpl(app) }
+        fun getInstance(app: Application) = getInstance { SdkInitializationManagerImpl(app) }
     }
 
     @InitializationState
     override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
-    private val callbacks = LinkedHashSet<SdkInitializationManager.Callback>()
+    private val callbacks = LinkedHashSet<SdkInitializationManager.SdkInitializationCallback>()
 
-    override fun initialize(callback: SdkInitializationManager.Callback) {
+    override fun initialize(callback: SdkInitializationManager.SdkInitializationCallback?) {
         synchronized(this) {
             if (initializationState == InitializationState.INITIALIZED) {
-                callback.onSdkInitialized()
+                callback?.onInitialized()
                 return
             }
 
-            callbacks.add(callback)
+            callback?.let { callbacks.add(it) }
 
             if (initializationState == InitializationState.INITIALIZING) {
                 return
@@ -66,20 +68,25 @@ class SdkInitializationManagerImpl private constructor(
             SygicEngine.Builder(app)
                 .setKeyAndSecret(app.packageName, key)
                 .setOnlineRoutingServiceKey(app.getString(R.string.online_routing_service_key))
-                .setInitListener(this)
+                .setRemoteControl(RemoteControlManager)
+                .setInitListener(object : SygicEngine.OnInitListener {
+                    override fun onSdkInitialized() {
+                        synchronized(this) { initializationState = InitializationState.INITIALIZED }
+                        with(callbacks) {
+                            forEach { it.onInitialized() }
+                            clear()
+                        }
+                    }
+
+                    override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
+                        synchronized(this) { initializationState = InitializationState.ERROR }
+                        with(callbacks) {
+                            forEach { it.onError(error) }
+                            clear()
+                        }
+                    }
+                })
                 .init()
         }
-    }
-
-    override fun onSdkInitialized() {
-        synchronized(this) { initializationState = InitializationState.INITIALIZED }
-        callbacks.forEach { it.onSdkInitialized() }
-        callbacks.clear()
-    }
-
-    override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
-        synchronized(this) { initializationState = InitializationState.ERROR }
-        callbacks.forEach { it.onError(error) }
-        callbacks.clear()
     }
 }

@@ -68,6 +68,7 @@ buildscript {
         mockitoKotlinVersion = '2.1.0'
         robolectricVersion = '1.2.0'
         livedataTestingVersion = '1.1.0'
+        koushAndroidAsyncVersion = '2.2.1'
 
         supportedAbis = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
     }
