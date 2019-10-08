@@ -42,7 +42,7 @@ import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
 import com.sygic.maps.module.common.provider.ProviderType
 import com.sygic.maps.module.common.theme.ThemeManager
-import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
+import com.sygic.maps.module.common.viewmodel.MapFragmentViewModel
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
@@ -51,6 +51,8 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.components.FragmentComponent
@@ -60,10 +62,11 @@ import com.sygic.maps.uikit.views.common.utils.logWarning
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.`object`.ProxyPoi
+import com.sygic.sdk.map.`object`.ProxyPlace
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
+import com.sygic.sdk.places.PlacesManager
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -71,13 +74,15 @@ class BrowseMapFragmentViewModel internal constructor(
     app: Application,
     @Assisted arguments: Bundle?,
     themeManager: ThemeManager,
+    regionalManager: RegionalManager,
+    positionManagerClient: PositionManagerClient,
     private val mapDataModel: ExtendedMapDataModel,
     private val poiDataManager: PoiDataManager,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager
-) : ThemeSupportedViewModel(app, arguments, themeManager), DefaultLifecycleObserver, MapInteractionManager.Listener,
-    PoiDetailBottomDialogFragment.Listener {
+) : MapFragmentViewModel(app, arguments, themeManager, regionalManager, positionManagerClient),
+    MapInteractionManager.Listener, PoiDetailBottomDialogFragment.Listener {
 
     @MapSelectionMode
     var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
@@ -209,7 +214,7 @@ class BrowseMapFragmentViewModel internal constructor(
                             when (firstViewObject) {
                                 // To persist ProxyPoi data payload we need to create a copy of the provided MapMarker
                                 // and give it the same payload
-                                is ProxyPoi -> clickMapMarker.getCopyWithPayload(firstViewObject)
+                                is ProxyPlace -> clickMapMarker.getCopyWithPayload(firstViewObject)
                                 else -> clickMapMarker
                             }.also {
                                 firstViewObject = it
@@ -257,6 +262,7 @@ class BrowseMapFragmentViewModel internal constructor(
                     }
                 }
             }
+            override fun onPlaceError(code: PlacesManager.ErrorCode) { /* Currently do nothing */ }
         })
     }
 

@@ -30,9 +30,9 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.getFirst
 import com.sygic.sdk.map.`object`.ScreenObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
-import com.sygic.sdk.places.LocationInfo
 import com.sygic.sdk.places.Place
-import com.sygic.sdk.places.Places
+import com.sygic.sdk.places.PlaceDetailAttributes
+import com.sygic.sdk.places.PlacesManager
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.ReverseGeocoder
 import com.sygic.sdk.search.ReverseSearchResult
@@ -42,24 +42,24 @@ interface PoiDataManager {
 
     fun getViewObjectData(viewObject: ViewObject<*>, callback: Callback)
 
-    abstract class Callback : Places.PlaceListener, ReverseGeocoder.ReverseSearchResultsListener {
+    abstract class Callback : PlacesManager.PlaceListener, ReverseGeocoder.ReverseSearchResultsListener {
         abstract fun onDataLoaded(data: ViewObjectData)
 
         final override fun onPlaceLoaded(place: Place) {
-            val placeObject = ScreenObject.at(place.coordinates)
+            val placeObject = ScreenObject.at(place.link.location)
                 .withPayload(
                     PoiData(
-                        name = place.name,
-                        iso = place.iso,
-                        poiCategory = place.category,
-                        poiGroup = place.group,
-                        city = place.locationInfo.getFirst(LocationInfo.LocationType.City),
-                        street = place.locationInfo.getFirst(LocationInfo.LocationType.Street),
-                        houseNumber = place.locationInfo.getFirst(LocationInfo.LocationType.HouseNum),
-                        postal = place.locationInfo.getFirst(LocationInfo.LocationType.Postal),
-                        phone = place.locationInfo.getFirst(LocationInfo.LocationType.Phone),
-                        email = place.locationInfo.getFirst(LocationInfo.LocationType.Mail),
-                        url = place.locationInfo.getFirst(LocationInfo.LocationType.Url)
+                        name = place.link.name,
+                        poiCategory = place.link.category,
+                        poiGroup = place.link.group,
+                        iso = place.details.getFirst(PlaceDetailAttributes.Iso),
+                        city = place.details.getFirst(PlaceDetailAttributes.City),
+                        street = place.details.getFirst(PlaceDetailAttributes.Street),
+                        houseNumber = place.details.getFirst(PlaceDetailAttributes.HouseNum),
+                        postal = place.details.getFirst(PlaceDetailAttributes.Postal),
+                        phone = place.details.getFirst(PlaceDetailAttributes.Phone),
+                        email = place.details.getFirst(PlaceDetailAttributes.Mail),
+                        url = place.details.getFirst(PlaceDetailAttributes.Url)
                     )
                 ).build()
 
@@ -67,20 +67,19 @@ interface PoiDataManager {
         }
 
         final override fun onSearchResults(results: List<ReverseSearchResult>, position: GeoCoordinates) {
-            val builder =
-                if (results.isEmpty()) {
-                    ScreenObject.at(position)
-                } else {
-                    val reverseSearchResult = results.first()
-                    ScreenObject.at(position).withPayload(
-                        PoiData(
-                            iso = reverseSearchResult.names.countryIso,
-                            city = reverseSearchResult.names.city,
-                            street = reverseSearchResult.names.street,
-                            houseNumber = reverseSearchResult.names.houseNumber
-                        )
+            val builder = if (results.isEmpty()) {
+                ScreenObject.at(position)
+            } else {
+                val reverseSearchResult = results.first()
+                ScreenObject.at(position).withPayload(
+                    PoiData(
+                        iso = reverseSearchResult.names.countryIso,
+                        city = reverseSearchResult.names.city,
+                        street = reverseSearchResult.names.street,
+                        houseNumber = reverseSearchResult.names.houseNumber
                     )
-                }
+                )
+            }
 
             onDataLoaded(builder.build().data)
         }

@@ -36,8 +36,6 @@ import com.sygic.maps.module.common.extensions.*
 import com.sygic.maps.module.navigation.NAVIGATION_FRAGMENT_TAG
 import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.module.navigation.listener.EventListener
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.maps.uikit.viewmodels.common.extensions.getLastValidLocation
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.views.common.extensions.isPermissionNotGranted
 import com.sygic.maps.uikit.views.common.extensions.longToast
@@ -48,8 +46,10 @@ import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.demo.states.BrowseMapDemoDefaultState
 import com.sygic.samples.demo.viewmodels.ComplexDemoActivityViewModel
+import com.sygic.samples.utils.getLastValidLocation
+import com.sygic.samples.utils.getPrimaryRoute
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.Route
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.RoutingOptions
 import kotlinx.android.synthetic.main.activity_complex_demo.*
@@ -137,12 +137,12 @@ class ComplexDemoActivity : CommonSampleActivity() {
                 }
             }
 
-            computePrimaryRoute(routePlan) { setRouteToNavigationFragment(it) }
+            routePlan.getPrimaryRoute { setRouteToNavigationFragment(it) }
         }
     }
 
-    private fun setRouteToNavigationFragment(route: RouteInfo) {
-        (supportFragmentManager.findFragmentByTag(NAVIGATION_FRAGMENT_TAG) as? NavigationFragment)?.routeInfo = route
+    private fun setRouteToNavigationFragment(route: Route) {
+        (supportFragmentManager.findFragmentByTag(NAVIGATION_FRAGMENT_TAG) as? NavigationFragment)?.route = route
     }
 
     private fun requestLastValidLocation(currentLocationCallback: (GeoCoordinates) -> Unit) {

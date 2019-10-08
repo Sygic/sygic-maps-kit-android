@@ -39,6 +39,7 @@ import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.samples.utils.isCategoryResult
+import com.sygic.samples.utils.loadDetails
 import com.sygic.samples.utils.toGeoCoordinatesList
 import com.sygic.samples.utils.toPoiDetailComponent
 import com.sygic.sdk.map.Camera
@@ -47,7 +48,7 @@ import com.sygic.sdk.map.data.SimpleCameraDataModel
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.Route
 import com.sygic.sdk.search.MapSearchResult
 import com.sygic.sdk.search.Search
 import com.sygic.sdk.search.SearchResult
@@ -94,7 +95,7 @@ class ComplexDemoActivityViewModel : ViewModel() {
     }
 
     val navigationEventListener = object : EventListener {
-        override fun onNavigationStarted(routeInfo: RouteInfo?) {
+        override fun onNavigationStarted(route: Route?) {
             routeComputeProgressVisibilityObservable.asSingleEvent().value = View.GONE
         }
 

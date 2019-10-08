@@ -27,12 +27,12 @@ package com.sygic.maps.uikit.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
-import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
 import com.sygic.sdk.position.GeoPosition
-import com.sygic.sdk.position.PositionManager
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -50,11 +50,11 @@ class CurrentSpeedViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var positionManager: PositionManager
+    private lateinit var positionManagerClient: PositionManagerClient
     @Mock
     private lateinit var regionalManager: RegionalManager
     @Mock
-    private lateinit var navigationManager: NavigationManager
+    private lateinit var navigationManagerClient: NavigationManagerClient
 
     private lateinit var currentSpeedViewModel: CurrentSpeedViewModel
 
@@ -62,13 +62,13 @@ class CurrentSpeedViewModelTest {
     fun setup() {
         whenever(regionalManager.distanceUnit).thenReturn(mock())
 
-        currentSpeedViewModel = CurrentSpeedViewModel(regionalManager, navigationManager, positionManager)
+        currentSpeedViewModel = CurrentSpeedViewModel(regionalManager, navigationManagerClient, positionManagerClient)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManager).addOnSpeedLimitListener(currentSpeedViewModel)
-        verify(positionManager).addPositionChangeListener(currentSpeedViewModel)
+        verify(navigationManagerClient).addOnSpeedLimitListener(currentSpeedViewModel)
+        verify(positionManagerClient).addPositionChangeListener(currentSpeedViewModel)
         verify(regionalManager.distanceUnit).observeForever(any())
     }
 

@@ -25,7 +25,9 @@
 package com.sygic.maps.module.common.component
 
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 
+val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnit.KILOMETERS
 const val MAP_SELECTION_MODE_DEFAULT_VALUE = MapSelectionMode.MARKERS_ONLY
 const val POSITION_ON_MAP_ENABLED_DEFAULT_VALUE = false
 const val COMPASS_ENABLED_DEFAULT_VALUE = false

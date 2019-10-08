@@ -44,7 +44,7 @@ class DateTimeManagerImpl private constructor(
 
     companion object : SingletonHolder<DateTimeManagerImpl>() {
         @JvmStatic
-        fun getInstance(app: Application): DateTimeManagerImpl = getInstance { DateTimeManagerImpl(app) }
+        fun getInstance(app: Application) = getInstance { DateTimeManagerImpl(app) }
     }
 
     private val timeInstances = SparseArray<DateFormat>()

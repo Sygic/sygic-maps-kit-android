@@ -27,7 +27,7 @@ package com.sygic.maps.uikit.viewmodels.common.navigation.preview
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
-import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.Route
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface RouteDemonstrationManager {
@@ -35,7 +35,7 @@ interface RouteDemonstrationManager {
     val speedMultiplier: MutableLiveData<Float>
     val demonstrationState: MutableLiveData<DemonstrationState>
 
-    fun start(routeInfo: RouteInfo)
+    fun start(route: Route)
     fun restart()
     fun pause()
     fun unPause()

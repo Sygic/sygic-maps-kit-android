@@ -27,9 +27,11 @@ package com.sygic.maps.uikit.viewmodels.common.extensions
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.sygic.maps.uikit.viewmodels.R
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.sdk.route.RouteManeuver
 
-internal fun RouteManeuver.nextRoadText(): String = if (nextRoadName.isNotEmpty()) nextRoadName else nextRoadNumbers.first()
+internal fun RouteManeuver.nextRoadText(): String =
+    if (nextRoadName.isNotEmpty()) nextRoadName else if (nextRoadNumbers.isNotEmpty()) nextRoadNumbers.first() else EMPTY_STRING
 
 internal fun RouteManeuver.isRoundabout(): Boolean = when (type) {
     RouteManeuver.Type.RoundaboutE,

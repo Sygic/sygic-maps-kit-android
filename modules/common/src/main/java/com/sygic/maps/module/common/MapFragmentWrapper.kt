@@ -69,6 +69,8 @@ import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.`object`.MapMarker
 import javax.inject.Inject
 
+const val KEY_DISTANCE_UNITS = "distance_units"
+
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>(moduleBuilder: M)

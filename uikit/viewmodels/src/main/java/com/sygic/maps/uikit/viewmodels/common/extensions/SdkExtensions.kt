@@ -24,20 +24,17 @@
 
 package com.sygic.maps.uikit.viewmodels.common.extensions
 
-import android.app.Activity
-import android.app.Application
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
-import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManagerImpl
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.utils.Distance
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
@@ -52,11 +49,12 @@ import com.sygic.sdk.map.`object`.data.payload.EmptyPayload
 import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
 import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
 import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo.SignElement.SignElementType
+import com.sygic.sdk.places.PlaceDetail
 import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.route.RouteInfo
-import com.sygic.sdk.route.RoutePlan
-import com.sygic.sdk.search.*
+import com.sygic.sdk.search.CoordinateSearchResult
+import com.sygic.sdk.search.MapSearchResult
+import com.sygic.sdk.search.SearchResult
 import java.util.*
 
 @SelectionType
@@ -71,7 +69,7 @@ fun ViewObject<*>.getSelectionType(): Int {
         }
         is ProxyObject<*> -> {
             return when (this.proxyObjectType) {
-                ProxyObject.ProxyObjectType.Poi -> SelectionType.POI
+                ProxyObject.ProxyObjectType.Place -> SelectionType.PLACE
                 else -> SelectionType.OTHER
             }
         }
@@ -79,9 +77,9 @@ fun ViewObject<*>.getSelectionType(): Int {
     }
 }
 
-fun LocationInfo.getFirst(@LocationInfo.LocationType locationType: Int): String? {
+fun List<PlaceDetail>.getFirst(attr: String): String? {
     // for each type of POI information, there could be multiple results, for instance multiple mail or phone info - get first
-    return locationData?.get(locationType)?.firstOrNull()
+    return first { it.first == attr }.second
 }
 
 fun GeoCoordinates.getFormattedLocation(): String {
@@ -186,40 +184,6 @@ fun List<SearchResult>.toSearchResultList(): List<SearchResultItem<out SearchRes
 
 fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList(): List<SearchResult> = mapNotNull { it.dataPayload }
 
-fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) =
-    Search().loadDetails(this, DetailRequest(), callback)
-
-fun Activity.getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) =
-    application.getLastValidLocation(lastValidLocationCallback)
-
-fun Application.getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
-    SdkInitializationManagerImpl.getInstance(this).onReady {
-        with(PositionManager.getInstance()) {
-            addPositionChangeListener(object : PositionManager.PositionChangeListener {
-                override fun onPositionChanged(position: GeoPosition) {
-                    if (position.isValid) {
-                        removePositionChangeListener(this)
-                        lastValidLocationCallback.invoke(position.coordinates)
-                    }
-                }
-            })
-            startPositionUpdating()
-        }
-    }
-}
-
-fun Activity.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: (route: RouteInfo) -> Unit) =
-    application.computePrimaryRoute(routePlan, routeComputeCallback)
-
-fun Application.computePrimaryRoute(routePlan: RoutePlan, routeComputeCallback: (route: RouteInfo) -> Unit) {
-    //ToDo: Remove when MS-5678 is done
-    SdkInitializationManagerImpl.getInstance(this).onReady {
-        Router().computeRoute(routePlan, object : Router.RouteComputeAdapter() {
-            override fun onPrimaryComputeFinished(router: Router, route: RouteInfo) = routeComputeCallback.invoke(route)
-        })
-    }
-}
-
 fun List<SignpostInfo.SignElement>.concatItems(): String = StringBuilder().apply {
     this@concatItems.forEach {
         if (isNotEmpty()) append(", ")
@@ -233,8 +197,7 @@ fun List<SignpostInfo>.getNaviSignInfoOnRoute(): SignpostInfo? {
             return null
         }
 
-        //ToDo: Use NaviSignInfo "priority" when ready
-        return isOnRouteList.firstOrNull { it.backgroundColor != 0 }?.let { it } ?: isOnRouteList[0]
+        return isOnRouteList.maxBy { it.priority }?.let { it } ?: isOnRouteList[0]
     }
 }
 

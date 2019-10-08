@@ -253,7 +253,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
         verify(extendedMapDataModel).addMapObject(any<MapMarker>())
         verify(poiDataManager).getViewObjectData(any(), any())
-        verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
+        verify(onMapClickListener).onMapClick(eq(SelectionType.PLACE), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
         browseMapFragmentViewModel.poiDetailComponentObservable.test().assertHasValue()
     }
@@ -271,7 +271,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
         verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
         verify(poiDataManager, never()).getViewObjectData(any(), any())
-        verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
+        verify(onMapClickListener).onMapClick(eq(SelectionType.PLACE), any(), any())
         verify(onMapClickListener, never()).onMapDataReceived(any())
         browseMapFragmentViewModel.poiDetailComponentObservable.test().assertNoValue()
     }
@@ -297,7 +297,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
         verify(extendedMapDataModel).addMapObject(any<MapMarker>())
         verify(poiDataManager).getViewObjectData(any(), any())
-        verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
+        verify(onMapClickListener).onMapClick(eq(SelectionType.PLACE), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
         browseMapFragmentViewModel.poiDetailComponentObservable.test().assertNoValue()
     }
@@ -321,7 +321,7 @@ class BrowseMapFragmentViewModelTest {
         browseMapFragmentViewModel.onMapObjectsReceived(listOf(testViewObject))
         verify(extendedMapDataModel, never()).addMapObject(any<MapMarker>())
         verify(poiDataManager).getViewObjectData(any(), any())
-        verify(onMapClickListener).onMapClick(eq(SelectionType.POI), any(), any())
+        verify(onMapClickListener).onMapClick(eq(SelectionType.PLACE), any(), any())
         verify(onMapClickListener).onMapDataReceived(eq(testViewObject.data))
         browseMapFragmentViewModel.poiDetailComponentObservable.test().assertNoValue()
     }

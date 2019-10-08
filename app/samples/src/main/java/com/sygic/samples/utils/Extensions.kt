@@ -26,14 +26,56 @@ package com.sygic.samples.utils
 
 import com.sygic.maps.uikit.viewmodels.common.data.PoiData
 import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.utils.logInfo
 import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.sdk.InitializationCallback
+import com.sygic.sdk.context.SygicContext
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.CoordinateSearchResult
-import com.sygic.sdk.search.MapSearchResult
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.position.GeoPosition
+import com.sygic.sdk.position.PositionManager
+import com.sygic.sdk.route.Route
+import com.sygic.sdk.route.RoutePlan
+import com.sygic.sdk.route.Router
+import com.sygic.sdk.route.RouterProvider
+import com.sygic.sdk.search.*
+
+fun getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
+    with(PositionManagerClientImpl) {
+        addPositionChangeListener(object : PositionManager.PositionChangeListener {
+            override fun onPositionChanged(position: GeoPosition) {
+                if (position.isValid) {
+                    removePositionChangeListener(this)
+                    lastValidLocationCallback.invoke(position.coordinates)
+                }
+            }
+        })
+        setSdkPositionUpdatingEnabled(true)
+    }
+}
+
+fun RoutePlan.getPrimaryRoute(routeComputeCallback: (route: Route) -> Unit) {
+    RouterProvider.getInstance(object : InitializationCallback<Router> {
+        override fun onInstance(router: Router) {
+            router.computeRoute(this@getPrimaryRoute, object : Router.RouteComputeAdapter() {
+                override fun onPrimaryComputeFinished(router: Router, route: Route) = routeComputeCallback.invoke(route)
+            })
+        }
+
+        override fun onError(@SygicContext.OnInitListener.Result result: Int) {}
+    })
+}
+
+fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) {
+    SearchProvider.getInstance(object : InitializationCallback<Search> {
+        override fun onInstance(search: Search) {
+            search.loadDetails(this@loadDetails, DetailRequest(), callback)
+        }
+        override fun onError(@SygicContext.OnInitListener.Result result: Int) {}
+    })
+}
 
 fun List<SearchResult>.isCategoryResult(): Boolean {
     val firstSearchResult = first()

@@ -29,10 +29,10 @@ import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.search.SearchFragment
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
-import com.sygic.maps.uikit.viewmodels.common.extensions.loadDetails
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
 import com.sygic.maps.uikit.viewmodels.common.extensions.setMapRectangle
 import com.sygic.samples.utils.isCategoryResult
+import com.sygic.samples.utils.loadDetails
 import com.sygic.samples.utils.toGeoCoordinatesList
 import com.sygic.sdk.map.data.SimpleCameraDataModel
 import com.sygic.sdk.map.data.SimpleMapDataModel

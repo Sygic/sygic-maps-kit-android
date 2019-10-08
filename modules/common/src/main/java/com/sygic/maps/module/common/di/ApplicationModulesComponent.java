@@ -37,6 +37,7 @@ import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerModule;
 import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
 import com.sygic.maps.module.common.di.module.SearchModule;
 import com.sygic.maps.module.common.di.module.ServicesManagerModule;
+import com.sygic.maps.module.common.di.module.SoundManagerModule;
 import com.sygic.maps.module.common.poi.manager.PoiDataManager;
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
 import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager;
@@ -47,6 +48,7 @@ import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
 import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager;
+import com.sygic.maps.uikit.viewmodels.common.sound.SoundManager;
 
 import javax.inject.Singleton;
 
@@ -65,7 +67,8 @@ import dagger.Component;
                 RouteDemonstrationManagerModule.class,
                 SdkInitializationManagerModule.class,
                 SearchModule.class,
-                ServicesManagerModule.class
+                ServicesManagerModule.class,
+                SoundManagerModule.class
         }
 )
 public interface ApplicationModulesComponent {
@@ -80,4 +83,5 @@ public interface ApplicationModulesComponent {
     SdkInitializationManager getSdkInitializationManager();
     SearchManager getSearchManager();
     ServicesManager getServicesManager();
+    SoundManager getSoundManager();
 }
