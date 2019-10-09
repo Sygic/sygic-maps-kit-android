@@ -22,25 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data
+package com.sygic.maps.module.common.di.module;
 
-import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager
-import com.sygic.maps.uikit.views.navigation.infobar.data.ItemData
-import java.util.*
-import java.util.concurrent.TimeUnit
+import androidx.annotation.NonNull;
 
-data class TimeData(
-    private val dateTimeManager: DateTimeManager,
-    val timeToEnd: Int,
-    val timeToEndWithSpeedProfile: Int,
-    val timeToEndWithSpeedProfileAndTraffic: Int
-) : ItemData {
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.sound.SoundManager;
+import com.sygic.maps.uikit.viewmodels.common.sound.SoundManagerImpl;
 
-    fun formatEstimateTime(): CharSequence = dateTimeManager.formatTime(
-        Date(
-            System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(
-                timeToEndWithSpeedProfileAndTraffic.toLong()
-            )
-        )
-    )
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+
+@Module
+public class SoundManagerModule {
+
+    @Singleton
+    @Provides
+    SoundManager provideSoundManager(@NonNull final NavigationManagerClient navigationManagerClient) {
+        return SoundManagerImpl.getInstance(navigationManagerClient);
+    }
 }

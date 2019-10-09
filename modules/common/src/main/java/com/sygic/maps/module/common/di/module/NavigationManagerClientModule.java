@@ -24,8 +24,12 @@
 
 package com.sygic.maps.module.common.di.module;
 
+import androidx.annotation.NonNull;
+
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClientImpl;
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -36,7 +40,7 @@ public class NavigationManagerClientModule {
 
     @Singleton
     @Provides
-    NavigationManagerClient provideNavigationManagerClient() {
-        return NavigationManagerClientImpl.INSTANCE;
+    NavigationManagerClient provideNavigationManagerClient(@NonNull final PositionManagerClient positionManagerClient) {
+        return NavigationManagerClientImpl.getInstance(positionManagerClient);
     }
 }
