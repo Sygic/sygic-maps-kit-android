@@ -30,7 +30,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -53,7 +52,6 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RE
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
 import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
-import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.SearchResult
@@ -165,25 +163,25 @@ class SearchFragment : Fragment(), SearchResultCallbackWrapper {
             this,
             viewModelFactory.with(resultListAdapter)
         )[SearchFragmentViewModel::class.java].apply {
-            this.onFinishObservable.observe(
-                this@SearchFragment,
-                Observer<Any> { fragmentManager?.popBackStack() })
+            onFinishObservable.observe(this@SearchFragment, Observer { fragmentManager?.popBackStack() })
         }
         searchToolbarViewModel = ViewModelProviders.of(
             this,
             viewModelFactory.with(arguments)
         )[SearchToolbarViewModel::class.java].apply {
-            this.onActionSearchClickObservable.observe(
+            onActionSearchClickObservable.observe(
                 this@SearchFragment,
-                Observer<TextView> { view -> fragmentViewModel.onActionSearchClick(view) })
+                Observer { view -> fragmentViewModel.onActionSearchClick(view) }
+            )
         }
         searchResultListViewModel = ViewModelProviders.of(
             this,
             viewModelFactory.with(resultListAdapter)
         )[SearchResultListViewModel::class.java].apply {
-            this.onSearchResultItemClickObservable.observe(
+            onSearchResultItemClickObservable.observe(
                 this@SearchFragment,
-                Observer<SearchResultItem<out SearchResult>> { fragmentViewModel.onSearchResultItemClick(it) })
+                Observer { fragmentViewModel.onSearchResultItemClick(it) }
+            )
         }
 
         lifecycle.addObserver(fragmentViewModel)

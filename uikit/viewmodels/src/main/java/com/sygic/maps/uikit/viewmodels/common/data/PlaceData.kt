@@ -32,7 +32,7 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PoiData(
+data class PlaceData(
     var name: String? = null,
     var street: String? = null,
     var houseNumber: String? = null,
@@ -42,8 +42,8 @@ data class PoiData(
     var phone: String? = null,
     var email: String? = null,
     var url: String? = null,
-    var poiGroup: String = EMPTY_STRING,
-    var poiCategory: String = EMPTY_STRING
+    var placeGroup: String = EMPTY_STRING,
+    var placeCategory: String = EMPTY_STRING
 ) : BasicData(createBasicDescription(name, street, houseNumber, city, postal)) {
 
     override fun toString(): String {

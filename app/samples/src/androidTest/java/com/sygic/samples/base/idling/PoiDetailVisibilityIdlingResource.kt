@@ -25,7 +25,7 @@
 package com.sygic.samples.base.idling
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
 import com.sygic.samples.app.activities.CommonSampleActivity
 
 class PoiDetailVisibilityIdlingResource(

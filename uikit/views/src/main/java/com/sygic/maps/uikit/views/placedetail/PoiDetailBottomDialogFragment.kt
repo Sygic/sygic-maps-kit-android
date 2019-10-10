@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail
+package com.sygic.maps.uikit.views.placedetail
 
 import android.app.Dialog
 import android.os.Bundle
@@ -35,15 +35,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.BaseBottomDialogFragment
+import com.sygic.maps.uikit.views.common.BottomSheetDialog
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
-import com.sygic.maps.uikit.views.common.BottomSheetDialog
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
-import com.sygic.maps.uikit.views.poidetail.listener.DialogFragmentListener
-import com.sygic.maps.uikit.views.poidetail.manager.PreferencesManager
-import com.sygic.maps.uikit.views.poidetail.viewmodel.DEFAULT_BEHAVIOR_STATE
-import com.sygic.maps.uikit.views.poidetail.viewmodel.PoiDetailInternalViewModel
-import com.sygic.maps.uikit.views.poidetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
+import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment.Listener
+import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.listener.DialogFragmentListener
+import com.sygic.maps.uikit.views.placedetail.manager.PreferencesManager
+import com.sygic.maps.uikit.views.placedetail.viewmodel.DEFAULT_BEHAVIOR_STATE
+import com.sygic.maps.uikit.views.placedetail.viewmodel.PoiDetailInternalViewModel
+import com.sygic.maps.uikit.views.placedetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
 private const val POI_DETAIL_COMPONENT = "poi_detail_component"
 
@@ -121,9 +122,7 @@ open class PoiDetailBottomDialogFragment : BaseBottomDialogFragment() {
         viewModel = ViewModelProviders.of(
             this, PoiDetailInternalViewModel.Factory(requireActivity().application, preferencesManager)
         )[PoiDetailInternalViewModel::class.java].apply {
-            this.dialogStateObservable.observe(
-                this@PoiDetailBottomDialogFragment,
-                Observer<Int> { setState(it) })
+            dialogStateObservable.observe(this@PoiDetailBottomDialogFragment, Observer { setState(it) })
 
             this.onComponentChanged(arguments.getParcelableValue(POI_DETAIL_COMPONENT))
             this.listener = this@PoiDetailBottomDialogFragment.listener

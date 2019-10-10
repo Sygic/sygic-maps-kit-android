@@ -22,17 +22,29 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail.viewmodel;
+package com.sygic.maps.uikit.viewmodels.common.initialization
 
-import androidx.annotation.IntDef;
+import androidx.annotation.RestrictTo
+import com.sygic.maps.uikit.views.common.utils.logError
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+@Suppress("UNCHECKED_CAST")
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface InitializationManager<T : InitializationManager.Callback> { //todo
 
-@IntDef({PoiDetailContentViewSwitcherIndex.CONTENT,
-        PoiDetailContentViewSwitcherIndex.PROGRESSBAR})
-@Retention(RetentionPolicy.SOURCE)
-@interface PoiDetailContentViewSwitcherIndex {
-    int CONTENT = 0;
-    int PROGRESSBAR = 1;
+    @InitializationState
+    var initializationState: Int
+
+    interface Callback {
+        fun onInitialized()
+        fun onError(error: Int) {
+            logError("Initialization failed, error: $error :(")
+        }
+    }
+
+    fun initialize(callback: T? = null)
+    fun initialize(callback: () -> Unit) { initialize(object : Callback { override fun onInitialized() { callback() } } as T) }
+
+    fun isInitialized() = initializationState == InitializationState.INITIALIZED
+
+    fun onReady(block: () -> Unit) = if (isInitialized()) block.invoke() else initialize { block.invoke() }
 }

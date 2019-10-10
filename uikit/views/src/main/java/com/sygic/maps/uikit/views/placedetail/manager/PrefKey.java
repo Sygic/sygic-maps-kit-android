@@ -22,21 +22,15 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.views.placedetail.manager;
 
-import com.sygic.maps.module.common.poi.manager.PoiDataManager;
-import com.sygic.maps.module.common.poi.manager.PoiDataManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import androidx.annotation.IntDef;
 
-import javax.inject.Singleton;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-@Module
-public class PoiDataManagerModule {
-
-    @Singleton
-    @Provides
-    PoiDataManager providePoiDataManager() {
-        return new PoiDataManagerImpl();
-    }
+@IntDef({PrefKey.SHOWCASE_ALLOWED})
+@Retention(RetentionPolicy.SOURCE)
+@interface PrefKey {
+    int SHOWCASE_ALLOWED = 0;
 }

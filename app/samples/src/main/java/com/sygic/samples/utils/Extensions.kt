@@ -24,18 +24,19 @@
 
 package com.sygic.samples.utils
 
-import com.sygic.maps.uikit.viewmodels.common.data.PoiData
+import androidx.lifecycle.Observer
+import com.sygic.maps.uikit.viewmodels.common.data.PlaceData
 import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerImpl
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.utils.logInfo
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
-import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.data.PlaceDetailData
 import com.sygic.sdk.InitializationCallback
 import com.sygic.sdk.context.SygicContext
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.position.GeoPosition
-import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.route.Route
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.Router
@@ -43,11 +44,11 @@ import com.sygic.sdk.route.RouterProvider
 import com.sygic.sdk.search.*
 
 fun getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
-    with(PositionManagerClientImpl) {
-        addPositionChangeListener(object : PositionManager.PositionChangeListener {
-            override fun onPositionChanged(position: GeoPosition) {
+    with(PositionManagerClientImpl.getInstance(RouteDemonstrationManagerImpl)) {
+        currentPosition.observeForever(object: Observer<GeoPosition> {
+            override fun onChanged(position: GeoPosition) {
                 if (position.isValid) {
-                    removePositionChangeListener(this)
+                    currentPosition.removeObserver(this)
                     lastValidLocationCallback.invoke(position.coordinates)
                 }
             }
@@ -96,12 +97,12 @@ fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
     return geoCoordinatesList
 }
 
-fun SearchResult.toPoiDetailComponent(): PoiDetailComponent? {
+fun SearchResult.toPlaceDetailComponent(): PoiDetailComponent? {
     return when (this) {
         is CoordinateSearchResult -> {
             val formattedCoordinates = this.position.getFormattedLocation()
             PoiDetailComponent(
-                PoiDetailData(
+                PlaceDetailData(
                     titleString = formattedCoordinates,
                     subtitleString = EMPTY_STRING,
                     coordinatesString = formattedCoordinates
@@ -110,15 +111,15 @@ fun SearchResult.toPoiDetailComponent(): PoiDetailComponent? {
             )
         }
         is MapSearchResult -> {
-            val poiData = PoiData(
+            val placeData = PlaceData(
                 name = this.poiName.text,
                 street = this.street.text,
                 city = this.city.text
             )
             PoiDetailComponent(
-                PoiDetailData(
-                    titleString = poiData.title,
-                    subtitleString = poiData.description,
+                PlaceDetailData(
+                    titleString = placeData.title,
+                    subtitleString = placeData.description,
                     coordinatesString = this.position.getFormattedLocation()
                 ),
                 true

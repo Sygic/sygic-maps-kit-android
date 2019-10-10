@@ -22,15 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail.manager;
+package com.sygic.maps.uikit.views.placedetail.data
 
-import androidx.annotation.IntDef;
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@IntDef({PrefKey.SHOWCASE_ALLOWED})
-@Retention(RetentionPolicy.SOURCE)
-@interface PrefKey {
-    int SHOWCASE_ALLOWED = 0;
-}
+@Parcelize
+data class PlaceDetailData(
+    val titleString: String,
+    val subtitleString: String,
+    val urlString: String? = null,
+    val emailString: String? = null,
+    val phoneString: String? = null,
+    val coordinatesString: String? = null
+) : Parcelable

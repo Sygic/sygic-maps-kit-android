@@ -26,6 +26,7 @@ package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.getNaviSignInfoOnRoute
 import com.sygic.maps.uikit.viewmodels.common.extensions.pictogramDrawableRes
@@ -39,6 +40,7 @@ import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
 import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.sdk.navigation.NavigationManager
+import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
 import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
 
 private const val EMPTY_PICTOGRAM = 0
@@ -60,11 +62,15 @@ open class FullSignpostViewModel internal constructor(
     val roadSigns: LiveData<List<RoadSignData>> = MutableLiveData(listOf())
 
     private val signpostInfoHolder = MutableLiveData<SignpostInfoHolder>(SignpostInfoHolder.empty)
+    private val directionAndSignpostInfoMerger = navigationManagerClient.directionInfo.combineLatest(signpostInfoHolder)
+
+    private val directionInfoObserver = Observer<Pair<DirectionInfo, SignpostInfoHolder>> {
+        instructionText.asMutable().value = createInstructionText(it)
+    }
 
     init {
         navigationManagerClient.addOnSignpostListener(this)
-        directionInfo.combineLatest(signpostInfoHolder)
-            .observeForever { instructionText.asMutable().value = createInstructionText(it) }
+        directionAndSignpostInfoMerger.observeForever(directionInfoObserver)
     }
 
     override fun onSignpostChanged(signpostInfoList: List<SignpostInfo>) {
@@ -79,5 +85,6 @@ open class FullSignpostViewModel internal constructor(
         super.onCleared()
 
         navigationManagerClient.removeOnSignpostListener(this)
+        directionAndSignpostInfoMerger.removeObserver(directionInfoObserver)
     }
 }

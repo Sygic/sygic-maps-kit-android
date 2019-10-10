@@ -28,7 +28,7 @@ import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
-import com.sygic.maps.uikit.viewmodels.common.data.PoiData
+import com.sygic.maps.uikit.viewmodels.common.data.PlaceData
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
@@ -38,7 +38,7 @@ import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.utils.Distance
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.maps.uikit.views.navigation.roadsign.data.RoadSignData
-import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.views.placedetail.data.PlaceDetailData
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.MapRectangle
@@ -78,8 +78,8 @@ fun ViewObject<*>.getSelectionType(): Int {
 }
 
 fun List<PlaceDetail>.getFirst(attr: String): String? {
-    // for each type of POI information, there could be multiple results, for instance multiple mail or phone info - get first
-    return first { it.first == attr }.second
+    // for each type of Place information, there could be multiple results, for instance multiple mail or phone info - get first
+    return firstOrNull { it.first == attr }?.second
 }
 
 fun GeoCoordinates.getFormattedLocation(): String {
@@ -90,14 +90,14 @@ fun GeoCoordinates.getFormattedLocation(): String {
     return String.format(Locale.US, "%.6f, %.6f", latitude, longitude)
 }
 
-fun ViewObjectData.toPoiDetailData(): PoiDetailData {
+fun ViewObjectData.toPlaceDetailData(): PlaceDetailData {
     val coordinatesText: String = position.getFormattedLocation()
     val titleText: String = if (payload is BasicData) (payload as BasicData).title else coordinatesText
     val subtitleText: String = if (payload is BasicData) (payload as BasicData).description else EMPTY_STRING
-    val urlText: String? = if (payload is PoiData) (payload as PoiData).url else null
-    val emailText: String? = if (payload is PoiData) (payload as PoiData).email else null
-    val phoneText: String? = if (payload is PoiData) (payload as PoiData).phone else null
-    return PoiDetailData(titleText, subtitleText, urlText, emailText, phoneText, coordinatesText)
+    val urlText: String? = if (payload is PlaceData) (payload as PlaceData).url else null
+    val emailText: String? = if (payload is PlaceData) (payload as PlaceData).email else null
+    val phoneText: String? = if (payload is PlaceData) (payload as PlaceData).phone else null
+    return PlaceDetailData(titleText, subtitleText, urlText, emailText, phoneText, coordinatesText)
 }
 
 fun MapMarker.getCopyWithPayload(payload: Parcelable): MapMarker {

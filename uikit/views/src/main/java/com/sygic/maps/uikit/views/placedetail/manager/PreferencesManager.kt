@@ -22,23 +22,32 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.browsemap.detail
+package com.sygic.maps.uikit.views.placedetail.manager
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.sygic.maps.module.common.detail.DetailsViewFactory
-import com.sygic.sdk.map.`object`.UiObject
-import com.sygic.sdk.map.`object`.data.ViewObjectData
-import kotlinx.android.parcel.Parcelize
+import android.content.Context
+import android.content.SharedPreferences
+import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
+import com.sygic.maps.uikit.views.common.extensions.get
+import com.sygic.maps.uikit.views.common.extensions.set
 
-@Parcelize
-internal class PoiDataDetailsFactory(
-    private val factory: DetailsViewFactory,
-    private val data: ViewObjectData
-) : UiObject.ViewFactory {
+const val PREFERENCES_NAME = "poi_detail_prefs"
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup): View {
-        return factory.getDetailsView(inflater, container, data)
+internal class PreferencesManager(context: Context) {
+
+    private val applicationContext = context.applicationContext
+    private val preferences: SharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+
+    var showcaseAllowed: Boolean
+        get() = preferences[getKeyFromPrefKey(PrefKey.SHOWCASE_ALLOWED), true]
+        set(value) {
+            preferences[getKeyFromPrefKey(PrefKey.SHOWCASE_ALLOWED)] = value
+        }
+
+    private fun getKeyFromPrefKey(@PrefKey prefKey: Int): String {
+        return when (prefKey) {
+            PrefKey.SHOWCASE_ALLOWED -> applicationContext.getString(R.string.preferenceKey_poi_detail_showcase)
+            else -> EMPTY_STRING
+        }
     }
 }

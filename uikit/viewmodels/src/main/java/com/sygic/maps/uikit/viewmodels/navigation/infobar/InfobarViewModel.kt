@@ -32,16 +32,19 @@ import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextDataWrapper
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextType
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.DistanceData
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.PositionData
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.TimeData
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.*
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.ActualElevationInfobarItem
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.EstimatedTimeInfobarItem
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.RemainingDistanceInfobarItem
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.RemainingTimeInfobarItem
 import com.sygic.maps.uikit.views.common.extensions.SPACE
 import com.sygic.maps.uikit.views.common.extensions.VERTICAL_BAR
 import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
-import com.sygic.maps.uikit.views.navigation.infobar.items.*
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
 import com.sygic.sdk.navigation.RouteProgress
 
 /**
@@ -64,11 +67,9 @@ open class InfobarViewModel internal constructor(
 
     private var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
     private val distanceUnitObserver = Observer<DistanceUnit> { distanceUnit = it }
-    private val routeProgressObserver = Observer<RouteProgress> { onRouteProgressChanged(it) }
 
     init {
         regionalManager.distanceUnit.observeForever(distanceUnitObserver)
-        navigationManagerClient.routeProgress.observeForever(routeProgressObserver)
 
         setTextData(
             InfobarTextType.PRIMARY, InfobarTextData(
@@ -94,6 +95,8 @@ open class InfobarViewModel internal constructor(
                 map.forEach { setTextData(it.key, it.value) }
             })
         }
+
+        navigationManagerClient.routeProgress.observe(owner, Observer { onRouteProgressChanged(it) })
     }
 
     private fun onRouteProgressChanged(routeProgress: RouteProgress) {
@@ -154,6 +157,5 @@ open class InfobarViewModel internal constructor(
         super.onCleared()
 
         regionalManager.distanceUnit.removeObserver(distanceUnitObserver)
-        navigationManagerClient.routeProgress.removeObserver(routeProgressObserver)
     }
 }

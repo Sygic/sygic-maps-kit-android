@@ -22,32 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.search
+package com.sygic.maps.uikit.viewmodels.common.geocoder
 
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
 import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
 import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
-import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
 import com.sygic.sdk.InitializationCallback
 import com.sygic.sdk.context.SygicContext
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.Search
-import com.sygic.sdk.search.SearchProvider
-import com.sygic.sdk.search.SearchRequest
-
-const val MAX_RESULTS_COUNT_DEFAULT_VALUE = 20
+import com.sygic.sdk.search.ReverseGeocoder
+import com.sygic.sdk.search.ReverseGeocoderProvider
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object SearchManagerImpl : SearchManager {
+object ReverseGeocoderManagerClientImpl : ReverseGeocoderManagerClient {
 
     @InitializationState
     override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
     private val callbacks = LinkedHashSet<InitializationManager.Callback>()
 
-    override var maxResultsCount: Int = MAX_RESULTS_COUNT_DEFAULT_VALUE
-
-    private lateinit var search: Search
+    private lateinit var reverseGeocoder: ReverseGeocoder
 
     override fun initialize(callback: InitializationManager.Callback?) {
         synchronized(this) {
@@ -65,10 +58,10 @@ object SearchManagerImpl : SearchManager {
             initializationState = InitializationState.INITIALIZING
         }
 
-        SearchProvider.getInstance(object : InitializationCallback<Search> {
-            override fun onInstance(search: Search) {
+        ReverseGeocoderProvider.getInstance(object : InitializationCallback<ReverseGeocoder> {
+            override fun onInstance(reverseGeocoder: ReverseGeocoder) {
                 synchronized(this) {
-                    this@SearchManagerImpl.search = search
+                    this@ReverseGeocoderManagerClientImpl.reverseGeocoder = reverseGeocoder
                     initializationState = InitializationState.INITIALIZED
                 }
                 with(callbacks) {
@@ -86,16 +79,6 @@ object SearchManagerImpl : SearchManager {
         })
     }
 
-    override val searchResults = object : LiveData<SearchResultsHolder>() {
-
-        private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
-            value = SearchResultsHolder(input, state, results)
-        }
-
-        override fun onActive() = onReady { search.addSearchResultsListener(searchResultsListener) }
-        override fun onInactive() = onReady { search.removeSearchResultsListener(searchResultsListener) }
-    }
-
-    override fun searchText(text: String, position: GeoCoordinates?) =
-        onReady { search.search(SearchRequest(text, position).apply { maxResults = maxResultsCount }) }
+    override fun search(position: GeoCoordinates, filter: Set<Int>, listener: ReverseGeocoder.ReverseSearchResultsListener) =
+        onReady { reverseGeocoder.search(position, filter, listener) }
 }

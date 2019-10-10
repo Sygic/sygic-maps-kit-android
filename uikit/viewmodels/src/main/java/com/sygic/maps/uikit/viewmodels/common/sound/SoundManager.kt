@@ -22,34 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.initialization
+package com.sygic.maps.uikit.viewmodels.common.sound
 
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.views.common.utils.logError
-import com.sygic.sdk.SygicEngine
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface SdkInitializationManager {
-
-    @InitializationState
-    var initializationState: Int
-
-    interface Callback {
-        fun onSdkInitialized()
-        fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
-            val errorType = when (error) {
-                SygicEngine.OnInitListener.InitError.InternalInit -> "Internal init"
-                SygicEngine.OnInitListener.InitError.Resources -> "Resources"
-                else -> "Unknown"
-            }
-            logError("SDK Initialization failed: $errorType error :(")
-        }
-    }
-
-    fun initialize(callback: Callback)
-    fun initialize(callback: () -> Unit) { initialize(object : Callback { override fun onSdkInitialized() = callback() }) }
-
-    fun isInitialized() = initializationState == InitializationState.INITIALIZED
-
-    fun onReady(block: () -> Unit) = if (isInitialized()) block.invoke() else initialize { block.invoke() }
+interface SoundManager {
+    fun setSoundsOn()
+    fun setSoundsOff()
 }

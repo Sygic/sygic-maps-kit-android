@@ -35,7 +35,7 @@
 
         <variable
             name="poiDetailInternalViewModel"
-            type="com.sygic.maps.uikit.views.poidetail.viewmodel.PoiDetailInternalViewModel" />
+            type="com.sygic.maps.uikit.views.placedetail.viewmodel.PoiDetailInternalViewModel" />
 
     </data>
 

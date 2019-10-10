@@ -29,10 +29,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
@@ -78,10 +75,6 @@ open class SearchToolbarViewModel internal constructor(
             searchManager.maxResultsCount = value
         }
 
-    private val searchResultsListener = Search.SearchResultsListener { _, _, _ ->
-        iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
-    }
-
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
     private var searchCoroutineJob: Job? = null
     private var lastSearchedString: CharSequence = EMPTY_STRING
@@ -94,7 +87,13 @@ open class SearchToolbarViewModel internal constructor(
         }
 
         inputText.observeForever(::search)
-        searchManager.addSearchResultsListener(searchResultsListener)
+
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        searchManager.searchResults.observe(owner, Observer {
+            iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
+        })
     }
 
     private fun search(input: CharSequence) {
@@ -136,6 +135,5 @@ open class SearchToolbarViewModel internal constructor(
         searchCoroutineJob?.cancel()
         scope.cancel()
         searchToolbarFocused.value = false
-        searchManager.removeSearchResultsListener(searchResultsListener)
     }
 }

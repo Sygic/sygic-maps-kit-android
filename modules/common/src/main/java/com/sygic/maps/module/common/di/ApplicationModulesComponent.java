@@ -31,20 +31,22 @@ import com.sygic.maps.module.common.di.module.DateTimeManagerModule;
 import com.sygic.maps.module.common.di.module.LocationModule;
 import com.sygic.maps.module.common.di.module.NavigationManagerClientModule;
 import com.sygic.maps.module.common.di.module.PermissionsModule;
-import com.sygic.maps.module.common.di.module.PoiDataManagerModule;
+import com.sygic.maps.module.common.di.module.PlacesManagerClientModule;
 import com.sygic.maps.module.common.di.module.PositionManagerClientModule;
+import com.sygic.maps.module.common.di.module.ReverseGeocoderManagerClientModule;
 import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerModule;
 import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
 import com.sygic.maps.module.common.di.module.SearchModule;
 import com.sygic.maps.module.common.di.module.ServicesManagerModule;
 import com.sygic.maps.module.common.di.module.SoundManagerModule;
-import com.sygic.maps.module.common.poi.manager.PoiDataManager;
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
+import com.sygic.maps.uikit.viewmodels.common.geocoder.ReverseGeocoderManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
+import com.sygic.maps.uikit.viewmodels.common.place.PlacesManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
 import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager;
@@ -62,8 +64,9 @@ import dagger.Component;
                 LocationModule.class,
                 NavigationManagerClientModule.class,
                 PermissionsModule.class,
-                PoiDataManagerModule.class,
+                PlacesManagerClientModule.class,
                 PositionManagerClientModule.class,
+                ReverseGeocoderManagerClientModule.class,
                 RouteDemonstrationManagerModule.class,
                 SdkInitializationManagerModule.class,
                 SearchModule.class,
@@ -77,8 +80,9 @@ public interface ApplicationModulesComponent {
     LocationManager getLocationManager();
     NavigationManagerClient getNavigationManagerClient();
     PermissionsManager getPermissionsManager();
-    PoiDataManager getPoiDataManager();
+    PlacesManagerClient getPlacesManagerClient();
     PositionManagerClient getPositionManagerClient();
+    ReverseGeocoderManagerClient getReverseGeocoderManagerClient();
     RouteDemonstrationManager getRouteDemonstrationManager();
     SdkInitializationManager getSdkInitializationManager();
     SearchManager getSearchManager();

@@ -22,26 +22,15 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.navigation.preview
+package com.sygic.maps.uikit.viewmodels.common.geocoder
 
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
-import com.sygic.sdk.position.GeoPosition
-import com.sygic.sdk.route.Route
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
+import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.search.ReverseGeocoder
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface RouteDemonstrationManager {
+interface ReverseGeocoderManagerClient : InitializationManager<InitializationManager.Callback> {
 
-    val currentPosition: LiveData<GeoPosition>
-    val speedMultiplier: MutableLiveData<Float>
-    val demonstrationState: LiveData<DemonstrationState>
-
-    fun start(route: Route)
-    fun restart()
-    fun pause()
-    fun unPause()
-    fun stop()
-    fun destroy()
+    fun search(position: GeoCoordinates, filter: Set<Int>, listener: ReverseGeocoder.ReverseSearchResultsListener )
 }

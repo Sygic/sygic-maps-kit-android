@@ -51,11 +51,10 @@ import com.sygic.maps.module.common.provider.ProviderType
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
-import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.compass.CompassView
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
 import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 import com.sygic.maps.uikit.views.searchfab.SearchFab
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
@@ -203,18 +202,13 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, arguments).apply {
-            this.poiDetailVisibleObservable.observe(
+            openFragmentObservable.observe(this@BrowseMapFragment, Observer { openFragment(it) })
+            poiDetailListenerObservable.observe(this@BrowseMapFragment, Observer { setPoiDetailListener(it) })
+            poiDetailComponentObservable.observe(this@BrowseMapFragment, Observer { setPoiDetailComponent(it) })
+            poiDetailVisibleObservable.observe(
                 this@BrowseMapFragment,
-                Observer<Boolean> { if (it) showPoiDetail() else hidePoiDetail() })
-            this.poiDetailComponentObservable.observe(
-                this@BrowseMapFragment,
-                Observer<PoiDetailComponent> { setPoiDetailComponent(it) })
-            this.poiDetailListenerObservable.observe(
-                this@BrowseMapFragment,
-                Observer<PoiDetailBottomDialogFragment.Listener> { setPoiDetailListener(it) })
-            this.openFragmentObservable.observe(
-                this@BrowseMapFragment,
-                Observer<FragmentComponent> { openFragment(it) })
+                Observer { if (it) showPoiDetail() else hidePoiDetail() }
+            )
         }
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)

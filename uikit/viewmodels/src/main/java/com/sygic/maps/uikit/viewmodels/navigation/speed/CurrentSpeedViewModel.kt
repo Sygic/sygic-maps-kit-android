@@ -24,10 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation.speed
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
@@ -39,7 +36,6 @@ import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
-import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import kotlin.math.roundToInt
 
@@ -54,7 +50,7 @@ open class CurrentSpeedViewModel internal constructor(
     private val regionalManager: RegionalManager,
     private val navigationManagerClient: NavigationManagerClient,
     private val positionManagerClient: PositionManagerClient
-) : ViewModel(), NavigationManager.OnSpeedLimitListener, PositionManager.PositionChangeListener {
+) : ViewModel(), DefaultLifecycleObserver, NavigationManager.OnSpeedLimitListener {
 
     val speeding: LiveData<Boolean> = MutableLiveData(false)
     val speedValue: LiveData<Int> = MutableLiveData(0)
@@ -73,7 +69,6 @@ open class CurrentSpeedViewModel internal constructor(
 
     init {
         navigationManagerClient.addOnSpeedLimitListener(this)
-        positionManagerClient.addPositionChangeListener(this)
         regionalManager.distanceUnit.observeForever(distanceUnitObserver)
         currentSpeed.combineLatest(speedLimitInfo).observeForever {
             speeding.asMutable().value = Speed.isSpeeding(it.first, it.second, distanceUnit)
@@ -82,19 +77,18 @@ open class CurrentSpeedViewModel internal constructor(
         }
     }
 
-    override fun onSpeedLimitInfoChanged(speedLimitInfo: SpeedLimitInfo) {
-        this.speedLimitInfo.value = speedLimitInfo
+    override fun onCreate(owner: LifecycleOwner) {
+        positionManagerClient.currentPosition.observe(owner, Observer { currentSpeed.value = it.speed.roundToInt() })
     }
 
-    override fun onPositionChanged(geoPosition: GeoPosition) {
-        currentSpeed.value = geoPosition.speed.roundToInt()
+    override fun onSpeedLimitInfoChanged(speedLimitInfo: SpeedLimitInfo) {
+        this.speedLimitInfo.value = speedLimitInfo
     }
 
     override fun onCleared() {
         super.onCleared()
 
         navigationManagerClient.removeOnSpeedLimitListener(this)
-        positionManagerClient.removePositionChangeListener(this)
         regionalManager.distanceUnit.removeObserver(distanceUnitObserver)
     }
 }

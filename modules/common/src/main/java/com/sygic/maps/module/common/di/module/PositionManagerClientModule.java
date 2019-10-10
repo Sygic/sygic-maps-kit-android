@@ -24,20 +24,23 @@
 
 package com.sygic.maps.module.common.di.module;
 
+import androidx.annotation.NonNull;
+
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
-
-import javax.inject.Singleton;
 
 @Module
 public class PositionManagerClientModule {
 
     @Singleton
     @Provides
-    PositionManagerClient providePositionManagerClient() {
-        return PositionManagerClientImpl.INSTANCE;
+    PositionManagerClient providePositionManagerClient(@NonNull final RouteDemonstrationManager routeDemonstrationManager) {
+        return PositionManagerClientImpl.getInstance(routeDemonstrationManager);
     }
 }

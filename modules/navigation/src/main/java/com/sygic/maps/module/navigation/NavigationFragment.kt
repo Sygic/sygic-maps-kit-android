@@ -61,7 +61,6 @@ import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostVie
 import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
 import com.sygic.maps.uikit.views.common.extensions.*
-import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
@@ -264,12 +263,12 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
      */
     var route: Route?
         get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.route.value
+            fragmentViewModel.route
         } else arguments.getParcelableValue(KEY_ROUTE)
         set(value) {
             arguments = Bundle(arguments).apply { putParcelable(KEY_ROUTE, value) }
             if (::fragmentViewModel.isInitialized && value != null) {
-                fragmentViewModel.route.value = value
+                fragmentViewModel.route = value
             }
         }
 
@@ -277,29 +276,23 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
-            this.infoToastObservable.observe(
+            activityFinishObservable.observe(this@NavigationFragment, Observer { finish() })
+            infoToastObservable.observe(this@NavigationFragment, Observer { showInfoToast(it) })
+            actionMenuHideObservable.observe(this@NavigationFragment, Observer { hideActionMenu() })
+            actionMenuShowObservable.observe(this@NavigationFragment, Observer { showActionMenu(it) })
+            actionMenuItemClickListenerObservable.observe(
                 this@NavigationFragment,
-                Observer<InfoToastComponent> { showInfoToast(it) })
-            this.actionMenuShowObservable.observe(
-                this@NavigationFragment,
-                Observer<ActionMenuData> { showActionMenu(it) })
-            this.actionMenuHideObservable.observe(
-                this@NavigationFragment,
-                Observer<Any> { hideActionMenu() })
-            this.actionMenuItemClickListenerObservable.observe(
-                this@NavigationFragment,
-                Observer<ActionMenuItemClickListener> { setActionMenuItemClickListener(it) })
-            this.activityFinishObservable.observe(
-                this@NavigationFragment,
-                Observer<Any> { finish() })
+                Observer { setActionMenuItemClickListener(it) }
+            )
         }
         infobarViewModel = viewModelOf(InfobarViewModel::class.java)
-        routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
-        currentSpeedViewModel = viewModelOf(CurrentSpeedViewModel::class.java)
         speedLimitViewModel = viewModelOf(SpeedLimitViewModel::class.java)
+        currentSpeedViewModel = viewModelOf(CurrentSpeedViewModel::class.java)
+        routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
 
-        lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(infobarViewModel)
+        lifecycle.addObserver(fragmentViewModel)
+        lifecycle.addObserver(currentSpeedViewModel)
         lifecycle.addObserver(routePreviewControlsViewModel)
     }
 
@@ -408,8 +401,9 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
     override fun onDestroy() {
         super.onDestroy()
 
-        lifecycle.removeObserver(fragmentViewModel)
         lifecycle.removeObserver(infobarViewModel)
+        lifecycle.removeObserver(fragmentViewModel)
+        lifecycle.removeObserver(currentSpeedViewModel)
         lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 

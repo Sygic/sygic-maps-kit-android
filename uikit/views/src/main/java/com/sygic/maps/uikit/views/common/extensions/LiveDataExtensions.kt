@@ -25,9 +25,7 @@
 package com.sygic.maps.uikit.views.common.extensions
 
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -51,22 +49,38 @@ fun <K, V> MutableLiveData<Map<K, V>>.put(key: K, newValue: V) {
     notifyObservers()
 }
 
-fun <A, B> LiveData<A>.combineLatest(with: LiveData<B>): LiveData<Pair<A, B>> {
-    return MediatorLiveData<Pair<A, B>>().apply {
-        var lastA: A? = null
-        var lastB: B? = null
-
-        addSource(this@combineLatest) {
-            if (it == null && value != null) value = null
-            lastA = it
-            if (lastA != null && lastB != null) value = lastA!! to lastB!!
+fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
+    observeForever(object: Observer<T> {
+        override fun onChanged(value: T) {
+            removeObserver(this)
+            observer(value)
         }
+    })
+}
 
-        addSource(with) {
-            if (it == null && value != null) value = null
-            lastB = it
-            if (lastA != null && lastB != null) value = lastA!! to lastB!!
+fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (T) -> Unit) {
+    observe(owner, object: Observer<T> {
+        override fun onChanged(value: T) {
+            removeObserver(this)
+            observer(value)
         }
+    })
+}
+
+fun <A, B> LiveData<A>.combineLatest(with: LiveData<B>): LiveData<Pair<A, B>> = MediatorLiveData<Pair<A, B>>().apply {
+    var lastA: A? = null
+    var lastB: B? = null
+
+    addSource(this@combineLatest) {
+        if (it == null && value != null) value = null
+        lastA = it
+        if (lastA != null && lastB != null) value = lastA!! to lastB!!
+    }
+
+    addSource(with) {
+        if (it == null && value != null) value = null
+        lastB = it
+        if (lastA != null && lastB != null) value = lastA!! to lastB!!
     }
 }
 
@@ -94,20 +108,18 @@ fun <A, B, C> combineLatest(a: LiveData<A>, b: LiveData<B>, c: LiveData<C>): Liv
     }
 }
 
-fun <A, B> LiveData<A>.withLatestFrom(from: LiveData<B>): LiveData<Pair<A, B>> {
-    return MediatorLiveData<Pair<A, B>>().apply {
-        var lastA: A? = null
-        var lastFrom: B? = null
+fun <A, B> LiveData<A>.withLatestFrom(from: LiveData<B>): LiveData<Pair<A, B>> = MediatorLiveData<Pair<A, B>>().apply {
+    var lastA: A? = null
+    var lastFrom: B? = null
 
-        addSource(from) {
-            if (lastFrom == null && lastA != null) value = lastA!! to it
-            lastFrom = it
-        }
+    addSource(from) {
+        if (lastFrom == null && lastA != null) value = lastA!! to it
+        lastFrom = it
+    }
 
-        addSource(this@withLatestFrom) {
-            if (it == null && value != null) value = null
-            lastA = it
-            if (lastFrom != null && it != null) value = it to lastFrom!!
-        }
+    addSource(this@withLatestFrom) {
+        if (it == null && value != null) value = null
+        lastA = it
+        if (lastFrom != null && it != null) value = it to lastFrom!!
     }
 }

@@ -24,6 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation.signpost
 
+import androidx.lifecycle.Observer
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
@@ -31,6 +32,7 @@ import com.sygic.maps.uikit.viewmodels.common.utils.createInstructionText
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.sdk.navigation.NavigationManager
+import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
 
 /**
  * A [SimplifiedSignpostViewModel] is a basic ViewModel implementation for the [SimplifiedSignpostView] class. It listens to
@@ -41,10 +43,20 @@ import com.sygic.sdk.navigation.NavigationManager
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SimplifiedSignpostViewModel internal constructor(
     regionalManager: RegionalManager,
-    navigationManagerClient: NavigationManagerClient
+    private val navigationManagerClient: NavigationManagerClient
 ) : BaseSignpostViewModel(regionalManager, navigationManagerClient) {
 
+    private val directionInfoObserver = Observer<DirectionInfo> {
+        instructionText.asMutable().value = createInstructionText(it)
+    }
+
     init {
-        directionInfo.observeForever { instructionText.asMutable().value = createInstructionText(it) }
+        navigationManagerClient.directionInfo.observeForever(directionInfoObserver)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        navigationManagerClient.directionInfo.removeObserver(directionInfoObserver)
     }
 }

@@ -22,14 +22,15 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail.component
+package com.sygic.maps.uikit.viewmodels.common.search.holder
 
 import android.os.Parcelable
-import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.sdk.search.SearchResult
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PoiDetailComponent(
-    val data: PoiDetailData,
-    val navigationButtonEnabled: Boolean = false
+class SearchResultsHolder(
+    val input: String,
+    @SearchResult.ResultState val state: Int,
+    val results: List<SearchResult>
 ) : Parcelable

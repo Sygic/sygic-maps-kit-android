@@ -24,44 +24,68 @@
 
 package com.sygic.maps.uikit.viewmodels.common.navigation.preview
 
+import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
-import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.InitializationCallback
+import com.sygic.sdk.context.SygicContext
+import com.sygic.sdk.position.GeoPosition
+import com.sygic.sdk.route.Route
+import com.sygic.sdk.route.simulator.PositionSimulator
 import com.sygic.sdk.route.simulator.RouteDemonstrateSimulator
+import com.sygic.sdk.route.simulator.RouteDemonstrateSimulatorProvider
 
 const val DEFAULT_SPEED = 1F
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
 
-    private var routeDemonstrateSimulator: RouteDemonstrateSimulator? = null
+    private var simulator: RouteDemonstrateSimulator? = null
+    private val simulatorListener = object : PositionSimulator.PositionSimulatorListener {
+        override fun onSimulatedPositionChanged(position: GeoPosition, progress: Float) { currentPosition.value = position }
+
+        override fun onSimulatedStateChanged(@PositionSimulator.SimulatorState state: Int) {
+            //todo: update demonstrationState? or call specific methods?
+            Log.d("Tomas", "onSimulatedStateChanged() called with: p0 = [$state]")
+        }
+    }
 
     override var speedMultiplier = MutableLiveData<Float>(DEFAULT_SPEED)
     override val demonstrationState = MutableLiveData<DemonstrationState>(DemonstrationState.INACTIVE)
 
     init {
-        speedMultiplier.observeForever { routeDemonstrateSimulator?.setSpeedMultiplier(it) }
+        speedMultiplier.observeForever { simulator?.setSpeedMultiplier(it) }
     }
 
-    override fun start(routeInfo: RouteInfo) {
+    override val currentPosition = MutableLiveData<GeoPosition>()
+
+    override fun start(route: Route) {
         destroy()
         demonstrationState.value = DemonstrationState.ACTIVE
-        routeDemonstrateSimulator = RouteDemonstrateSimulator(routeInfo).also {
-            it.start()
-            it.setSpeedMultiplier(speedMultiplier.value!!)
-        }
+
+        RouteDemonstrateSimulatorProvider.getInstance(route, object : InitializationCallback<RouteDemonstrateSimulator> {
+            override fun onInstance(simulator: RouteDemonstrateSimulator) {
+                with(simulator) {
+                    this@RouteDemonstrationManagerImpl.simulator = this
+                    start()
+                    setSpeedMultiplier(speedMultiplier.value!!)
+                    addPositionSimulatorListener(simulatorListener)
+                }
+            }
+            override fun onError(@SygicContext.OnInitListener.Result result: Int) {}
+        })
     }
 
     override fun restart() {
-        routeDemonstrateSimulator?.let {
+        simulator?.let {
             it.start()
             demonstrationState.value = DemonstrationState.ACTIVE
         }
     }
 
     override fun pause() {
-        routeDemonstrateSimulator?.let {
+        simulator?.let {
             if (demonstrationState.value!! == DemonstrationState.ACTIVE) {
                 it.pause()
                 demonstrationState.value = DemonstrationState.PAUSED
@@ -70,7 +94,7 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
     }
 
     override fun unPause() {
-        routeDemonstrateSimulator?.let {
+        simulator?.let {
             if (demonstrationState.value!! == DemonstrationState.PAUSED) {
                 it.start()
                 demonstrationState.value = DemonstrationState.ACTIVE
@@ -79,7 +103,7 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
     }
 
     override fun stop() {
-        routeDemonstrateSimulator?.let {
+        simulator?.let {
             it.stop()
             demonstrationState.value = DemonstrationState.STOPPED
             demonstrationState.value = DemonstrationState.INACTIVE
@@ -87,10 +111,10 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
     }
 
     override fun destroy() {
-        routeDemonstrateSimulator?.let {
+        simulator?.let {
             it.stop()
             it.destroy()
-            routeDemonstrateSimulator = null
+            simulator = null
         }
     }
 }

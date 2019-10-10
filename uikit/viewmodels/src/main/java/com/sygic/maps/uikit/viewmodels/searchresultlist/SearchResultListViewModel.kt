@@ -25,10 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.searchresultlist
 
 import android.view.View
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
@@ -68,18 +65,16 @@ open class SearchResultListViewModel @JvmOverloads internal constructor(
 
     private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
 
-    private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
-        results.toSearchResultList().let {
-            resultListAdapter.items = it
-        }
-
-        errorViewSwitcherIndex.asMutable().value = searchResultStateToErrorViewSwitcherIndex(state)
-        activeAdapter.asMutable().value = if (input.isNotEmpty()) resultListAdapter else defaultStateAdapter
-    }
-
     init {
         resultListAdapter.clickListener = this
-        searchManager.addSearchResultsListener(searchResultsListener)
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        searchManager.searchResults.observe(owner, Observer { holder ->
+            holder.results.toSearchResultList().let { resultListAdapter.items = it }
+            errorViewSwitcherIndex.asMutable().value = searchResultStateToErrorViewSwitcherIndex(holder.state)
+            activeAdapter.asMutable().value = if (holder.input.isNotEmpty()) resultListAdapter else defaultStateAdapter
+        })
     }
 
     open fun onResultListScrollStateChanged(view: RecyclerView, scrollState: Int) {
@@ -94,11 +89,5 @@ open class SearchResultListViewModel @JvmOverloads internal constructor(
     override fun onSearchResultItemClick(view: View, searchResultItem: SearchResultItem<out SearchResult>) {
         view.hideKeyboard()
         onSearchResultItemClickObservable.asSingleEvent().value = searchResultItem
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        searchManager.removeSearchResultsListener(searchResultsListener)
     }
 }

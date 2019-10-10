@@ -28,7 +28,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 

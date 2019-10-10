@@ -22,26 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.navigation.preview
+package com.sygic.maps.uikit.viewmodels.common.position
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
 import com.sygic.sdk.position.GeoPosition
-import com.sygic.sdk.route.Route
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface RouteDemonstrationManager {
+interface PositionManagerClient : InitializationManager<InitializationManager.Callback> {
 
     val currentPosition: LiveData<GeoPosition>
-    val speedMultiplier: MutableLiveData<Float>
-    val demonstrationState: LiveData<DemonstrationState>
 
-    fun start(route: Route)
-    fun restart()
-    fun pause()
-    fun unPause()
-    fun stop()
-    fun destroy()
+    fun enableRemotePositioningService()
+    fun disableRemotePositioningService()
+    fun getLastKnownPosition(callback: (GeoPosition) -> Unit)
+    fun setSdkPositionUpdatingEnabled(enabled: Boolean)
 }

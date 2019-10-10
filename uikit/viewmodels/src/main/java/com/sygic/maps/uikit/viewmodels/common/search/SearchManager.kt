@@ -25,14 +25,16 @@
 package com.sygic.maps.uikit.viewmodels.common.search
 
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
+import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.Search
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface SearchManager {
+interface SearchManager : InitializationManager<InitializationManager.Callback> {
+
     var maxResultsCount: Int
+    val searchResults: LiveData<SearchResultsHolder>
 
     fun searchText(text: String, position: GeoCoordinates? = null)
-    fun addSearchResultsListener(listener: Search.SearchResultsListener)
-    fun removeSearchResultsListener(listener: Search.SearchResultsListener)
 }

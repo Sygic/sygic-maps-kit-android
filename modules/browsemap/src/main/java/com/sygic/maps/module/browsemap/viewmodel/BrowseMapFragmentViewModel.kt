@@ -27,9 +27,12 @@ package com.sygic.maps.module.browsemap.viewmodel
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.browsemap.*
-import com.sygic.maps.module.browsemap.detail.PoiDetailsObject
+import com.sygic.maps.module.browsemap.detail.PlaceDetailsObject
 import com.sygic.maps.module.common.component.*
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.extensions.onMapClick
@@ -37,7 +40,6 @@ import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.listener.OnMapClickListenerWrapper
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
-import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
 import com.sygic.maps.module.common.provider.ProviderType
@@ -48,25 +50,36 @@ import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
-import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
+import com.sygic.maps.uikit.viewmodels.common.extensions.toPlaceDetailData
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.place.PlacesManagerClient
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.components.FragmentComponent
-import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.getBoolean
+import com.sygic.maps.uikit.views.common.extensions.getInt
+import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logWarning
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ProxyPlace
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.places.PlacesManager
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.MutableMap
+import kotlin.collections.first
+import kotlin.collections.forEach
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -77,7 +90,7 @@ class BrowseMapFragmentViewModel internal constructor(
     regionalManager: RegionalManager,
     positionManagerClient: PositionManagerClient,
     private val mapDataModel: ExtendedMapDataModel,
-    private val poiDataManager: PoiDataManager,
+    private val placesManagerClient: PlacesManagerClient,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager
@@ -128,8 +141,6 @@ class BrowseMapFragmentViewModel internal constructor(
             positionLockFabEnabled.value = getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
             zoomControlsEnabled.value = getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
         }
-
-        mapInteractionManager.addOnMapClickListener(this)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -144,6 +155,7 @@ class BrowseMapFragmentViewModel internal constructor(
             })
         }
         poiDetailListenerObservable.asSingleEvent().value = this
+        mapInteractionManager.addOnMapClickListener(this)
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -247,18 +259,18 @@ class BrowseMapFragmentViewModel internal constructor(
             poiDetailVisibleObservable.asSingleEvent().value = true
         }
 
-        poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
+        placesManagerClient.getViewObjectData(viewObject, object : PlacesManagerClient.Callback() {
             override fun onDataLoaded(data: ViewObjectData) {
                 onMapClickListener?.onMapDataReceived(data)
 
                 if (showDetailsView) {
                     detailsViewFactory?.let { factory ->
-                        poiDetailsView = PoiDetailsObject.create(data, factory, viewObject).also { view ->
+                        poiDetailsView = PlaceDetailsObject.create(data, factory, viewObject).also { view ->
                             mapDataModel.addMapObject(view)
                         }
                     } ?: run {
                         poiDetailComponentObservable.asSingleEvent().value =
-                            PoiDetailComponent(data.toPoiDetailData(), navigationButtonEnabled.value!!)
+                            PoiDetailComponent(data.toPlaceDetailData(), navigationButtonEnabled.value!!)
                     }
                 }
             }
@@ -297,10 +309,6 @@ class BrowseMapFragmentViewModel internal constructor(
     override fun onDestroy(owner: LifecycleOwner) {
         onMapClickListener = null
         (moduleConnectionProvidersMap as MutableMap).clear()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
         mapInteractionManager.removeOnMapClickListener(this)
     }
 }

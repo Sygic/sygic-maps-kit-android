@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail.viewmodel
+package com.sygic.maps.uikit.views.placedetail.viewmodel
 
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.BottomSheetBehaviorWrapper
+import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
-import com.sygic.maps.uikit.views.poidetail.manager.PreferencesManager
+import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.manager.PreferencesManager
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 

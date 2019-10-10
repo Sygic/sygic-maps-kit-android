@@ -33,15 +33,18 @@ import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.navigation.listener.EventListener
 import com.sygic.maps.module.search.SEARCH_FRAGMENT_TAG
 import com.sygic.maps.module.search.SearchFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.*
+import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
+import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapMarkers
+import com.sygic.maps.uikit.viewmodels.common.extensions.setMapRectangle
+import com.sygic.maps.uikit.viewmodels.common.extensions.toPlaceDetailData
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
 import com.sygic.samples.utils.isCategoryResult
 import com.sygic.samples.utils.loadDetails
 import com.sygic.samples.utils.toGeoCoordinatesList
-import com.sygic.samples.utils.toPoiDetailComponent
+import com.sygic.samples.utils.toPlaceDetailComponent
 import com.sygic.sdk.map.Camera
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.map.data.SimpleCameraDataModel
@@ -75,7 +78,7 @@ class ComplexDemoActivityViewModel : ViewModel() {
         override fun onMapDataReceived(data: ViewObjectData) {
             targetPosition = data.position
             showPoiDetailObservable.asSingleEvent().value = Pair(
-                PoiDetailComponent(data.toPoiDetailData(), true),
+                PoiDetailComponent(data.toPlaceDetailData(), true),
                 poiDetailListener
             )
         }
@@ -146,7 +149,7 @@ class ComplexDemoActivityViewModel : ViewModel() {
                                 targetPosition = this
                                 cameraDataModel?.position = this
                                 cameraDataModel?.zoomLevel = 10F
-                                searchResultList.first().toPoiDetailComponent()?.let {
+                                searchResultList.first().toPlaceDetailComponent()?.let {
                                     showPoiDetailObservable.asSingleEvent().value = Pair(it, poiDetailListener)
                                 }
                             }

@@ -40,8 +40,6 @@ import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.views.common.extensions.isPermissionNotGranted
 import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.maps.uikit.views.common.extensions.requestPermission
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.demo.states.BrowseMapDemoDefaultState
@@ -71,26 +69,21 @@ class ComplexDemoActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_complex_demo)
 
         viewModel = ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
-            this.restoreDefaultStateObservable.observe(
+            hidePoiDetailObservable.observe(this@ComplexDemoActivity, Observer { browseMapFragment.hidePoiDetail() })
+            placeNavigationFragmentObservable.observe(this@ComplexDemoActivity, Observer { placeNavigationFragment(it) })
+            computePrimaryRouteObservable.observe(this@ComplexDemoActivity, Observer { createRoutePlanAndComputeRoute(it) })
+            restoreDefaultStateObservable.observe(
                 this@ComplexDemoActivity,
-                Observer<Any> { BrowseMapDemoDefaultState.setTo(browseMapFragment) })
-            this.showPoiDetailObservable.observe(
+                Observer { BrowseMapDemoDefaultState.setTo(browseMapFragment) }
+            )
+            showPoiDetailObservable.observe(
                 this@ComplexDemoActivity,
-                Observer<Pair<PoiDetailComponent, PoiDetailBottomDialogFragment.Listener>> {
-                    browseMapFragment.showPoiDetail(it.first, it.second)
-                })
-            this.hidePoiDetailObservable.observe(
+                Observer { browseMapFragment.showPoiDetail(it.first, it.second) }
+            )
+            routeComputeProgressVisibilityObservable.observe(
                 this@ComplexDemoActivity,
-                Observer<Any> { browseMapFragment.hidePoiDetail() })
-            this.computePrimaryRouteObservable.observe(
-                this@ComplexDemoActivity,
-                Observer<GeoCoordinates> { createRoutePlanAndComputeRoute(it) })
-            this.routeComputeProgressVisibilityObservable.observe(
-                this@ComplexDemoActivity,
-                Observer<Int> { routeComputeProgressBarContainer.visibility = it })
-            this.placeNavigationFragmentObservable.observe(
-                this@ComplexDemoActivity,
-                Observer<EventListener> { placeNavigationFragment(it) })
+                Observer { routeComputeProgressBarContainer.visibility = it }
+            )
         }
 
         browseMapFragment = if (savedInstanceState == null) {

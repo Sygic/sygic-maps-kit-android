@@ -22,32 +22,34 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.search
+package com.sygic.maps.uikit.viewmodels.common.services
 
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
 import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
 import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
-import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
+import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager
+import com.sygic.maps.uikit.views.common.utils.SingletonHolder
 import com.sygic.sdk.InitializationCallback
 import com.sygic.sdk.context.SygicContext
-import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.Search
-import com.sygic.sdk.search.SearchProvider
-import com.sygic.sdk.search.SearchRequest
-
-const val MAX_RESULTS_COUNT_DEFAULT_VALUE = 20
+import com.sygic.sdk.online.OnlineManager
+import com.sygic.sdk.online.OnlineManagerProvider
+import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object SearchManagerImpl : SearchManager {
+class ServicesManagerImpl private constructor(
+    private val sdkInitializationManager: SdkInitializationManager
+) : ServicesManager {
+
+    companion object : SingletonHolder<ServicesManagerImpl>() {
+        @JvmStatic
+        fun getInstance(manager: SdkInitializationManager) = getInstance { ServicesManagerImpl(manager) }
+    }
 
     @InitializationState
     override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
     private val callbacks = LinkedHashSet<InitializationManager.Callback>()
 
-    override var maxResultsCount: Int = MAX_RESULTS_COUNT_DEFAULT_VALUE
-
-    private lateinit var search: Search
+    private lateinit var onlineManager: OnlineManager
 
     override fun initialize(callback: InitializationManager.Callback?) {
         synchronized(this) {
@@ -65,10 +67,10 @@ object SearchManagerImpl : SearchManager {
             initializationState = InitializationState.INITIALIZING
         }
 
-        SearchProvider.getInstance(object : InitializationCallback<Search> {
-            override fun onInstance(search: Search) {
+        OnlineManagerProvider.getInstance(object : InitializationCallback<OnlineManager> {
+            override fun onInstance(onlineManager: OnlineManager) {
                 synchronized(this) {
-                    this@SearchManagerImpl.search = search
+                    this@ServicesManagerImpl.onlineManager = onlineManager
                     initializationState = InitializationState.INITIALIZED
                 }
                 with(callbacks) {
@@ -86,16 +88,7 @@ object SearchManagerImpl : SearchManager {
         })
     }
 
-    override val searchResults = object : LiveData<SearchResultsHolder>() {
+    override fun initializeSdk() = sdkInitializationManager.initialize()
 
-        private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
-            value = SearchResultsHolder(input, state, results)
-        }
-
-        override fun onActive() = onReady { search.addSearchResultsListener(searchResultsListener) }
-        override fun onInactive() = onReady { search.removeSearchResultsListener(searchResultsListener) }
-    }
-
-    override fun searchText(text: String, position: GeoCoordinates?) =
-        onReady { search.search(SearchRequest(text, position).apply { maxResults = maxResultsCount }) }
+    override fun enableOnlineMapStreaming(enable: Boolean) = onReady { onlineManager.enableOnlineMapStreaming(enable) }
 }

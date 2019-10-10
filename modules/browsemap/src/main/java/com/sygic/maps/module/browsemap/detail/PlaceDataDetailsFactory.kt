@@ -22,12 +22,23 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail.listener
+package com.sygic.maps.module.browsemap.detail
 
-import androidx.annotation.RestrictTo
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.sygic.maps.module.common.detail.DetailsViewFactory
+import com.sygic.sdk.map.`object`.UiObject
+import com.sygic.sdk.map.`object`.data.ViewObjectData
+import kotlinx.android.parcel.Parcelize
 
-@FunctionalInterface
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface DialogFragmentListener {
-    fun onDismiss()
+@Parcelize
+internal class PlaceDataDetailsFactory(
+    private val factory: DetailsViewFactory,
+    private val data: ViewObjectData
+) : UiObject.ViewFactory {
+
+    override fun createView(inflater: LayoutInflater, container: ViewGroup): View {
+        return factory.getDetailsView(inflater, container, data)
+    }
 }

@@ -22,17 +22,26 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.poidetail.data
+package com.sygic.maps.uikit.viewmodels.common.initialization.sdk
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.RestrictTo
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
+import com.sygic.maps.uikit.views.common.utils.logError
+import com.sygic.sdk.SygicEngine
 
-@Parcelize
-data class PoiDetailData(
-    val titleString: String,
-    val subtitleString: String,
-    val urlString: String? = null,
-    val emailString: String? = null,
-    val phoneString: String? = null,
-    val coordinatesString: String? = null
-) : Parcelable
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface SdkInitializationManager : InitializationManager<SdkInitializationManager.SdkInitializationCallback> {
+
+    interface SdkInitializationCallback : InitializationManager.Callback {
+        override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
+            val errorType = when (error) {
+                SygicEngine.OnInitListener.InitError.InternalInit -> "Internal init"
+                SygicEngine.OnInitListener.InitError.Resources -> "Resources"
+                else -> "Unknown"
+            }
+            logError("SDK Initialization failed: $errorType error :(")
+        }
+    }
+
+    override fun initialize(callback: () -> Unit) { initialize(object : SdkInitializationCallback { override fun onInitialized() { callback() } }) }
+}

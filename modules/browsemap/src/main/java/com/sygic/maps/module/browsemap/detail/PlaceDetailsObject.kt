@@ -34,7 +34,7 @@ import com.sygic.sdk.map.`object`.data.ObjectCreator
 import com.sygic.sdk.map.`object`.data.UiObjectData
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 
-internal class PoiDetailsObject : UiObject {
+internal class PlaceDetailsObject : UiObject {
 
     private val factory: DetailsViewFactory
     private val viewObject: ViewObject<*>
@@ -49,25 +49,25 @@ internal class PoiDetailsObject : UiObject {
             data: ViewObjectData,
             factory: DetailsViewFactory,
             viewObject: ViewObject<*>
-        ): PoiDetailsObject {
-            return UiObjectData.Builder(data.position, PoiDataDetailsFactory(factory, data),
+        ): PlaceDetailsObject {
+            return UiObjectData.Builder(data.position, PlaceDataDetailsFactory(factory, data),
                 ObjectCreator { uiData ->
-                    PoiDetailsObject(
+                    PlaceDetailsObject(
                         uiData,
                         factory,
                         viewObject
                     )
                 })
-                .build() as PoiDetailsObject
+                .build() as PlaceDetailsObject
         }
 
         @JvmField
-        val CREATOR: Parcelable.Creator<PoiDetailsObject> = object : Parcelable.Creator<PoiDetailsObject> {
-            override fun createFromParcel(parcel: Parcel): PoiDetailsObject {
-                return PoiDetailsObject(parcel)
+        val CREATOR: Parcelable.Creator<PlaceDetailsObject> = object : Parcelable.Creator<PlaceDetailsObject> {
+            override fun createFromParcel(parcel: Parcel): PlaceDetailsObject {
+                return PlaceDetailsObject(parcel)
             }
 
-            override fun newArray(size: Int): Array<PoiDetailsObject?> {
+            override fun newArray(size: Int): Array<PlaceDetailsObject?> {
                 return arrayOfNulls(size)
             }
         }
@@ -79,6 +79,7 @@ internal class PoiDetailsObject : UiObject {
         val markerHeight: Int = if (viewObject is MapMarker)
             viewObject.data.bitmapFactory.getBitmap(view?.context!!)?.height ?: 0 else 0
 
+        //todo
         //FIXME: modifying anchor after addition we break hashCode equality!!!
         data.anchor.x = 0.5f - (factory.getXOffset() / width)
         data.anchor.y = 1f + ((markerHeight + factory.getYOffset()) / height)
@@ -88,7 +89,7 @@ internal class PoiDetailsObject : UiObject {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as PoiDetailsObject
+        other as PlaceDetailsObject
 
         if (factory != other.factory) return false
         if (viewObject != other.viewObject) return false
@@ -97,7 +98,7 @@ internal class PoiDetailsObject : UiObject {
         return true
     }
 
-    override fun hashCode(): Int {
+    override fun hashCode(): Int { //todo
         //FIXME: see comment in onMeasured
         var result = super.hashCode()
         result = 0

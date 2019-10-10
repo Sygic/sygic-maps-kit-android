@@ -22,26 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.navigation.preview
+package com.sygic.maps.module.common.di.module;
 
-import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
-import com.sygic.sdk.position.GeoPosition
-import com.sygic.sdk.route.Route
+import androidx.annotation.NonNull;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface RouteDemonstrationManager {
+import com.sygic.maps.uikit.viewmodels.common.geocoder.ReverseGeocoderManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.place.PlacesManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.place.PlacesManagerClientImpl;
 
-    val currentPosition: LiveData<GeoPosition>
-    val speedMultiplier: MutableLiveData<Float>
-    val demonstrationState: LiveData<DemonstrationState>
+import javax.inject.Singleton;
 
-    fun start(route: Route)
-    fun restart()
-    fun pause()
-    fun unPause()
-    fun stop()
-    fun destroy()
+import dagger.Module;
+import dagger.Provides;
+
+@Module
+public class PlacesManagerClientModule {
+
+    @Singleton
+    @Provides
+    PlacesManagerClient providePlacesManagerClient(@NonNull final ReverseGeocoderManagerClient reverseGeocoderManagerClient) {
+        return PlacesManagerClientImpl.getInstance(reverseGeocoderManagerClient);
+    }
 }

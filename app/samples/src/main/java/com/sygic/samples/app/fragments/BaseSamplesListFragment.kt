@@ -29,16 +29,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.samples.databinding.LayoutSamplesListBinding
-import com.sygic.samples.app.models.Sample
-import com.sygic.samples.app.viewmodels.SamplesListViewModel
 import com.sygic.maps.uikit.views.common.extensions.openActivity
 import com.sygic.samples.R
+import com.sygic.samples.app.models.Sample
+import com.sygic.samples.app.viewmodels.SamplesListViewModel
+import com.sygic.samples.databinding.LayoutSamplesListBinding
 
 abstract class BaseSamplesListFragment : Fragment() {
 
@@ -56,11 +55,11 @@ abstract class BaseSamplesListFragment : Fragment() {
         samplesListViewModel =
             ViewModelProviders.of(
                 this,
-                SamplesListViewModel.Factory(requireActivity().application, items))[SamplesListViewModel::class.java]
-                .apply {
-                    this.startActivityObservable.observe(
+                SamplesListViewModel.Factory(requireActivity().application, items))[SamplesListViewModel::class.java].apply {
+                    startActivityObservable.observe(
                         this@BaseSamplesListFragment,
-                        Observer<Class<out AppCompatActivity>> { requireContext().openActivity(it) })
+                        Observer { requireContext().openActivity(it) }
+                    )
                 }
 
         lifecycle.addObserver(samplesListViewModel)

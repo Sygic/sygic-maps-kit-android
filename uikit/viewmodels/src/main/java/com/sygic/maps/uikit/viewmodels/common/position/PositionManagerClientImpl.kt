@@ -22,32 +22,36 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.search
+package com.sygic.maps.uikit.viewmodels.common.position
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
 import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
-import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.views.common.utils.SingletonHolder
 import com.sygic.sdk.InitializationCallback
 import com.sygic.sdk.context.SygicContext
-import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.Search
-import com.sygic.sdk.search.SearchProvider
-import com.sygic.sdk.search.SearchRequest
-
-const val MAX_RESULTS_COUNT_DEFAULT_VALUE = 20
+import com.sygic.sdk.position.GeoPosition
+import com.sygic.sdk.position.PositionManager
+import com.sygic.sdk.position.PositionManagerProvider
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object SearchManagerImpl : SearchManager {
+class PositionManagerClientImpl private constructor(
+    private val routeDemonstrationManager: RouteDemonstrationManager
+) : PositionManagerClient {
+
+    companion object : SingletonHolder<PositionManagerClientImpl>() {
+        @JvmStatic
+        fun getInstance(manager: RouteDemonstrationManager) = getInstance { PositionManagerClientImpl(manager) }
+    }
 
     @InitializationState
     override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
     private val callbacks = LinkedHashSet<InitializationManager.Callback>()
 
-    override var maxResultsCount: Int = MAX_RESULTS_COUNT_DEFAULT_VALUE
-
-    private lateinit var search: Search
+    private lateinit var positionManager: PositionManager
 
     override fun initialize(callback: InitializationManager.Callback?) {
         synchronized(this) {
@@ -65,10 +69,10 @@ object SearchManagerImpl : SearchManager {
             initializationState = InitializationState.INITIALIZING
         }
 
-        SearchProvider.getInstance(object : InitializationCallback<Search> {
-            override fun onInstance(search: Search) {
+        PositionManagerProvider.getInstance(object : InitializationCallback<PositionManager> {
+            override fun onInstance(positionManager: PositionManager) {
                 synchronized(this) {
-                    this@SearchManagerImpl.search = search
+                    this@PositionManagerClientImpl.positionManager = positionManager
                     initializationState = InitializationState.INITIALIZED
                 }
                 with(callbacks) {
@@ -86,16 +90,28 @@ object SearchManagerImpl : SearchManager {
         })
     }
 
-    override val searchResults = object : LiveData<SearchResultsHolder>() {
+    override val currentPosition = object : LiveData<GeoPosition>() {
 
-        private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
-            value = SearchResultsHolder(input, state, results)
+        private val positionChangeListener = PositionManager.PositionChangeListener { value = it }
+        private val demonstrationPositionObserver = Observer<GeoPosition> { value = it } //ToDo: remove it when CI-531 is done
+
+        override fun onActive() {
+            onReady { positionManager.addPositionChangeListener(positionChangeListener) }
+            routeDemonstrationManager.currentPosition.observeForever(demonstrationPositionObserver)
         }
 
-        override fun onActive() = onReady { search.addSearchResultsListener(searchResultsListener) }
-        override fun onInactive() = onReady { search.removeSearchResultsListener(searchResultsListener) }
+        override fun onInactive() {
+            onReady { positionManager.removePositionChangeListener(positionChangeListener) }
+            routeDemonstrationManager.currentPosition.removeObserver(demonstrationPositionObserver)
+        }
     }
 
-    override fun searchText(text: String, position: GeoCoordinates?) =
-        onReady { search.search(SearchRequest(text, position).apply { maxResults = maxResultsCount }) }
+    override fun enableRemotePositioningService() = onReady { positionManager.enableRemotePositioningService() }
+
+    override fun disableRemotePositioningService() = onReady { positionManager.disableRemotePositioningService() }
+
+    override fun getLastKnownPosition(callback: (GeoPosition) -> Unit) = onReady { callback.invoke(positionManager.lastKnownPosition) }
+
+    override fun setSdkPositionUpdatingEnabled(enabled: Boolean) =
+        onReady { positionManager.run { if (enabled) startPositionUpdating() else stopPositionUpdating() } }
 }

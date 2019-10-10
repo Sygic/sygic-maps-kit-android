@@ -26,32 +26,28 @@ package com.sygic.maps.uikit.viewmodels.navigation.lanes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.lanes.data.SimpleLanesData
-import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.routeeventnotifications.LaneInfo
 import com.sygic.sdk.navigation.routeeventnotifications.LaneInfo.Lane.Direction.*
 
 @AutoFactory
 class LanesViewModel internal constructor(
     val navigationManagerClient: NavigationManagerClient
-) : ViewModel(), NavigationManager.OnLaneListener {
+) : ViewModel() {
 
     val enabled: LiveData<Boolean> = MutableLiveData(false)
     val lanesData: LiveData<Array<SimpleLanesData>> = MutableLiveData(emptyArray())
 
-    init {
-        navigationManagerClient.addOnLaneListener(this)
-    }
-
-    override fun onLaneInfoChanged(info: LaneInfo) {
+    private val laneInfoObserver = Observer<LaneInfo> { info ->
         if (!info.isActive) {
             enabled.asMutable().value = false
-            return
+            return@Observer
         }
 
         with(info.simpleLanesInfo) {
@@ -67,9 +63,14 @@ class LanesViewModel internal constructor(
         }
     }
 
+    init {
+        navigationManagerClient.laneInfo.observeForever(laneInfoObserver)
+    }
+
     override fun onCleared() {
         super.onCleared()
-        navigationManagerClient.removeOnLaneListener(this)
+
+        navigationManagerClient.laneInfo.removeObserver(laneInfoObserver)
     }
 }
 
