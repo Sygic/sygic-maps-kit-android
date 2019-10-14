@@ -24,7 +24,6 @@
 
 package com.sygic.maps.uikit.viewmodels.common.navigation.preview
 
-import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
@@ -42,23 +41,14 @@ const val DEFAULT_SPEED = 1F
 object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
 
     private var simulator: RouteDemonstrateSimulator? = null
-    private val simulatorListener = object : PositionSimulator.PositionSimulatorListener {
-        override fun onSimulatedPositionChanged(position: GeoPosition, progress: Float) { currentPosition.value = position }
-
-        override fun onSimulatedStateChanged(@PositionSimulator.SimulatorState state: Int) {
-            //todo: update demonstrationState? or call specific methods?
-            Log.d("Tomas", "onSimulatedStateChanged() called with: p0 = [$state]")
-        }
-    }
 
     override var speedMultiplier = MutableLiveData<Float>(DEFAULT_SPEED)
+    override val currentPosition = MutableLiveData<GeoPosition>()
     override val demonstrationState = MutableLiveData<DemonstrationState>(DemonstrationState.INACTIVE)
 
     init {
         speedMultiplier.observeForever { simulator?.setSpeedMultiplier(it) }
     }
-
-    override val currentPosition = MutableLiveData<GeoPosition>()
 
     override fun start(route: Route) {
         destroy()
@@ -70,7 +60,10 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
                     this@RouteDemonstrationManagerImpl.simulator = this
                     start()
                     setSpeedMultiplier(speedMultiplier.value!!)
-                    addPositionSimulatorListener(simulatorListener)
+                    addPositionSimulatorListener(object : PositionSimulator.PositionSimulatorListener {
+                        override fun onSimulatedPositionChanged(position: GeoPosition, progress: Float) { currentPosition.value = position }
+                        override fun onSimulatedStateChanged(@PositionSimulator.SimulatorState state: Int) { /* Currently do nothing */ }
+                    })
                 }
             }
             override fun onError(@SygicContext.OnInitListener.Result result: Int) {}

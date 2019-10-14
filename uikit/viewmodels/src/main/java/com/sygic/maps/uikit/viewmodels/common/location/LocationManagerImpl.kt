@@ -36,8 +36,8 @@ class LocationManagerImpl(private val positionManagerClient: PositionManagerClie
 
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 
-    private val providerCheck: LocationProviderCheckLiveEvent = LocationProviderCheckLiveEvent()
-    private val locationRequest: LocationRequestLiveEvent = LocationRequestLiveEvent()
+    private val providerCheck: LocationProviderCheckLiveEvent by lazy { LocationProviderCheckLiveEvent() }
+    private val locationRequest: LocationRequestLiveEvent by lazy { LocationRequestLiveEvent() }
 
     override var positionOnMapEnabled: Boolean = false
         set(value) {

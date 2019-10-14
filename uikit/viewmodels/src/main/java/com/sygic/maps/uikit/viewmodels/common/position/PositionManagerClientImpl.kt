@@ -90,19 +90,21 @@ class PositionManagerClientImpl private constructor(
         })
     }
 
-    override val currentPosition = object : LiveData<GeoPosition>() {
+    override val currentPosition by lazy {
+        object : LiveData<GeoPosition>() {
 
-        private val positionChangeListener = PositionManager.PositionChangeListener { value = it }
-        private val demonstrationPositionObserver = Observer<GeoPosition> { value = it } //ToDo: remove it when CI-531 is done
+            private val positionChangeListener by lazy { PositionManager.PositionChangeListener { value = it } }
+            private val demonstrationPositionObserver by lazy { Observer<GeoPosition> { value = it } } //ToDo: remove it when CI-531 is done
 
-        override fun onActive() {
-            onReady { positionManager.addPositionChangeListener(positionChangeListener) }
-            routeDemonstrationManager.currentPosition.observeForever(demonstrationPositionObserver)
-        }
+            override fun onActive() {
+                onReady { positionManager.addPositionChangeListener(positionChangeListener) }
+                routeDemonstrationManager.currentPosition.observeForever(demonstrationPositionObserver)
+            }
 
-        override fun onInactive() {
-            onReady { positionManager.removePositionChangeListener(positionChangeListener) }
-            routeDemonstrationManager.currentPosition.removeObserver(demonstrationPositionObserver)
+            override fun onInactive() {
+                onReady { positionManager.removePositionChangeListener(positionChangeListener) }
+                routeDemonstrationManager.currentPosition.removeObserver(demonstrationPositionObserver)
+            }
         }
     }
 

@@ -86,14 +86,18 @@ object SearchManagerImpl : SearchManager {
         })
     }
 
-    override val searchResults = object : LiveData<SearchResultsHolder>() {
+    override val searchResults by lazy {
+        object : LiveData<SearchResultsHolder>() {
 
-        private val searchResultsListener = Search.SearchResultsListener { input, state, results ->
-            value = SearchResultsHolder(input, state, results)
+            private val searchResultsListener by lazy {
+                Search.SearchResultsListener { input, state, results ->
+                    value = SearchResultsHolder(input, state, results)
+                }
+            }
+
+            override fun onActive() = onReady { search.addSearchResultsListener(searchResultsListener) }
+            override fun onInactive() = onReady { search.removeSearchResultsListener(searchResultsListener) }
         }
-
-        override fun onActive() = onReady { search.addSearchResultsListener(searchResultsListener) }
-        override fun onInactive() = onReady { search.removeSearchResultsListener(searchResultsListener) }
     }
 
     override fun searchText(text: String, position: GeoCoordinates?) =

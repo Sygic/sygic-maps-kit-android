@@ -53,7 +53,7 @@ abstract class BaseSignpostViewModel(
     val secondaryDirectionContainerVisible: LiveData<Boolean> = MutableLiveData(false)
     val instructionText: LiveData<TextHolder> = MutableLiveData(TextHolder.empty)
 
-    private val directionInfoAndDistanceUnitMerger = navigationManagerClient.directionInfo.withLatestFrom(regionalManager.distanceUnit)
+    private val directionInfoAndDistanceUnitMediator = navigationManagerClient.directionInfo.withLatestFrom(regionalManager.distanceUnit)
 
     private val directionInfoObserver = Observer<Pair<DirectionInfo, DistanceUnit>> {
         distance.asMutable().value = it.first.getDistanceWithUnits(it.second)
@@ -63,12 +63,12 @@ abstract class BaseSignpostViewModel(
     }
 
     init {
-        directionInfoAndDistanceUnitMerger.observeForever(directionInfoObserver)
+        directionInfoAndDistanceUnitMediator.observeForever(directionInfoObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
 
-        directionInfoAndDistanceUnitMerger.removeObserver(directionInfoObserver)
+        directionInfoAndDistanceUnitMediator.removeObserver(directionInfoObserver)
     }
 }

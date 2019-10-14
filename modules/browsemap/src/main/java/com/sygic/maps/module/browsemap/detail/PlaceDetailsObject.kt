@@ -45,21 +45,16 @@ internal class PlaceDetailsObject : UiObject {
     }
 
     companion object {
-        internal fun create(
-            data: ViewObjectData,
-            factory: DetailsViewFactory,
-            viewObject: ViewObject<*>
-        ): PlaceDetailsObject {
-            return UiObjectData.Builder(data.position, PlaceDataDetailsFactory(factory, data),
-                ObjectCreator { uiData ->
-                    PlaceDetailsObject(
-                        uiData,
-                        factory,
-                        viewObject
-                    )
-                })
-                .build() as PlaceDetailsObject
-        }
+        internal fun create(data: ViewObjectData, factory: DetailsViewFactory, viewObject: ViewObject<*>) =
+            UiObjectData.Builder(data.position, PlaceDataDetailsFactory(factory, data),
+            ObjectCreator { uiData ->
+                PlaceDetailsObject(
+                    uiData,
+                    factory,
+                    viewObject
+                )
+            })
+            .build() as PlaceDetailsObject
 
         @JvmField
         val CREATOR: Parcelable.Creator<PlaceDetailsObject> = object : Parcelable.Creator<PlaceDetailsObject> {
@@ -79,7 +74,6 @@ internal class PlaceDetailsObject : UiObject {
         val markerHeight: Int = if (viewObject is MapMarker)
             viewObject.data.bitmapFactory.getBitmap(view?.context!!)?.height ?: 0 else 0
 
-        //todo
         //FIXME: modifying anchor after addition we break hashCode equality!!!
         data.anchor.x = 0.5f - (factory.getXOffset() / width)
         data.anchor.y = 1f + ((markerHeight + factory.getYOffset()) / height)
@@ -98,7 +92,7 @@ internal class PlaceDetailsObject : UiObject {
         return true
     }
 
-    override fun hashCode(): Int { //todo
+    override fun hashCode(): Int {
         //FIXME: see comment in onMeasured
         var result = super.hashCode()
         result = 0

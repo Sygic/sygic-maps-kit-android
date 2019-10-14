@@ -35,9 +35,9 @@ import com.sygic.maps.uikit.viewmodels.common.permission.livedata.PermissionRequ
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PermissionsManagerImpl : PermissionsManager {
 
-    private val permissionCheck: PermissionCheckLiveEvent = PermissionCheckLiveEvent()
-    private val rationaleCheck: PermissionRationaleLiveEvent = PermissionRationaleLiveEvent()
-    private val permissionRequest: PermissionRequestLiveEvent = PermissionRequestLiveEvent()
+    private val permissionCheck: PermissionCheckLiveEvent by lazy { PermissionCheckLiveEvent() }
+    private val rationaleCheck: PermissionRationaleLiveEvent by lazy { PermissionRationaleLiveEvent() }
+    private val permissionRequest: PermissionRequestLiveEvent by lazy { PermissionRequestLiveEvent() }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<PermissionsManager.PermissionRequest>) {
         permissionCheck.observe(owner)
