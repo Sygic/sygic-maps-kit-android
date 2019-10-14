@@ -292,6 +292,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
 
         lifecycle.addObserver(infobarViewModel)
         lifecycle.addObserver(fragmentViewModel)
+        lifecycle.addObserver(speedLimitViewModel)
         lifecycle.addObserver(currentSpeedViewModel)
         lifecycle.addObserver(routePreviewControlsViewModel)
     }
@@ -403,6 +404,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
 
         lifecycle.removeObserver(infobarViewModel)
         lifecycle.removeObserver(fragmentViewModel)
+        lifecycle.removeObserver(speedLimitViewModel)
         lifecycle.removeObserver(currentSpeedViewModel)
         lifecycle.removeObserver(routePreviewControlsViewModel)
     }

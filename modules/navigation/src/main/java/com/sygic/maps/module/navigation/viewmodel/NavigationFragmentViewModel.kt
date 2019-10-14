@@ -295,7 +295,7 @@ class NavigationFragmentViewModel internal constructor(
 
     override fun onFinishReached() {
         mapDataModel.removeAllMapRoutes()
-        navigationManagerClient.stopNavigation()
+        navigationManagerClient.route.value = null
         eventListener?.onRouteFinishReached()
         eventListener?.onNavigationFinished()
     }
@@ -345,7 +345,6 @@ class NavigationFragmentViewModel internal constructor(
 
         mapDataModel.removeAllMapRoutes()
         routeDemonstrationManager.destroy()
-        navigationManagerClient.stopNavigation()
         navigationManagerClient.route.value = null
     }
 }

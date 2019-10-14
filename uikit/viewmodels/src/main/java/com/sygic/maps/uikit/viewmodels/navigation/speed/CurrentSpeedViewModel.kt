@@ -35,7 +35,6 @@ import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
 import com.sygic.sdk.position.PositionManager
 import kotlin.math.roundToInt
 
@@ -50,45 +49,28 @@ open class CurrentSpeedViewModel internal constructor(
     private val regionalManager: RegionalManager,
     private val navigationManagerClient: NavigationManagerClient,
     private val positionManagerClient: PositionManagerClient
-) : ViewModel(), DefaultLifecycleObserver, NavigationManager.OnSpeedLimitListener {
+) : ViewModel(), DefaultLifecycleObserver {
 
     val speeding: LiveData<Boolean> = MutableLiveData(false)
     val speedValue: LiveData<Int> = MutableLiveData(0)
     val speedProgress: LiveData<Float> = MutableLiveData(0f)
     val speedUnit: LiveData<String> = MutableLiveData(Speed.getUnitFromDistanceUnit(DistanceUnit.KILOMETERS))
 
-    private var distanceUnit: DistanceUnit = DistanceUnit.KILOMETERS
-    private val distanceUnitObserver = Observer<DistanceUnit> {
-        speedValue.asMutable().value = Speed.convertValue(speedValue.value!!, currentDistanceUnit = distanceUnit, targetDistanceUnit = it)
-        speedUnit.asMutable().value = Speed.getUnitFromDistanceUnit(it)
-        distanceUnit = it
-    }
-
-    private val currentSpeed = MutableLiveData<Int>()
-    private val speedLimitInfo = MutableLiveData<SpeedLimitInfo>()
-
-    init {
-        navigationManagerClient.addOnSpeedLimitListener(this)
-        regionalManager.distanceUnit.observeForever(distanceUnitObserver)
-        currentSpeed.combineLatest(speedLimitInfo).observeForever {
-            speeding.asMutable().value = Speed.isSpeeding(it.first, it.second, distanceUnit)
-            speedProgress.asMutable().value = Speed.speedProgress(it.first, it.second, distanceUnit)
-            speedValue.asMutable().value = Speed.convertValue(it.first, DistanceUnit.KILOMETERS, distanceUnit)
-        }
-    }
+    private var currentDistanceUnit = regionalManager.distanceUnit.value!!
 
     override fun onCreate(owner: LifecycleOwner) {
-        positionManagerClient.currentPosition.observe(owner, Observer { currentSpeed.value = it.speed.roundToInt() })
-    }
-
-    override fun onSpeedLimitInfoChanged(speedLimitInfo: SpeedLimitInfo) {
-        this.speedLimitInfo.value = speedLimitInfo
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        navigationManagerClient.removeOnSpeedLimitListener(this)
-        regionalManager.distanceUnit.removeObserver(distanceUnitObserver)
+        regionalManager.distanceUnit.observe(owner, Observer {
+            speedValue.asMutable().value = Speed.convertValue(speedValue.value!!, currentDistanceUnit = currentDistanceUnit, targetDistanceUnit = it)
+            speedUnit.asMutable().value = Speed.getUnitFromDistanceUnit(it)
+            currentDistanceUnit = it
+        })
+        combineLatest(positionManagerClient.currentPosition, navigationManagerClient.speedLimitInfo)
+            .observe(owner, Observer {
+                with(it.first.speed.roundToInt()) {
+                    speeding.asMutable().value = Speed.isSpeeding(this, it.second, currentDistanceUnit)
+                    speedProgress.asMutable().value = Speed.speedProgress(this, it.second, currentDistanceUnit)
+                    speedValue.asMutable().value = Speed.convertValue(this, DistanceUnit.KILOMETERS, currentDistanceUnit)
+                }
+            })
     }
 }

@@ -32,6 +32,9 @@ import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.RouteProgress
 import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
 import com.sygic.sdk.navigation.routeeventnotifications.LaneInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
+import com.sygic.sdk.navigation.traffic.TrafficNotification
 import com.sygic.sdk.route.Route
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -39,19 +42,14 @@ interface NavigationManagerClient : InitializationManager<InitializationManager.
 
     val route: MutableLiveData<Route>
     val laneInfo: LiveData<LaneInfo>
+    val trafficNotification: LiveData<TrafficNotification>
     val routeProgress: LiveData<RouteProgress>
     val directionInfo: LiveData<DirectionInfo>
+    val speedLimitInfo: LiveData<SpeedLimitInfo>
+    val signpostInfoList: LiveData<List<SignpostInfo>>
 
-    fun stopNavigation() //todo
-    fun addOnTrafficChangedListener(listener: NavigationManager.OnTrafficChangedListener) //todo
-    fun removeOnTrafficChangedListener(listener: NavigationManager.OnTrafficChangedListener) //todo
-    fun addOnSignpostListener(listener: NavigationManager.OnSignpostListener) //todo
-    fun removeOnSignpostListener(listener: NavigationManager.OnSignpostListener) //todo
-    fun addOnSpeedLimitListener(listener: NavigationManager.OnSpeedLimitListener) //todo
-    fun removeOnSpeedLimitListener(listener: NavigationManager.OnSpeedLimitListener) //todo
-    fun addOnWaypointPassListener(listener: NavigationManager.OnWaypointPassListener) //todo
-    fun removeOnWaypointPassListener(listener: NavigationManager.OnWaypointPassListener) //todo
-    //todo: migrate audio listeners also to live data?
+    fun addOnWaypointPassListener(listener: NavigationManager.OnWaypointPassListener)
+    fun removeOnWaypointPassListener(listener: NavigationManager.OnWaypointPassListener)
     fun setAudioBetterRouteListener(listener: NavigationManager.AudioBetterRouteListener?)
     fun setAudioIncidentListener(listener: NavigationManager.AudioIncidentListener?)
     fun setAudioInstructionListener(listener: NavigationManager.AudioInstructionListener?)

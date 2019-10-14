@@ -56,35 +56,34 @@ private const val EMPTY_PICTOGRAM = 0
 open class FullSignpostViewModel internal constructor(
     regionalManager: RegionalManager,
     private val navigationManagerClient: NavigationManagerClient
-) : BaseSignpostViewModel(regionalManager, navigationManagerClient), NavigationManager.OnSignpostListener {
+) : BaseSignpostViewModel(regionalManager, navigationManagerClient) {
 
     val pictogram: LiveData<Int> = MutableLiveData(EMPTY_PICTOGRAM)
     val roadSigns: LiveData<List<RoadSignData>> = MutableLiveData(listOf())
 
     private val signpostInfoHolder = MutableLiveData<SignpostInfoHolder>(SignpostInfoHolder.empty)
-    private val directionAndSignpostInfoMerger = navigationManagerClient.directionInfo.combineLatest(signpostInfoHolder)
+    private val directionAndSignpostInfoMediator = combineLatest(navigationManagerClient.directionInfo, signpostInfoHolder)
 
     private val directionInfoObserver = Observer<Pair<DirectionInfo, SignpostInfoHolder>> {
         instructionText.asMutable().value = createInstructionText(it)
     }
-
-    init {
-        navigationManagerClient.addOnSignpostListener(this)
-        directionAndSignpostInfoMerger.observeForever(directionInfoObserver)
-    }
-
-    override fun onSignpostChanged(signpostInfoList: List<SignpostInfo>) {
-        with(signpostInfoList.getNaviSignInfoOnRoute()) {
+    private val signpostInfoObserver = Observer<List<SignpostInfo>> {
+        with(it.getNaviSignInfoOnRoute()) {
             signpostInfoHolder.value = SignpostInfoHolder.from(this)
             roadSigns.asMutable().value = this?.roadSigns() ?: listOf()
             pictogram.asMutable().value = this?.pictogramDrawableRes() ?: EMPTY_PICTOGRAM
         }
     }
 
+    init {
+        directionAndSignpostInfoMediator.observeForever(directionInfoObserver)
+        navigationManagerClient.signpostInfoList.observeForever(signpostInfoObserver)
+    }
+
     override fun onCleared() {
         super.onCleared()
 
-        navigationManagerClient.removeOnSignpostListener(this)
-        directionAndSignpostInfoMerger.removeObserver(directionInfoObserver)
+        directionAndSignpostInfoMediator.removeObserver(directionInfoObserver)
+        navigationManagerClient.signpostInfoList.removeObserver(signpostInfoObserver)
     }
 }

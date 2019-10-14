@@ -24,9 +24,7 @@
 
 package com.sygic.maps.uikit.viewmodels.navigation.speed
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSpeedLimitType
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
@@ -34,7 +32,6 @@ import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
 import com.sygic.maps.uikit.views.navigation.speed.limit.SpeedLimitType
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
 
 /**
  * A [SpeedLimitViewModel] is a basic ViewModel implementation for the [SpeedLimitView] view class. It listens
@@ -44,25 +41,17 @@ import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SpeedLimitViewModel internal constructor(
     private val navigationManagerClient: NavigationManagerClient
-) : ViewModel(), NavigationManager.OnSpeedLimitListener {
+) : ViewModel(), DefaultLifecycleObserver {
 
     val speedLimitType: LiveData<SpeedLimitType> = MutableLiveData(SpeedLimitType.EU)
     val speedLimitValue: LiveData<Int> = MutableLiveData(0)
     val speedLimitVisible: LiveData<Boolean> = MutableLiveData(false)
 
-    init {
-        navigationManagerClient.addOnSpeedLimitListener(this)
-    }
-
-    override fun onSpeedLimitInfoChanged(speedLimitInfo: SpeedLimitInfo) {
-        speedLimitValue.asMutable().value = speedLimitInfo.getSpeedLimit(speedLimitInfo.countrySpeedUnits)
-        speedLimitType.asMutable().value = speedLimitInfo.countrySignage.toSpeedLimitType()
-        speedLimitVisible.asMutable().value = speedLimitValue.value!! > 0
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        navigationManagerClient.removeOnSpeedLimitListener(this)
+    override fun onCreate(owner: LifecycleOwner) {
+        navigationManagerClient.speedLimitInfo.observe(owner, Observer { speedLimitInfo ->
+            speedLimitValue.asMutable().value = speedLimitInfo.getSpeedLimit(speedLimitInfo.countrySpeedUnits)
+            speedLimitType.asMutable().value = speedLimitInfo.countrySignage.toSpeedLimitType()
+            speedLimitVisible.asMutable().value = speedLimitValue.value!! > 0
+        })
     }
 }
