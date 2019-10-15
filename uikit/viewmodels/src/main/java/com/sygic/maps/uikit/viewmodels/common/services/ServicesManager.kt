@@ -25,10 +25,9 @@
 package com.sygic.maps.uikit.viewmodels.common.services
 
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ServicesManager : InitializationManager<InitializationManager.Callback> {
+interface ServicesManager {
 
     fun initializeSdk()
     fun enableOnlineMapStreaming(enable: Boolean = true)

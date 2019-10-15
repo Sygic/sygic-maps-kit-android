@@ -25,15 +25,14 @@
 package com.sygic.maps.uikit.viewmodels.common.services
 
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationCallback
 import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager
+import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
-import com.sygic.sdk.InitializationCallback
-import com.sygic.sdk.context.SygicContext
 import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.online.OnlineManagerProvider
-import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ServicesManagerImpl private constructor(
@@ -45,50 +44,11 @@ class ServicesManagerImpl private constructor(
         fun getInstance(manager: SdkInitializationManager) = getInstance { ServicesManagerImpl(manager) }
     }
 
-    @InitializationState
-    override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
-    private val callbacks = LinkedHashSet<InitializationManager.Callback>()
-
-    private lateinit var onlineManager: OnlineManager
-
-    override fun initialize(callback: InitializationManager.Callback?) {
-        synchronized(this) {
-            if (initializationState == InitializationState.INITIALIZED) {
-                callback?.onInitialized()
-                return
-            }
-
-            callback?.let { callbacks.add(it) }
-
-            if (initializationState == InitializationState.INITIALIZING) {
-                return
-            }
-
-            initializationState = InitializationState.INITIALIZING
-        }
-
-        OnlineManagerProvider.getInstance(object : InitializationCallback<OnlineManager> {
-            override fun onInstance(onlineManager: OnlineManager) {
-                synchronized(this) {
-                    this@ServicesManagerImpl.onlineManager = onlineManager
-                    initializationState = InitializationState.INITIALIZED
-                }
-                with(callbacks) {
-                    forEach { it.onInitialized() }
-                    clear()
-                }
-            }
-            override fun onError(@SygicContext.OnInitListener.Result result: Int) {
-                synchronized(this) { initializationState = InitializationState.ERROR }
-                with(callbacks) {
-                    forEach { it.onError(result) }
-                    clear()
-                }
-            }
-        })
+    private val managerProvider: LiveData<OnlineManager> = object : MutableLiveData<OnlineManager>() {
+        init { OnlineManagerProvider.getInstance(InitializationCallback<OnlineManager> { value = it }) }
     }
 
     override fun initializeSdk() = sdkInitializationManager.initialize()
 
-    override fun enableOnlineMapStreaming(enable: Boolean) = onReady { onlineManager.enableOnlineMapStreaming(enable) }
+    override fun enableOnlineMapStreaming(enable: Boolean) = managerProvider.observeOnce { it.enableOnlineMapStreaming(enable) }
 }
