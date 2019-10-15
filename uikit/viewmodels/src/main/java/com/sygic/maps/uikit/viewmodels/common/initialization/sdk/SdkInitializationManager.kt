@@ -25,23 +25,12 @@
 package com.sygic.maps.uikit.viewmodels.common.initialization.sdk
 
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
-import com.sygic.maps.uikit.views.common.utils.logError
-import com.sygic.sdk.SygicEngine
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface SdkInitializationManager : InitializationManager<SdkInitializationManager.SdkInitializationCallback> {
+interface SdkInitializationManager {
 
-    interface SdkInitializationCallback : InitializationManager.Callback {
-        override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
-            val errorType = when (error) {
-                SygicEngine.OnInitListener.InitError.InternalInit -> "Internal init"
-                SygicEngine.OnInitListener.InitError.Resources -> "Resources"
-                else -> "Unknown"
-            }
-            logError("SDK Initialization failed: $errorType error :(")
-        }
-    }
+    @InitializationState
+    var initializationState: Int
 
-    override fun initialize(callback: () -> Unit) { initialize(object : SdkInitializationCallback { override fun onInitialized() { callback() } }) }
+    fun initialize()
 }

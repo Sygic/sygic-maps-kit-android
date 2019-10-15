@@ -22,29 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.initialization
+package com.sygic.maps.uikit.viewmodels.common.initialization.sdk;
 
-import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.views.common.utils.logError
+import androidx.annotation.IntDef;
+import androidx.annotation.RestrictTo;
 
-@Suppress("UNCHECKED_CAST")
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@IntDef({InitializationState.ERROR, InitializationState.INITIALIZATION_NOT_STARTED,
+        InitializationState.INITIALIZING, InitializationState.INITIALIZED})
+@Retention(RetentionPolicy.SOURCE)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface InitializationManager<T : InitializationManager.Callback> { //todo
-
-    @InitializationState
-    var initializationState: Int
-
-    interface Callback {
-        fun onInitialized()
-        fun onError(error: Int) {
-            logError("Initialization failed, error: $error :(")
-        }
-    }
-
-    fun initialize(callback: T? = null)
-    fun initialize(callback: () -> Unit) { initialize(object : Callback { override fun onInitialized() { callback() } } as T) }
-
-    fun isInitialized() = initializationState == InitializationState.INITIALIZED
-
-    fun onReady(block: () -> Unit) = if (isInitialized()) block.invoke() else initialize { block.invoke() }
+public @interface InitializationState {
+    int ERROR = -1;
+    int INITIALIZATION_NOT_STARTED = 0;
+    int INITIALIZING = 1;
+    int INITIALIZED = 2;
 }

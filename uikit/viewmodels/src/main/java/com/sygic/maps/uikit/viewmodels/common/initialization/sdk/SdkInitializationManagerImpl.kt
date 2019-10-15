@@ -27,12 +27,11 @@ package com.sygic.maps.uikit.viewmodels.common.initialization.sdk
 import android.app.Application
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.R
-import com.sygic.maps.uikit.viewmodels.common.remote.RemoteControlManager
 import com.sygic.maps.uikit.viewmodels.common.extensions.getApiKey
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
+import com.sygic.maps.uikit.viewmodels.common.remote.RemoteControlManager
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
+import com.sygic.maps.uikit.views.common.utils.logError
 import com.sygic.sdk.SygicEngine
-import java.util.*
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SdkInitializationManagerImpl private constructor(
@@ -46,18 +45,10 @@ class SdkInitializationManagerImpl private constructor(
 
     @InitializationState
     override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
-    private val callbacks = LinkedHashSet<SdkInitializationManager.SdkInitializationCallback>()
 
-    override fun initialize(callback: SdkInitializationManager.SdkInitializationCallback?) {
+    override fun initialize() {
         synchronized(this) {
-            if (initializationState == InitializationState.INITIALIZED) {
-                callback?.onInitialized()
-                return
-            }
-
-            callback?.let { callbacks.add(it) }
-
-            if (initializationState == InitializationState.INITIALIZING) {
+            if (initializationState == InitializationState.INITIALIZED || initializationState == InitializationState.INITIALIZING) {
                 return
             }
 
@@ -72,18 +63,17 @@ class SdkInitializationManagerImpl private constructor(
                 .setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {
                         synchronized(this) { initializationState = InitializationState.INITIALIZED }
-                        with(callbacks) {
-                            forEach { it.onInitialized() }
-                            clear()
-                        }
                     }
 
                     override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
                         synchronized(this) { initializationState = InitializationState.ERROR }
-                        with(callbacks) {
-                            forEach { it.onError(error) }
-                            clear()
+
+                        val errorType = when (error) {
+                            SygicEngine.OnInitListener.InitError.InternalInit -> "Internal init"
+                            SygicEngine.OnInitListener.InitError.Resources -> "Resources"
+                            else -> "Unknown"
                         }
+                        logError("SDK Initialization failed: $errorType error :(")
                     }
                 })
                 .init()

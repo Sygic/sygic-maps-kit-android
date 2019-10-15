@@ -147,7 +147,6 @@ class NavigationFragmentViewModel internal constructor(
             eventListener?.onNavigationStarted(value)
         }
 
-    private val previewModeAndRouteMerger = previewMode.withLatestFrom(navigationManagerClient.route)
     private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
 
     private val navigationDefaultLeftInfobarClickListener = object : InternalLeftInfobarClickListener() {
@@ -255,7 +254,7 @@ class NavigationFragmentViewModel internal constructor(
             // notify listener
             eventListener?.onRouteChanged(route)
         })
-        previewModeAndRouteMerger.observe(owner, Observer<Pair<Boolean, Route>> {
+        previewMode.withLatestFrom(navigationManagerClient.route).observe(owner, Observer<Pair<Boolean, Route>> {
             if (it.first) {
                 // start preview mode
                 locationManager.positionOnMapEnabled = false
