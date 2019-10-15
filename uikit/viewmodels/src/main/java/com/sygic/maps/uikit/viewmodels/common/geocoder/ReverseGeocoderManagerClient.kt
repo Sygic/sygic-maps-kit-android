@@ -25,12 +25,11 @@
 package com.sygic.maps.uikit.viewmodels.common.geocoder
 
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.ReverseGeocoder
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ReverseGeocoderManagerClient : InitializationManager<InitializationManager.Callback> {
+interface ReverseGeocoderManagerClient {
 
     fun search(position: GeoCoordinates, filter: Set<Int>, listener: ReverseGeocoder.ReverseSearchResultsListener )
 }

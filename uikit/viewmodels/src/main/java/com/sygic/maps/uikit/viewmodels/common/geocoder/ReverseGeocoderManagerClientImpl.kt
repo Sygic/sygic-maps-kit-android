@@ -25,10 +25,10 @@
 package com.sygic.maps.uikit.viewmodels.common.geocoder
 
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
-import com.sygic.sdk.InitializationCallback
-import com.sygic.sdk.context.SygicContext
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationCallback
+import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.ReverseGeocoder
 import com.sygic.sdk.search.ReverseGeocoderProvider
@@ -36,49 +36,10 @@ import com.sygic.sdk.search.ReverseGeocoderProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object ReverseGeocoderManagerClientImpl : ReverseGeocoderManagerClient {
 
-    @InitializationState
-    override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
-    private val callbacks = LinkedHashSet<InitializationManager.Callback>()
-
-    private lateinit var reverseGeocoder: ReverseGeocoder
-
-    override fun initialize(callback: InitializationManager.Callback?) {
-        synchronized(this) {
-            if (initializationState == InitializationState.INITIALIZED) {
-                callback?.onInitialized()
-                return
-            }
-
-            callback?.let { callbacks.add(it) }
-
-            if (initializationState == InitializationState.INITIALIZING) {
-                return
-            }
-
-            initializationState = InitializationState.INITIALIZING
-        }
-
-        ReverseGeocoderProvider.getInstance(object : InitializationCallback<ReverseGeocoder> {
-            override fun onInstance(reverseGeocoder: ReverseGeocoder) {
-                synchronized(this) {
-                    this@ReverseGeocoderManagerClientImpl.reverseGeocoder = reverseGeocoder
-                    initializationState = InitializationState.INITIALIZED
-                }
-                with(callbacks) {
-                    forEach { it.onInitialized() }
-                    clear()
-                }
-            }
-            override fun onError(@SygicContext.OnInitListener.Result result: Int) {
-                synchronized(this) { initializationState = InitializationState.ERROR }
-                with(callbacks) {
-                    forEach { it.onError(result) }
-                    clear()
-                }
-            }
-        })
+    private val managerProvider: LiveData<ReverseGeocoder> = object : MutableLiveData<ReverseGeocoder>() {
+        init { ReverseGeocoderProvider.getInstance(InitializationCallback<ReverseGeocoder> { value = it }) }
     }
 
     override fun search(position: GeoCoordinates, filter: Set<Int>, listener: ReverseGeocoder.ReverseSearchResultsListener) =
-        onReady { reverseGeocoder.search(position, filter, listener) }
+        managerProvider.observeOnce { it.search(position, filter, listener) }
 }
