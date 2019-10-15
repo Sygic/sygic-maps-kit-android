@@ -25,12 +25,12 @@
 package com.sygic.maps.uikit.viewmodels.common.place
 
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.viewmodels.common.geocoder.ReverseGeocoderManagerClient
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationCallback
+import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
-import com.sygic.sdk.InitializationCallback
-import com.sygic.sdk.context.SygicContext
 import com.sygic.sdk.map.`object`.ProxyObject
 import com.sygic.sdk.map.`object`.ProxyObjectManager
 import com.sygic.sdk.map.`object`.ProxyPlace
@@ -50,51 +50,12 @@ class PlacesManagerClientImpl private constructor(
         fun getInstance(client: ReverseGeocoderManagerClient) = getInstance { PlacesManagerClientImpl(client) }
     }
 
-    @InitializationState
-    override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
-    private val callbacks = LinkedHashSet<InitializationManager.Callback>()
-
-    private lateinit var placesManager: PlacesManager
-
-    override fun initialize(callback: InitializationManager.Callback?) {
-        synchronized(this) {
-            if (initializationState == InitializationState.INITIALIZED) {
-                callback?.onInitialized()
-                return
-            }
-
-            callback?.let { callbacks.add(it) }
-
-            if (initializationState == InitializationState.INITIALIZING) {
-                return
-            }
-
-            initializationState = InitializationState.INITIALIZING
-        }
-
-        PlacesManagerProvider.getInstance(object : InitializationCallback<PlacesManager> {
-            override fun onInstance(placesManager: PlacesManager) {
-                synchronized(this) {
-                    this@PlacesManagerClientImpl.placesManager = placesManager
-                    initializationState = InitializationState.INITIALIZED
-                }
-                with(callbacks) {
-                    forEach { it.onInitialized() }
-                    clear()
-                }
-            }
-            override fun onError(@SygicContext.OnInitListener.Result result: Int) {
-                synchronized(this) { initializationState = InitializationState.ERROR }
-                with(callbacks) {
-                    forEach { it.onError(result) }
-                    clear()
-                }
-            }
-        })
+    private val managerProvider: LiveData<PlacesManager> = object : MutableLiveData<PlacesManager>() {
+        init { PlacesManagerProvider.getInstance(InitializationCallback<PlacesManager> { value = it }) }
     }
 
     override fun loadPlace(link: PlaceLink, listener: PlacesManager.PlaceListener) =
-        onReady { placesManager.loadPlace(link, listener) }
+        managerProvider.observeOnce { it.loadPlace(link, listener) }
 
     override fun loadPlaceLink(proxyPlace: ProxyPlace, listener: ProxyObjectManager.PlaceLinkListener) =
         ProxyObjectManager.loadPlaceLink(proxyPlace, listener)

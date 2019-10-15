@@ -27,7 +27,6 @@ package com.sygic.maps.uikit.viewmodels.common.place
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.common.data.PlaceData
 import com.sygic.maps.uikit.viewmodels.common.extensions.getFirst
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
 import com.sygic.sdk.map.`object`.ProxyObjectManager
 import com.sygic.sdk.map.`object`.ProxyPlace
 import com.sygic.sdk.map.`object`.ScreenObject
@@ -42,7 +41,7 @@ import com.sygic.sdk.search.ReverseGeocoder
 import com.sygic.sdk.search.ReverseSearchResult
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface PlacesManagerClient : InitializationManager<InitializationManager.Callback> {
+interface PlacesManagerClient {
 
     fun loadPlace(link: PlaceLink, listener: PlacesManager.PlaceListener)
     fun loadPlaceLink(proxyPlace: ProxyPlace, listener: ProxyObjectManager.PlaceLinkListener)
