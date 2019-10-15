@@ -36,7 +36,7 @@ import com.sygic.maps.module.common.di.module.PositionManagerClientModule;
 import com.sygic.maps.module.common.di.module.ReverseGeocoderManagerClientModule;
 import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerModule;
 import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
-import com.sygic.maps.module.common.di.module.SearchModule;
+import com.sygic.maps.module.common.di.module.SearchManagerClientModule;
 import com.sygic.maps.module.common.di.module.ServicesManagerModule;
 import com.sygic.maps.module.common.di.module.SoundManagerModule;
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
@@ -48,7 +48,7 @@ import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrat
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
 import com.sygic.maps.uikit.viewmodels.common.place.PlacesManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
-import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager;
 import com.sygic.maps.uikit.viewmodels.common.sound.SoundManager;
 
@@ -69,7 +69,7 @@ import dagger.Component;
                 ReverseGeocoderManagerClientModule.class,
                 RouteDemonstrationManagerModule.class,
                 SdkInitializationManagerModule.class,
-                SearchModule.class,
+                SearchManagerClientModule.class,
                 ServicesManagerModule.class,
                 SoundManagerModule.class
         }
@@ -85,7 +85,7 @@ public interface ApplicationModulesComponent {
     ReverseGeocoderManagerClient getReverseGeocoderManagerClient();
     RouteDemonstrationManager getRouteDemonstrationManager();
     SdkInitializationManager getSdkInitializationManager();
-    SearchManager getSearchManager();
+    SearchManagerClient getSearchManagerClient();
     ServicesManager getServicesManager();
     SoundManager getSoundManager();
 }

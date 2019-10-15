@@ -22,22 +22,12 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.viewmodels.common.initialization
 
-import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
-import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerImpl;
+import com.sygic.sdk.InitializationCallback
+import com.sygic.sdk.context.SygicContext
 
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-
-@Module
-public class SearchModule {
-
-    @Singleton
-    @Provides
-    SearchManager provideSearchManager() {
-        return SearchManagerImpl.INSTANCE;
-    }
+class InitializationCallback<T>(private val callback: (manager: T) -> Unit) : InitializationCallback<T> {
+    override fun onInstance(manager: T) = callback.invoke(manager)
+    override fun onError(@SygicContext.OnInitListener.Result result: Int) { /* currently do nothing */ }
 }

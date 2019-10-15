@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
-import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
 import com.sygic.maps.uikit.viewmodels.common.utils.searchResultStateToErrorViewSwitcherIndex
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
@@ -52,7 +52,7 @@ import com.sygic.sdk.search.SearchResult
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchResultListViewModel @JvmOverloads internal constructor(
-    private val searchManager: SearchManager,
+    private val searchManagerClient: SearchManagerClient,
     @Assisted private val resultListAdapter: SearchResultListAdapter<SearchResult>,
     @Assisted private val defaultStateAdapter: DefaultStateAdapter<SearchResult> = DefaultStateAdapter()
 ) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener<SearchResult> {
@@ -70,7 +70,7 @@ open class SearchResultListViewModel @JvmOverloads internal constructor(
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        searchManager.searchResults.observe(owner, Observer { holder ->
+        searchManagerClient.searchResults.observe(owner, Observer { holder ->
             holder.results.toSearchResultList().let { resultListAdapter.items = it }
             errorViewSwitcherIndex.asMutable().value = searchResultStateToErrorViewSwitcherIndex(holder.state)
             activeAdapter.asMutable().value = if (holder.input.isNotEmpty()) resultListAdapter else defaultStateAdapter

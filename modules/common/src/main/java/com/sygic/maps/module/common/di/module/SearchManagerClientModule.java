@@ -22,19 +22,22 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.search
+package com.sygic.maps.module.common.di.module;
 
-import androidx.annotation.RestrictTo
-import androidx.lifecycle.LiveData
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
-import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
-import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClientImpl;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface SearchManager : InitializationManager<InitializationManager.Callback> {
+import javax.inject.Singleton;
 
-    var maxResultsCount: Int
-    val searchResults: LiveData<SearchResultsHolder>
+import dagger.Module;
+import dagger.Provides;
 
-    fun searchText(text: String, position: GeoCoordinates? = null)
+@Module
+public class SearchManagerClientModule {
+
+    @Singleton
+    @Provides
+    SearchManagerClient provideSearchManagerClient() {
+        return SearchManagerClientImpl.INSTANCE;
+    }
 }

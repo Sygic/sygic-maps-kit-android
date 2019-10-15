@@ -33,7 +33,7 @@ import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
-import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATION
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
@@ -50,7 +50,7 @@ private const val DEFAULT_SEARCH_DELAY = 300L
 
 /**
  * A [SearchToolbarViewModel] is a basic ViewModel implementation for the [SearchToolbar] class. It listens to the
- * [SearchToolbar] input [EditText] changes and use the [SearchManager] to process search query request to the Sygic SDK
+ * [SearchToolbar] input [EditText] changes and use the [SearchManagerClient] to process search query request to the Sygic SDK
  * [Search] after the specified [searchDelay]. It also listens to the Sygic SDK [Search.SearchResultsListener] and set
  * appropriate state to the [SearchToolbar] state view.
  */
@@ -58,7 +58,7 @@ private const val DEFAULT_SEARCH_DELAY = 300L
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class SearchToolbarViewModel internal constructor(
     @Assisted arguments: Bundle?,
-    private val searchManager: SearchManager
+    private val searchManagerClient: SearchManagerClient
 ) : ViewModel(), DefaultLifecycleObserver {
 
     val searchToolbarFocused = MutableLiveData<Boolean>(true)
@@ -70,9 +70,9 @@ open class SearchToolbarViewModel internal constructor(
     var searchLocation: GeoCoordinates? = null
     var searchDelay: Long = DEFAULT_SEARCH_DELAY
     var maxResultsCount: Int
-        get() = searchManager.maxResultsCount
+        get() = searchManagerClient.maxResultsCount
         set(value) {
-            searchManager.maxResultsCount = value
+            searchManagerClient.maxResultsCount = value
         }
 
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
@@ -91,7 +91,7 @@ open class SearchToolbarViewModel internal constructor(
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        searchManager.searchResults.observe(owner, Observer {
+        searchManagerClient.searchResults.observe(owner, Observer {
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
         })
     }
@@ -102,7 +102,7 @@ open class SearchToolbarViewModel internal constructor(
         searchCoroutineJob = scope.launch {
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
             if (input.isNotEmpty()) delay(searchDelay)
-            searchManager.searchText(input.toString(), searchLocation)
+            searchManagerClient.searchText(input.toString(), searchLocation)
         }
     }
 
