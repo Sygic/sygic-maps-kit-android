@@ -254,18 +254,20 @@ class NavigationFragmentViewModel internal constructor(
             // notify listener
             eventListener?.onRouteChanged(route)
         })
-        previewMode.withLatestFrom(navigationManagerClient.route).observe(owner, Observer<Pair<Boolean, Route>> {
-            if (it.first) {
-                // start preview mode
-                locationManager.positionOnMapEnabled = false
-                routeDemonstrationManager.start(it.second)
-            } else {
-                // stop the previous demonstration first
-                routeDemonstrationManager.stop()
+        previewMode.withLatestFrom(navigationManagerClient.route).observe(owner, Observer<Pair<Boolean, Route?>> {
+            it.second?.let { route ->
+                if (it.first) {
+                    // start preview mode
+                    locationManager.positionOnMapEnabled = false
+                    routeDemonstrationManager.start(route)
+                } else {
+                    // stop the previous demonstration first
+                    routeDemonstrationManager.stop()
 
-                // start navigation mode
-                requestLocationAccess(permissionsManager, locationManager) {
-                    locationManager.positionOnMapEnabled = true
+                    // start navigation mode
+                    requestLocationAccess(permissionsManager, locationManager) {
+                        locationManager.positionOnMapEnabled = true
+                    }
                 }
             }
         })

@@ -28,12 +28,11 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
+import androidx.lifecycle.Transformations
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationCallback
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
+import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
-import com.sygic.sdk.InitializationCallback
-import com.sygic.sdk.context.SygicContext
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.NavigationManagerProvider
 import com.sygic.sdk.navigation.RouteProgress
@@ -55,165 +54,143 @@ class NavigationManagerClientImpl private constructor(
         fun getInstance(client: PositionManagerClient) = getInstance { NavigationManagerClientImpl(client) }
     }
 
-    @InitializationState
-    override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
-    private val callbacks = LinkedHashSet<InitializationManager.Callback>()
-
-    private lateinit var navigationManager: NavigationManager
-
-    override fun initialize(callback: InitializationManager.Callback?) {
-        synchronized(this) {
-            if (initializationState == InitializationState.INITIALIZED) {
-                callback?.onInitialized()
-                return
-            }
-
-            callback?.let { callbacks.add(it) }
-
-            if (initializationState == InitializationState.INITIALIZING) {
-                return
-            }
-
-            initializationState = InitializationState.INITIALIZING
-        }
-
-        NavigationManagerProvider.getInstance(object : InitializationCallback<NavigationManager> {
-            override fun onInstance(navigationManager: NavigationManager) {
-                synchronized(this) {
-                    this@NavigationManagerClientImpl.navigationManager = navigationManager
-                    initializationState = InitializationState.INITIALIZED
-                }
-                with(callbacks) {
-                    forEach { it.onInitialized() }
-                    clear()
-                }
-            }
-            override fun onError(@SygicContext.OnInitListener.Result result: Int) {
-                synchronized(this) { initializationState = InitializationState.ERROR }
-                with(callbacks) {
-                    forEach { it.onError(result) }
-                    clear()
-                }
-            }
-        })
+    private val managerProvider: LiveData<NavigationManager> = object : MutableLiveData<NavigationManager>() {
+        init { NavigationManagerProvider.getInstance(InitializationCallback<NavigationManager> { value = it }) }
     }
 
     override val route by lazy {
-        object : MutableLiveData<Route>() {
+        Transformations.switchMap<NavigationManager, Route?>(managerProvider) { manager ->
+            object : MutableLiveData<Route?>() {
 
-            private val listener by lazy { NavigationManager.OnRouteChangedListener { value = it } }
+                private val listener by lazy { NavigationManager.OnRouteChangedListener { value = it } }
 
-            override fun setValue(value: Route?) {
-                if (value != this.value) {
-                    onReady {
-                        value?.let { navigationManager.setRouteForNavigation(it) } ?: run { navigationManager.stopNavigation() }
-                    }
-                    super.setValue(value)
+                override fun setValue(value: Route?) {
+                    if (value != this.value) super.setValue(value)
                 }
-            }
 
-            override fun onActive() = onReady { navigationManager.addOnRouteChangedListener(listener) }
-            override fun onInactive() = onReady { navigationManager.removeOnRouteChangedListener(listener) }
-        }
+                override fun onActive() = manager.addOnRouteChangedListener(listener)
+                override fun onInactive() = manager.removeOnRouteChangedListener(listener)
+            }
+        } as MutableLiveData
     }
 
     override val laneInfo by lazy {
-        object : LiveData<LaneInfo>() {
+        Transformations.switchMap<NavigationManager, LaneInfo>(managerProvider) { manager ->
+            object : LiveData<LaneInfo>() {
 
-            private val listener by lazy { NavigationManager.OnLaneListener { value = it } }
+                private val listener by lazy { NavigationManager.OnLaneListener { value = it } }
 
-            override fun onActive() = onReady { navigationManager.addOnLaneListener(listener) }
-            override fun onInactive() = onReady { navigationManager.removeOnLaneListener(listener) }
+                override fun onActive() = manager.addOnLaneListener(listener)
+                override fun onInactive() = manager.removeOnLaneListener(listener)
+            }
         }
     }
 
     override val trafficNotification by lazy {
-        object : LiveData<TrafficNotification>() {
+        Transformations.switchMap<NavigationManager, TrafficNotification>(managerProvider) { manager ->
+            object : LiveData<TrafficNotification>() {
 
-            private val listener = NavigationManager.OnTrafficChangedListener { value = it }
+                private val listener = NavigationManager.OnTrafficChangedListener { value = it }
 
-            override fun onActive() = onReady { navigationManager.addOnTrafficChangedListener(listener) }
-            override fun onInactive() = onReady { navigationManager.removeOnTrafficChangedListener(listener) }
+                override fun onActive() = manager.addOnTrafficChangedListener(listener)
+                override fun onInactive() = manager.removeOnTrafficChangedListener(listener)
+            }
         }
     }
 
     override val directionInfo by lazy {
-        object : LiveData<DirectionInfo>() {
+        Transformations.switchMap<NavigationManager, DirectionInfo>(managerProvider) { manager ->
+            object : LiveData<DirectionInfo>() {
 
-            private val listener by lazy { NavigationManager.OnDirectionListener { value = it } }
+                private val listener by lazy { NavigationManager.OnDirectionListener { value = it } }
 
-            override fun onActive() = onReady { navigationManager.addOnDirectionListener(listener) }
-            override fun onInactive() = onReady { navigationManager.removeOnDirectionListener(listener) }
+                override fun onActive() = manager.addOnDirectionListener(listener)
+                override fun onInactive() = manager.removeOnDirectionListener(listener)
+            }
         }
     }
 
     override val speedLimitInfo by lazy {
-        object : LiveData<SpeedLimitInfo>() {
+        Transformations.switchMap<NavigationManager, SpeedLimitInfo>(managerProvider) { manager ->
+            object : LiveData<SpeedLimitInfo>() {
 
-            private val listener by lazy { NavigationManager.OnSpeedLimitListener { value = it } }
+                private val listener by lazy { NavigationManager.OnSpeedLimitListener { value = it } }
 
-            override fun onActive() = onReady { navigationManager.addOnSpeedLimitListener(listener) }
-            override fun onInactive() = onReady { navigationManager.removeOnSpeedLimitListener(listener) }
+                override fun onActive() = manager.addOnSpeedLimitListener(listener)
+                override fun onInactive() = manager.removeOnSpeedLimitListener(listener)
+            }
         }
     }
 
     override val signpostInfoList by lazy {
-        object : LiveData<List<SignpostInfo>>() {
+        Transformations.switchMap<NavigationManager, List<SignpostInfo>>(managerProvider) { manager ->
+            object : LiveData<List<SignpostInfo>>() {
 
-            private val listener by lazy { NavigationManager.OnSignpostListener { value = it } }
+                private val listener by lazy { NavigationManager.OnSignpostListener { value = it } }
 
-            override fun onActive() = onReady { navigationManager.addOnSignpostListener(listener) }
-            override fun onInactive() = onReady { navigationManager.removeOnSignpostListener(listener) }
+                override fun onActive() = manager.addOnSignpostListener(listener)
+                override fun onInactive() = manager.removeOnSignpostListener(listener)
+            }
         }
     }
 
     override val routeProgress by lazy {
-        object : LiveData<RouteProgress>() {
+        Transformations.switchMap<NavigationManager, RouteProgress>(managerProvider) { manager ->
+            object : LiveData<RouteProgress>() {
 
-            private val routeChangedObserver by lazy { Observer<Route> { updateValue() } }
-            private val currentPositionObserver by lazy { Observer<GeoPosition> { updateValue() } }
-            private val trafficNotificationObserver by lazy { Observer<TrafficNotification> { updateValue() } }
+                private val routeChangedObserver by lazy { Observer<Route?> { updateValue() } }
+                private val currentPositionObserver by lazy { Observer<GeoPosition> { updateValue() } }
+                private val trafficNotificationObserver by lazy { Observer<TrafficNotification> { updateValue() } }
 
-            private fun updateValue() { onReady { value = navigationManager.routeProgress } }
+                private fun updateValue() { value = manager.routeProgress }
 
-            override fun onActive() {
-                route.observeForever(routeChangedObserver)
-                trafficNotification.observeForever(trafficNotificationObserver)
-                positionManagerClient.currentPosition.observeForever(currentPositionObserver)
-            }
+                override fun onActive() {
+                    route.observeForever(routeChangedObserver)
+                    trafficNotification.observeForever(trafficNotificationObserver)
+                    positionManagerClient.currentPosition.observeForever(currentPositionObserver)
+                }
 
-            override fun onInactive() {
-                route.removeObserver(routeChangedObserver)
-                trafficNotification.removeObserver(trafficNotificationObserver)
-                positionManagerClient.currentPosition.removeObserver(currentPositionObserver)
+                override fun onInactive() {
+                    route.removeObserver(routeChangedObserver)
+                    trafficNotification.removeObserver(trafficNotificationObserver)
+                    positionManagerClient.currentPosition.removeObserver(currentPositionObserver)
+                }
             }
         }
     }
 
     override fun addOnWaypointPassListener(listener: NavigationManager.OnWaypointPassListener) =
-        onReady { navigationManager.addOnWaypointPassListener(listener) }
+        managerProvider.observeOnce { it.addOnWaypointPassListener(listener) }
 
     override fun removeOnWaypointPassListener(listener: NavigationManager.OnWaypointPassListener) =
-        onReady { navigationManager.removeOnWaypointPassListener(listener) }
+        managerProvider.observeOnce { it.removeOnWaypointPassListener(listener) }
 
     override fun setAudioBetterRouteListener(listener: NavigationManager.AudioBetterRouteListener?) =
-        onReady { navigationManager.setAudioBetterRouteListener(listener) }
+        managerProvider.observeOnce { it.setAudioBetterRouteListener(listener) }
 
     override fun setAudioIncidentListener(listener: NavigationManager.AudioIncidentListener?) =
-        onReady { navigationManager.setAudioIncidentListener(listener) }
+        managerProvider.observeOnce { it.setAudioIncidentListener(listener) }
 
     override fun setAudioInstructionListener(listener: NavigationManager.AudioInstructionListener?) =
-        onReady { navigationManager.setAudioInstructionListener(listener) }
+        managerProvider.observeOnce { it.setAudioInstructionListener(listener) }
 
     override fun setAudioRailwayCrossingListener(listener: NavigationManager.AudioRailwayCrossingListener?) =
-        onReady { navigationManager.setAudioRailwayCrossingListener(listener) }
+        managerProvider.observeOnce { it.setAudioRailwayCrossingListener(listener) }
 
     override fun setAudioSharpCurveListener(listener: NavigationManager.AudioSharpCurveListener?) =
-        onReady { navigationManager.setAudioSharpCurveListener(listener) }
+        managerProvider.observeOnce { it.setAudioSharpCurveListener(listener) }
 
     override fun setAudioSpeedLimitListener(listener: NavigationManager.AudioSpeedLimitListener?) =
-        onReady { navigationManager.setAudioSpeedLimitListener(listener) }
+        managerProvider.observeOnce { it.setAudioSpeedLimitListener(listener) }
 
     override fun setAudioTrafficListener(listener: NavigationManager.AudioTrafficListener?) =
-        onReady { navigationManager.setAudioTrafficListener(listener) }
+        managerProvider.observeOnce { it.setAudioTrafficListener(listener) }
+
+    init {
+        route.observeForever { route ->
+            managerProvider.observeOnce { manager ->
+                route?.let { manager.setRouteForNavigation(it) } ?: run { manager.stopNavigation() }
+            }
+        }
+    }
 }

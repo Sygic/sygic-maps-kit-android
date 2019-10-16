@@ -27,7 +27,6 @@ package com.sygic.maps.uikit.viewmodels.common.navigation
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
 import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.navigation.RouteProgress
 import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
@@ -38,9 +37,9 @@ import com.sygic.sdk.navigation.traffic.TrafficNotification
 import com.sygic.sdk.route.Route
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface NavigationManagerClient : InitializationManager<InitializationManager.Callback> {
+interface NavigationManagerClient {
 
-    val route: MutableLiveData<Route>
+    val route: MutableLiveData<Route?>
     val laneInfo: LiveData<LaneInfo>
     val trafficNotification: LiveData<TrafficNotification>
     val routeProgress: LiveData<RouteProgress>
