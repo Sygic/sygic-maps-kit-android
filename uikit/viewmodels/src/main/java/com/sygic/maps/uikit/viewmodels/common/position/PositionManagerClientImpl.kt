@@ -26,16 +26,20 @@ package com.sygic.maps.uikit.viewmodels.common.position
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationState
+import androidx.lifecycle.Transformations
+import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationCallback
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
-import com.sygic.sdk.InitializationCallback
-import com.sygic.sdk.context.SygicContext
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.position.PositionManagerProvider
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PositionManagerClientImpl private constructor(
@@ -47,73 +51,63 @@ class PositionManagerClientImpl private constructor(
         fun getInstance(manager: RouteDemonstrationManager) = getInstance { PositionManagerClientImpl(manager) }
     }
 
-    @InitializationState
-    override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
-    private val callbacks = LinkedHashSet<InitializationManager.Callback>()
-
-    private lateinit var positionManager: PositionManager
-
-    override fun initialize(callback: InitializationManager.Callback?) {
-        synchronized(this) {
-            if (initializationState == InitializationState.INITIALIZED) {
-                callback?.onInitialized()
-                return
-            }
-
-            callback?.let { callbacks.add(it) }
-
-            if (initializationState == InitializationState.INITIALIZING) {
-                return
-            }
-
-            initializationState = InitializationState.INITIALIZING
-        }
-
-        PositionManagerProvider.getInstance(object : InitializationCallback<PositionManager> {
-            override fun onInstance(positionManager: PositionManager) {
-                synchronized(this) {
-                    this@PositionManagerClientImpl.positionManager = positionManager
-                    initializationState = InitializationState.INITIALIZED
-                }
-                with(callbacks) {
-                    forEach { it.onInitialized() }
-                    clear()
-                }
-            }
-            override fun onError(@SygicContext.OnInitListener.Result result: Int) {
-                synchronized(this) { initializationState = InitializationState.ERROR }
-                with(callbacks) {
-                    forEach { it.onError(result) }
-                    clear()
-                }
-            }
-        })
+    private val managerProvider: LiveData<PositionManager> = object : MutableLiveData<PositionManager>() {
+        init { PositionManagerProvider.getInstance(InitializationCallback<PositionManager> { value = it }) }
     }
 
     override val currentPosition by lazy {
-        object : LiveData<GeoPosition>() {
+        Transformations.switchMap<PositionManager, GeoPosition>(managerProvider) { manager ->
+            object : LiveData<GeoPosition>() {
 
-            private val positionChangeListener by lazy { PositionManager.PositionChangeListener { value = it } }
-            private val demonstrationPositionObserver by lazy { Observer<GeoPosition> { value = it } } //ToDo: remove it when CI-531 is done
+                private val positionChangeListener by lazy { PositionManager.PositionChangeListener { value = it } }
+                private val demonstrationPositionObserver by lazy { Observer<GeoPosition> { value = it } } //ToDo: remove it when CI-531 is done
 
-            override fun onActive() {
-                onReady { positionManager.addPositionChangeListener(positionChangeListener) }
-                routeDemonstrationManager.currentPosition.observeForever(demonstrationPositionObserver)
-            }
+                override fun onActive() {
+                    manager.addPositionChangeListener(positionChangeListener)
+                    routeDemonstrationManager.currentPosition.observeForever(demonstrationPositionObserver)
+                }
 
-            override fun onInactive() {
-                onReady { positionManager.removePositionChangeListener(positionChangeListener) }
-                routeDemonstrationManager.currentPosition.removeObserver(demonstrationPositionObserver)
+                override fun onInactive() {
+                    manager.removePositionChangeListener(positionChangeListener)
+                    routeDemonstrationManager.currentPosition.removeObserver(demonstrationPositionObserver)
+                }
             }
         }
     }
 
-    override fun enableRemotePositioningService() = onReady { positionManager.enableRemotePositioningService() }
+    override val lastKnownPosition by lazy {
+        Transformations.switchMap<PositionManager, GeoPosition>(managerProvider) { manager ->
+            object : LiveData<GeoPosition>() {
 
-    override fun disableRemotePositioningService() = onReady { positionManager.disableRemotePositioningService() }
+                private var fetchJob: Job? = null
 
-    override fun getLastKnownPosition(callback: (GeoPosition) -> Unit) = onReady { callback.invoke(positionManager.lastKnownPosition) }
+                override fun onActive() {
+                    fetchJob = GlobalScope.launch {
+                        while (true) {
+                            postValue(manager.lastKnownPosition)
+                            delay(1000)
+                        }
+                    }
+                }
 
-    override fun setSdkPositionUpdatingEnabled(enabled: Boolean) =
-        onReady { positionManager.run { if (enabled) startPositionUpdating() else stopPositionUpdating() } }
+                override fun onInactive() {
+                    fetchJob?.cancel()
+                }
+            }
+        }
+    }
+
+    override val sdkPositionUpdatingEnabled by lazy { MutableLiveData<Boolean>() }
+
+    override val remotePositioningServiceEnabled by lazy { MutableLiveData<Boolean>() }
+
+    init {
+        sdkPositionUpdatingEnabled.observeForever { enabled ->
+            managerProvider.observeOnce { it.run { if (enabled) enableRemotePositioningService() else disableRemotePositioningService() } }
+        }
+
+        remotePositioningServiceEnabled.observeForever { enabled ->
+            managerProvider.observeOnce { it.run { if (enabled) startPositionUpdating() else stopPositionUpdating() } }
+        }
+    }
 }

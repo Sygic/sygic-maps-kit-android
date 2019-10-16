@@ -26,32 +26,34 @@ package com.sygic.maps.uikit.viewmodels.common.location
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.sygic.maps.uikit.viewmodels.common.location.livedata.LocationProviderCheckLiveEvent
 import com.sygic.maps.uikit.viewmodels.common.location.livedata.LocationRequestLiveEvent
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class LocationManagerImpl(private val positionManagerClient: PositionManagerClient) : LocationManager {
+class LocationManagerImpl(positionManagerClient: PositionManagerClient) : LocationManager {
 
     private var wasNoGPSDialogAlreadyShown: Boolean = false
 
     private val providerCheck: LocationProviderCheckLiveEvent by lazy { LocationProviderCheckLiveEvent() }
     private val locationRequest: LocationRequestLiveEvent by lazy { LocationRequestLiveEvent() }
 
-    override var positionOnMapEnabled: Boolean = false
-        set(value) {
-            field = value
-            setSdkPositionUpdatingEnabled(value)
+    override val positionOnMapEnabled = object : MutableLiveData<Boolean>(false) {
+
+        override fun setValue(value: Boolean) {
+            if (value != this.value) {
+                super.setValue(value)
+                positionManagerClient.sdkPositionUpdatingEnabled.value = value
+            }
         }
+    }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<LocationManager.LocationRequesterCallback>) {
         providerCheck.observe(owner)
         locationRequest.observe(owner, observer)
     }
-
-    override fun setSdkPositionUpdatingEnabled(enabled: Boolean) =
-        positionManagerClient.setSdkPositionUpdatingEnabled(enabled)
 
     /**
      * Returns the current enabled/disabled status of the GPS provider.

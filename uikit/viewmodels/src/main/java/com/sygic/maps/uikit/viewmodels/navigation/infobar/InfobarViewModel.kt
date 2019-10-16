@@ -42,6 +42,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.RemainingTi
 import com.sygic.maps.uikit.views.common.extensions.SPACE
 import com.sygic.maps.uikit.views.common.extensions.VERTICAL_BAR
 import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
@@ -109,8 +110,7 @@ open class InfobarViewModel internal constructor(
             return
         }
 
-        positionManagerClient.getLastKnownPosition {
-
+        positionManagerClient.lastKnownPosition.observeOnce {
             val positionData = PositionData(it.coordinates)
             val distanceData = DistanceData(routeProgress.distanceToEnd, distanceUnit)
             val timeData = TimeData(

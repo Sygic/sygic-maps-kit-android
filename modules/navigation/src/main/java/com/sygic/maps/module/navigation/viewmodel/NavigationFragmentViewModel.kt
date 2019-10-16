@@ -258,7 +258,7 @@ class NavigationFragmentViewModel internal constructor(
             it.second?.let { route ->
                 if (it.first) {
                     // start preview mode
-                    locationManager.positionOnMapEnabled = false
+                    locationManager.positionOnMapEnabled.value = false
                     routeDemonstrationManager.start(route)
                 } else {
                     // stop the previous demonstration first
@@ -266,7 +266,7 @@ class NavigationFragmentViewModel internal constructor(
 
                     // start navigation mode
                     requestLocationAccess(permissionsManager, locationManager) {
-                        locationManager.positionOnMapEnabled = true
+                        locationManager.positionOnMapEnabled.value = true
                     }
                 }
             }
@@ -284,7 +284,7 @@ class NavigationFragmentViewModel internal constructor(
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        locationManager.positionOnMapEnabled = !previewMode.value!! || routeDemonstrationManager.demonstrationState.value == DemonstrationState.ACTIVE
+        locationManager.positionOnMapEnabled.value = !previewMode.value!! || routeDemonstrationManager.demonstrationState.value == DemonstrationState.ACTIVE
         cameraModel.addModeChangedListener(this)
         navigationManagerClient.addOnWaypointPassListener(this)
         actionMenuItemClickListenerObservable.asSingleEvent().value = actionMenuItemClickListener
@@ -331,7 +331,7 @@ class NavigationFragmentViewModel internal constructor(
     fun onRightInfobarButtonClick() = infobarButtonListenersMap[InfobarButtonType.RIGHT]?.onButtonClick()
 
     override fun onStop(owner: LifecycleOwner) {
-        locationManager.positionOnMapEnabled = false
+        locationManager.positionOnMapEnabled.value = false
         cameraModel.removeModeChangedListener(this)
         navigationManagerClient.removeOnWaypointPassListener(this)
     }

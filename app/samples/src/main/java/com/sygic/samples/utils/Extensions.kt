@@ -53,7 +53,7 @@ fun getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
                 }
             }
         })
-        setSdkPositionUpdatingEnabled(true)
+        sdkPositionUpdatingEnabled.value = true
     }
 }
 

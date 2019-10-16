@@ -58,7 +58,7 @@ abstract class MapFragmentViewModel constructor(
         }
 
         if (BuildConfig.DEBUG) {
-            positionManagerClient.enableRemotePositioningService()
+            positionManagerClient.remotePositioningServiceEnabled.value = true
         }
     }
 
@@ -66,7 +66,7 @@ abstract class MapFragmentViewModel constructor(
         super.onCleared()
 
         if (BuildConfig.DEBUG) {
-            positionManagerClient.disableRemotePositioningService()
+            positionManagerClient.remotePositioningServiceEnabled.value = false
         }
     }
 }

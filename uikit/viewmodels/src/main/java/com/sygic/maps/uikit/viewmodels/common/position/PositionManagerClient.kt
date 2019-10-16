@@ -26,16 +26,14 @@ package com.sygic.maps.uikit.viewmodels.common.position
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
-import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationManager
+import androidx.lifecycle.MutableLiveData
 import com.sygic.sdk.position.GeoPosition
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface PositionManagerClient : InitializationManager<InitializationManager.Callback> {
+interface PositionManagerClient {
 
     val currentPosition: LiveData<GeoPosition>
-
-    fun enableRemotePositioningService()
-    fun disableRemotePositioningService()
-    fun getLastKnownPosition(callback: (GeoPosition) -> Unit)
-    fun setSdkPositionUpdatingEnabled(enabled: Boolean)
+    val lastKnownPosition: LiveData<GeoPosition>
+    val sdkPositionUpdatingEnabled: MutableLiveData<Boolean>
+    val remotePositioningServiceEnabled: MutableLiveData<Boolean>
 }

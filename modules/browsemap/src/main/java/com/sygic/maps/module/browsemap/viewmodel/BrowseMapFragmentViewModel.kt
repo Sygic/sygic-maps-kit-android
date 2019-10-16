@@ -73,12 +73,6 @@ import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 import com.sygic.sdk.places.PlacesManager
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.MutableMap
-import kotlin.collections.first
-import kotlin.collections.forEach
-import kotlin.collections.mutableMapOf
 import kotlin.collections.set
 
 @AutoFactory
@@ -88,26 +82,26 @@ class BrowseMapFragmentViewModel internal constructor(
     @Assisted arguments: Bundle?,
     themeManager: ThemeManager,
     regionalManager: RegionalManager,
-    positionManagerClient: PositionManagerClient,
     private val mapDataModel: ExtendedMapDataModel,
     private val placesManagerClient: PlacesManagerClient,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager
+    private val permissionsManager: PermissionsManager,
+    private val positionManagerClient: PositionManagerClient
 ) : MapFragmentViewModel(app, arguments, themeManager, regionalManager, positionManagerClient),
     MapInteractionManager.Listener, PoiDetailBottomDialogFragment.Listener {
 
     @MapSelectionMode
     var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
     var positionOnMapEnabled: Boolean
-        get() = locationManager.positionOnMapEnabled
+        get() = locationManager.positionOnMapEnabled.value!!
         set(value) {
             if (value) {
                 requestLocationAccess(permissionsManager, locationManager) {
-                    locationManager.positionOnMapEnabled = true
+                    locationManager.positionOnMapEnabled.value = true
                 }
             } else {
-                locationManager.positionOnMapEnabled = false
+                locationManager.positionOnMapEnabled.value = false
             }
         }
 
@@ -160,7 +154,7 @@ class BrowseMapFragmentViewModel internal constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         if (positionOnMapEnabled) {
-            locationManager.setSdkPositionUpdatingEnabled(true)
+            positionManagerClient.sdkPositionUpdatingEnabled.value = true
         }
     }
 
@@ -303,7 +297,7 @@ class BrowseMapFragmentViewModel internal constructor(
     override fun onDismiss() = mapDataModel.removeMapMarker(selectedMarker)
 
     override fun onStop(owner: LifecycleOwner) {
-        locationManager.setSdkPositionUpdatingEnabled(false)
+        positionManagerClient.sdkPositionUpdatingEnabled.value = false
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
