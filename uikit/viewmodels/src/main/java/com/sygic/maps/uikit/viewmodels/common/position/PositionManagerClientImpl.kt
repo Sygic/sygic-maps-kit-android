@@ -84,7 +84,7 @@ class PositionManagerClientImpl private constructor(
                 override fun onActive() {
                     fetchJob = GlobalScope.launch {
                         while (true) {
-                            postValue(manager.lastKnownPosition)
+                            manager.lastKnownPosition.let { if (value != it) postValue(it) }
                             delay(1000)
                         }
                     }
@@ -92,6 +92,7 @@ class PositionManagerClientImpl private constructor(
 
                 override fun onInactive() {
                     fetchJob?.cancel()
+                    fetchJob = null
                 }
             }
         }
