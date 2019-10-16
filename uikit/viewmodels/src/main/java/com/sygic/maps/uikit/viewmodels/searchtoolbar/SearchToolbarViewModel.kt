@@ -67,12 +67,16 @@ open class SearchToolbarViewModel internal constructor(
     val iconStateSwitcherIndex = MutableLiveData<Int>(SearchToolbarIconStateSwitcherIndex.MAGNIFIER)
     val inputText: MutableLiveData<CharSequence> = UniqueMutableLiveData()
 
-    var searchLocation: GeoCoordinates? = null
     var searchDelay: Long = DEFAULT_SEARCH_DELAY
-    var maxResultsCount: Int
-        get() = searchManagerClient.maxResultsCount
+    var searchLocation: GeoCoordinates?
+        get() = searchManagerClient.searchLocation.value
         set(value) {
-            searchManagerClient.maxResultsCount = value
+            searchManagerClient.searchLocation.value = value
+        }
+    var maxResultsCount: Int
+        get() = searchManagerClient.maxResultsCount.value!!
+        set(value) {
+            searchManagerClient.maxResultsCount.value = value
         }
 
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
@@ -102,13 +106,11 @@ open class SearchToolbarViewModel internal constructor(
         searchCoroutineJob = scope.launch {
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.PROGRESSBAR
             if (input.isNotEmpty()) delay(searchDelay)
-            searchManagerClient.searchText(input.toString(), searchLocation)
+            searchManagerClient.searchText.value = input.toString()
         }
     }
 
-    open fun retrySearch() {
-        search(lastSearchedString)
-    }
+    open fun retrySearch() = search(lastSearchedString)
 
     open fun onClearButtonClick() {
         inputText.value = EMPTY_STRING

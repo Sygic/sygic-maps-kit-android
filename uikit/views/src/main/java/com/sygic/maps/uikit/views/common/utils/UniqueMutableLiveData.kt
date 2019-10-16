@@ -26,7 +26,7 @@ package com.sygic.maps.uikit.views.common.utils
 
 import androidx.lifecycle.MutableLiveData
 
-class UniqueMutableLiveData<T> : MutableLiveData<T>() {
+open class UniqueMutableLiveData<T> : MutableLiveData<T>() {
 
     override fun setValue(value: T) {
         if (value != this.value) super.setValue(value)

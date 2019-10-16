@@ -26,14 +26,15 @@ package com.sygic.maps.uikit.viewmodels.common.search
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
 import com.sygic.sdk.position.GeoCoordinates
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SearchManagerClient {
 
-    var maxResultsCount: Int
+    val searchText: MutableLiveData<String>
+    val searchLocation: MutableLiveData<GeoCoordinates?>
+    val maxResultsCount: MutableLiveData<Int>
     val searchResults: LiveData<SearchResultsHolder>
-
-    fun searchText(text: String, position: GeoCoordinates? = null)
 }

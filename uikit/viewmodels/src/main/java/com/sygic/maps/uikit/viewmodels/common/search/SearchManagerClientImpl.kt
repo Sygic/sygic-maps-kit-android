@@ -41,11 +41,15 @@ const val MAX_RESULTS_COUNT_DEFAULT_VALUE = 20
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object SearchManagerClientImpl : SearchManagerClient {
 
-    override var maxResultsCount: Int = MAX_RESULTS_COUNT_DEFAULT_VALUE
-
     private val managerProvider: LiveData<Search> = object : MutableLiveData<Search>() {
         init { SearchProvider.getInstance(InitializationCallback<Search> { value = it }) }
     }
+
+    override val searchText by lazy { MutableLiveData<String>() }
+
+    override val searchLocation by lazy { MutableLiveData<GeoCoordinates?>() }
+
+    override val maxResultsCount by lazy { MutableLiveData<Int>(MAX_RESULTS_COUNT_DEFAULT_VALUE) }
 
     override val searchResults by lazy {
         Transformations.switchMap<Search, SearchResultsHolder>(managerProvider) { manager ->
@@ -63,6 +67,11 @@ object SearchManagerClientImpl : SearchManagerClient {
         }
     }
 
-    override fun searchText(text: String, position: GeoCoordinates?) =
-        managerProvider.observeOnce { it.search(SearchRequest(text, position).apply { maxResults = maxResultsCount }) }
+    init {
+        searchText.observeForever { text ->
+            managerProvider.observeOnce {
+                it.search(SearchRequest(text, searchLocation.value).apply { maxResults = maxResultsCount.value!! })
+            }
+        }
+    }
 }
