@@ -32,16 +32,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
+import com.sygic.maps.module.common.KEY_DISTANCE_UNITS
 import com.sygic.maps.module.common.theme.ThemeManager
 import com.sygic.maps.module.navigation.types.SignpostType
 import com.sygic.maps.module.navigation.utils.NavigationTestLifecycleOwner
 import com.sygic.maps.module.navigation.viewmodel.NavigationFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
+import com.sygic.maps.uikit.viewmodels.common.sound.SoundManager
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
@@ -55,7 +59,6 @@ import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
 import com.sygic.maps.uikit.views.navigation.infobar.buttons.InfobarButton
-import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.route.RouteInfo
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -77,17 +80,21 @@ class NavigationFragmentViewModelTest {
     @Mock
     private lateinit var extendedMapDataModel: ExtendedMapDataModel
     @Mock
-    private lateinit var navigationManager: NavigationManager
-    @Mock
     private lateinit var extendedCameraModel: ExtendedCameraModel
     @Mock
+    private lateinit var navigationManagerClient: NavigationManagerClient
+    @Mock
     private lateinit var locationManager: LocationManager
+    @Mock
+    private lateinit var positionManagerClient: PositionManagerClient
     @Mock
     private lateinit var permissionsManager: PermissionsManager
     @Mock
     private lateinit var regionalManager: RegionalManager
     @Mock
-    private lateinit var routeDemonstrationManager: RouteDemonstrationManager
+    private lateinit var routeDemonstrationManagerClient: RouteDemonstrationManagerClient
+    @Mock
+    private lateinit var soundManager: SoundManager
     @Mock
     private lateinit var themeManager: ThemeManager
 
@@ -110,10 +117,10 @@ class NavigationFragmentViewModelTest {
         whenever(app.resources).thenReturn(mock())
         whenever(app.resources.configuration).thenReturn(mock())
         whenever(regionalManager.distanceUnit).thenReturn(mock())
-        whenever(routeDemonstrationManager.demonstrationState).thenReturn(mock())
+        whenever(routeDemonstrationManagerClient.demonstrationState).thenReturn(mock())
 
         val arguments = mock<Bundle>()
-        whenever(arguments.getParcelable<RouteInfo>(eq(KEY_ROUTE_INFO))).thenReturn(mock())
+        whenever(arguments.getParcelable<RouteInfo>(eq(KEY_ROUTE))).thenReturn(mock())
         whenever(arguments.getBoolean(eq(KEY_PREVIEW_MODE), any())).thenReturn(false)
         whenever(arguments.getBoolean(eq(KEY_INFOBAR_ENABLED), any())).thenReturn(true)
         whenever(arguments.getBoolean(eq(KEY_PREVIEW_CONTROLS_ENABLED), any())).thenReturn(true)
@@ -128,13 +135,15 @@ class NavigationFragmentViewModelTest {
             app,
             arguments,
             themeManager,
+            regionalManager,
+            positionManagerClient,
             extendedCameraModel,
             extendedMapDataModel,
-            regionalManager,
+            soundManager,
             locationManager,
             permissionsManager,
-            navigationManager,
-            routeDemonstrationManager
+            navigationManagerClient,
+            routeDemonstrationManagerClient
         )
     }
 
@@ -189,7 +198,7 @@ class NavigationFragmentViewModelTest {
 
         verify(locationManager).positionOnMapEnabled = any()
         verify(extendedCameraModel).addModeChangedListener(navigationFragmentViewModel)
-        verify(navigationManager).addOnRouteChangedListener(navigationFragmentViewModel)
+        verify(navigationManagerClient).addOnRouteChangedListener(navigationFragmentViewModel)
         navigationFragmentViewModel.actionMenuItemClickListenerObservable.asSingleEvent().test().assertValue(navigationFragmentViewModel.actionMenuItemClickListener)
     }
 
@@ -270,7 +279,6 @@ class NavigationFragmentViewModelTest {
         navigationFragmentViewModel.actionMenuShowObservable.test().assertValue(actionMenuData)
     }
 
-    /*//todo: MS-6336 uncomment with next version (v15) of SDK
     @Test
     fun onRouteChangedTest() {
         val routeInfoMock = mock<RouteInfo>()
@@ -282,7 +290,7 @@ class NavigationFragmentViewModelTest {
         verify(extendedMapDataModel).removeAllMapRoutes()
         verify(extendedMapDataModel).addMapRoute(any())
         navigationFragmentViewModel.routeInfo.test().assertValue(routeInfoMock)
-    }*/
+    }
 
     @Test
     fun onStopTest() {
@@ -290,6 +298,6 @@ class NavigationFragmentViewModelTest {
 
         verify(locationManager).positionOnMapEnabled = false
         verify(extendedCameraModel).removeModeChangedListener(navigationFragmentViewModel)
-        verify(navigationManager).removeOnRouteChangedListener(navigationFragmentViewModel)
+        verify(navigationManagerClient).removeOnRouteChangedListener(navigationFragmentViewModel)
     }
 }

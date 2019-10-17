@@ -27,7 +27,7 @@ package com.sygic.samples.utils
 import androidx.lifecycle.Observer
 import com.sygic.maps.uikit.viewmodels.common.data.PlaceData
 import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerImpl
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClientImpl
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.utils.logInfo
@@ -44,7 +44,7 @@ import com.sygic.sdk.route.RouterProvider
 import com.sygic.sdk.search.*
 
 fun getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
-    with(PositionManagerClientImpl.getInstance(RouteDemonstrationManagerImpl)) {
+    with(PositionManagerClientImpl.getInstance(RouteDemonstrationManagerClientImpl)) {
         currentPosition.observeForever(object: Observer<GeoPosition> {
             override fun onChanged(position: GeoPosition) {
                 if (position.isValid) {

@@ -51,7 +51,7 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.addMapRoute
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapRoutes
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
@@ -112,7 +112,7 @@ class NavigationFragmentViewModel internal constructor(
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
     private val navigationManagerClient: NavigationManagerClient,
-    private val routeDemonstrationManager: RouteDemonstrationManager
+    private val routeDemonstrationManagerClient: RouteDemonstrationManagerClient
 ) : MapFragmentViewModel(app, arguments, themeManager, regionalManager, positionManagerClient),
     NavigationManager.OnWaypointPassListener, Camera.ModeChangedListener {
 
@@ -259,10 +259,10 @@ class NavigationFragmentViewModel internal constructor(
                 if (it.first) {
                     // start preview mode
                     locationManager.positionOnMapEnabled.value = false
-                    routeDemonstrationManager.start(route)
+                    routeDemonstrationManagerClient.start(route)
                 } else {
                     // stop the previous demonstration first
-                    routeDemonstrationManager.stop()
+                    routeDemonstrationManagerClient.stop()
 
                     // start navigation mode
                     requestLocationAccess(permissionsManager, locationManager) {
@@ -271,7 +271,7 @@ class NavigationFragmentViewModel internal constructor(
                 }
             }
         })
-        routeDemonstrationManager.demonstrationState.observe(owner, Observer {
+        routeDemonstrationManagerClient.demonstrationState.observe(owner, Observer {
             route?.let { route ->
                 when (it) {
                     DemonstrationState.ACTIVE -> eventListener?.onNavigationStarted(route)
@@ -284,7 +284,7 @@ class NavigationFragmentViewModel internal constructor(
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        locationManager.positionOnMapEnabled.value = !previewMode.value!! || routeDemonstrationManager.demonstrationState.value == DemonstrationState.ACTIVE
+        locationManager.positionOnMapEnabled.value = !previewMode.value!! || routeDemonstrationManagerClient.demonstrationState.value == DemonstrationState.ACTIVE
         cameraModel.addModeChangedListener(this)
         navigationManagerClient.addOnWaypointPassListener(this)
         actionMenuItemClickListenerObservable.asSingleEvent().value = actionMenuItemClickListener
@@ -345,7 +345,7 @@ class NavigationFragmentViewModel internal constructor(
         super.onCleared()
 
         mapDataModel.removeAllMapRoutes()
-        routeDemonstrationManager.destroy()
+        routeDemonstrationManagerClient.destroy()
         navigationManagerClient.route.value = null
     }
 }

@@ -38,7 +38,7 @@ import com.sygic.sdk.route.simulator.RouteDemonstrateSimulatorProvider
 const val DEFAULT_SPEED = 1F
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
+object RouteDemonstrationManagerClientImpl : RouteDemonstrationManagerClient {
 
     private var simulator: RouteDemonstrateSimulator? = null
 
@@ -57,7 +57,7 @@ object RouteDemonstrationManagerImpl : RouteDemonstrationManager {
         RouteDemonstrateSimulatorProvider.getInstance(route, object : InitializationCallback<RouteDemonstrateSimulator> {
             override fun onInstance(simulator: RouteDemonstrateSimulator) {
                 with(simulator) {
-                    this@RouteDemonstrationManagerImpl.simulator = this
+                    this@RouteDemonstrationManagerClientImpl.simulator = this
                     start()
                     setSpeedMultiplier(speedMultiplier.value!!)
                     addPositionSimulatorListener(object : PositionSimulator.PositionSimulatorListener {

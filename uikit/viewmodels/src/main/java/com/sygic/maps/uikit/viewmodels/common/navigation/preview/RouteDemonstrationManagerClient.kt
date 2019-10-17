@@ -22,21 +22,26 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.viewmodels.common.navigation.preview
 
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerImpl;
-import dagger.Module;
-import dagger.Provides;
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
+import com.sygic.sdk.position.GeoPosition
+import com.sygic.sdk.route.Route
 
-import javax.inject.Singleton;
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface RouteDemonstrationManagerClient {
 
-@Module
-public class RouteDemonstrationManagerModule {
+    val currentPosition: LiveData<GeoPosition>
+    val speedMultiplier: MutableLiveData<Float>
+    val demonstrationState: LiveData<DemonstrationState>
 
-    @Singleton
-    @Provides
-    RouteDemonstrationManager provideRouteDemonstrationManager() {
-        return RouteDemonstrationManagerImpl.INSTANCE;
-    }
+    fun start(route: Route)
+    fun restart()
+    fun pause()
+    fun unPause()
+    fun stop()
+    fun destroy()
 }

@@ -34,7 +34,7 @@ import com.sygic.maps.module.common.di.module.PermissionsModule;
 import com.sygic.maps.module.common.di.module.PlacesManagerClientModule;
 import com.sygic.maps.module.common.di.module.PositionManagerClientModule;
 import com.sygic.maps.module.common.di.module.ReverseGeocoderManagerClientModule;
-import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerModule;
+import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerClientModule;
 import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
 import com.sygic.maps.module.common.di.module.SearchManagerClientModule;
 import com.sygic.maps.module.common.di.module.ServicesManagerModule;
@@ -44,7 +44,7 @@ import com.sygic.maps.uikit.viewmodels.common.geocoder.ReverseGeocoderManagerCli
 import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient;
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
 import com.sygic.maps.uikit.viewmodels.common.place.PlacesManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
@@ -67,7 +67,7 @@ import dagger.Component;
                 PlacesManagerClientModule.class,
                 PositionManagerClientModule.class,
                 ReverseGeocoderManagerClientModule.class,
-                RouteDemonstrationManagerModule.class,
+                RouteDemonstrationManagerClientModule.class,
                 SdkInitializationManagerModule.class,
                 SearchManagerClientModule.class,
                 ServicesManagerModule.class,
@@ -83,7 +83,7 @@ public interface ApplicationModulesComponent {
     PlacesManagerClient getPlacesManagerClient();
     PositionManagerClient getPositionManagerClient();
     ReverseGeocoderManagerClient getReverseGeocoderManagerClient();
-    RouteDemonstrationManager getRouteDemonstrationManager();
+    RouteDemonstrationManagerClient getRouteDemonstrationManagerClient();
     SdkInitializationManager getSdkInitializationManager();
     SearchManagerClient getSearchManagerClient();
     ServicesManager getServicesManager();

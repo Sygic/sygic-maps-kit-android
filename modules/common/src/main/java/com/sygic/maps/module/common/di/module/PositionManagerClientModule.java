@@ -26,7 +26,7 @@ package com.sygic.maps.module.common.di.module;
 
 import androidx.annotation.NonNull;
 
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl;
 
@@ -40,7 +40,7 @@ public class PositionManagerClientModule {
 
     @Singleton
     @Provides
-    PositionManagerClient providePositionManagerClient(@NonNull final RouteDemonstrationManager routeDemonstrationManager) {
-        return PositionManagerClientImpl.getInstance(routeDemonstrationManager);
+    PositionManagerClient providePositionManagerClient(@NonNull final RouteDemonstrationManagerClient routeDemonstrationManagerClient) {
+        return PositionManagerClientImpl.getInstance(routeDemonstrationManagerClient);
     }
 }

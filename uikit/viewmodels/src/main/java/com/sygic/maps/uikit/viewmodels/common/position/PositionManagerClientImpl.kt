@@ -30,7 +30,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationCallback
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient
 import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
 import com.sygic.sdk.position.GeoPosition
@@ -43,12 +43,12 @@ import kotlinx.coroutines.launch
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PositionManagerClientImpl private constructor(
-    private val routeDemonstrationManager: RouteDemonstrationManager
+    private val routeDemonstrationManagerClient: RouteDemonstrationManagerClient
 ) : PositionManagerClient {
 
     companion object : SingletonHolder<PositionManagerClientImpl>() {
         @JvmStatic
-        fun getInstance(manager: RouteDemonstrationManager) = getInstance { PositionManagerClientImpl(manager) }
+        fun getInstance(managerClient: RouteDemonstrationManagerClient) = getInstance { PositionManagerClientImpl(managerClient) }
     }
 
     private val managerProvider: LiveData<PositionManager> = object : MutableLiveData<PositionManager>() {
@@ -64,12 +64,12 @@ class PositionManagerClientImpl private constructor(
 
                 override fun onActive() {
                     manager.addPositionChangeListener(positionChangeListener)
-                    routeDemonstrationManager.currentPosition.observeForever(demonstrationPositionObserver)
+                    routeDemonstrationManagerClient.currentPosition.observeForever(demonstrationPositionObserver)
                 }
 
                 override fun onInactive() {
                     manager.removePositionChangeListener(positionChangeListener)
-                    routeDemonstrationManager.currentPosition.removeObserver(demonstrationPositionObserver)
+                    routeDemonstrationManagerClient.currentPosition.removeObserver(demonstrationPositionObserver)
                 }
             }
         }
