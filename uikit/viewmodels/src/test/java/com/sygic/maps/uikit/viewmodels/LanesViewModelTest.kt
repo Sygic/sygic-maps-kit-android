@@ -29,10 +29,10 @@ import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel
-import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.LanesInfo
-import com.sygic.sdk.navigation.warnings.SimpleLanesInfo
+import com.sygic.sdk.navigation.routeeventnotifications.LaneInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SimpleLaneInfo
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -48,50 +48,50 @@ class LanesViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var navigationManager: NavigationManager
+    private lateinit var navigationManagerClient: NavigationManagerClient
 
     private lateinit var lanesViewModel: LanesViewModel
 
     @Before
     fun setup() {
-        lanesViewModel = LanesViewModel(navigationManager)
+        lanesViewModel = LanesViewModel(navigationManagerClient)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManager).addOnLanesListener(lanesViewModel)
+        verify(navigationManagerClient).addOnLanesListener(lanesViewModel)
     }
 
     @Test
     fun onLanesInfoChangedTest() {
-        val lanesInfoMock = mock<LanesInfo>()
-        val simpleLanesInfoMock = mock<SimpleLanesInfo>()
-        whenever(lanesInfoMock.isActive).thenReturn(false)
-        whenever(lanesInfoMock.simpleLanesInfo).thenReturn(simpleLanesInfoMock)
-        lanesViewModel.onLanesInfoChanged(lanesInfoMock)
+        val laneInfoMock = mock<LaneInfo>()
+        val simpleLaneInfoMock = mock<SimpleLaneInfo>()
+        whenever(laneInfoMock.isActive).thenReturn(false)
+        whenever(laneInfoMock.simpleLanesInfo).thenReturn(simpleLaneInfoMock)
+        lanesViewModel.onLanesInfoChanged(laneInfoMock)
 
         lanesViewModel.enabled.test().assertValue(false)
 
-        whenever(lanesInfoMock.isActive).thenReturn(true)
-        whenever(simpleLanesInfoMock.lanes).thenReturn(emptyList())
-        lanesViewModel.onLanesInfoChanged(lanesInfoMock)
+        whenever(laneInfoMock.isActive).thenReturn(true)
+        whenever(simpleLaneInfoMock.lanes).thenReturn(emptyList())
+        lanesViewModel.onLanesInfoChanged(laneInfoMock)
 
         lanesViewModel.enabled.test().assertValue(false)
 
-        whenever(lanesInfoMock.isActive).thenReturn(true)
-        whenever(simpleLanesInfoMock.lanes).thenReturn(emptyList())
-        lanesViewModel.onLanesInfoChanged(lanesInfoMock)
+        whenever(laneInfoMock.isActive).thenReturn(true)
+        whenever(simpleLaneInfoMock.lanes).thenReturn(emptyList())
+        lanesViewModel.onLanesInfoChanged(laneInfoMock)
 
         lanesViewModel.enabled.test().assertValue(false)
 
-        val firstLaneMock = mock<LanesInfo.Lane>()
-        val secondLaneMock = mock<LanesInfo.Lane>()
-        whenever(firstLaneMock.directions).thenReturn(listOf(LanesInfo.Lane.Direction.HalfRight, LanesInfo.Lane.Direction.Right))
+        val firstLaneMock = mock<LaneInfo.Lane>()
+        val secondLaneMock = mock<LaneInfo.Lane>()
+        whenever(firstLaneMock.directions).thenReturn(listOf(LaneInfo.Lane.Direction.HalfRight, LaneInfo.Lane.Direction.Right))
         whenever(firstLaneMock.isHighlighted).thenReturn(false)
         whenever(secondLaneMock.isHighlighted).thenReturn(true)
-        whenever(lanesInfoMock.isActive).thenReturn(true)
-        whenever(simpleLanesInfoMock.lanes).thenReturn(listOf(firstLaneMock, secondLaneMock))
-        lanesViewModel.onLanesInfoChanged(lanesInfoMock)
+        whenever(laneInfoMock.isActive).thenReturn(true)
+        whenever(simpleLaneInfoMock.lanes).thenReturn(listOf(firstLaneMock, secondLaneMock))
+        lanesViewModel.onLanesInfoChanged(laneInfoMock)
 
         lanesViewModel.enabled.test().assertValue(true)
         assertEquals(false, lanesViewModel.lanesData.value!!.first().highlighted)

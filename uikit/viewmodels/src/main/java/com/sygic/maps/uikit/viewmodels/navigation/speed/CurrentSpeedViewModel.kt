@@ -34,13 +34,11 @@ import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.combineLatest
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
-import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.position.PositionManager
 import kotlin.math.roundToInt
 
 /**
  * A [CurrentSpeedViewModel] is a basic ViewModel implementation for the [CurrentSpeedView] view class. It listens
- * to the [NavigationManager.OnSpeedLimitListener] and [PositionManager.PositionChangeListener] and sets the appropriate
+ * to the [NavigationManagerClient.speedLimitInfo] and [PositionManagerClient.currentPosition] and sets the appropriate
  * state to the [CurrentSpeedView] view.
  */
 @AutoFactory

@@ -31,11 +31,11 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
-import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.DirectionInfo
+import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
 import com.sygic.sdk.route.RouteManeuver
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -54,7 +54,7 @@ class SimplifiedSignpostViewModelTest {
     @Mock
     private lateinit var regionalManager: RegionalManager
     @Mock
-    private lateinit var navigationManager: NavigationManager
+    private lateinit var navigationManagerClient: NavigationManagerClient
 
     private lateinit var simplifiedSignpostViewModel: SimplifiedSignpostViewModel
 
@@ -62,12 +62,12 @@ class SimplifiedSignpostViewModelTest {
     fun setup() {
         whenever(regionalManager.distanceUnit).thenReturn(MutableLiveData(DistanceUnit.KILOMETERS))
 
-        simplifiedSignpostViewModel = SimplifiedSignpostViewModel(regionalManager, navigationManager)
+        simplifiedSignpostViewModel = SimplifiedSignpostViewModel(regionalManager, navigationManagerClient)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManager).addOnDirectionListener(simplifiedSignpostViewModel)
+        verify(navigationManagerClient).addOnDirectionListener(simplifiedSignpostViewModel)
     }
 
     @Test

@@ -25,13 +25,14 @@
 package com.sygic.maps.uikit.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LifecycleOwner
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
 import com.sygic.maps.uikit.views.navigation.speed.limit.SpeedLimitType
 import com.sygic.sdk.map.MapView
-import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.SpeedLimitInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -47,18 +48,20 @@ class SpeedLimitViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var navigationManager: NavigationManager
+    private lateinit var navigationManagerClient: NavigationManagerClient
 
     private lateinit var speedLimitViewModel: SpeedLimitViewModel
 
     @Before
     fun setup() {
-        speedLimitViewModel = SpeedLimitViewModel(navigationManager)
+        speedLimitViewModel = SpeedLimitViewModel(navigationManagerClient)
     }
 
     @Test
-    fun initTest() {
-        verify(navigationManager).addOnSpeedLimitListener(speedLimitViewModel)
+    fun onCreateTest() {
+        val lifecycleOwnerMock = mock<LifecycleOwner>()
+        speedLimitViewModel.onCreate(lifecycleOwnerMock)
+        verify(navigationManagerClient.speedLimitInfo).observe(eq(lifecycleOwnerMock), any())
         assertEquals(SpeedLimitType.EU, speedLimitViewModel.speedLimitType.value!!)
     }
 

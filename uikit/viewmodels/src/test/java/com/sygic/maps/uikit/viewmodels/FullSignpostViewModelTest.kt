@@ -31,12 +31,12 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.FullSignpostViewModel
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
-import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.DirectionInfo
-import com.sygic.sdk.navigation.warnings.NaviSignInfo
+import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
 import com.sygic.sdk.route.RouteManeuver
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -55,7 +55,7 @@ class FullSignpostViewModelTest {
     @Mock
     private lateinit var regionalManager: RegionalManager
     @Mock
-    private lateinit var navigationManager: NavigationManager
+    private lateinit var navigationManagerClient: NavigationManagerClient
 
     private lateinit var fullSignpostViewModel: FullSignpostViewModel
 
@@ -63,13 +63,13 @@ class FullSignpostViewModelTest {
     fun setup() {
         whenever(regionalManager.distanceUnit).thenReturn(MutableLiveData(DistanceUnit.KILOMETERS))
 
-        fullSignpostViewModel = FullSignpostViewModel(regionalManager, navigationManager)
+        fullSignpostViewModel = FullSignpostViewModel(regionalManager, navigationManagerClient)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManager).addOnNaviSignListener(fullSignpostViewModel)
-        verify(navigationManager).addOnDirectionListener(fullSignpostViewModel)
+        verify(navigationManagerClient).addOnNaviSignListener(fullSignpostViewModel)
+        verify(navigationManagerClient).addOnDirectionListener(fullSignpostViewModel)
     }
 
     @Test
@@ -77,10 +77,10 @@ class FullSignpostViewModelTest {
         val nextRoadName = "Main road"
         val placeName = "London eye"
         val directionInfoMock = mock<DirectionInfo>()
-        val naviSignInfoMock = mock<NaviSignInfo>()
-        val placeNaviSignInfoSignElementMock = mock<NaviSignInfo.SignElement>()
-        val pictogramNaviSignInfoSignElementMock = mock<NaviSignInfo.SignElement>()
-        val routeNumberNaviSignInfoSignElementMock = mock<NaviSignInfo.SignElement>()
+        val signpostInfoMock = mock<SignpostInfo>()
+        val placeNaviSignInfoSignElementMock = mock<SignpostInfo.SignElement>()
+        val pictogramNaviSignInfoSignElementMock = mock<SignpostInfo.SignElement>()
+        val routeNumberNaviSignInfoSignElementMock = mock<SignpostInfo.SignElement>()
         val naviSignElements = listOf(placeNaviSignInfoSignElementMock, pictogramNaviSignInfoSignElementMock, routeNumberNaviSignInfoSignElementMock)
         val primaryRouteManeuverMock = mock<RouteManeuver>()
         val secondaryRouteManeuverMock = mock<RouteManeuver>()
@@ -93,18 +93,18 @@ class FullSignpostViewModelTest {
         whenever(directionInfoMock.primary).thenReturn(primaryRouteManeuverMock)
         whenever(directionInfoMock.secondary).thenReturn(secondaryRouteManeuverMock)
         whenever(directionInfoMock.distance).thenReturn(100)
-        whenever(naviSignInfoMock.isOnRoute).thenReturn(true)
-        whenever(naviSignInfoMock.signElements).thenReturn(naviSignElements)
-        whenever(placeNaviSignInfoSignElementMock.elementType).thenReturn(NaviSignInfo.SignElement.SignElementType.PlaceName)
+        whenever(signpostInfoMock.isOnRoute).thenReturn(true)
+        whenever(signpostInfoMock.signElements).thenReturn(naviSignElements)
+        whenever(placeNaviSignInfoSignElementMock.elementType).thenReturn(SignpostInfo.SignElement.SignElementType.PlaceName)
         whenever(placeNaviSignInfoSignElementMock.text).thenReturn(placeName)
-        whenever(pictogramNaviSignInfoSignElementMock.pictogramType).thenReturn(NaviSignInfo.SignElement.PictogramType.Airport)
-        whenever(pictogramNaviSignInfoSignElementMock.elementType).thenReturn(NaviSignInfo.SignElement.SignElementType.Pictogram)
-        whenever(routeNumberNaviSignInfoSignElementMock.elementType).thenReturn(NaviSignInfo.SignElement.SignElementType.RouteNumber)
-        whenever(routeNumberNaviSignInfoSignElementMock.routeNumberFormat).thenReturn(mock())
-        whenever(routeNumberNaviSignInfoSignElementMock.routeNumberFormat.insideNumber).thenReturn("5")
+        whenever(pictogramNaviSignInfoSignElementMock.pictogramType).thenReturn(SignpostInfo.SignElement.PictogramType.Airport)
+        whenever(pictogramNaviSignInfoSignElementMock.elementType).thenReturn(SignpostInfo.SignElement.SignElementType.Pictogram)
+        whenever(routeNumberNaviSignInfoSignElementMock.elementType).thenReturn(SignpostInfo.SignElement.SignElementType.RouteNumber)
+        whenever(routeNumberNaviSignInfoSignElementMock.roadNumberFormat).thenReturn(mock())
+        whenever(routeNumberNaviSignInfoSignElementMock.roadNumberFormat.insideNumber).thenReturn("5")
 
         fullSignpostViewModel.onDirectionInfoChanged(directionInfoMock)
-        fullSignpostViewModel.onNaviSignChanged(listOf(naviSignInfoMock))
+        fullSignpostViewModel.onNaviSignChanged(listOf(signpostInfoMock))
 
         fullSignpostViewModel.distance.test().assertValue("100 m")
         fullSignpostViewModel.primaryDirection.test().assertValue(R.drawable.ic_direction_right_90)

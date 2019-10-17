@@ -31,11 +31,10 @@ import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
 import com.sygic.maps.uikit.views.navigation.speed.limit.SpeedLimitType
-import com.sygic.sdk.navigation.NavigationManager
 
 /**
  * A [SpeedLimitViewModel] is a basic ViewModel implementation for the [SpeedLimitView] view class. It listens
- * to the [NavigationManager.OnSpeedLimitListener] and sets the appropriate state to the [SpeedLimitView] view.
+ * to the [NavigationManagerClient.speedLimitInfo] and sets the appropriate state to the [SpeedLimitView] view.
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")

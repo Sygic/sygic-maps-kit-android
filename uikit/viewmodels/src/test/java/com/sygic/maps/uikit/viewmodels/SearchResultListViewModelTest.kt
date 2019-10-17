@@ -31,7 +31,7 @@ import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
 import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultListErrorViewSwitcherIndex
@@ -53,20 +53,20 @@ class SearchResultListViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var searchManager: SearchManager
+    private lateinit var searchManagerClient: SearchManagerClient
 
     private lateinit var searchResultListViewModel: SearchResultListViewModel
 
     @Before
     fun setup() {
-        searchResultListViewModel = SearchResultListViewModel(searchManager, mock())
+        searchResultListViewModel = SearchResultListViewModel(searchManagerClient, mock())
     }
 
     @Test
     fun initTest() {
         assertEquals(true, searchResultListViewModel.activeAdapter.value is DefaultStateAdapter<SearchResult>)
         assertEquals(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND, searchResultListViewModel.errorViewSwitcherIndex.value)
-        verify(searchManager).addSearchResultsListener(any())
+        verify(searchManagerClient).addSearchResultsListener(any())
     }
 
     @Test

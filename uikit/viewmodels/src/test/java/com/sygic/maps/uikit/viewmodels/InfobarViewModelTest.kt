@@ -30,6 +30,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.InfobarViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextDataWrapper
@@ -43,10 +45,8 @@ import com.sygic.maps.uikit.views.common.extensions.SPACE
 import com.sygic.maps.uikit.views.common.extensions.VERTICAL_BAR
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarItem
 import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
-import com.sygic.sdk.navigation.NavigationManager
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.position.GeoPosition
-import com.sygic.sdk.position.PositionManager
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -66,24 +66,24 @@ class InfobarViewModelTest {
     @Mock
     private lateinit var dateTimeManager: DateTimeManager
     @Mock
-    private lateinit var positionManager: PositionManager
+    private lateinit var positionManagerClient: PositionManagerClient
     @Mock
-    private lateinit var navigationManager: NavigationManager
+    private lateinit var navigationManagerClient: NavigationManagerClient
 
     private lateinit var infobarViewModel: InfobarViewModel
 
     @Before
     fun setup() {
         whenever(regionalManager.distanceUnit).thenReturn(mock())
-        whenever(positionManager.lastKnownPosition).thenReturn(GeoPosition(GeoCoordinates(50.14, 9.22), 10.0, 0.0))
+        whenever(positionManagerClient.lastKnownPosition.value).thenReturn(GeoPosition(GeoCoordinates(50.14, 9.22), 10.0, 0.0))
         whenever(dateTimeManager.formatTime(any())).thenReturn("12:22")
 
-        infobarViewModel = InfobarViewModel(regionalManager, dateTimeManager, positionManager, navigationManager)
+        infobarViewModel = InfobarViewModel(regionalManager, dateTimeManager, positionManagerClient, navigationManagerClient)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManager).addOnNaviStatsListener(infobarViewModel)
+        verify(navigationManagerClient).addOnNaviStatsListener(infobarViewModel)
         verify(regionalManager.distanceUnit).observeForever(any())
         assertEquals(true, infobarViewModel.textDataPrimary.value!!.items.first() is RemainingTimeInfobarItem)
         assertEquals(true, infobarViewModel.textDataSecondary.value!!.items.first() is RemainingDistanceInfobarItem)
