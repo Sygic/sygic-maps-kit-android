@@ -39,8 +39,8 @@ import com.sygic.maps.uikit.viewmodels.common.extensions.setMapRectangle
 import com.sygic.maps.uikit.viewmodels.common.extensions.toPlaceDetailData
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.samples.utils.isCategoryResult
 import com.sygic.samples.utils.loadDetails
 import com.sygic.samples.utils.toGeoCoordinatesList
@@ -70,23 +70,23 @@ class ComplexDemoActivityViewModel : ViewModel() {
     val computePrimaryRouteObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
     val routeComputeProgressVisibilityObservable: LiveData<Int> = SingleLiveEvent()
     val placeNavigationFragmentObservable: LiveData<EventListener> = SingleLiveEvent()
-    val showPoiDetailObservable: LiveData<Pair<PoiDetailComponent, PoiDetailBottomDialogFragment.Listener>> = SingleLiveEvent()
-    val hidePoiDetailObservable: LiveData<Any> = SingleLiveEvent()
+    val showPlaceDetailObservable: LiveData<Pair<PlaceDetailComponent, PlaceDetailBottomDialogFragment.Listener>> = SingleLiveEvent()
+    val hidePlaceDetailObservable: LiveData<Any> = SingleLiveEvent()
 
     val onMapClickListener = object : OnMapClickListener {
         override fun showDetailsView() = false
         override fun onMapDataReceived(data: ViewObjectData) {
             targetPosition = data.position
-            showPoiDetailObservable.asSingleEvent().value = Pair(
-                PoiDetailComponent(data.toPlaceDetailData(), true),
-                poiDetailListener
+            showPlaceDetailObservable.asSingleEvent().value = Pair(
+                PlaceDetailComponent(data.toPlaceDetailData(), true),
+                placeDetailListener
             )
         }
     }
 
-    val poiDetailListener = object : PoiDetailBottomDialogFragment.Listener {
+    val placeDetailListener = object : PlaceDetailBottomDialogFragment.Listener {
         override fun onNavigationButtonClick() {
-            hidePoiDetailObservable.asSingleEvent().call()
+            hidePlaceDetailObservable.asSingleEvent().call()
             computePrimaryRouteObservable.asSingleEvent().value = targetPosition
             routeComputeProgressVisibilityObservable.asSingleEvent().value = View.VISIBLE
             placeNavigationFragmentObservable.asSingleEvent().value = navigationEventListener
@@ -133,8 +133,8 @@ class ComplexDemoActivityViewModel : ViewModel() {
                 (searchResultList.first() as MapSearchResult).loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
                     if (state == SearchResult.ResultState.Success) {
                         when (mapSearchDetail) {
-                            is DetailPoiCategory -> mapSearchDetail.poiList.forEach { mapDataModel?.addMapMarker(it.position) }
-                            is DetailPoiCategoryGroup -> mapSearchDetail.poiList.forEach { mapDataModel?.addMapMarker(it.position) }
+                            is DetailPoiCategory -> mapSearchDetail.poiList.forEach { mapDataModel?.addMapMarker(it.position) } //todo
+                            is DetailPoiCategoryGroup -> mapSearchDetail.poiList.forEach { mapDataModel?.addMapMarker(it.position) } //todo
                         }
                         cameraDataModel?.setMapRectangle(mapSearchDetail.boundingBox, CAMERA_RECTANGLE_MARGIN)
                     }
@@ -150,7 +150,7 @@ class ComplexDemoActivityViewModel : ViewModel() {
                                 cameraDataModel?.position = this
                                 cameraDataModel?.zoomLevel = 10F
                                 searchResultList.first().toPlaceDetailComponent()?.let {
-                                    showPoiDetailObservable.asSingleEvent().value = Pair(it, poiDetailListener)
+                                    showPlaceDetailObservable.asSingleEvent().value = Pair(it, placeDetailListener)
                                 }
                             }
                         } else {

@@ -31,7 +31,7 @@ import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrat
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.utils.logInfo
-import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.maps.uikit.views.placedetail.data.PlaceDetailData
 import com.sygic.sdk.InitializationCallback
 import com.sygic.sdk.context.SygicContext
@@ -82,7 +82,7 @@ fun List<SearchResult>.isCategoryResult(): Boolean {
     val firstSearchResult = first()
     return size == 1 && firstSearchResult is MapSearchResult
             && (firstSearchResult.dataType == MapSearchResult.DataType.PoiCategoryGroup
-            || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory)
+            || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory) //todo
 }
 
 fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
@@ -97,11 +97,11 @@ fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
     return geoCoordinatesList
 }
 
-fun SearchResult.toPlaceDetailComponent(): PoiDetailComponent? {
+fun SearchResult.toPlaceDetailComponent(): PlaceDetailComponent? {
     return when (this) {
         is CoordinateSearchResult -> {
             val formattedCoordinates = this.position.getFormattedLocation()
-            PoiDetailComponent(
+            PlaceDetailComponent(
                 PlaceDetailData(
                     titleString = formattedCoordinates,
                     subtitleString = EMPTY_STRING,
@@ -112,11 +112,11 @@ fun SearchResult.toPlaceDetailComponent(): PoiDetailComponent? {
         }
         is MapSearchResult -> {
             val placeData = PlaceData(
-                name = this.poiName.text,
+                name = this.poiName.text, //todo
                 street = this.street.text,
                 city = this.city.text
             )
-            PoiDetailComponent(
+            PlaceDetailComponent(
                 PlaceDetailData(
                     titleString = placeData.title,
                     subtitleString = placeData.description,

@@ -110,7 +110,7 @@
         <item name="android:background">@drawable/bg_zoom_controls_button</item>
     </style>
 
-    <style name="PoiDetailItem">
+    <style name="PlaceDetailItem">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:drawablePadding">18dp</item>

@@ -22,38 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
+package com.sygic.maps.uikit.views.placedetail.viewmodel;
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import com.sygic.maps.uikit.viewmodels.R
-import com.sygic.maps.uikit.viewmodels.common.extensions.toCategoryIconDrawableRes
-import com.sygic.maps.uikit.viewmodels.common.extensions.toColorRes
-import com.sygic.maps.uikit.views.common.utils.TextHolder
-import com.sygic.sdk.search.MapSearchResult
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.IntDef;
 
-@Parcelize
-open class PoiCategoryResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    @get:MapSearchResult.DataType
-    override val type: Int
-        get() = MapSearchResult.DataType.PoiCategory
-
-    override val title: TextHolder
-        get() = TextHolder.from(dataPayload.poiCategoryName.text)
-
-    override val subTitle: TextHolder
-        get() = TextHolder.from(R.string.category)
-
-    @get:DrawableRes
-    override val icon: Int
-        get() = dataPayload.poiCategoryId.toCategoryIconDrawableRes()
-
-    @get:ColorRes
-    override val iconBackgroundColor: Int
-        get() = dataPayload.poiGroupId.toColorRes()
-
-    override val iconRingVisible: Boolean
-        get() = true
+@IntDef({PlaceDetailContentViewSwitcherIndex.CONTENT,
+        PlaceDetailContentViewSwitcherIndex.PROGRESSBAR})
+@Retention(RetentionPolicy.SOURCE)
+@interface PlaceDetailContentViewSwitcherIndex {
+    int CONTENT = 0;
+    int PROGRESSBAR = 1;
 }

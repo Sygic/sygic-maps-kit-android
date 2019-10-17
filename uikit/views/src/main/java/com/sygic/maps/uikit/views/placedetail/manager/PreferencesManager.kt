@@ -31,7 +31,7 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.get
 import com.sygic.maps.uikit.views.common.extensions.set
 
-const val PREFERENCES_NAME = "poi_detail_prefs"
+const val PREFERENCES_NAME = "place_detail_prefs"
 
 internal class PreferencesManager(context: Context) {
 
@@ -46,7 +46,7 @@ internal class PreferencesManager(context: Context) {
 
     private fun getKeyFromPrefKey(@PrefKey prefKey: Int): String {
         return when (prefKey) {
-            PrefKey.SHOWCASE_ALLOWED -> applicationContext.getString(R.string.preferenceKey_poi_detail_showcase)
+            PrefKey.SHOWCASE_ALLOWED -> applicationContext.getString(R.string.preferenceKey_place_detail_showcase)
             else -> EMPTY_STRING
         }
     }

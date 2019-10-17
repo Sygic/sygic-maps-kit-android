@@ -34,19 +34,19 @@
         <import type="android.text.TextUtils" />
 
         <variable
-            name="poiDetailInternalViewModel"
-            type="com.sygic.maps.uikit.views.placedetail.viewmodel.PoiDetailInternalViewModel" />
+            name="viewModel"
+            type="com.sygic.maps.uikit.views.placedetail.viewmodel.PlaceDetailInternalViewModel" />
 
     </data>
 
     <ViewAnimator
-        android:id="@+id/poiDetailContainer"
+        android:id="@+id/placeDetailContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/colorBackground"
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:displayedChild="@{safeUnbox(poiDetailInternalViewModel.contentViewSwitcherIndex)}">
+        app:displayedChild="@{safeUnbox(viewModel.contentViewSwitcherIndex)}">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/poiDetailHeaderContainer"
+                android:id="@+id/placeDetailHeaderContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="24dp"
@@ -62,116 +62,116 @@
                 android:paddingBottom="24dp">
 
                 <View
-                    android:id="@+id/poiDetailHandleView"
+                    android:id="@+id/placeDetailHandleView"
                     android:layout_width="48dp"
                     android:layout_height="8dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/ic_drag_hint_shape"
-                    android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
-                    app:layout_constraintBottom_toTopOf="@id/poiDetailTitleTextView"
+                    android:onClick="@{() -> viewModel.onHeaderClick()}"
+                    app:layout_constraintBottom_toTopOf="@id/placeDetailTitleTextView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.Group
-                    android:id="@+id/poiDetailHeaderGroup"
+                    android:id="@+id/placeDetailHeaderGroup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="poiDetailTitleTextView,poiDetailSubtitleTextView"
+                    app:constraint_referenced_ids="placeDetailTitleTextView,placeDetailSubtitleTextView"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/poiDetailNavigationButton"
+                    app:layout_constraintEnd_toStartOf="@id/placeDetailNavigationButton"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/poiDetailHandleView" />
+                    app:layout_constraintTop_toBottomOf="@id/placeDetailHandleView" />
 
                 <TextView
-                    android:id="@+id/poiDetailTitleTextView"
+                    android:id="@+id/placeDetailTitleTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:paddingTop="6dp"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-medium"
-                    android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
+                    android:onClick="@{() -> viewModel.onHeaderClick()}"
                     android:singleLine="true"
-                    android:text="@{poiDetailInternalViewModel.titleText}"
+                    android:text="@{viewModel.titleText}"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="@dimen/fontSizeMediumLarge"
-                    app:layout_constraintEnd_toStartOf="@id/poiDetailNavigationButton"
+                    app:layout_constraintEnd_toStartOf="@id/placeDetailNavigationButton"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/poiDetailHandleView"
+                    app:layout_constraintTop_toBottomOf="@id/placeDetailHandleView"
                     tools:text="Sygic" />
 
                 <TextView
-                    android:id="@+id/poiDetailSubtitleTextView"
+                    android:id="@+id/placeDetailSubtitleTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:paddingTop="4dp"
                     android:ellipsize="end"
-                    android:onClick="@{() -> poiDetailInternalViewModel.onHeaderClick()}"
+                    android:onClick="@{() -> viewModel.onHeaderClick()}"
                     android:singleLine="true"
-                    android:text="@{poiDetailInternalViewModel.subtitleText}"
+                    android:text="@{viewModel.subtitleText}"
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="@dimen/fontSizeSmall"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/poiDetailNavigationButton"
+                    app:layout_constraintEnd_toStartOf="@id/placeDetailNavigationButton"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/poiDetailTitleTextView"
+                    app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView"
                     tools:text="Mlynské nivy 16, 821 09 Bratislava" />
 
                 <ImageButton
-                    android:id="@+id/poiDetailNavigationButton"
+                    android:id="@+id/placeDetailNavigationButton"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
-                    android:onClick="@{() -> poiDetailInternalViewModel.onNavigationButtonClick()}"
+                    android:onClick="@{() -> viewModel.onNavigationButtonClick()}"
                     android:padding="8dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_navigation"
-                    android:visibility="@{safeUnbox(poiDetailInternalViewModel.navigationButtonEnabled) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{safeUnbox(viewModel.navigationButtonEnabled) ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/poiDetailHeaderGroup" />
+                    app:layout_constraintStart_toEndOf="@id/placeDetailHeaderGroup" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                style="@style/PoiDetailItem"
+                style="@style/PlaceDetailItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_phone"
-                android:onClick="@{() -> poiDetailInternalViewModel.onPhoneNumberClick()}"
-                android:text="@{poiDetailInternalViewModel.phoneText}"
-                android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.phoneText) ? View.GONE : View.VISIBLE}"
+                android:onClick="@{() -> viewModel.onPhoneNumberClick()}"
+                android:text="@{viewModel.phoneText}"
+                android:visibility="@{TextUtils.isEmpty(viewModel.phoneText) ? View.GONE : View.VISIBLE}"
                 tools:text="+421 0944 123456" />
 
             <TextView
-                style="@style/PoiDetailItem"
+                style="@style/PlaceDetailItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_email"
-                android:onClick="@{() -> poiDetailInternalViewModel.onEmailClick()}"
-                android:text="@{poiDetailInternalViewModel.emailText}"
-                android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.emailText) ? View.GONE : View.VISIBLE}"
+                android:onClick="@{() -> viewModel.onEmailClick()}"
+                android:text="@{viewModel.emailText}"
+                android:visibility="@{TextUtils.isEmpty(viewModel.emailText) ? View.GONE : View.VISIBLE}"
                 tools:text="sygic@sygic.com" />
 
             <TextView
-                style="@style/PoiDetailItem"
+                style="@style/PlaceDetailItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_web"
-                android:onClick="@{() -> poiDetailInternalViewModel.onWebUrlClick()}"
-                android:text="@{poiDetailInternalViewModel.urlText}"
-                android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.urlText) ? View.GONE : View.VISIBLE}"
+                android:onClick="@{() -> viewModel.onWebUrlClick()}"
+                android:text="@{viewModel.urlText}"
+                android:visibility="@{TextUtils.isEmpty(viewModel.urlText) ? View.GONE : View.VISIBLE}"
                 tools:text="http://www.sygic.com" />
 
             <TextView
-                style="@style/PoiDetailItem"
+                style="@style/PlaceDetailItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_location"
-                android:onClick="@{() -> poiDetailInternalViewModel.onCoordinatesClick()}"
-                android:text="@{poiDetailInternalViewModel.coordinatesText}"
-                android:visibility="@{TextUtils.isEmpty(poiDetailInternalViewModel.coordinatesText) ? View.GONE : View.VISIBLE}"
+                android:onClick="@{() -> viewModel.onCoordinatesClick()}"
+                android:text="@{viewModel.coordinatesText}"
+                android:visibility="@{TextUtils.isEmpty(viewModel.coordinatesText) ? View.GONE : View.VISIBLE}"
                 tools:text="48.126895, 12.214578" />
 
         </LinearLayout>

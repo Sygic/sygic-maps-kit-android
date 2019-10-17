@@ -22,14 +22,31 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.placedetail.component
+package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
-import android.os.Parcelable
-import com.sygic.maps.uikit.views.placedetail.data.PlaceDetailData
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.viewmodels.common.extensions.toCategoryIconDrawableRes
+import com.sygic.maps.uikit.viewmodels.common.extensions.toColorRes
+import com.sygic.maps.uikit.views.common.utils.TextHolder
+import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PoiDetailComponent(
-    val data: PlaceDetailData,
-    val navigationButtonEnabled: Boolean = false
-) : Parcelable
+class PlaceResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
+
+    @get:MapSearchResult.DataType
+    override val type: Int
+        get() = MapSearchResult.DataType.Poi
+
+    override val title: TextHolder
+        get() = TextHolder.from(dataPayload.poiName.text)
+
+    @get:DrawableRes
+    override val icon: Int
+        get() = dataPayload.poiCategoryId.toCategoryIconDrawableRes()
+
+    @get:ColorRes
+    override val iconBackgroundColor: Int
+        get() = dataPayload.poiGroupId.toColorRes()
+}

@@ -37,50 +37,50 @@ import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.BaseBottomDialogFragment
 import com.sygic.maps.uikit.views.common.BottomSheetDialog
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
-import com.sygic.maps.uikit.views.databinding.LayoutPoiDetailInternalBinding
-import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment.Listener
-import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.databinding.LayoutPlaceDetailInternalBinding
+import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment.Listener
+import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.maps.uikit.views.placedetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.placedetail.manager.PreferencesManager
 import com.sygic.maps.uikit.views.placedetail.viewmodel.DEFAULT_BEHAVIOR_STATE
-import com.sygic.maps.uikit.views.placedetail.viewmodel.PoiDetailInternalViewModel
+import com.sygic.maps.uikit.views.placedetail.viewmodel.PlaceDetailInternalViewModel
 import com.sygic.maps.uikit.views.placedetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
-private const val POI_DETAIL_COMPONENT = "poi_detail_component"
+private const val PLACE_DETAIL_COMPONENT = "place_detail_component"
 
 /**
- * A [PoiDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
- * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PoiDetailComponent] object.
+ * A [PlaceDetailBottomDialogFragment] is a custom version of the [DialogFragment] that shows a bottom sheet using custom
+ * [BottomSheetDialog] instead of a floating dialog. It can be used for a visual representation of the [PlaceDetailComponent] object.
  *
  * You can register an [Listener] using [setListener] method. Then you will be notified when dialog is dismissed.
  *
  * Content colors can be changed with the standard _colorBackground_, _textColorPrimary_, _textColorSecondary_ or
  * _colorAccent_ attribute.
  */
-open class PoiDetailBottomDialogFragment : BaseBottomDialogFragment() {
+open class PlaceDetailBottomDialogFragment : BaseBottomDialogFragment() {
 
-    private var viewModel: PoiDetailInternalViewModel? = null
+    private var viewModel: PlaceDetailInternalViewModel? = null
 
     private lateinit var preferencesManager: PreferencesManager
-    private lateinit var binding: LayoutPoiDetailInternalBinding
+    private lateinit var binding: LayoutPlaceDetailInternalBinding
 
     /**
-     * Set a [PoiDetailComponent] for [PoiDetailBottomDialogFragment] content generation. If null, the loading [ProgressBar] view
+     * Set a [PlaceDetailComponent] for [PlaceDetailBottomDialogFragment] content generation. If null, the loading [ProgressBar] view
      * will be displayed.
      *
-     * @param [PoiDetailComponent] which will be used for fulfillment the [PoiDetailBottomDialogFragment] content.
+     * @param [PlaceDetailComponent] which will be used for fulfillment the [PlaceDetailBottomDialogFragment] content.
      */
-    var component: PoiDetailComponent?
-        get() = arguments?.getParcelable(POI_DETAIL_COMPONENT)
+    var component: PlaceDetailComponent?
+        get() = arguments?.getParcelable(PLACE_DETAIL_COMPONENT)
         set(value) {
-            arguments?.putParcelable(POI_DETAIL_COMPONENT, value)
+            arguments?.putParcelable(PLACE_DETAIL_COMPONENT, value)
             viewModel?.onComponentChanged(value)
         }
 
     /**
-     * Register a callback to be invoked when a [PoiDetailBottomDialogFragment] is dismissed.
+     * Register a callback to be invoked when a [PlaceDetailBottomDialogFragment] is dismissed.
      *
-     * @param [PoiDetailBottomDialogFragment.Listener] callback to invoke [PoiDetailBottomDialogFragment] dismiss.
+     * @param [PlaceDetailBottomDialogFragment.Listener] callback to invoke [PlaceDetailBottomDialogFragment] dismiss.
      */
     var listener: Listener? = null
         get() = viewModel?.listener ?: field
@@ -90,22 +90,22 @@ open class PoiDetailBottomDialogFragment : BaseBottomDialogFragment() {
         }
 
     /**
-     * @see PoiDetailBottomDialogFragment
+     * @see PlaceDetailBottomDialogFragment
      */
     companion object {
 
-        const val TAG = "poi_detail_bottom_dialog_fragment"
+        const val TAG = "place_detail_bottom_dialog_fragment"
 
         /**
-         * Allows you to simply create new instance of [PoiDetailBottomDialogFragment]. You can provide a [PoiDetailComponent] object.
+         * Allows you to simply create new instance of [PlaceDetailBottomDialogFragment]. You can provide a [PlaceDetailComponent] object.
          *
-         * @param component [PoiDetailComponent] to be applied to the dialog content.
+         * @param component [PlaceDetailComponent] to be applied to the dialog content.
          */
         @JvmStatic
-        fun newInstance(component: PoiDetailComponent? = null): PoiDetailBottomDialogFragment =
-            PoiDetailBottomDialogFragment().apply {
+        fun newInstance(component: PlaceDetailComponent? = null): PlaceDetailBottomDialogFragment =
+            PlaceDetailBottomDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(POI_DETAIL_COMPONENT, component)
+                    putParcelable(PLACE_DETAIL_COMPONENT, component)
                 }
             }
     }
@@ -120,13 +120,13 @@ open class PoiDetailBottomDialogFragment : BaseBottomDialogFragment() {
         preferencesManager = PreferencesManager(requireContext())
 
         viewModel = ViewModelProviders.of(
-            this, PoiDetailInternalViewModel.Factory(requireActivity().application, preferencesManager)
-        )[PoiDetailInternalViewModel::class.java].apply {
-            dialogStateObservable.observe(this@PoiDetailBottomDialogFragment, Observer { setState(it) })
+            this, PlaceDetailInternalViewModel.Factory(requireActivity().application, preferencesManager)
+        )[PlaceDetailInternalViewModel::class.java].apply {
+            dialogStateObservable.observe(this@PlaceDetailBottomDialogFragment, Observer { setState(it) })
 
-            this.onComponentChanged(arguments.getParcelableValue(POI_DETAIL_COMPONENT))
-            this.listener = this@PoiDetailBottomDialogFragment.listener
-            this@PoiDetailBottomDialogFragment.listener = null
+            this.onComponentChanged(arguments.getParcelableValue(PLACE_DETAIL_COMPONENT))
+            this.listener = this@PlaceDetailBottomDialogFragment.listener
+            this@PlaceDetailBottomDialogFragment.listener = null
         }
     }
 
@@ -142,14 +142,14 @@ open class PoiDetailBottomDialogFragment : BaseBottomDialogFragment() {
     // Using LayoutInflater from AppCompatActivity instead of provided inflater from onCreateView fix DialogFragment
     // styling problem (https://stackoverflow.com/q/32784009/3796931 or https://issuetracker.google.com/issues/37042151)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = LayoutPoiDetailInternalBinding.inflate(requireActivity().layoutInflater, container, false)
+        binding = LayoutPlaceDetailInternalBinding.inflate(requireActivity().layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.poiDetailInternalViewModel = viewModel
+        binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
 

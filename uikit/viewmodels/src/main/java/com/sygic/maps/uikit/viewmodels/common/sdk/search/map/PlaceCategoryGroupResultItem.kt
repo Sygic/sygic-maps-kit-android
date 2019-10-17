@@ -22,17 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.placedetail.viewmodel;
+package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
-import androidx.annotation.IntDef;
+import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.viewmodels.common.extensions.toGroupIconDrawableRes
+import com.sygic.maps.uikit.views.common.utils.TextHolder
+import com.sygic.sdk.search.MapSearchResult
+import kotlinx.android.parcel.Parcelize
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+@Parcelize
+class PlaceCategoryGroupResultItem(override val dataPayload: MapSearchResult) : PlaceCategoryResultItem(dataPayload) {
 
-@IntDef({PoiDetailContentViewSwitcherIndex.CONTENT,
-        PoiDetailContentViewSwitcherIndex.PROGRESSBAR})
-@Retention(RetentionPolicy.SOURCE)
-@interface PoiDetailContentViewSwitcherIndex {
-    int CONTENT = 0;
-    int PROGRESSBAR = 1;
+    @get:MapSearchResult.DataType
+    override val type: Int
+        get() = MapSearchResult.DataType.PoiCategoryGroup
+
+    override val title: TextHolder
+        get() = TextHolder.from(dataPayload.poiCategoryGroupName.text)
+
+    @get:DrawableRes
+    override val icon: Int
+        get() = dataPayload.poiGroupId.toGroupIconDrawableRes()
 }

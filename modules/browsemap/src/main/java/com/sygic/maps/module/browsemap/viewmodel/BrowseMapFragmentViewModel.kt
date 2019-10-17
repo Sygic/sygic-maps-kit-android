@@ -65,8 +65,8 @@ import com.sygic.maps.uikit.views.common.extensions.getInt
 import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logWarning
-import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.ProxyPlace
 import com.sygic.sdk.map.`object`.UiObject
@@ -89,7 +89,7 @@ class BrowseMapFragmentViewModel internal constructor(
     private val permissionsManager: PermissionsManager,
     private val positionManagerClient: PositionManagerClient
 ) : MapFragmentViewModel(app, arguments, themeManager, regionalManager, positionManagerClient),
-    MapInteractionManager.Listener, PoiDetailBottomDialogFragment.Listener {
+    MapInteractionManager.Listener, PlaceDetailBottomDialogFragment.Listener {
 
     @MapSelectionMode
     var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
@@ -116,12 +116,12 @@ class BrowseMapFragmentViewModel internal constructor(
     var detailsViewFactory: DetailsViewFactory? = null
     private val moduleConnectionProvidersMap: Map<ProviderType, ModuleConnectionProvider?> = mutableMapOf()
 
-    val poiDetailVisibleObservable: LiveData<Boolean> = SingleLiveEvent()
-    val poiDetailComponentObservable: LiveData<PoiDetailComponent> = SingleLiveEvent()
-    val poiDetailListenerObservable: LiveData<PoiDetailBottomDialogFragment.Listener> = SingleLiveEvent()
+    val placeDetailVisibleObservable: LiveData<Boolean> = SingleLiveEvent()
+    val placeDetailComponentObservable: LiveData<PlaceDetailComponent> = SingleLiveEvent()
+    val placeDetailListenerObservable: LiveData<PlaceDetailBottomDialogFragment.Listener> = SingleLiveEvent()
     val openFragmentObservable: LiveData<FragmentComponent> = SingleLiveEvent()
 
-    private var poiDetailsView: UiObject? = null
+    private var placeDetailsView: UiObject? = null
     private var selectedMarker: MapMarker? = null
 
     init {
@@ -148,7 +148,7 @@ class BrowseMapFragmentViewModel internal constructor(
                 map.forEach { updateModuleConnectionProvidersMap(it.key, it.value) }
             })
         }
-        poiDetailListenerObservable.asSingleEvent().value = this
+        placeDetailListenerObservable.asSingleEvent().value = this
         mapInteractionManager.addOnMapClickListener(this)
     }
 
@@ -171,12 +171,12 @@ class BrowseMapFragmentViewModel internal constructor(
         var firstViewObject = viewObjects.first()
         val dataLoadAllowed = onMapClickListener?.onMapClick(firstViewObject) ?: true
 
-        // First, check if the PoiDetailsView is visible
-        poiDetailsView?.let {
+        // First, check if the PlaceDetailsView is visible
+        placeDetailsView?.let {
 
             // Always remove the previous one
             mapDataModel.removeMapObject(it)
-            poiDetailsView = null
+            placeDetailsView = null
 
             // Check if we should ask or use our own logic
             if (onMapClickListener != null) {
@@ -209,7 +209,7 @@ class BrowseMapFragmentViewModel internal constructor(
                     return
                 }
 
-                getPoiDataAndNotifyObservers(firstViewObject)
+                getPlaceDataAndNotifyObservers(firstViewObject)
             }
 
             MapSelectionMode.FULL -> {
@@ -218,7 +218,7 @@ class BrowseMapFragmentViewModel internal constructor(
                     getOnClickMapMarker(firstViewObject)?.let { clickMapMarker ->
                         mapDataModel.addMapMarker(
                             when (firstViewObject) {
-                                // To persist ProxyPoi data payload we need to create a copy of the provided MapMarker
+                                // To persist ProxyPlace data payload we need to create a copy of the provided MapMarker
                                 // and give it the same payload
                                 is ProxyPlace -> clickMapMarker.getCopyWithPayload(firstViewObject)
                                 else -> clickMapMarker
@@ -234,7 +234,7 @@ class BrowseMapFragmentViewModel internal constructor(
                     return
                 }
 
-                getPoiDataAndNotifyObservers(firstViewObject)
+                getPlaceDataAndNotifyObservers(firstViewObject)
             }
         }
     }
@@ -247,10 +247,10 @@ class BrowseMapFragmentViewModel internal constructor(
         }
     }
 
-    private fun getPoiDataAndNotifyObservers(viewObject: ViewObject<*>) {
+    private fun getPlaceDataAndNotifyObservers(viewObject: ViewObject<*>) {
         val showDetailsView = onMapClickListener?.showDetailsView() ?: true
         if (showDetailsView && detailsViewFactory == null) {
-            poiDetailVisibleObservable.asSingleEvent().value = true
+            placeDetailVisibleObservable.asSingleEvent().value = true
         }
 
         placesManagerClient.getViewObjectData(viewObject, object : PlacesManagerClient.Callback() {
@@ -259,12 +259,12 @@ class BrowseMapFragmentViewModel internal constructor(
 
                 if (showDetailsView) {
                     detailsViewFactory?.let { factory ->
-                        poiDetailsView = PlaceDetailsObject.create(data, factory, viewObject).also { view ->
+                        placeDetailsView = PlaceDetailsObject.create(data, factory, viewObject).also { view ->
                             mapDataModel.addMapObject(view)
                         }
                     } ?: run {
-                        poiDetailComponentObservable.asSingleEvent().value =
-                            PoiDetailComponent(data.toPlaceDetailData(), navigationButtonEnabled.value!!)
+                        placeDetailComponentObservable.asSingleEvent().value =
+                            PlaceDetailComponent(data.toPlaceDetailData(), navigationButtonEnabled.value!!)
                     }
                 }
             }
@@ -288,7 +288,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onNavigationButtonClick() {
-        poiDetailVisibleObservable.asSingleEvent().value = false
+        placeDetailVisibleObservable.asSingleEvent().value = false
         moduleConnectionProvidersMap[ProviderType.NAVIGATION]?.let {
             openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
         }

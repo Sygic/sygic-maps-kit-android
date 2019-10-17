@@ -69,16 +69,16 @@ class ComplexDemoActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_complex_demo)
 
         viewModel = ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
-            hidePoiDetailObservable.observe(this@ComplexDemoActivity, Observer { browseMapFragment.hidePoiDetail() })
+            hidePlaceDetailObservable.observe(this@ComplexDemoActivity, Observer { browseMapFragment.hidePlaceDetail() })
             placeNavigationFragmentObservable.observe(this@ComplexDemoActivity, Observer { placeNavigationFragment(it) })
             computePrimaryRouteObservable.observe(this@ComplexDemoActivity, Observer { createRoutePlanAndComputeRoute(it) })
             restoreDefaultStateObservable.observe(
                 this@ComplexDemoActivity,
                 Observer { BrowseMapDemoDefaultState.setTo(browseMapFragment) }
             )
-            showPoiDetailObservable.observe(
+            showPlaceDetailObservable.observe(
                 this@ComplexDemoActivity,
-                Observer { browseMapFragment.showPoiDetail(it.first, it.second) }
+                Observer { browseMapFragment.showPlaceDetail(it.first, it.second) }
             )
             routeComputeProgressVisibilityObservable.observe(
                 this@ComplexDemoActivity,

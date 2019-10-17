@@ -31,8 +31,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.common.BottomSheetBehaviorWrapper
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.uikit.views.placedetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.placedetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.maps.uikit.views.placedetail.manager.PreferencesManager
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
@@ -41,7 +41,7 @@ private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
 const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
 const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED
 
-internal class PoiDetailInternalViewModel(app: Application, private val preferencesManager: PreferencesManager) :
+internal class PlaceDetailInternalViewModel(app: Application, private val preferencesManager: PreferencesManager) :
     AndroidViewModel(app),
     BottomSheetBehaviorWrapper.StateListener {
 
@@ -56,7 +56,7 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
 
     val dialogStateObservable: LiveData<Int> = SingleLiveEvent()
 
-    var listener: PoiDetailBottomDialogFragment.Listener? = null
+    var listener: PlaceDetailBottomDialogFragment.Listener? = null
 
     private var showcaseLaunch: Job? = null
 
@@ -76,7 +76,7 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
 
     fun onCoordinatesClick() = coordinatesText.value?.let { application.copyToClipboard(it) }
 
-    fun onComponentChanged(component: PoiDetailComponent?) {
+    fun onComponentChanged(component: PlaceDetailComponent?) {
         component?.let {
             titleText.asMutable().value = it.data.titleString
             subtitleText.asMutable().value = it.data.subtitleString
@@ -85,9 +85,9 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
             phoneText.asMutable().value = it.data.phoneString
             coordinatesText.asMutable().value = it.data.coordinatesString
             navigationButtonEnabled.asMutable().value = it.navigationButtonEnabled
-            contentViewSwitcherIndex.asMutable().value = PoiDetailContentViewSwitcherIndex.CONTENT
+            contentViewSwitcherIndex.asMutable().value = PlaceDetailContentViewSwitcherIndex.CONTENT
         } ?: run {
-            contentViewSwitcherIndex.asMutable().value = PoiDetailContentViewSwitcherIndex.PROGRESSBAR
+            contentViewSwitcherIndex.asMutable().value = PlaceDetailContentViewSwitcherIndex.PROGRESSBAR
         }
     }
 
@@ -126,7 +126,7 @@ internal class PoiDetailInternalViewModel(app: Application, private val preferen
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            return PoiDetailInternalViewModel(app, preferencesManager) as T
+            return PlaceDetailInternalViewModel(app, preferencesManager) as T
         }
     }
 }

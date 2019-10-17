@@ -24,23 +24,36 @@
 
 package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import com.sygic.maps.uikit.viewmodels.common.extensions.toGroupIconDrawableRes
+import com.sygic.maps.uikit.viewmodels.R
+import com.sygic.maps.uikit.viewmodels.common.extensions.toCategoryIconDrawableRes
+import com.sygic.maps.uikit.viewmodels.common.extensions.toColorRes
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 import com.sygic.sdk.search.MapSearchResult
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class PoiCategoryGroupResultItem(override val dataPayload: MapSearchResult) : PoiCategoryResultItem(dataPayload) {
+open class PlaceCategoryResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
 
     @get:MapSearchResult.DataType
     override val type: Int
-        get() = MapSearchResult.DataType.PoiCategoryGroup
+        get() = MapSearchResult.DataType.PoiCategory
 
     override val title: TextHolder
-        get() = TextHolder.from(dataPayload.poiCategoryGroupName.text)
+        get() = TextHolder.from(dataPayload.poiCategoryName.text)
+
+    override val subTitle: TextHolder
+        get() = TextHolder.from(R.string.category)
 
     @get:DrawableRes
     override val icon: Int
-        get() = dataPayload.poiGroupId.toGroupIconDrawableRes()
+        get() = dataPayload.poiCategoryId.toCategoryIconDrawableRes()
+
+    @get:ColorRes
+    override val iconBackgroundColor: Int
+        get() = dataPayload.poiGroupId.toColorRes()
+
+    override val iconRingVisible: Boolean
+        get() = true
 }
