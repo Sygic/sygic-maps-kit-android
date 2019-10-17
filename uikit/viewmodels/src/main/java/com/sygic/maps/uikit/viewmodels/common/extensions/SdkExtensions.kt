@@ -168,9 +168,9 @@ fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
                 MapSearchResult.DataType.Street -> StreetResultItem(this)
                 MapSearchResult.DataType.AddressPoint -> AddressPointResultItem(this)
                 MapSearchResult.DataType.PostalAddress -> PostalAddressResultItem(this)
-                MapSearchResult.DataType.PoiCategoryGroup -> PlaceCategoryGroupResultItem(this) //todo
-                MapSearchResult.DataType.PoiCategory -> PlaceCategoryResultItem(this) //todo
-                MapSearchResult.DataType.Poi -> PlaceResultItem(this) //todo
+                MapSearchResult.DataType.PoiCategoryGroup -> PlaceCategoryGroupResultItem(this) //todo: Search interface refactor
+                MapSearchResult.DataType.PoiCategory -> PlaceCategoryResultItem(this) //todo: Search interface refactor
+                MapSearchResult.DataType.Poi -> PlaceResultItem(this) //todo: Search interface refactor
                 else -> null
             }
         }

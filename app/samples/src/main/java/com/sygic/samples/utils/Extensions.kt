@@ -82,7 +82,7 @@ fun List<SearchResult>.isCategoryResult(): Boolean {
     val firstSearchResult = first()
     return size == 1 && firstSearchResult is MapSearchResult
             && (firstSearchResult.dataType == MapSearchResult.DataType.PoiCategoryGroup
-            || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory) //todo
+            || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory) //todo: Search interface refactor
 }
 
 fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
@@ -112,7 +112,7 @@ fun SearchResult.toPlaceDetailComponent(): PlaceDetailComponent? {
         }
         is MapSearchResult -> {
             val placeData = PlaceData(
-                name = this.poiName.text, //todo
+                name = this.poiName.text, //todo: Search interface refactor
                 street = this.street.text,
                 city = this.city.text
             )
