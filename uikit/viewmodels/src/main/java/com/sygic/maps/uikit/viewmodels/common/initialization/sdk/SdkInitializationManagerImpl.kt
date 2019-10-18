@@ -26,7 +26,6 @@ package com.sygic.maps.uikit.viewmodels.common.initialization.sdk
 
 import android.app.Application
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.getApiKey
 import com.sygic.maps.uikit.viewmodels.common.remote.RemoteControlManager
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
@@ -58,7 +57,6 @@ class SdkInitializationManagerImpl private constructor(
         app.getApiKey()?.let { key ->
             SygicEngine.Builder(app)
                 .setKeyAndSecret(app.packageName, key)
-                .setOnlineRoutingServiceKey(app.getString(R.string.online_routing_service_key))
                 .setRemoteControl(RemoteControlManager)
                 .setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {

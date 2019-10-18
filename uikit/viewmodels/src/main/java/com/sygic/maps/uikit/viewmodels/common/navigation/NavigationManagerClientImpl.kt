@@ -62,7 +62,7 @@ class NavigationManagerClientImpl private constructor(
         Transformations.switchMap<NavigationManager, Route?>(managerProvider) { manager ->
             object : MutableLiveData<Route?>() {
 
-                private val listener by lazy { NavigationManager.OnRouteChangedListener { value = it } }
+                private val listener by lazy { NavigationManager.OnRouteChangedListener { route, _ -> value = route } }
 
                 override fun setValue(value: Route?) {
                     if (value != this.value) super.setValue(value)
