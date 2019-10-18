@@ -216,6 +216,7 @@ class NavigationFragmentViewModel internal constructor(
         }
 
         soundManager.setSoundsOn()
+        soundManager.setDefaultVoice() //ToDo: Remove it, when CI-538 is done
 
         updateInfobarListenersMap(InfobarButtonType.LEFT, navigationDefaultLeftInfobarClickListener)
         updateInfobarListenersMap(InfobarButtonType.RIGHT, navigationDefaultRightInfobarClickListener)

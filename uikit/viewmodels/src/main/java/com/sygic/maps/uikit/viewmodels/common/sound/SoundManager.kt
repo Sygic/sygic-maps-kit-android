@@ -30,4 +30,5 @@ import androidx.annotation.RestrictTo
 interface SoundManager {
     fun setSoundsOn()
     fun setSoundsOff()
+    fun setDefaultVoice()
 }
