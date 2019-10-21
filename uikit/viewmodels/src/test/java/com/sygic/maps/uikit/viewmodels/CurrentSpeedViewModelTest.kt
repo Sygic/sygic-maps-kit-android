@@ -74,7 +74,7 @@ class CurrentSpeedViewModelTest {
     }
 
     @Test
-    fun initTest() {
+    fun onCreateTest() {
         val resumedLifecycleOwner = LiveDataResumedLifecycleOwner()
         currentSpeedViewModel.onCreate(resumedLifecycleOwner)
         verify(regionalManager.distanceUnit).observe(eq(resumedLifecycleOwner), any())
