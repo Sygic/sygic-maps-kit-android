@@ -27,9 +27,7 @@ package com.sygic.maps.uikit.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.jraska.livedata.test
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
@@ -59,17 +57,24 @@ class FullSignpostViewModelTest {
 
     private lateinit var fullSignpostViewModel: FullSignpostViewModel
 
+    private fun initViewModel() {
+        fullSignpostViewModel = FullSignpostViewModel(regionalManager, navigationManagerClient)
+    }
+
     @Before
     fun setup() {
         whenever(regionalManager.distanceUnit).thenReturn(MutableLiveData(DistanceUnit.KILOMETERS))
-
-        fullSignpostViewModel = FullSignpostViewModel(regionalManager, navigationManagerClient)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManagerClient).addOnNaviSignListener(fullSignpostViewModel)
-        verify(navigationManagerClient).addOnDirectionListener(fullSignpostViewModel)
+        whenever(navigationManagerClient.directionInfo).thenReturn(mock())
+        whenever(navigationManagerClient.signpostInfoList).thenReturn(mock())
+
+        initViewModel()
+
+        verify(navigationManagerClient.signpostInfoList).observeForever(any())
+        verify(navigationManagerClient.directionInfo, times(2)).observeForever(any())
     }
 
     @Test
@@ -77,7 +82,9 @@ class FullSignpostViewModelTest {
         val nextRoadName = "Main road"
         val placeName = "London eye"
         val directionInfoMock = mock<DirectionInfo>()
+        val directionInfoLiveData = MutableLiveData<DirectionInfo>(directionInfoMock)
         val signpostInfoMock = mock<SignpostInfo>()
+        val signpostInfoLiveData = MutableLiveData<List<SignpostInfo>>(listOf(signpostInfoMock))
         val placeNaviSignInfoSignElementMock = mock<SignpostInfo.SignElement>()
         val pictogramNaviSignInfoSignElementMock = mock<SignpostInfo.SignElement>()
         val routeNumberNaviSignInfoSignElementMock = mock<SignpostInfo.SignElement>()
@@ -102,9 +109,12 @@ class FullSignpostViewModelTest {
         whenever(routeNumberNaviSignInfoSignElementMock.elementType).thenReturn(SignpostInfo.SignElement.SignElementType.RouteNumber)
         whenever(routeNumberNaviSignInfoSignElementMock.roadNumberFormat).thenReturn(mock())
         whenever(routeNumberNaviSignInfoSignElementMock.roadNumberFormat.insideNumber).thenReturn("5")
+        whenever(navigationManagerClient.directionInfo).thenReturn(directionInfoLiveData)
+        whenever(navigationManagerClient.signpostInfoList).thenReturn(signpostInfoLiveData)
 
-        fullSignpostViewModel.onDirectionInfoChanged(directionInfoMock)
-        fullSignpostViewModel.onNaviSignChanged(listOf(signpostInfoMock))
+        initViewModel()
+        directionInfoLiveData.value = directionInfoMock
+        directionInfoLiveData.value = directionInfoMock
 
         fullSignpostViewModel.distance.test().assertValue("100 m")
         fullSignpostViewModel.primaryDirection.test().assertValue(R.drawable.ic_direction_right_90)

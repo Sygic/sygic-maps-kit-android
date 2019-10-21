@@ -62,14 +62,15 @@ class SimplifiedSignpostViewModelTest {
 
     @Before
     fun setup() {
-        whenever(navigationManagerClient.directionInfo).thenReturn(mock())
         whenever(regionalManager.distanceUnit).thenReturn(MutableLiveData(DistanceUnit.KILOMETERS))
-
-        initViewModel()
     }
 
     @Test
     fun initTest() {
+        whenever(navigationManagerClient.directionInfo).thenReturn(mock())
+
+        initViewModel()
+
         verify(navigationManagerClient.directionInfo, times(2)).observeForever(any())
     }
 
