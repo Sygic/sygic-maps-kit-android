@@ -25,12 +25,15 @@
 package com.sygic.maps.uikit.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
+import com.sygic.maps.uikit.viewmodels.utils.LiveDataResumedLifecycleOwner
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.sdk.navigation.routeeventnotifications.SpeedLimitInfo
 import com.sygic.sdk.position.GeoPosition
 import org.junit.Before
@@ -60,21 +63,28 @@ class CurrentSpeedViewModelTest {
 
     @Before
     fun setup() {
-        whenever(regionalManager.distanceUnit).thenReturn(mock())
+        val distanceUnitMock = mock<MutableLiveData<DistanceUnit>>()
+        whenever(distanceUnitMock.value).thenReturn(DistanceUnit.KILOMETERS)
+        whenever(regionalManager.distanceUnit).thenReturn(distanceUnitMock)
+
+        whenever(positionManagerClient.currentPosition).thenReturn(mock<MutableLiveData<GeoPosition>>())
+        whenever(navigationManagerClient.speedLimitInfo).thenReturn(mock<MutableLiveData<SpeedLimitInfo>>())
 
         currentSpeedViewModel = CurrentSpeedViewModel(regionalManager, navigationManagerClient, positionManagerClient)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManagerClient).addOnSpeedLimitListener(currentSpeedViewModel)
-        verify(positionManagerClient).addPositionChangeListener(currentSpeedViewModel)
-        verify(regionalManager.distanceUnit).observeForever(any())
+        val resumedLifecycleOwner = LiveDataResumedLifecycleOwner()
+        currentSpeedViewModel.onCreate(resumedLifecycleOwner)
+        verify(regionalManager.distanceUnit).observe(eq(resumedLifecycleOwner), any())
     }
 
     @Test
     fun onPositionChangedTest() {
-        currentSpeedViewModel.onPositionChanged(mock())
+        whenever(positionManagerClient.currentPosition).thenReturn(MutableLiveData<GeoPosition>(mock()))
+        currentSpeedViewModel.onCreate(LiveDataResumedLifecycleOwner())
+
         currentSpeedViewModel.speeding.test().assertHistorySize(NOT_CHANGED_DEFAULT_VALUE_ONLY)
         currentSpeedViewModel.speedProgress.test().assertHistorySize(NOT_CHANGED_DEFAULT_VALUE_ONLY)
         currentSpeedViewModel.speedValue.test().assertHistorySize(NOT_CHANGED_DEFAULT_VALUE_ONLY)
@@ -82,7 +92,9 @@ class CurrentSpeedViewModelTest {
 
     @Test
     fun onSpeedLimitInfoChangedTest() {
-        currentSpeedViewModel.onSpeedLimitInfoChanged(mock())
+        whenever(navigationManagerClient.speedLimitInfo).thenReturn(MutableLiveData<SpeedLimitInfo>(mock()))
+        currentSpeedViewModel.onCreate(LiveDataResumedLifecycleOwner())
+
         currentSpeedViewModel.speeding.test().assertHistorySize(NOT_CHANGED_DEFAULT_VALUE_ONLY)
         currentSpeedViewModel.speedProgress.test().assertHistorySize(NOT_CHANGED_DEFAULT_VALUE_ONLY)
         currentSpeedViewModel.speedValue.test().assertHistorySize(NOT_CHANGED_DEFAULT_VALUE_ONLY)
@@ -91,13 +103,18 @@ class CurrentSpeedViewModelTest {
     @Test
     fun onPositionChangedAndOnSpeedLimitInfoChangedTest() {
         val geoPositionMock = mock<GeoPosition>()
+        val geoPositionLiveData = MutableLiveData<GeoPosition>(geoPositionMock)
         val speedLimitInfoMock = mock<SpeedLimitInfo>()
+        val speedLimitInfoLiveData = MutableLiveData<SpeedLimitInfo>(speedLimitInfoMock)
         val currentSpeedValue30 = 30.0
         val speedLimitValue = 50
+
+        whenever(positionManagerClient.currentPosition).thenReturn(geoPositionLiveData)
+        whenever(navigationManagerClient.speedLimitInfo).thenReturn(speedLimitInfoLiveData)
         whenever(geoPositionMock.speed).thenReturn(currentSpeedValue30)
         whenever(speedLimitInfoMock.getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)).thenReturn(speedLimitValue)
-        currentSpeedViewModel.onPositionChanged(geoPositionMock)
-        currentSpeedViewModel.onSpeedLimitInfoChanged(speedLimitInfoMock)
+
+        currentSpeedViewModel.onCreate(LiveDataResumedLifecycleOwner())
 
         verify(speedLimitInfoMock).getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)
 
@@ -107,8 +124,9 @@ class CurrentSpeedViewModelTest {
 
         val currentSpeedValue70 = 70.0
         whenever(geoPositionMock.speed).thenReturn(currentSpeedValue70)
-        currentSpeedViewModel.onPositionChanged(geoPositionMock)
-        currentSpeedViewModel.onSpeedLimitInfoChanged(speedLimitInfoMock)
+
+        geoPositionLiveData.value = geoPositionMock
+        speedLimitInfoLiveData.value = speedLimitInfoMock
 
         currentSpeedViewModel.speeding.test().assertValue(true)
         currentSpeedViewModel.speedProgress.test().assertValue(140f)

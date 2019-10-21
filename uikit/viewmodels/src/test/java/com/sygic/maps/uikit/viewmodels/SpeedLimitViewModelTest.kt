@@ -71,16 +71,15 @@ class SpeedLimitViewModelTest {
 
     @Test
     fun onSpeedLimitInfoChangedTest() {
-        val speedLimitInfoMock = mock<SpeedLimitInfo>()
-        val resumedLifecycleOwner = LiveDataResumedLifecycleOwner()
         val speedLimitValue50 = 50
+        val speedLimitInfoMock = mock<SpeedLimitInfo>()
         val speedLimitInfoLiveData = MutableLiveData<SpeedLimitInfo>(speedLimitInfoMock)
 
         whenever(navigationManagerClient.speedLimitInfo).thenReturn(speedLimitInfoLiveData)
         whenever(speedLimitInfoMock.getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)).thenReturn(speedLimitValue50)
         whenever(speedLimitInfoMock.countrySignage).thenReturn(MapView.CountrySignage.World)
 
-        speedLimitViewModel.onCreate(resumedLifecycleOwner)
+        speedLimitViewModel.onCreate(LiveDataResumedLifecycleOwner())
 
         verify(speedLimitInfoMock).countrySignage
         verify(speedLimitInfoMock, times(2)).getSpeedLimit(speedLimitInfoMock.countrySpeedUnits)
