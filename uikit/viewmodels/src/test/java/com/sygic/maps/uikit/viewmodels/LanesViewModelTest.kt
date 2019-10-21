@@ -25,7 +25,9 @@
 package com.sygic.maps.uikit.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import com.jraska.livedata.test
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -34,7 +36,6 @@ import com.sygic.maps.uikit.viewmodels.navigation.lanes.LanesViewModel
 import com.sygic.sdk.navigation.routeeventnotifications.LaneInfo
 import com.sygic.sdk.navigation.routeeventnotifications.SimpleLaneInfo
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -52,35 +53,43 @@ class LanesViewModelTest {
 
     private lateinit var lanesViewModel: LanesViewModel
 
-    @Before
-    fun setup() {
+    private fun initViewModel() {
         lanesViewModel = LanesViewModel(navigationManagerClient)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManagerClient).addOnLanesListener(lanesViewModel)
+        whenever(navigationManagerClient.laneInfo).thenReturn(mock())
+
+        initViewModel()
+
+        verify(navigationManagerClient.laneInfo).observeForever(any())
     }
 
     @Test
     fun onLanesInfoChangedTest() {
         val laneInfoMock = mock<LaneInfo>()
         val simpleLaneInfoMock = mock<SimpleLaneInfo>()
-        whenever(laneInfoMock.isActive).thenReturn(false)
+        val laneInfoLiveData = MutableLiveData<LaneInfo>(laneInfoMock)
         whenever(laneInfoMock.simpleLanesInfo).thenReturn(simpleLaneInfoMock)
-        lanesViewModel.onLanesInfoChanged(laneInfoMock)
+        whenever(navigationManagerClient.laneInfo).thenReturn(laneInfoLiveData)
+
+        initViewModel()
+
+        whenever(laneInfoMock.isActive).thenReturn(false)
+        laneInfoLiveData.value = laneInfoMock
 
         lanesViewModel.enabled.test().assertValue(false)
 
         whenever(laneInfoMock.isActive).thenReturn(true)
         whenever(simpleLaneInfoMock.lanes).thenReturn(emptyList())
-        lanesViewModel.onLanesInfoChanged(laneInfoMock)
+        laneInfoLiveData.value = laneInfoMock
 
         lanesViewModel.enabled.test().assertValue(false)
 
         whenever(laneInfoMock.isActive).thenReturn(true)
         whenever(simpleLaneInfoMock.lanes).thenReturn(emptyList())
-        lanesViewModel.onLanesInfoChanged(laneInfoMock)
+        laneInfoLiveData.value = laneInfoMock
 
         lanesViewModel.enabled.test().assertValue(false)
 
@@ -91,7 +100,7 @@ class LanesViewModelTest {
         whenever(secondLaneMock.isHighlighted).thenReturn(true)
         whenever(laneInfoMock.isActive).thenReturn(true)
         whenever(simpleLaneInfoMock.lanes).thenReturn(listOf(firstLaneMock, secondLaneMock))
-        lanesViewModel.onLanesInfoChanged(laneInfoMock)
+        laneInfoLiveData.value = laneInfoMock
 
         lanesViewModel.enabled.test().assertValue(true)
         assertEquals(false, lanesViewModel.lanesData.value!!.first().highlighted)
