@@ -55,6 +55,7 @@ import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.CoordinateSearchResult
 import com.sygic.sdk.search.MapSearchResult
 import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.voice.VoiceEntry
 import java.util.*
 
 @SelectionType
@@ -270,5 +271,13 @@ fun DirectionInfo.createInstructionText(): TextHolder {
         getDirectionInstruction().let {
             return if (it != 0) TextHolder.from(it) else TextHolder.empty
         }
+    }
+}
+
+fun List<VoiceEntry>.getFirstTtsVoiceForLanguage(targetLanguage: String): VoiceEntry? {
+    return firstOrNull { voiceEntry ->
+        voiceEntry.isTts && voiceEntry.language
+            .filter { lng -> lng.isLetterOrDigit() }
+            .startsWith(targetLanguage.filter { lng -> lng.isLetterOrDigit() })
     }
 }

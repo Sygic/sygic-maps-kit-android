@@ -22,27 +22,17 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.di.module;
+package com.sygic.maps.uikit.viewmodels.common.voice
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.MutableLiveData
+import com.sygic.sdk.voice.VoiceEntry
 
-import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient;
-import com.sygic.maps.uikit.viewmodels.common.sound.SoundManager;
-import com.sygic.maps.uikit.viewmodels.common.sound.SoundManagerImpl;
-import com.sygic.maps.uikit.viewmodels.common.voice.VoiceManagerClient;
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface VoiceManagerClient {
 
-import javax.inject.Singleton;
+    val currentVoice: MutableLiveData<VoiceEntry>
 
-import dagger.Module;
-import dagger.Provides;
-
-@Module
-public class SoundManagerModule {
-
-    @Singleton
-    @Provides
-    SoundManager provideSoundManager(@NonNull final VoiceManagerClient voiceManagerClient,
-                                     @NonNull final NavigationManagerClient navigationManagerClient) {
-        return SoundManagerImpl.getInstance(voiceManagerClient, navigationManagerClient);
-    }
+    fun setDefaultVoice()
+    fun getInstalledVoices(callback: (List<VoiceEntry>) -> Unit )
 }

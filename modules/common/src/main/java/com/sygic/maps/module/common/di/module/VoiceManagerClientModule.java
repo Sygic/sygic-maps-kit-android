@@ -24,12 +24,8 @@
 
 package com.sygic.maps.module.common.di.module;
 
-import androidx.annotation.NonNull;
-
-import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient;
-import com.sygic.maps.uikit.viewmodels.common.sound.SoundManager;
-import com.sygic.maps.uikit.viewmodels.common.sound.SoundManagerImpl;
 import com.sygic.maps.uikit.viewmodels.common.voice.VoiceManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.voice.VoiceManagerClientImpl;
 
 import javax.inject.Singleton;
 
@@ -37,12 +33,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class SoundManagerModule {
+public class VoiceManagerClientModule {
 
     @Singleton
     @Provides
-    SoundManager provideSoundManager(@NonNull final VoiceManagerClient voiceManagerClient,
-                                     @NonNull final NavigationManagerClient navigationManagerClient) {
-        return SoundManagerImpl.getInstance(voiceManagerClient, navigationManagerClient);
+    VoiceManagerClient provideVoiceManagerClient() {
+        return VoiceManagerClientImpl.INSTANCE;
     }
 }

@@ -26,17 +26,20 @@ package com.sygic.maps.uikit.viewmodels.common.sound
 
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
+import com.sygic.maps.uikit.viewmodels.common.voice.VoiceManagerClient
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
 import com.sygic.sdk.navigation.NavigationManager
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SoundManagerImpl private constructor(
+    private val voiceManagerClient: VoiceManagerClient,
     private val navigationManagerClient: NavigationManagerClient
 ) : SoundManager {
 
     companion object : SingletonHolder<SoundManagerImpl>() {
         @JvmStatic
-        fun getInstance(manager: NavigationManagerClient) = getInstance { SoundManagerImpl(manager) }
+        fun getInstance(voiceManager: VoiceManagerClient, navManager: NavigationManagerClient) =
+            getInstance { SoundManagerImpl(voiceManager, navManager) }
     }
 
     override fun setSoundsOn() {
@@ -50,15 +53,17 @@ class SoundManagerImpl private constructor(
     }
 
     private fun setNavigationAudioWarningsEnabled(enabled: Boolean) {
-        navigationManagerClient.setAudioBetterRouteListener(if (enabled) NavigationManager.AudioBetterRouteListener { true } else null)
-        navigationManagerClient.setAudioIncidentListener(if (enabled) NavigationManager.AudioIncidentListener { true } else null)
-        navigationManagerClient.setAudioRailwayCrossingListener(if (enabled) NavigationManager.AudioRailwayCrossingListener { true } else null)
-        navigationManagerClient.setAudioSharpCurveListener(if (enabled) NavigationManager.AudioSharpCurveListener { true } else null)
-        navigationManagerClient.setAudioSpeedLimitListener(if (enabled) NavigationManager.AudioSpeedLimitListener { true } else null)
-        navigationManagerClient.setAudioTrafficListener(if (enabled) NavigationManager.AudioTrafficListener { true } else null)
+        navigationManagerClient.setAudioBetterRouteListener(if (enabled) NavigationManager.AudioBetterRouteListener { false } else null)
+        navigationManagerClient.setAudioIncidentListener(if (enabled) NavigationManager.AudioIncidentListener { false } else null)
+        navigationManagerClient.setAudioRailwayCrossingListener(if (enabled) NavigationManager.AudioRailwayCrossingListener { false } else null)
+        navigationManagerClient.setAudioSharpCurveListener(if (enabled) NavigationManager.AudioSharpCurveListener { false } else null)
+        navigationManagerClient.setAudioSpeedLimitListener(if (enabled) NavigationManager.AudioSpeedLimitListener { false } else null)
+        navigationManagerClient.setAudioTrafficListener(if (enabled) NavigationManager.AudioTrafficListener { false } else null)
     }
 
     private fun setNavigationAudioInstructionsEnabled(enabled: Boolean) {
-        navigationManagerClient.setAudioInstructionListener(if (enabled) NavigationManager.AudioInstructionListener { true } else null)
+        navigationManagerClient.setAudioInstructionListener(if (enabled) NavigationManager.AudioInstructionListener { false } else null)
     }
+
+    override fun setDefaultVoice() = voiceManagerClient.setDefaultVoice()
 }
