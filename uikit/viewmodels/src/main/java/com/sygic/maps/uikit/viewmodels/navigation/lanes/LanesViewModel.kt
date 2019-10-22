@@ -47,19 +47,18 @@ class LanesViewModel internal constructor(
     private val laneInfoObserver = Observer<LaneInfo> { info ->
         if (!info.isActive) {
             enabled.asMutable().value = false
-            return@Observer
-        }
+        } else {
+            with(info.simpleLanesInfo) {
+                val lanesArray = this?.lanes?.map {
+                    SimpleLanesData(
+                        it.directions.map(transformationDirections).ifEmpty { listOf(R.drawable.ic_lanedirection_straight) },
+                        it.isHighlighted
+                    )
+                }?.toTypedArray() ?: emptyArray()
 
-        with(info.simpleLanesInfo) {
-            val lanesArray = this?.lanes?.map {
-                SimpleLanesData(
-                    it.directions.map(transformationDirections).ifEmpty { listOf(R.drawable.ic_lanedirection_straight) },
-                    it.isHighlighted
-                )
-            }?.toTypedArray() ?: emptyArray()
-
-            lanesData.asMutable().value = lanesArray
-            enabled.asMutable().value = lanesArray.isNotEmpty()
+                lanesData.asMutable().value = lanesArray
+                enabled.asMutable().value = lanesArray.isNotEmpty()
+            }
         }
     }
 
