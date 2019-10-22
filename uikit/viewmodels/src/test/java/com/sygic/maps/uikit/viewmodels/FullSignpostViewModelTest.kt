@@ -114,7 +114,6 @@ class FullSignpostViewModelTest {
 
         initViewModel()
         directionInfoLiveData.value = directionInfoMock
-        directionInfoLiveData.value = directionInfoMock
 
         fullSignpostViewModel.distance.test().assertValue("100 m")
         fullSignpostViewModel.primaryDirection.test().assertValue(R.drawable.ic_direction_right_90)
