@@ -26,11 +26,10 @@ package com.sygic.maps.uikit.viewmodels
 
 import android.widget.TextView
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.jraska.livedata.test
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
 import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
@@ -59,6 +58,8 @@ class SearchResultListViewModelTest {
 
     @Before
     fun setup() {
+        whenever(searchManagerClient.searchResults).thenReturn(mock())
+
         searchResultListViewModel = SearchResultListViewModel(searchManagerClient, mock())
     }
 
@@ -66,7 +67,13 @@ class SearchResultListViewModelTest {
     fun initTest() {
         assertEquals(true, searchResultListViewModel.activeAdapter.value is DefaultStateAdapter<SearchResult>)
         assertEquals(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND, searchResultListViewModel.errorViewSwitcherIndex.value)
-        verify(searchManagerClient).addSearchResultsListener(any())
+    }
+
+    @Test
+    fun onCreateTest() {
+        val lifecycleOwnerMock = mock<LifecycleOwner>()
+        searchResultListViewModel.onCreate(lifecycleOwnerMock)
+        verify(searchManagerClient.searchResults).observe(eq(lifecycleOwnerMock), any())
     }
 
     @Test

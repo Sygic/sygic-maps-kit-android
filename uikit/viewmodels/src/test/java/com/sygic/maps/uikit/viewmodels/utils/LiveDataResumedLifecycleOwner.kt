@@ -22,18 +22,13 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.utils
+package com.sygic.maps.uikit.viewmodels.utils
 
-import androidx.lifecycle.*
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
-import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 
-class NavigationTestLifecycleOwner : LifecycleOwner, OnInfobarButtonClickListenerWrapper, ActionMenuItemsProviderWrapper {
-
-    override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
-    override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> = MutableLiveData(mutableMapOf())
+class LiveDataResumedLifecycleOwner : LifecycleOwner {
 
     private val lifecycle = LifecycleRegistry(this)
 

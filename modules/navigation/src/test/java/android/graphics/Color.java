@@ -22,24 +22,20 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.utils
+package android.graphics;
 
-import androidx.lifecycle.*
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
-import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
+import androidx.annotation.IntRange;
 
-class NavigationTestLifecycleOwner : LifecycleOwner, OnInfobarButtonClickListenerWrapper, ActionMenuItemsProviderWrapper {
+import org.jetbrains.annotations.TestOnly;
 
-    override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
-    override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> = MutableLiveData(mutableMapOf())
+public class Color {
 
-    private val lifecycle = LifecycleRegistry(this)
-
-    init {
-        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    @TestOnly
+    public static int argb(
+            @IntRange(from = 0, to = 255) final int alpha,
+            @IntRange(from = 0, to = 255) final int red,
+            @IntRange(from = 0, to = 255) final int green,
+            @IntRange(from = 0, to = 255) final int blue) {
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
     }
-
-    override fun getLifecycle() = lifecycle
 }
