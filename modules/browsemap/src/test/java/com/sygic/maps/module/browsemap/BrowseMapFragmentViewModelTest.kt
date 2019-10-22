@@ -22,15 +22,16 @@
  * SOFTWARE.
  */
 
-package com.sygic.module.browsemap
+package com.sygic.maps.module.browsemap
 
 import android.app.Application
 import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
-import com.sygic.maps.module.browsemap.*
+import com.sygic.maps.module.browsemap.utils.BrowseMapTestLifecycleOwner
 import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.listener.OnMapClickListener
@@ -101,7 +102,12 @@ class BrowseMapFragmentViewModelTest {
             }
         }
 
-        whenever(locationManager.positionOnMapEnabled.value).thenReturn(true)
+        val positionOnMapEnabledMock = mock<MutableLiveData<Boolean>>()
+        whenever(positionOnMapEnabledMock.value).thenReturn(true)
+        whenever(locationManager.positionOnMapEnabled).thenReturn(positionOnMapEnabledMock)
+        whenever(regionalManager.distanceUnit).thenReturn(mock())
+        whenever(positionManagerClient.sdkPositionUpdatingEnabled).thenReturn(mock())
+        whenever(positionManagerClient.remotePositioningServiceEnabled).thenReturn(mock())
 
         val arguments = mock<Bundle>()
         whenever(arguments.getInt(eq(KEY_MAP_SELECTION_MODE), any())).thenReturn(MapSelectionMode.FULL)
@@ -126,11 +132,6 @@ class BrowseMapFragmentViewModelTest {
     }
 
     @Test
-    fun initTest() {
-        verify(mapInteractionManager).addOnMapClickListener(browseMapFragmentViewModel)
-    }
-
-    @Test
     fun initComponentTest() {
         assertEquals(MapSelectionMode.FULL, browseMapFragmentViewModel.mapSelectionMode)
         assertEquals(true, browseMapFragmentViewModel.positionOnMapEnabled)
@@ -144,17 +145,31 @@ class BrowseMapFragmentViewModelTest {
     }
 
     @Test
+    fun onCreateTest() {
+        val browseMapTestLifecycleOwner = BrowseMapTestLifecycleOwner()
+
+        browseMapFragmentViewModel.onCreate(browseMapTestLifecycleOwner)
+
+        assertEquals(true, browseMapTestLifecycleOwner.mapClickListenerProvider.hasObservers())
+        assertEquals(true, browseMapTestLifecycleOwner.moduleConnectionProvidersMap.hasObservers())
+
+        browseMapFragmentViewModel.placeDetailListenerObservable.test().assertValue(browseMapFragmentViewModel)
+
+        verify(mapInteractionManager).addOnMapClickListener(browseMapFragmentViewModel)
+    }
+
+    @Test
     fun onStartTestPositionOnMapEnabled() {
         whenever(locationManager.positionOnMapEnabled.value).thenReturn(true)
         browseMapFragmentViewModel.onStart(mock())
-        verify(locationManager).setSdkPositionUpdatingEnabled(true)
+        verify(positionManagerClient.sdkPositionUpdatingEnabled).value = true
     }
 
     @Test
     fun onStartTestPositionOnMapDisabled() {
         whenever(locationManager.positionOnMapEnabled.value).thenReturn(false)
         browseMapFragmentViewModel.onStart(mock())
-        verify(locationManager, never()).setSdkPositionUpdatingEnabled(true)
+        verify(positionManagerClient.sdkPositionUpdatingEnabled, never()).value = true
     }
 
     @Test
@@ -357,12 +372,14 @@ class BrowseMapFragmentViewModelTest {
     @Test
     fun onStopTest() {
         browseMapFragmentViewModel.onStop(mock())
-        verify(locationManager).setSdkPositionUpdatingEnabled(false)
+
+        verify(positionManagerClient.sdkPositionUpdatingEnabled).value = false
     }
 
     @Test
     fun onDestroyTest() {
         browseMapFragmentViewModel.onDestroy(mock())
+
         assertEquals(null, browseMapFragmentViewModel.onMapClickListener)
         assertEquals(null, browseMapFragmentViewModel.detailsViewFactory)
     }

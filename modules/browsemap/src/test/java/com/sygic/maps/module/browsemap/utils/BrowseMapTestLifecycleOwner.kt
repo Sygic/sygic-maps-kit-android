@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.navigation.utils
+package com.sygic.maps.module.browsemap.utils
 
 import androidx.lifecycle.*
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListenerWrapper
-import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemsProviderWrapper
+import com.sygic.maps.module.common.listener.OnMapClickListener
+import com.sygic.maps.module.common.listener.OnMapClickListenerWrapper
+import com.sygic.maps.module.common.provider.ModuleConnectionProvider
+import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
+import com.sygic.maps.module.common.provider.ProviderType
 
-class NavigationTestLifecycleOwner : LifecycleOwner, OnInfobarButtonClickListenerWrapper, ActionMenuItemsProviderWrapper {
+class BrowseMapTestLifecycleOwner : LifecycleOwner, OnMapClickListenerWrapper, ModuleConnectionProviderWrapper {
 
-    override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
-    override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> = MutableLiveData(mutableMapOf())
+    override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
+    override val moduleConnectionProvidersMap: LiveData<Map<ProviderType, ModuleConnectionProvider?>> = MutableLiveData(mutableMapOf())
 
     private val lifecycle = LifecycleRegistry(this)
 
