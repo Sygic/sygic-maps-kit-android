@@ -61,4 +61,5 @@
     <string name="tunnel">Tunnel</string>
     <string name="via">Via</string>
     <string name="exit_number">Exit %s</string>
+    <string name="get_direction">Get direction</string>
 </resources>

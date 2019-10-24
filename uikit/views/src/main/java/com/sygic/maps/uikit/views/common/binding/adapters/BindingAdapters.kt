@@ -24,6 +24,8 @@
 
 package com.sygic.maps.uikit.views.common.binding.adapters
 
+import android.animation.LayoutTransition
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.sygic.maps.uikit.views.common.utils.TextHolder
@@ -36,4 +38,9 @@ fun setTextHolder(textView: TextView, textHolder: TextHolder?) {
     }
 
     textView.text = null
+}
+
+@BindingAdapter(value = ["animate"])
+fun animate(layout: LinearLayout, animate: Boolean) {
+    layout.layoutTransition = if (animate) LayoutTransition().apply { setAnimateParentHierarchy(false) } else null
 }

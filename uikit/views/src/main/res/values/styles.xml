@@ -39,6 +39,17 @@
         <item name="android:layout_marginTop">@dimen/currentSpeedViewLayoutMargin</item>
     </style>
 
+    <style name="SygicExtendedFloatingActionButtonStyle">
+        <item name="android:background">@drawable/bg_get_direction_button_rounded</item>
+        <!--todo-->
+        <!--
+        <item name="android:elevation">@dimen/navigationComponentElevation</item>
+        <item name="android:layout_marginBottom">@dimen/currentSpeedViewLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/currentSpeedViewLayoutMargin</item>
+        <item name="android:layout_marginStart">@dimen/currentSpeedViewLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/currentSpeedViewLayoutMargin</item>-->
+    </style>
+
     <style name="SygicInfobarStyle">
         <item name="android:background">@drawable/bg_infobar_rounded</item>
         <item name="android:layout_marginBottom">@dimen/infobarLayoutMargin</item>
@@ -108,6 +119,15 @@
         <item name="android:elevation">4dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:background">@drawable/bg_zoom_controls_button</item>
+    </style>
+
+    <style name="SygicPlaceDetailBottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/SygicPlaceDetailBottomSheetStyle</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="SygicPlaceDetailBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="PlaceDetailItem">

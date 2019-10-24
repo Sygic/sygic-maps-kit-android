@@ -50,6 +50,7 @@
     <color name="zircon">#f5f8ff</color>
     <color name="mystic">#E0E6EF</color>
     <color name="botticelli">#CDD5E3</color>
+    <color name="gray">#D6D6D6</color>
     <color name="gray_chateau">#9DA4B3</color>
     <color name="slate_gray">#7a859a</color>
     <color name="shuttle_gray">#5C6373</color>
@@ -62,6 +63,8 @@
     <color name="malibu">#7dc8f7</color>
     <color name="azure_radiance">#0080ff</color>
     <color name="science_blue">#0461be</color>
+    <color name="blue">#2430f5</color>
+    <color name="dark_blue">#0000C8</color>
 
     <!-- END BASE COLORS FOR REFERENCING -->
 

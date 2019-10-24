@@ -24,14 +24,12 @@
 
 package com.sygic.maps.uikit.views.navigation.actionmenu
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.maps.uikit.views.common.BaseBottomDialogFragment
 import com.sygic.maps.uikit.views.common.BottomSheetDialog
 import com.sygic.maps.uikit.views.common.extensions.getInt
@@ -136,14 +134,6 @@ open class ActionMenuBottomDialogFragment : BaseBottomDialogFragment() {
                     this.listener = this@ActionMenuBottomDialogFragment.itemClickListener
                     this@ActionMenuBottomDialogFragment.itemClickListener = null
                 }
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return BottomSheetDialog(
-            this.requireContext(),
-            this.theme,
-            initialState = BottomSheetBehavior.STATE_EXPANDED
-        )
     }
 
     // Using LayoutInflater from AppCompatActivity instead of provided inflater from onCreateView fix DialogFragment

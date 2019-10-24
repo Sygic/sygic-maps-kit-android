@@ -43,136 +43,120 @@
         android:id="@+id/placeDetailContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/colorBackground"
-        android:clipChildren="false"
-        android:clipToPadding="false"
+        android:background="@android:color/transparent"
         app:displayedChild="@{safeUnbox(viewModel.contentViewSwitcherIndex)}">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_place_detail_rounded"
+            android:elevation="16dp"
+            android:orientation="vertical"
+            app:animate="@{true}">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/placeDetailHeaderContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="24dp">
+                android:orientation="vertical">
 
+                <!--todo: placeDetailHandleView visibility-->
                 <View
                     android:id="@+id/placeDetailHandleView"
-                    android:layout_width="48dp"
-                    android:layout_height="8dp"
+                    android:layout_width="64dp"
+                    android:layout_height="6dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/ic_drag_hint_shape"
-                    android:onClick="@{() -> viewModel.onHeaderClick()}"
-                    app:layout_constraintBottom_toTopOf="@id/placeDetailTitleTextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/placeDetailHeaderGroup"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="placeDetailTitleTextView,placeDetailSubtitleTextView"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/placeDetailNavigationButton"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/placeDetailHandleView" />
-
-                <TextView
-                    android:id="@+id/placeDetailTitleTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="6dp"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-medium"
-                    android:onClick="@{() -> viewModel.onHeaderClick()}"
-                    android:singleLine="true"
-                    android:text="@{viewModel.titleText}"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="@dimen/fontSizeMediumLarge"
-                    app:layout_constraintEnd_toStartOf="@id/placeDetailNavigationButton"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/placeDetailHandleView"
-                    tools:text="Sygic" />
+                    android:onClick="@{() -> viewModel.onHeaderClick()}" />
 
                 <TextView
                     android:id="@+id/placeDetailSubtitleTextView"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="4dp"
                     android:ellipsize="end"
                     android:onClick="@{() -> viewModel.onHeaderClick()}"
+                    android:paddingTop="4dp"
                     android:singleLine="true"
                     android:text="@{viewModel.subtitleText}"
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="@dimen/fontSizeSmall"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/placeDetailNavigationButton"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView"
                     tools:text="Mlynské nivy 16, 821 09 Bratislava" />
 
-                <ImageButton
+                <TextView
+                    android:id="@+id/placeDetailTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:onClick="@{() -> viewModel.onHeaderClick()}"
+                    android:paddingTop="6dp"
+                    android:singleLine="true"
+                    android:text="@{viewModel.titleText}"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="@dimen/fontSizeMediumLarge"
+                    tools:text="Sygic" />
+
+                <com.sygic.maps.uikit.views.common.ExtendedFloatingActionButton
                     android:id="@+id/placeDetailNavigationButton"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:onClick="@{() -> viewModel.onNavigationButtonClick()}"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_navigation"
                     android:visibility="@{safeUnbox(viewModel.navigationButtonEnabled) ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/placeDetailHeaderGroup" />
+                    android:text="@string/get_direction"
+                    android:icon="@drawable/ic_navigation" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
-            <TextView
-                style="@style/PlaceDetailItem"
+            <LinearLayout
+                android:id="@+id/placeDetailContentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_phone"
-                android:onClick="@{() -> viewModel.onPhoneNumberClick()}"
-                android:text="@{viewModel.phoneText}"
-                android:visibility="@{TextUtils.isEmpty(viewModel.phoneText) ? View.GONE : View.VISIBLE}"
-                tools:text="+421 0944 123456" />
+                android:orientation="vertical"
+                android:visibility="@{viewModel.contentContainerVisible ? View.VISIBLE : View.GONE}">
 
-            <TextView
-                style="@style/PlaceDetailItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_email"
-                android:onClick="@{() -> viewModel.onEmailClick()}"
-                android:text="@{viewModel.emailText}"
-                android:visibility="@{TextUtils.isEmpty(viewModel.emailText) ? View.GONE : View.VISIBLE}"
-                tools:text="sygic@sygic.com" />
+                <TextView
+                    style="@style/PlaceDetailItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_phone"
+                    android:onClick="@{() -> viewModel.onPhoneNumberClick()}"
+                    android:text="@{viewModel.phoneText}"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.phoneText) ? View.GONE : View.VISIBLE}"
+                    tools:text="+421 0944 123456" />
 
-            <TextView
-                style="@style/PlaceDetailItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_web"
-                android:onClick="@{() -> viewModel.onWebUrlClick()}"
-                android:text="@{viewModel.urlText}"
-                android:visibility="@{TextUtils.isEmpty(viewModel.urlText) ? View.GONE : View.VISIBLE}"
-                tools:text="http://www.sygic.com" />
+                <TextView
+                    style="@style/PlaceDetailItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_email"
+                    android:onClick="@{() -> viewModel.onEmailClick()}"
+                    android:text="@{viewModel.emailText}"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.emailText) ? View.GONE : View.VISIBLE}"
+                    tools:text="sygic@sygic.com" />
 
-            <TextView
-                style="@style/PlaceDetailItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_location"
-                android:onClick="@{() -> viewModel.onCoordinatesClick()}"
-                android:text="@{viewModel.coordinatesText}"
-                android:visibility="@{TextUtils.isEmpty(viewModel.coordinatesText) ? View.GONE : View.VISIBLE}"
-                tools:text="48.126895, 12.214578" />
+                <TextView
+                    style="@style/PlaceDetailItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_web"
+                    android:onClick="@{() -> viewModel.onWebUrlClick()}"
+                    android:text="@{viewModel.urlText}"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.urlText) ? View.GONE : View.VISIBLE}"
+                    tools:text="http://www.sygic.com" />
+
+                <TextView
+                    style="@style/PlaceDetailItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_location"
+                    android:onClick="@{() -> viewModel.onCoordinatesClick()}"
+                    android:text="@{viewModel.coordinatesText}"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.coordinatesText) ? View.GONE : View.VISIBLE}"
+                    tools:text="48.126895, 12.214578" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -180,7 +164,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="26dp" />
+            android:layout_margin="26dp"
+            android:background="@drawable/bg_place_detail_rounded"
+            android:elevation="16dp" />
 
     </ViewAnimator>
 
