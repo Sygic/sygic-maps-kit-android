@@ -56,8 +56,7 @@ open class RoutePreviewControls @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicRoutePreviewControlsStyle
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: LayoutRoutePreviewControlsInternalBinding =
-        LayoutRoutePreviewControlsInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutRoutePreviewControlsInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     private var layoutMargin: Int = 0
     private var layoutMarginTop: Int = 0

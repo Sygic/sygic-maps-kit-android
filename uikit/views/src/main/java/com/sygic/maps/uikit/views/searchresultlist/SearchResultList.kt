@@ -60,8 +60,7 @@ open class SearchResultList @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicSearchResultListStyle
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: LayoutSearchResultListInternalBinding =
-        LayoutSearchResultListInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutSearchResultListInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     @LayoutRes
     private var itemLayoutId: Int = R.layout.layout_search_item_result_internal

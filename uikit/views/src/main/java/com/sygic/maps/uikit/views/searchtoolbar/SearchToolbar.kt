@@ -53,8 +53,7 @@ open class SearchToolbar @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicSearchToolbarStyle
 ) : Toolbar(context, attrs, defStyleAttr) {
 
-    private val binding: LayoutSearchToolbarInternalBinding =
-        LayoutSearchToolbarInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutSearchToolbarInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     /**
      * Set the text to be displayed in the input [EditText].

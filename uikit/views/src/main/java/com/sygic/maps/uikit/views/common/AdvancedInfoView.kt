@@ -49,8 +49,7 @@ class AdvancedInfoView @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: LayoutAdvancedInfoViewInternalBinding =
-        LayoutAdvancedInfoViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutAdvancedInfoViewInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
         orientation = VERTICAL
