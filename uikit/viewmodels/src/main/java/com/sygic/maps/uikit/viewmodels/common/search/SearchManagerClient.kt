@@ -27,8 +27,10 @@ package com.sygic.maps.uikit.viewmodels.common.search
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
+import com.sygic.maps.uikit.viewmodels.common.search.state.ResultState
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.search.AutocompleteResult
+import com.sygic.sdk.search.GeocodingResult
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SearchManagerClient {
@@ -36,5 +38,9 @@ interface SearchManagerClient {
     val searchText: MutableLiveData<String>
     val searchLocation: MutableLiveData<GeoCoordinates?>
     val maxResultsCount: MutableLiveData<Int>
-    val searchResults: LiveData<SearchResultsHolder>
+    val autocompleteResults: LiveData<List<AutocompleteResult>>
+    val autocompleteResultState: LiveData<ResultState>
+
+    fun geocodeResult(result: AutocompleteResult, callback: (result: GeocodingResult) -> Unit)
+    fun geocodeAllResults(callback: (results: List<GeocodingResult>) -> Unit)
 }

@@ -31,5 +31,5 @@ import com.sygic.sdk.search.ReverseGeocoder
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ReverseGeocoderManagerClient {
 
-    fun search(position: GeoCoordinates, filter: Set<Int>, listener: ReverseGeocoder.ReverseSearchResultsListener )
+    fun reverseGeocode(position: GeoCoordinates, filter: Set<ReverseGeocoder.Filter>, listener: ReverseGeocoder.ReverseGeocodingResultListener )
 }

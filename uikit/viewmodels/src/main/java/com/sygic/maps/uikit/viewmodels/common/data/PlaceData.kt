@@ -42,8 +42,7 @@ data class PlaceData(
     var phone: String? = null,
     var email: String? = null,
     var url: String? = null,
-    var placeGroup: String = EMPTY_STRING,
-    var placeCategory: String = EMPTY_STRING
+    var placeCategory: String? = EMPTY_STRING
 ) : BasicData(createBasicDescription(name, street, houseNumber, city, postal)) {
 
     override fun toString(): String {

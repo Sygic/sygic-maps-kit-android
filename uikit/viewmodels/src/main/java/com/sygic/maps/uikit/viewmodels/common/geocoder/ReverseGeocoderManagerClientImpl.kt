@@ -40,6 +40,9 @@ object ReverseGeocoderManagerClientImpl : ReverseGeocoderManagerClient {
         init { ReverseGeocoderProvider.getInstance(InitializationCallback<ReverseGeocoder> { value = it }) }
     }
 
-    override fun search(position: GeoCoordinates, filter: Set<Int>, listener: ReverseGeocoder.ReverseSearchResultsListener) =
-        managerProvider.observeOnce { it.search(position, filter, listener) }
+    override fun reverseGeocode(
+        position: GeoCoordinates,
+        filter: Set<ReverseGeocoder.Filter>,
+        listener: ReverseGeocoder.ReverseGeocodingResultListener
+    ) = managerProvider.observeOnce { it.reverseGeocode(position, filter, listener) }
 }

@@ -51,10 +51,9 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATI
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
-import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.GeocodingResult
 import javax.inject.Inject
 
 const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
@@ -157,11 +156,9 @@ class SearchFragment : Fragment(), SearchResultCallbackWrapper {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val resultListAdapter = SearchResultListAdapter<SearchResult>()
-
         fragmentViewModel = ViewModelProviders.of(
             this,
-            viewModelFactory.with(resultListAdapter)
+            viewModelFactory
         )[SearchFragmentViewModel::class.java].apply {
             onFinishObservable.observe(this@SearchFragment, Observer { fragmentManager?.popBackStack() })
         }
@@ -176,7 +173,7 @@ class SearchFragment : Fragment(), SearchResultCallbackWrapper {
         }
         searchResultListViewModel = ViewModelProviders.of(
             this,
-            viewModelFactory.with(resultListAdapter)
+            viewModelFactory
         )[SearchResultListViewModel::class.java].apply {
             onSearchResultItemClickObservable.observe(
                 this@SearchFragment,
@@ -211,9 +208,9 @@ class SearchFragment : Fragment(), SearchResultCallbackWrapper {
      *
      * @param callback [SearchResultCallback] callback to invoke when a search process is done.
      */
-    fun setResultCallback(callback: (searchResultList: List<SearchResult>) -> Unit) {
+    fun setResultCallback(callback: (results: List<GeocodingResult>) -> Unit) {
         setResultCallback(object : SearchResultCallback {
-            override fun onSearchResult(searchResultList: List<SearchResult>) = callback(searchResultList)
+            override fun onSearchResult(results: List<GeocodingResult>) = callback(results)
         })
     }
 

@@ -41,8 +41,6 @@ import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
-import com.sygic.samples.utils.isCategoryResult
-import com.sygic.samples.utils.loadDetails
 import com.sygic.samples.utils.toGeoCoordinatesList
 import com.sygic.samples.utils.toPlaceDetailComponent
 import com.sygic.sdk.map.Camera
@@ -52,11 +50,7 @@ import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.Route
-import com.sygic.sdk.search.MapSearchResult
-import com.sygic.sdk.search.Search
-import com.sygic.sdk.search.SearchResult
-import com.sygic.sdk.search.detail.DetailPoiCategory
-import com.sygic.sdk.search.detail.DetailPoiCategoryGroup
+import com.sygic.sdk.search.GeocodingResult
 
 private const val CAMERA_RECTANGLE_MARGIN = 80
 
@@ -120,47 +114,35 @@ class ComplexDemoActivityViewModel : ViewModel() {
         override fun getFragmentTag() = SEARCH_FRAGMENT_TAG
     }
 
-    private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
+    private val callback: ((results: List<GeocodingResult>) -> Unit) = { results ->
         mapDataModel?.removeAllMapMarkers()
 
-        if (searchResultList.isNotEmpty()) {
+        if (results.isNotEmpty()) {
             cameraDataModel?.apply {
                 movementMode = Camera.MovementMode.Free
                 rotationMode = Camera.RotationMode.Free
             }
 
-            if (searchResultList.isCategoryResult()) {
-                (searchResultList.first() as MapSearchResult).loadDetails(Search.SearchDetailListener { mapSearchDetail, state ->
-                    if (state == SearchResult.ResultState.Success) {
-                        when (mapSearchDetail) {
-                            is DetailPoiCategory -> mapSearchDetail.poiList.forEach { mapDataModel?.addMapMarker(it.position) } //todo: Search interface refactor
-                            is DetailPoiCategoryGroup -> mapSearchDetail.poiList.forEach { mapDataModel?.addMapMarker(it.position) } //todo: Search interface refactor
-                        }
-                        cameraDataModel?.setMapRectangle(mapSearchDetail.boundingBox, CAMERA_RECTANGLE_MARGIN)
-                    }
-                })
-            } else {
-                searchResultList.toGeoCoordinatesList().let { geoCoordinatesList ->
-                    if (geoCoordinatesList.isNotEmpty()) {
+            results.toGeoCoordinatesList().let { geoCoordinatesList ->
+                if (geoCoordinatesList.isNotEmpty()) {
 
-                        if (geoCoordinatesList.size == 1) {
-                            with(geoCoordinatesList.first()) {
-                                mapDataModel?.addMapMarker(this)
-                                targetPosition = this
-                                cameraDataModel?.position = this
-                                cameraDataModel?.zoomLevel = 10F
-                                searchResultList.first().toPlaceDetailComponent()?.let {
-                                    showPlaceDetailObservable.asSingleEvent().value = Pair(it, placeDetailListener)
-                                }
-                            }
-                        } else {
-                            val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
-                            geoCoordinatesList.forEach { geoCoordinates ->
-                                mapDataModel?.addMapMarker(geoCoordinates)
-                                geoBoundingBox.union(geoCoordinates)
-                            }
-                            cameraDataModel?.setMapRectangle(geoBoundingBox, CAMERA_RECTANGLE_MARGIN)
+                    if (geoCoordinatesList.size == 1) {
+                        with(geoCoordinatesList.first()) {
+                            mapDataModel?.addMapMarker(this)
+                            targetPosition = this
+                            cameraDataModel?.position = this
+                            cameraDataModel?.zoomLevel = 10F
+                            showPlaceDetailObservable.asSingleEvent().value = Pair(
+                                results.first().toPlaceDetailComponent(true), placeDetailListener
+                            )
                         }
+                    } else {
+                        val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
+                        geoCoordinatesList.forEach { geoCoordinates ->
+                            mapDataModel?.addMapMarker(geoCoordinates)
+                            geoBoundingBox.union(geoCoordinates)
+                        }
+                        cameraDataModel?.setMapRectangle(geoBoundingBox, CAMERA_RECTANGLE_MARGIN)
                     }
                 }
             }

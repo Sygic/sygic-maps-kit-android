@@ -24,15 +24,15 @@
 
 package com.sygic.maps.uikit.viewmodels.common.utils
 
+import com.sygic.maps.uikit.viewmodels.common.search.state.ResultState
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultListErrorViewSwitcherIndex
-import com.sygic.sdk.search.SearchResult
 
 @SearchResultListErrorViewSwitcherIndex
-internal fun searchResultStateToErrorViewSwitcherIndex(@SearchResult.ResultState state: Int): Int {
+internal fun searchResultStateToErrorViewSwitcherIndex(state: ResultState): Int {
     return when (state) {
-        SearchResult.ResultState.Success -> SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND
-        SearchResult.ResultState.NotAvailable -> SearchResultListErrorViewSwitcherIndex.NO_INTERNET_CONNECTION
-        SearchResult.ResultState.Timeout -> SearchResultListErrorViewSwitcherIndex.SLOW_INTERNET_CONNECTION
-        else -> SearchResultListErrorViewSwitcherIndex.GENERAL_ERROR
+        ResultState.SUCCESS, ResultState.UNKNOWN -> SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND
+        ResultState.NETWORK_UNAVAILABLE -> SearchResultListErrorViewSwitcherIndex.NO_INTERNET_CONNECTION
+        ResultState.NETWORK_TIMEOUT -> SearchResultListErrorViewSwitcherIndex.SLOW_INTERNET_CONNECTION
+        ResultState.GENERAL_ERROR -> SearchResultListErrorViewSwitcherIndex.GENERAL_ERROR
     }
 }

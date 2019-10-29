@@ -34,7 +34,7 @@ import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
-import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
+import com.sygic.maps.uikit.viewmodels.common.search.state.ResultState
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATION
@@ -44,7 +44,6 @@ import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.showKeyboard
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.SearchResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -85,7 +84,7 @@ class SearchToolbarViewModelTest {
         whenever(arguments.getInt(eq(KEY_SEARCH_MAX_RESULTS_COUNT), any())).thenReturn(MAX_RESULTS_COUNT_DEFAULT_VALUE)
 
         whenever(searchManagerClient.searchText).thenReturn(mock())
-        whenever(searchManagerClient.searchResults).thenReturn(mock())
+        whenever(searchManagerClient.autocompleteResultState).thenReturn(mock())
         whenever(searchManagerClient.searchLocation).thenReturn(mock())
         whenever(searchManagerClient.maxResultsCount).thenReturn(mock())
 
@@ -93,14 +92,10 @@ class SearchToolbarViewModelTest {
         searchToolbarViewModel.searchDelay = CUSTOM_SEARCH_DELAY
 
         val searchText = argumentCaptor<String>()
-        val searchResultsObserverCaptor = argumentCaptor<Observer<SearchResultsHolder>>()
-        whenever(searchManagerClient.searchResults.observe(any(), searchResultsObserverCaptor.capture())).then { /* do nothing */ }
+        val searchResultsObserverCaptor = argumentCaptor<Observer<ResultState>>()
+        whenever(searchManagerClient.autocompleteResultState.observe(any(), searchResultsObserverCaptor.capture())).then { /* do nothing */ }
         whenever(searchManagerClient.searchText.setValue(searchText.capture())).then {
-            searchResultsObserverCaptor.firstValue.onChanged(
-                SearchResultsHolder(
-                    searchText.firstValue, SearchResult.ResultState.Success, emptyList()
-                )
-            )
+            searchResultsObserverCaptor.firstValue.onChanged(ResultState.SUCCESS)
         }
     }
 
@@ -116,7 +111,7 @@ class SearchToolbarViewModelTest {
     fun onCreateTest() {
         val resumedLifecycleOwner = LiveDataResumedLifecycleOwner()
         searchToolbarViewModel.onCreate(resumedLifecycleOwner)
-        verify(searchManagerClient.searchResults).observe(eq(resumedLifecycleOwner), any())
+        verify(searchManagerClient.autocompleteResultState).observe(eq(resumedLifecycleOwner), any())
     }
 
     @Test

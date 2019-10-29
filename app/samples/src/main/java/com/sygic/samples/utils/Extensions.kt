@@ -25,12 +25,9 @@
 package com.sygic.samples.utils
 
 import androidx.lifecycle.Observer
-import com.sygic.maps.uikit.viewmodels.common.data.PlaceData
 import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClientImpl
 import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.views.common.utils.logInfo
 import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.maps.uikit.views.placedetail.data.PlaceDetailData
 import com.sygic.sdk.InitializationCallback
@@ -41,7 +38,8 @@ import com.sygic.sdk.route.Route
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.Router
 import com.sygic.sdk.route.RouterProvider
-import com.sygic.sdk.search.*
+import com.sygic.sdk.search.GeocodingResult
+import com.sygic.sdk.search.ResultType
 
 fun getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
     with(PositionManagerClientImpl.getInstance(RouteDemonstrationManagerClientImpl)) {
@@ -69,65 +67,19 @@ fun RoutePlan.getPrimaryRoute(routeComputeCallback: (route: Route) -> Unit) {
     })
 }
 
-fun MapSearchResult.loadDetails(callback: Search.SearchDetailListener) {
-    SearchProvider.getInstance(object : InitializationCallback<Search> {
-        override fun onInstance(search: Search) {
-            search.loadDetails(this@loadDetails, DetailRequest(), callback)
-        }
-        override fun onError(@SygicContext.OnInitListener.Result result: Int) {}
-    })
+fun List<GeocodingResult>.isCategoryResult(): Boolean {
+    return size == 1 && first().type == ResultType.PLACE_CATEGORY
 }
 
-fun List<SearchResult>.isCategoryResult(): Boolean {
-    val firstSearchResult = first()
-    return size == 1 && firstSearchResult is MapSearchResult
-            && (firstSearchResult.dataType == MapSearchResult.DataType.PoiCategoryGroup
-            || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory) //todo: Search interface refactor
-}
+fun List<GeocodingResult>.toGeoCoordinatesList(): List<GeoCoordinates> = map { it.location }
 
-fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
-    val geoCoordinatesList = mutableListOf<GeoCoordinates>()
-    forEach { searchResult ->
-        when (searchResult) {
-            is CoordinateSearchResult -> geoCoordinatesList.add(searchResult.position)
-            is MapSearchResult -> geoCoordinatesList.add(searchResult.position)
-            else -> logInfo("${searchResult.javaClass.simpleName} class conversion is not implemented yet.")
-        }
-    }
-    return geoCoordinatesList
-}
-
-fun SearchResult.toPlaceDetailComponent(): PlaceDetailComponent? {
-    return when (this) {
-        is CoordinateSearchResult -> {
-            val formattedCoordinates = this.position.getFormattedLocation()
-            PlaceDetailComponent(
-                PlaceDetailData(
-                    titleString = formattedCoordinates,
-                    subtitleString = EMPTY_STRING,
-                    coordinatesString = formattedCoordinates
-                ),
-                true
-            )
-        }
-        is MapSearchResult -> {
-            val placeData = PlaceData(
-                name = this.poiName.text, //todo: Search interface refactor
-                street = this.street.text,
-                city = this.city.text
-            )
-            PlaceDetailComponent(
-                PlaceDetailData(
-                    titleString = placeData.title,
-                    subtitleString = placeData.description,
-                    coordinatesString = this.position.getFormattedLocation()
-                ),
-                true
-            )
-        }
-        else -> {
-            logInfo("${this.javaClass.simpleName} class conversion is not implemented yet.")
-            null
-        }
-    }
+fun GeocodingResult.toPlaceDetailComponent(navigationButtonEnabled: Boolean = false): PlaceDetailComponent {
+    return PlaceDetailComponent(
+        PlaceDetailData(
+            titleString = title,
+            subtitleString = subtitle,
+            coordinatesString = this.location.getFormattedLocation()
+        ),
+        navigationButtonEnabled
+    )
 }

@@ -27,9 +27,8 @@ package com.sygic.maps.uikit.viewmodels.searchresultlist
 import android.view.View
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
-import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResultList
+import com.sygic.maps.uikit.viewmodels.common.extensions.toSearchResults
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
 import com.sygic.maps.uikit.viewmodels.common.utils.searchResultStateToErrorViewSwitcherIndex
 import com.sygic.maps.uikit.views.common.extensions.asMutable
@@ -42,39 +41,43 @@ import com.sygic.maps.uikit.views.searchresultlist.adapter.DefaultStateAdapter
 import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
-import com.sygic.sdk.search.Search
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.AutocompleteResult
 
 /**
  * A [SearchResultListViewModel] is a basic ViewModel implementation for the [SearchResultList] class. It listens to
- * the Sygic SDK [Search.SearchResultsListener] and updates the search result list in the [SearchResultList] view.
+ * the Sygic SDK [SearchManagerClient.autocompleteResults] and updates the search result list in the [SearchResultList] view.
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-open class SearchResultListViewModel @JvmOverloads internal constructor(
-    private val searchManagerClient: SearchManagerClient,
-    @Assisted private val resultListAdapter: SearchResultListAdapter<SearchResult>,
-    @Assisted private val defaultStateAdapter: DefaultStateAdapter<SearchResult> = DefaultStateAdapter()
-) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener<SearchResult> {
-
-    val onSearchResultItemClickObservable: LiveData<SearchResultItem<out SearchResult>> = SingleLiveEvent()
-
-    val errorViewSwitcherIndex = MutableLiveData(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND)
-    val activeAdapter: LiveData<ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>> = MutableLiveData(defaultStateAdapter)
+open class SearchResultListViewModel internal constructor(
+    private val searchManagerClient: SearchManagerClient
+) : ViewModel(), DefaultLifecycleObserver, ResultListAdapter.ClickListener<AutocompleteResult> {
 
     private var lastScrollState = RecyclerView.SCROLL_STATE_IDLE
+
+    private val defaultStateAdapter: DefaultStateAdapter<AutocompleteResult> = DefaultStateAdapter()
+    private val resultListAdapter: SearchResultListAdapter<AutocompleteResult> = SearchResultListAdapter()
+
+    val onSearchResultItemClickObservable: LiveData<SearchResultItem<out AutocompleteResult>> = SingleLiveEvent()
+
+    val errorViewSwitcherIndex = MutableLiveData(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND)
+    val activeAdapter: LiveData<ResultListAdapter<AutocompleteResult, ResultListAdapter.ItemViewHolder<AutocompleteResult>>> = MutableLiveData(defaultStateAdapter)
 
     init {
         resultListAdapter.clickListener = this
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        searchManagerClient.searchResults.observe(owner, Observer { holder ->
-            holder.results.toSearchResultList().let { resultListAdapter.items = it }
-            errorViewSwitcherIndex.asMutable().value = searchResultStateToErrorViewSwitcherIndex(holder.state)
-            activeAdapter.asMutable().value = if (holder.input.isNotEmpty()) resultListAdapter else defaultStateAdapter
+        searchManagerClient.autocompleteResults.observe(owner, Observer { autocompleteResults ->
+            resultListAdapter.items = autocompleteResults.toSearchResults()
+            activeAdapter.asMutable().value = if (inputIsNotEmpty()) resultListAdapter else defaultStateAdapter
+        })
+        searchManagerClient.autocompleteResultState.observe(owner, Observer {
+            errorViewSwitcherIndex.asMutable().value = searchResultStateToErrorViewSwitcherIndex(it)
         })
     }
+
+    private fun inputIsNotEmpty() = searchManagerClient.searchText.value!!.isNotEmpty()
 
     open fun onResultListScrollStateChanged(view: RecyclerView, scrollState: Int) {
         if (lastScrollState != scrollState && scrollState != RecyclerView.SCROLL_STATE_IDLE) {
@@ -85,7 +88,7 @@ open class SearchResultListViewModel @JvmOverloads internal constructor(
         lastScrollState = scrollState
     }
 
-    override fun onSearchResultItemClick(view: View, searchResultItem: SearchResultItem<out SearchResult>) {
+    override fun onSearchResultItemClick(view: View, searchResultItem: SearchResultItem<out AutocompleteResult>) {
         view.hideKeyboard()
         onSearchResultItemClickObservable.asSingleEvent().value = searchResultItem
     }

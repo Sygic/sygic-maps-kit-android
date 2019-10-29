@@ -36,7 +36,7 @@ import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultListErrorViewSwitcherIndex
 import com.sygic.maps.uikit.views.searchresultlist.adapter.DefaultStateAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.AutocompleteResult
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -58,14 +58,15 @@ class SearchResultListViewModelTest {
 
     @Before
     fun setup() {
-        whenever(searchManagerClient.searchResults).thenReturn(mock())
+        whenever(searchManagerClient.autocompleteResults).thenReturn(mock())
+        whenever(searchManagerClient.autocompleteResultState).thenReturn(mock())
 
-        searchResultListViewModel = SearchResultListViewModel(searchManagerClient, mock())
+        searchResultListViewModel = SearchResultListViewModel(searchManagerClient)
     }
 
     @Test
     fun initTest() {
-        assertEquals(true, searchResultListViewModel.activeAdapter.value is DefaultStateAdapter<SearchResult>)
+        assertEquals(true, searchResultListViewModel.activeAdapter.value is DefaultStateAdapter<AutocompleteResult>)
         assertEquals(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND, searchResultListViewModel.errorViewSwitcherIndex.value)
     }
 
@@ -73,7 +74,8 @@ class SearchResultListViewModelTest {
     fun onCreateTest() {
         val lifecycleOwnerMock = mock<LifecycleOwner>()
         searchResultListViewModel.onCreate(lifecycleOwnerMock)
-        verify(searchManagerClient.searchResults).observe(eq(lifecycleOwnerMock), any())
+        verify(searchManagerClient.autocompleteResults).observe(eq(lifecycleOwnerMock), any())
+        verify(searchManagerClient.autocompleteResultState).observe(eq(lifecycleOwnerMock), any())
     }
 
     @Test
@@ -87,7 +89,7 @@ class SearchResultListViewModelTest {
     @Test
     fun onSearchResultItemClickTest() {
         val textViewMock = mock<TextView>()
-        val searchResultItemMock = mock<SearchResultItem<SearchResult>>()
+        val searchResultItemMock = mock<SearchResultItem<AutocompleteResult>>()
         searchResultListViewModel.onSearchResultItemClick(textViewMock, searchResultItemMock)
         verify(textViewMock).hideKeyboard()
         searchResultListViewModel.onSearchResultItemClickObservable.test().assertValue(searchResultItemMock)

@@ -25,7 +25,7 @@
 package com.sygic.maps.module.search.callback
 
 import androidx.lifecycle.LiveData
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.GeocodingResult
 
 /**
  * Interface definition for a callback to be invoked when a search process is done.
@@ -36,10 +36,10 @@ interface SearchResultCallback {
     /**
      * Called when a search process is done.
      *
-     * @param searchResultList [List] containing a list of [SearchResult].
+     * @param results [List] containing a list of [GeocodingResult].
      *
      */
-    fun onSearchResult(searchResultList: List<SearchResult>)
+    fun onSearchResult(results: List<GeocodingResult>)
 }
 
 internal interface SearchResultCallbackWrapper {

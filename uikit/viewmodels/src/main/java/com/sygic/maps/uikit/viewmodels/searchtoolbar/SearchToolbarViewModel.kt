@@ -43,7 +43,6 @@ import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbarIconStateSwitcherIndex
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.Search
 import kotlinx.coroutines.*
 
 private const val DEFAULT_SEARCH_DELAY = 300L
@@ -51,7 +50,7 @@ private const val DEFAULT_SEARCH_DELAY = 300L
 /**
  * A [SearchToolbarViewModel] is a basic ViewModel implementation for the [SearchToolbar] class. It listens to the
  * [SearchToolbar] input [EditText] changes and use the [SearchManagerClient] to process search query request to the Sygic SDK
- * [Search] after the specified [searchDelay]. It also listens to the Sygic SDK [Search.SearchResultsListener] and set
+ * [SearchManagerClient] after the specified [searchDelay]. It also listens to the Sygic SDK [SearchManagerClient.autocompleteResults] and set
  * appropriate state to the [SearchToolbar] state view.
  */
 @AutoFactory
@@ -95,7 +94,7 @@ open class SearchToolbarViewModel internal constructor(
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        searchManagerClient.searchResults.observe(owner, Observer {
+        searchManagerClient.autocompleteResultState.observe(owner, Observer {
             iconStateSwitcherIndex.value = SearchToolbarIconStateSwitcherIndex.MAGNIFIER
         })
     }

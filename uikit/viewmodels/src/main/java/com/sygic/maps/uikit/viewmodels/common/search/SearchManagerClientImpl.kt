@@ -27,50 +27,74 @@ package com.sygic.maps.uikit.viewmodels.common.search
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationCallback
-import com.sygic.maps.uikit.viewmodels.common.search.holder.SearchResultsHolder
+import com.sygic.maps.uikit.viewmodels.common.search.state.ResultState
+import com.sygic.maps.uikit.viewmodels.common.search.state.toResultState
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.Search
-import com.sygic.sdk.search.SearchProvider
-import com.sygic.sdk.search.SearchRequest
+import com.sygic.sdk.search.*
 
-const val MAX_RESULTS_COUNT_DEFAULT_VALUE = 20
+const val MAX_RESULTS_COUNT_DEFAULT_VALUE = 10
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object SearchManagerClientImpl : SearchManagerClient {
 
-    private val managerProvider: LiveData<Search> = object : MutableLiveData<Search>() {
-        init { SearchProvider.getInstance(InitializationCallback<Search> { value = it }) }
+    private val managerProvider: LiveData<SearchManager> = object : MutableLiveData<SearchManager>() {
+        init { SearchManagerProvider.getInstance(InitializationCallback<SearchManager> { value = it }) }
     }
 
-    override val searchText by lazy { MutableLiveData<String>() }
+    private val autocompleteResultListener = object : SearchManager.AutocompleteResultListener {
+        override fun onAutocomplete(autocompleteResult: List<AutocompleteResult>) {
+            autocompleteResultState.value = ResultState.SUCCESS
+            autocompleteResults.value = autocompleteResult
+        }
+        override fun onAutcompleteError(code: SearchManager.ErrorCode) {
+            autocompleteResultState.value = code.toResultState()
+            autocompleteResults.value = emptyList()
+        }
+    }
+
+    override val searchText by lazy { MutableLiveData<String>(EMPTY_STRING) }
 
     override val searchLocation by lazy { MutableLiveData<GeoCoordinates?>() }
 
     override val maxResultsCount by lazy { MutableLiveData<Int>(MAX_RESULTS_COUNT_DEFAULT_VALUE) }
 
-    override val searchResults by lazy {
-        Transformations.switchMap<Search, SearchResultsHolder>(managerProvider) { manager ->
-            object : LiveData<SearchResultsHolder>() {
+    override val autocompleteResults by lazy { MutableLiveData<List<AutocompleteResult>>(emptyList()) }
 
-                private val searchResultsListener by lazy {
-                    Search.SearchResultsListener { input, state, results ->
-                        value = SearchResultsHolder(input, state, results)
-                    }
-                }
+    override val autocompleteResultState by lazy { MutableLiveData<ResultState>(ResultState.UNKNOWN) }
 
-                override fun onActive() = manager.addSearchResultsListener(searchResultsListener)
-                override fun onInactive() = manager.removeSearchResultsListener(searchResultsListener)
-            }
+    override fun geocodeResult(result: AutocompleteResult, callback: (result: GeocodingResult) -> Unit) {
+        managerProvider.observeOnce {
+            it.geocode(GeocodeLocationRequest(locationId = result.locationId), object : SearchManager.GeocodingResultListener {
+                override fun onGeocodingResult(geocodingResult: GeocodingResult) { callback.invoke(geocodingResult) }
+                override fun onGeocodingResultError(code: SearchManager.ErrorCode) { /* Currently do nothing */ }
+            })
+        }
+    }
+
+    override fun geocodeAllResults(callback: (results: List<GeocodingResult>) -> Unit) {
+        managerProvider.observeOnce {
+            it.geocode(SearchRequest(
+                searchInput = searchText.value!!,
+                maxResultCount = maxResultsCount.value!!,
+                location = searchLocation.value ?: GeoCoordinates.Invalid
+            ), object : SearchManager.GeocodingResultsListener {
+                override fun onGeocodingResults(geocodingResults: List<GeocodingResult>) { callback.invoke(geocodingResults) }
+                override fun onGeocodingResultsError(code: SearchManager.ErrorCode) { /* Currently do nothing */ }
+            })
         }
     }
 
     init {
         searchText.observeForever { text ->
             managerProvider.observeOnce {
-                it.search(SearchRequest(text, searchLocation.value).apply { maxResults = maxResultsCount.value!! })
+                it.autocomplete(SearchRequest(
+                    searchInput = text,
+                    maxResultCount = maxResultsCount.value!!,
+                    location = searchLocation.value ?: GeoCoordinates.Invalid
+                ), autocompleteResultListener)
             }
         }
     }
