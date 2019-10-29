@@ -32,6 +32,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.isRtl
+import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu.InteractionListener
 import com.sygic.maps.uikit.views.zoomcontrols.buttons.*
 
 private const val ANIMATION_DELAY_PER_ITEM = 50
@@ -50,7 +51,8 @@ private const val ANIMATION_DELAY_PER_ITEM = 50
 open class ZoomControlsMenu @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.zoomControlsMenuStyle
+    defStyleAttr: Int = R.attr.zoomControlsMenuStyle,
+    defStyleRes: Int = R.style.SygicZoomControlsMenuStyle
 ) : LinearLayout(context, attrs, 0), ZoomControlsMenuButton.MenuCallback {
 
     private val uiHandler = Handler()
@@ -108,8 +110,21 @@ open class ZoomControlsMenu @JvmOverloads constructor(
     }
 
     init {
-        orientation = HORIZONTAL
         clipChildren = false
+
+        attrs?.let { attributeSet ->
+            @Suppress("Recycle")
+            context.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.ZoomControlsMenu,
+                defStyleAttr,
+                defStyleRes
+            ).also {
+                if (it.hasValue(R.styleable.ZoomControlsMenu_android_orientation)) {
+                    orientation = it.getInt(R.styleable.ZoomControlsMenu_android_orientation, HORIZONTAL)
+                }
+            }.recycle()
+        }
 
         addView(
             ZoomControlsMenuButton(context, attrs, defStyleAttr, this).also { menuButton = it },

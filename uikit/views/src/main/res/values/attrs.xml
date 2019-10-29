@@ -163,4 +163,11 @@
         <attr name="segmentSpacing" format="fraction" />
     </declare-styleable>
 
+    <declare-styleable name="ZoomControlsMenu">
+        <attr name="android:orientation">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+    </declare-styleable>
+
 </resources>

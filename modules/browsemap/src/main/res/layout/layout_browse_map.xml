@@ -103,8 +103,9 @@
             android:layout_marginBottom="8dp"
             android:visibility="@{safeUnbox(browseMapFragmentViewModel.zoomControlsEnabled) ? View.VISIBLE : View.GONE}"
             app:interactionListener="@{zoomControlsViewModel}"
-            app:layout_constraintBottom_toTopOf="@id/positionLockFab"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:tiltType="@{safeUnbox(zoomControlsViewModel.tiltType)}"
             tools:visibility="visible" />
 
