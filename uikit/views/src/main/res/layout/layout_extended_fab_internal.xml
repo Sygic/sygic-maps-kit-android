@@ -32,10 +32,10 @@
         tools:layout_gravity="center"
         tools:layout_height="wrap_content"
         tools:layout_width="match_parent"
-        tools:paddingBottom="6dp"
+        tools:paddingBottom="8dp"
         tools:paddingEnd="10dp"
         tools:paddingStart="10dp"
-        tools:paddingTop="6dp"
+        tools:paddingTop="8dp"
         tools:parentTag="android.widget.LinearLayout">
 
         <TextView

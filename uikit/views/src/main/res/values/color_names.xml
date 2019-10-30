@@ -48,6 +48,7 @@
 
     <color name="white">@android:color/white</color>
     <color name="zircon">#f5f8ff</color>
+    <color name="mercury">#E7E7E7</color>
     <color name="mystic">#E0E6EF</color>
     <color name="botticelli">#CDD5E3</color>
     <color name="gray">#D6D6D6</color>

@@ -128,14 +128,21 @@
     </style>
 
     <style name="PlaceDetailItem">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-        <item name="android:drawablePadding">18dp</item>
-        <item name="android:focusable">true</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:padding">24dp</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="PlaceDetailItem.Horizontal">
+        <item name="android:minWidth">112dp</item>
+        <item name="android:background">@drawable/bg_place_detail_item_horizontal_rounded</item>
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">@dimen/fontSizeSmall</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="PlaceDetailItem.Vertical">
+        <item name="android:background">@drawable/bg_place_detail_item_vertical_rounded</item>
+        <item name="android:layout_margin">6dp</item>
     </style>
 
 </resources>

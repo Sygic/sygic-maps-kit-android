@@ -46,125 +46,205 @@
         android:background="@android:color/transparent"
         app:displayedChild="@{safeUnbox(viewModel.contentViewSwitcherIndex)}">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/placeDetailHeaderContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/bg_place_detail_rounded"
             android:elevation="16dp"
-            android:orientation="vertical"
-            app:animate="@{true}">
+            android:padding="8dp">
 
-            <LinearLayout
-                android:id="@+id/placeDetailHeaderContainer"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/placeDetailHandleView"
+                android:layout_width="0dp"
+                android:layout_height="6dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="4dp"
+                android:onClick="@{() -> viewModel.onHeaderClick()}"
+                android:paddingStart="148dp"
+                android:paddingEnd="148dp"
+                android:src="@drawable/ic_drag_hint_shape"
+                app:layout_constraintBottom_toTopOf="@id/placeDetailSubtitleTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/placeDetailSubtitleTextView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:ellipsize="end"
+                android:onClick="@{() -> viewModel.onHeaderClick()}"
+                android:paddingStart="12dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="12dp"
+                android:singleLine="true"
+                android:text="@{viewModel.subtitleText}"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="@dimen/fontSizeSmall"
+                android:visibility="@{TextUtils.isEmpty(viewModel.subtitleText) ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toTopOf="@id/placeDetailTitleTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/placeDetailHandleView"
+                tools:text="Mlynské nivy 16, 821 09 Bratislava"
+                tools:visibility="visible" />
 
-                <View
-                    android:id="@+id/placeDetailHandleView"
-                    android:layout_width="64dp"
-                    android:layout_height="6dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="4dp"
-                    android:background="@drawable/ic_drag_hint_shape"
-                    android:onClick="@{() -> viewModel.onHeaderClick()}" />
+            <TextView
+                android:id="@+id/placeDetailTitleTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:onClick="@{() -> viewModel.onHeaderClick()}"
+                android:paddingStart="12dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="12dp"
+                android:singleLine="true"
+                android:text="@{viewModel.titleText}"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="@dimen/fontSizeMediumLarge"
+                app:layout_constraintBottom_toTopOf="@id/placeDetailItemWeb"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/placeDetailSubtitleTextView"
+                tools:text="Sheraton Bratislava" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/placeDetailAdditionalContentGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.contentContainerVisible ? View.VISIBLE : View.GONE}"
+                app:constraint_referenced_ids="placeDetailItemWeb,placeDetailItemPhone,placeDetailItemEmail,placeDetailItemLocationContainer"
+                app:layout_constraintBottom_toTopOf="@id/placeDetailNavigationButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView" />
+
+            <!--todo: disabled state-->
+            <TextView
+                android:id="@+id/placeDetailItemWeb"
+                style="@style/PlaceDetailItem.Horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_web"
+                android:onClick="@{() -> viewModel.onWebUrlClick()}"
+                android:text="@string/url"
+                android:textAllCaps="true"
+                android:textColor="?android:attr/colorAccent"
+                app:layout_constraintBottom_toTopOf="@id/placeDetailItemLocationContainer"
+                app:layout_constraintEnd_toStartOf="@id/placeDetailItemPhone"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView" />
+
+            <!--todo: disabled state-->
+            <TextView
+                android:id="@+id/placeDetailItemPhone"
+                style="@style/PlaceDetailItem.Horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_phone"
+                android:onClick="@{() -> viewModel.onPhoneNumberClick()}"
+                android:text="@string/telephone"
+                android:textColor="?android:attr/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/placeDetailItemWeb"
+                app:layout_constraintEnd_toStartOf="@id/placeDetailItemEmail"
+                app:layout_constraintStart_toEndOf="@id/placeDetailItemWeb"
+                app:layout_constraintTop_toTopOf="@id/placeDetailItemWeb" />
+
+            <!--todo: disabled state-->
+            <TextView
+                android:id="@+id/placeDetailItemEmail"
+                style="@style/PlaceDetailItem.Horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_email"
+                android:onClick="@{() -> viewModel.onEmailClick()}"
+                android:text="@string/email"
+                android:textColor="?android:attr/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/placeDetailItemWeb"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/placeDetailItemPhone"
+                app:layout_constraintTop_toTopOf="@id/placeDetailItemWeb" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/placeDetailItemLocationContainer"
+                style="@style/PlaceDetailItem.Vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.onCoordinatesClick()}"
+                android:visibility="@{TextUtils.isEmpty(viewModel.coordinatesText) ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toTopOf="@id/placeDetailNavigationButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/placeDetailItemWeb">
+
+                <ImageView
+                    android:id="@+id/placeDetailItemLocationIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:src="@drawable/ic_location"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/placeDetailItemLocationTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/placeDetailSubtitleTextView"
-                    android:layout_width="match_parent"
+                    android:id="@+id/placeDetailItemLocationTitle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:onClick="@{() -> viewModel.onHeaderClick()}"
-                    android:paddingTop="4dp"
-                    android:singleLine="true"
-                    android:text="@{viewModel.subtitleText}"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/gps_coordinates"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="@dimen/fontSizeMedium"
+                    app:layout_constraintBottom_toTopOf="@id/placeDetailItemLocationSubtitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@id/placeDetailItemLocationIcon"
+                    app:layout_constraintTop_toTopOf="@id/placeDetailItemLocationIcon" />
+
+                <TextView
+                    android:id="@+id/placeDetailItemLocationSubtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="@{viewModel.coordinatesText}"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="@dimen/fontSizeSmall"
-                    tools:text="Mlynské nivy 16, 821 09 Bratislava" />
-
-                <TextView
-                    android:id="@+id/placeDetailTitleTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-medium"
-                    android:onClick="@{() -> viewModel.onHeaderClick()}"
-                    android:paddingTop="6dp"
-                    android:singleLine="true"
-                    android:text="@{viewModel.titleText}"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="@dimen/fontSizeMediumLarge"
-                    tools:text="Sheraton Bratislava" />
-
-                <com.sygic.maps.uikit.views.common.ExtendedFloatingActionButton
-                    android:id="@+id/placeDetailNavigationButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:icon="@drawable/ic_navigation"
-                    android:onClick="@{() -> viewModel.onNavigationButtonClick()}"
-                    android:paddingStart="10dp"
-                    android:paddingTop="6dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="6dp"
-                    android:text="@string/get_direction"
-                    android:visibility="@{safeUnbox(viewModel.navigationButtonEnabled) ? View.VISIBLE : View.GONE}"
-                    tools:visibility="visible" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/placeDetailContentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="@{viewModel.contentContainerVisible ? View.VISIBLE : View.GONE}">
-
-                <TextView
-                    style="@style/PlaceDetailItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_phone"
-                    android:onClick="@{() -> viewModel.onPhoneNumberClick()}"
-                    android:text="@{viewModel.phoneText}"
-                    android:visibility="@{TextUtils.isEmpty(viewModel.phoneText) ? View.GONE : View.VISIBLE}"
-                    tools:text="+421 0944 123456" />
-
-                <TextView
-                    style="@style/PlaceDetailItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_email"
-                    android:onClick="@{() -> viewModel.onEmailClick()}"
-                    android:text="@{viewModel.emailText}"
-                    android:visibility="@{TextUtils.isEmpty(viewModel.emailText) ? View.GONE : View.VISIBLE}"
-                    tools:text="sygic@sygic.com" />
-
-                <TextView
-                    style="@style/PlaceDetailItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_web"
-                    android:onClick="@{() -> viewModel.onWebUrlClick()}"
-                    android:text="@{viewModel.urlText}"
-                    android:visibility="@{TextUtils.isEmpty(viewModel.urlText) ? View.GONE : View.VISIBLE}"
-                    tools:text="http://www.sygic.com" />
-
-                <TextView
-                    style="@style/PlaceDetailItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_location"
-                    android:onClick="@{() -> viewModel.onCoordinatesClick()}"
-                    android:text="@{viewModel.coordinatesText}"
-                    android:visibility="@{TextUtils.isEmpty(viewModel.coordinatesText) ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@id/placeDetailItemLocationIcon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/placeDetailItemLocationTitle"
+                    app:layout_constraintTop_toBottomOf="@id/placeDetailItemLocationTitle"
                     tools:text="48.126895, 12.214578" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+            <com.sygic.maps.uikit.views.common.ExtendedFloatingActionButton
+                android:id="@+id/placeDetailNavigationButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_navigation"
+                android:onClick="@{() -> viewModel.onNavigationButtonClick()}"
+                android:paddingStart="10dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="8dp"
+                android:text="@string/get_direction"
+                android:visibility="@{safeUnbox(viewModel.navigationButtonEnabled) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/placeDetailItemLocationContainer"
+                tools:background="@drawable/bg_get_direction_button_rounded"
+                tools:layout_height="48dp"
+                tools:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
             android:layout_width="48dp"
