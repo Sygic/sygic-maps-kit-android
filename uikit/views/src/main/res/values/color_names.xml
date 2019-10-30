@@ -61,9 +61,9 @@
     <color name="black">@android:color/black</color>
 
     <color name="malibu">#7dc8f7</color>
-    <color name="azure_radiance">#0080ff</color>
+    <color name="azure_radiance">#007BFF</color>
+    <color name="blue_ribbon">#0066FF</color>
     <color name="science_blue">#0461be</color>
-    <color name="blue">#2430f5</color>
     <color name="dark_blue">#0000C8</color>
 
     <!-- END BASE COLORS FOR REFERENCING -->

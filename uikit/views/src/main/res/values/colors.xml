@@ -25,8 +25,8 @@
 
 <resources>
     <color name="colorPrimary">@color/colorAccent</color>
-    <color name="colorPrimaryDark">@color/dark_blue</color>
-    <color name="colorAccent">@color/blue</color>
+    <color name="colorPrimaryDark">@color/science_blue</color>
+    <color name="colorAccent">@color/blue_ribbon</color>
     <color name="textColorPrimary">@color/mine_shaft</color>
     <color name="textColorSecondary">@color/boulder</color>
     <color name="iconBackground">@color/shuttle_gray</color>

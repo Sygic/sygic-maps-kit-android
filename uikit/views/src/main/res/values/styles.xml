@@ -23,7 +23,7 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="SygicCompassStyle">
         <item name="android:elevation">4dp</item>
@@ -41,13 +41,9 @@
 
     <style name="SygicExtendedFloatingActionButtonStyle">
         <item name="android:background">@drawable/bg_get_direction_button_rounded</item>
-        <!--todo-->
-        <!--
-        <item name="android:elevation">@dimen/navigationComponentElevation</item>
-        <item name="android:layout_marginBottom">@dimen/currentSpeedViewLayoutMargin</item>
-        <item name="android:layout_marginEnd">@dimen/currentSpeedViewLayoutMargin</item>
-        <item name="android:layout_marginStart">@dimen/currentSpeedViewLayoutMargin</item>
-        <item name="android:layout_marginTop">@dimen/currentSpeedViewLayoutMargin</item>-->
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:textSize">@dimen/fontSizeLarge</item>
+        <item name="android:iconTint" tools:targetApi="o">?android:attr/textColorPrimaryInverse</item>
     </style>
 
     <style name="SygicInfobarStyle">

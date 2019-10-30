@@ -26,25 +26,29 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--todo-->
     <merge
         tools:background="@drawable/bg_get_direction_button_rounded"
         tools:gravity="center"
         tools:layout_gravity="center"
         tools:layout_height="wrap_content"
         tools:layout_width="match_parent"
+        tools:paddingBottom="6dp"
+        tools:paddingEnd="10dp"
+        tools:paddingStart="10dp"
+        tools:paddingTop="6dp"
         tools:parentTag="android.widget.LinearLayout">
 
-        <!--todo-->
         <TextView
             android:id="@+id/extendedFabTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:fontFamily="sans-serif-medium"
-            tools:text="Get direction" />
+            tools:text="Get direction"
+            tools:textColor="?android:attr/textColorPrimaryInverse"
+            tools:textSize="@dimen/fontSizeLarge" />
 
-        <!--todo-->
         <ImageView
             android:id="@+id/extendedFabIcon"
             android:layout_width="wrap_content"
@@ -52,12 +56,9 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="8dp"
-            android:tint="?attr/navigationTextColorPrimary"
-            tools:src="@drawable/ic_navigation" />
+            android:padding="8dp"
+            tools:src="@drawable/ic_navigation"
+            tools:tint="?android:attr/textColorPrimaryInverse" />
 
     </merge>
 

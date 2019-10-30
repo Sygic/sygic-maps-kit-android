@@ -59,15 +59,16 @@
                 android:id="@+id/placeDetailHeaderContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="8dp">
 
-                <!--todo: placeDetailHandleView visibility-->
                 <View
                     android:id="@+id/placeDetailHandleView"
                     android:layout_width="64dp"
                     android:layout_height="6dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="4dp"
                     android:background="@drawable/ic_drag_hint_shape"
                     android:onClick="@{() -> viewModel.onHeaderClick()}" />
 
@@ -80,7 +81,7 @@
                     android:paddingTop="4dp"
                     android:singleLine="true"
                     android:text="@{viewModel.subtitleText}"
-                    android:textColor="?android:attr/textColorSecondary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="@dimen/fontSizeSmall"
                     tools:text="Mlynské nivy 16, 821 09 Bratislava" />
 
@@ -96,16 +97,21 @@
                     android:text="@{viewModel.titleText}"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="@dimen/fontSizeMediumLarge"
-                    tools:text="Sygic" />
+                    tools:text="Sheraton Bratislava" />
 
                 <com.sygic.maps.uikit.views.common.ExtendedFloatingActionButton
                     android:id="@+id/placeDetailNavigationButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_navigation"
                     android:onClick="@{() -> viewModel.onNavigationButtonClick()}"
-                    android:visibility="@{safeUnbox(viewModel.navigationButtonEnabled) ? View.VISIBLE : View.GONE}"
+                    android:paddingStart="10dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="6dp"
                     android:text="@string/get_direction"
-                    android:icon="@drawable/ic_navigation" />
+                    android:visibility="@{safeUnbox(viewModel.navigationButtonEnabled) ? View.VISIBLE : View.GONE}"
+                    tools:visibility="visible" />
 
             </LinearLayout>
 

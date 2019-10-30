@@ -26,13 +26,17 @@ package com.sygic.maps.uikit.views.common
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.getColor
+import com.sygic.maps.uikit.views.common.extensions.tint
 import com.sygic.maps.uikit.views.databinding.LayoutExtendedFabInternalBinding
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -71,7 +75,10 @@ open class ExtendedFloatingActionButton @JvmOverloads constructor(
                 layoutMarginStart = it.getDimensionPixelSize(R.styleable.ExtendedFloatingActionButton_android_layout_marginStart, 0)
                 layoutMarginEnd = it.getDimensionPixelSize(R.styleable.ExtendedFloatingActionButton_android_layout_marginEnd, 0)
                 setText(it.getResourceId(R.styleable.ExtendedFloatingActionButton_android_text, 0))
+                setTextColor(it.getResourceId(R.styleable.ExtendedFloatingActionButton_android_textColor, 0))
+                setTextSize(it.getDimensionPixelSize(R.styleable.ExtendedFloatingActionButton_android_textSize, 0))
                 setIcon(it.getResourceId(R.styleable.ExtendedFloatingActionButton_android_icon, 0))
+                setIconTint(it.getResourceId(R.styleable.ExtendedFloatingActionButton_android_iconTint, 0))
             }.recycle()
         }
     }
@@ -95,9 +102,29 @@ open class ExtendedFloatingActionButton @JvmOverloads constructor(
         }
     }
 
+    fun setTextColor(@ColorRes colorId: Int) {
+        if (colorId != 0) {
+            binding.extendedFabTitle.setTextColor(getColor(colorId))
+        }
+    }
+
+    fun setTextSize(sizeValue: Int) = setTextSize(sizeValue.toFloat())
+
+    fun setTextSize(sizeValue: Float) {
+        if (sizeValue != 0F) {
+            binding.extendedFabTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, sizeValue)
+        }
+    }
+
     fun setIcon(@DrawableRes iconId: Int) {
         if (iconId != 0) {
             binding.extendedFabIcon.setImageResource(iconId)
+        }
+    }
+
+    fun setIconTint(@ColorRes colorId: Int) {
+        if (colorId != 0) {
+            binding.extendedFabIcon.tint(colorId)
         }
     }
 }
