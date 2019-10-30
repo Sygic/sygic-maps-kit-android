@@ -29,8 +29,9 @@ import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.data.BasicData
 import com.sygic.maps.uikit.viewmodels.common.data.PlaceData
-import com.sygic.maps.uikit.viewmodels.common.sdk.search.CoordinateSearchResultItem
-import com.sygic.maps.uikit.viewmodels.common.sdk.search.map.*
+import com.sygic.maps.uikit.viewmodels.common.sdk.search.PlaceCategorySdkSearchResultItem
+import com.sygic.maps.uikit.viewmodels.common.sdk.search.PlaceSdkSearchResultItem
+import com.sygic.maps.uikit.viewmodels.common.sdk.search.SdkSearchResultItem
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.direction.DirectionManeuverType
 import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
@@ -52,9 +53,9 @@ import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo.SignElement
 import com.sygic.sdk.places.PlaceDetail
 import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.CoordinateSearchResult
-import com.sygic.sdk.search.MapSearchResult
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.AutocompleteResult
+import com.sygic.sdk.search.PlaceResultDetail
+import com.sygic.sdk.search.ResultType
 import com.sygic.sdk.voice.VoiceEntry
 import java.util.*
 
@@ -78,9 +79,14 @@ fun ViewObject<*>.getSelectionType(): Int {
     }
 }
 
-fun List<PlaceDetail>.getFirst(attr: String): String? {
+fun List<PlaceDetail>.getFirstPlaceDetail(attr: String): String? {
     // for each type of Place information, there could be multiple results, for instance multiple mail or phone info - get first
-    return firstOrNull { it.first == attr }?.second
+    return firstOrNull { it.key == attr }?.value
+}
+
+fun List<PlaceResultDetail>.getFirstPlaceResultDetail(attr: String): String? {
+    // for each type of Place information, there could be multiple results, for instance multiple mail or phone info - get first
+    return firstOrNull { it.key == attr }?.value
 }
 
 fun GeoCoordinates.getFormattedLocation(): String {
@@ -159,31 +165,24 @@ fun Camera.CameraModel.setMapRectangle(geoBoundingBox: GeoBoundingBox, margin: I
     mapRectangle = MapRectangle(geoBoundingBox, margin, margin, margin, margin)
 }
 
-fun SearchResult.toSearchResultItem(): SearchResultItem<out SearchResult>? {
-    return when (this) {
-        is MapSearchResult -> {
-            when (dataType) {
-                MapSearchResult.DataType.Country -> CountryResultItem(this)
-                MapSearchResult.DataType.Postal -> PostalResultItem(this)
-                MapSearchResult.DataType.City -> CityResultItem(this)
-                MapSearchResult.DataType.Street -> StreetResultItem(this)
-                MapSearchResult.DataType.AddressPoint -> AddressPointResultItem(this)
-                MapSearchResult.DataType.PostalAddress -> PostalAddressResultItem(this)
-                MapSearchResult.DataType.PoiCategoryGroup -> PlaceCategoryGroupResultItem(this) //todo: Search interface refactor
-                MapSearchResult.DataType.PoiCategory -> PlaceCategoryResultItem(this) //todo: Search interface refactor
-                MapSearchResult.DataType.Poi -> PlaceResultItem(this) //todo: Search interface refactor
-                else -> null
-            }
-        }
-        is CoordinateSearchResult -> CoordinateSearchResultItem(this)
-        else -> null
+fun AutocompleteResult.toSearchResultItem(): SearchResultItem<out AutocompleteResult>? {
+    return when (type) {
+        ResultType.COORDINATE,
+        ResultType.ADMIN_AREA,
+        ResultType.POSTAL_CODE,
+        ResultType.STREET,
+        ResultType.HOUSE_NUMBER,
+        ResultType.FLAT_DATA -> SdkSearchResultItem(this)
+        ResultType.PLACE_CATEGORY -> PlaceCategorySdkSearchResultItem(this)
+        ResultType.PLACE -> PlaceSdkSearchResultItem(this)
     }
 }
 
-fun List<SearchResult>.toSearchResultList(): List<SearchResultItem<out SearchResult>> =
+fun List<AutocompleteResult>.toSearchResults(): List<SearchResultItem<out AutocompleteResult>> =
     mapNotNull { it.toSearchResultItem() }
 
-fun List<SearchResultItem<out SearchResult>>.toSdkSearchResultList(): List<SearchResult> = mapNotNull { it.dataPayload }
+fun List<SearchResultItem<out AutocompleteResult>>.toAutocompleteResults(): List<AutocompleteResult> =
+    mapNotNull { it.dataPayload }
 
 fun List<SignpostInfo.SignElement>.concatItems(): String = StringBuilder().apply {
     this@concatItems.forEach {

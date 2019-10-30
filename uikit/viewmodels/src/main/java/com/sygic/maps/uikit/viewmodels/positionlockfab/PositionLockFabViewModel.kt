@@ -54,10 +54,7 @@ open class PositionLockFabViewModel internal constructor(
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
     private val positionManagerClient: PositionManagerClient
-) :
-    ViewModel(),
-    Camera.ModeChangedListener,
-    DefaultLifecycleObserver {
+) : ViewModel(), Camera.ModeChangedListener, DefaultLifecycleObserver {
 
     val currentState: LiveData<Int> = MutableLiveData(LockState.UNLOCKED)
 

@@ -22,15 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.search.holder
+package com.sygic.maps.uikit.viewmodels.common.sdk.search
 
-import android.os.Parcelable
-import com.sygic.sdk.search.SearchResult
+import com.sygic.maps.uikit.views.common.utils.TextHolder
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
+import com.sygic.sdk.search.AutocompleteResult
+import com.sygic.sdk.search.ResultType
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class SearchResultsHolder(
-    val input: String,
-    @SearchResult.ResultState val state: Int,
-    val results: List<SearchResult>
-) : Parcelable
+open class SdkSearchResultItem(
+    override val dataPayload: AutocompleteResult
+) : SearchResultItem<AutocompleteResult> {
+
+    val type: ResultType
+        get() = dataPayload.type
+
+    override val title: TextHolder
+        get() = TextHolder.from(dataPayload.title)
+
+    override val subTitle: TextHolder
+        get() = TextHolder.from(dataPayload.subtitle)
+}

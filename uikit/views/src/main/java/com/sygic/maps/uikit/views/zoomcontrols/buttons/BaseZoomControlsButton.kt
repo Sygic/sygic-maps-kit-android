@@ -30,7 +30,6 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -50,8 +49,8 @@ internal abstract class BaseZoomControlsButton @JvmOverloads constructor(
     internal var interactionListener: ZoomControlsMenu.InteractionListener? = null
 
     private val iconImageView: ImageView
-    private val showAnimation: Animation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_up)
-    private val hideAnimation: Animation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_down)
+    private val showAnimation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_up)
+    private val hideAnimation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_down)
 
     open fun onActionDown() {}
     abstract fun onActionUpOrCancel()

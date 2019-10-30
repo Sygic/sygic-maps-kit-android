@@ -22,25 +22,23 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
+package com.sygic.maps.uikit.viewmodels.common.search.state
 
-import com.sygic.maps.uikit.viewmodels.common.utils.getStreetWithHouseNumberAndCityWithPostal
-import com.sygic.maps.uikit.views.common.utils.TextHolder
-import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
-import com.sygic.sdk.search.MapSearchResult
+import android.os.Parcelable
+import com.sygic.sdk.search.SearchManager
+import kotlinx.android.parcel.Parcelize
 
-abstract class MapSearchResultItem : SearchResultItem<MapSearchResult> {
+@Parcelize
+enum class ResultState : Parcelable {
+    SUCCESS, NETWORK_UNAVAILABLE, NETWORK_TIMEOUT, GENERAL_ERROR, UNKNOWN
+}
 
-    @get:MapSearchResult.DataType
-    abstract val type: Int
-
-    override val subTitle: TextHolder
-        get() = TextHolder.from(
-            getStreetWithHouseNumberAndCityWithPostal(
-                dataPayload.street.text,
-                dataPayload.addressPoint.text,
-                dataPayload.city.text,
-                dataPayload.postal.text
-            )
-        )
+fun SearchManager.ErrorCode.toResultState(): ResultState = when (this) {
+    SearchManager.ErrorCode.REQUEST_CANCELED -> ResultState.GENERAL_ERROR
+    SearchManager.ErrorCode.INAVLID_LOCATION_ID -> ResultState.GENERAL_ERROR
+    SearchManager.ErrorCode.INVALID_CATEGORY_TAG -> ResultState.GENERAL_ERROR
+    SearchManager.ErrorCode.UNATHORIZED -> ResultState.GENERAL_ERROR
+    SearchManager.ErrorCode.NETWORK_UNAVAILABLE -> ResultState.NETWORK_UNAVAILABLE
+    SearchManager.ErrorCode.NETWORK_TIMEOUT -> ResultState.NETWORK_TIMEOUT
+    SearchManager.ErrorCode.UNKNOWN -> ResultState.UNKNOWN
 }

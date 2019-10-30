@@ -53,8 +53,7 @@ open class CurrentSpeedView @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicCurrentSpeedViewStyle
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val binding: LayoutCurrentSpeedInternalBinding =
-        LayoutCurrentSpeedInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutCurrentSpeedInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     private var layoutMargin: Int = 0
     private var layoutMarginTop: Int = 0

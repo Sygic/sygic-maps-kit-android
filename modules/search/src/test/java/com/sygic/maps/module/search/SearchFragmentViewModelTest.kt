@@ -29,12 +29,15 @@ import android.widget.TextView
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
+import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
+import com.sygic.sdk.search.AutocompleteResult
+import com.sygic.sdk.search.ResultType
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -51,11 +54,14 @@ class SearchFragmentViewModelTest {
     @Mock
     private lateinit var app: Application
 
+    @Mock
+    private lateinit var searchManagerClient: SearchManagerClient
+
     private lateinit var searchFragmentViewModel: SearchFragmentViewModel
 
     @Before
     fun setup() {
-        searchFragmentViewModel = SearchFragmentViewModel(app, mock())
+        searchFragmentViewModel = SearchFragmentViewModel(app, searchManagerClient)
     }
 
     @Test
@@ -71,8 +77,14 @@ class SearchFragmentViewModelTest {
 
     @Test
     fun onSearchResultItemClickTest() {
-        searchFragmentViewModel.onSearchResultItemClick(mock())
-        searchFragmentViewModel.onFinishObservable.test().assertHasValue()
+        val searchResultItemMock = mock<SearchResultItem<AutocompleteResult>>()
+        val dataPayloadMock = mock<AutocompleteResult>()
+
+        whenever(searchResultItemMock.dataPayload).thenReturn(dataPayloadMock)
+        whenever(dataPayloadMock.type).thenReturn(ResultType.PLACE)
+
+        searchFragmentViewModel.onSearchResultItemClick(searchResultItemMock)
+        verify(searchManagerClient).geocodeResult(eq(dataPayloadMock), any())
     }
 
     @Test
@@ -80,6 +92,6 @@ class SearchFragmentViewModelTest {
         val textViewMock = mock<TextView>()
         searchFragmentViewModel.onActionSearchClick(textViewMock)
         verify(textViewMock).hideKeyboard()
-        searchFragmentViewModel.onFinishObservable.test().assertHasValue()
+        verify(searchManagerClient).geocodeAllResults(any())
     }
 }

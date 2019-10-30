@@ -22,23 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.viewmodels.common.sdk.search.map
+package com.sygic.maps.uikit.viewmodels.common.sdk.search
 
-import com.sygic.maps.uikit.viewmodels.R
-import com.sygic.maps.uikit.views.common.utils.TextHolder
-import com.sygic.sdk.search.MapSearchResult
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import com.sygic.maps.uikit.viewmodels.common.extensions.toCategoryIconDrawableRes
+import com.sygic.maps.uikit.viewmodels.common.extensions.toColorRes
+import com.sygic.sdk.search.AutocompleteResult
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class CountryResultItem(override val dataPayload: MapSearchResult) : MapSearchResultItem() {
+class PlaceSdkSearchResultItem(
+    override val dataPayload: AutocompleteResult
+) : SdkSearchResultItem(dataPayload) {
 
-    @get:MapSearchResult.DataType
-    override val type: Int
-        get() = MapSearchResult.DataType.Country
+    @get:DrawableRes
+    override val icon: Int
+        get() = dataPayload.categoryTags.toCategoryIconDrawableRes()
 
-    override val title: TextHolder
-        get() = TextHolder.from(dataPayload.country.text)
-
-    override val subTitle: TextHolder
-        get() = TextHolder.from(R.string.country)
+    @get:ColorRes
+    override val iconBackgroundColor: Int
+        get() = dataPayload.categoryTags.toColorRes()
 }

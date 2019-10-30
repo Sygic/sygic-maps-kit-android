@@ -26,7 +26,7 @@ package com.sygic.maps.uikit.viewmodels.common.place
 
 import androidx.annotation.RestrictTo
 import com.sygic.maps.uikit.viewmodels.common.data.PlaceData
-import com.sygic.maps.uikit.viewmodels.common.extensions.getFirst
+import com.sygic.maps.uikit.viewmodels.common.extensions.getFirstPlaceDetail
 import com.sygic.sdk.map.`object`.ProxyObjectManager
 import com.sygic.sdk.map.`object`.ProxyPlace
 import com.sygic.sdk.map.`object`.ScreenObject
@@ -36,9 +36,9 @@ import com.sygic.sdk.places.Place
 import com.sygic.sdk.places.PlaceDetailAttributes
 import com.sygic.sdk.places.PlaceLink
 import com.sygic.sdk.places.PlacesManager
-import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.ReverseGeocoder
-import com.sygic.sdk.search.ReverseSearchResult
+import com.sygic.sdk.search.ReverseGeocodingResult
+import com.sygic.sdk.search.SearchManager
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PlacesManagerClient {
@@ -47,7 +47,7 @@ interface PlacesManagerClient {
     fun loadPlaceLink(proxyPlace: ProxyPlace, listener: ProxyObjectManager.PlaceLinkListener)
     fun getViewObjectData(viewObject: ViewObject<*>, callback: Callback)
 
-    abstract class Callback : PlacesManager.PlaceListener, ReverseGeocoder.ReverseSearchResultsListener {
+    abstract class Callback : PlacesManager.PlaceListener, ReverseGeocoder.ReverseGeocodingResultListener {
         abstract fun onDataLoaded(data: ViewObjectData)
 
         final override fun onPlaceLoaded(place: Place) {
@@ -56,37 +56,35 @@ interface PlacesManagerClient {
                     PlaceData(
                         name = place.link.name,
                         placeCategory = place.link.category,
-                        placeGroup = place.link.group,
-                        iso = place.details.getFirst(PlaceDetailAttributes.Iso),
-                        city = place.details.getFirst(PlaceDetailAttributes.City),
-                        street = place.details.getFirst(PlaceDetailAttributes.Street),
-                        houseNumber = place.details.getFirst(PlaceDetailAttributes.HouseNum),
-                        postal = place.details.getFirst(PlaceDetailAttributes.Postal),
-                        phone = place.details.getFirst(PlaceDetailAttributes.Phone),
-                        email = place.details.getFirst(PlaceDetailAttributes.Mail),
-                        url = place.details.getFirst(PlaceDetailAttributes.Url)
+                        iso = place.details.getFirstPlaceDetail(PlaceDetailAttributes.Iso),
+                        city = place.details.getFirstPlaceDetail(PlaceDetailAttributes.City),
+                        street = place.details.getFirstPlaceDetail(PlaceDetailAttributes.Street),
+                        houseNumber = place.details.getFirstPlaceDetail(PlaceDetailAttributes.HouseNum),
+                        postal = place.details.getFirstPlaceDetail(PlaceDetailAttributes.Postal),
+                        phone = place.details.getFirstPlaceDetail(PlaceDetailAttributes.Phone),
+                        email = place.details.getFirstPlaceDetail(PlaceDetailAttributes.Mail),
+                        url = place.details.getFirstPlaceDetail(PlaceDetailAttributes.Url)
                     )
                 ).build()
 
             onDataLoaded(placeObject.data)
         }
 
-        final override fun onSearchResults(results: List<ReverseSearchResult>, position: GeoCoordinates) {
-            val builder = if (results.isEmpty()) {
-                ScreenObject.at(position)
-            } else {
-                val reverseSearchResult = results.first()
-                ScreenObject.at(position).withPayload(
+        final override fun onReverseGeocodingResult(result: List<ReverseGeocodingResult>) {
+            result.firstOrNull()?.let {
+                val builder = ScreenObject.at(it.position).withPayload(
                     PlaceData(
-                        iso = reverseSearchResult.names.countryIso,
-                        city = reverseSearchResult.names.city,
-                        street = reverseSearchResult.names.street,
-                        houseNumber = reverseSearchResult.names.houseNumber
+                        iso = it.names.countryIso,
+                        city = it.names.city,
+                        street = it.names.street,
+                        houseNumber = it.names.houseNumber
                     )
                 )
-            }
 
-            onDataLoaded(builder.build().data)
+                onDataLoaded(builder.build().data)
+            }
         }
+
+        final override fun onReverseGeocodingResultError(code: SearchManager.ErrorCode) { /* Currently do nothing */ }
     }
 }

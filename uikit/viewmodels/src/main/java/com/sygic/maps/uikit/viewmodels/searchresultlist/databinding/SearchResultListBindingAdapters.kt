@@ -27,10 +27,10 @@ package com.sygic.maps.uikit.viewmodels.searchresultlist.databinding
 import androidx.databinding.BindingAdapter
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
 import com.sygic.maps.uikit.views.searchresultlist.adapter.ResultListAdapter
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.AutocompleteResult
 
 @BindingAdapter(value = ["adapter"])
 fun setAdapter(
     searchResultList: SearchResultList,
-    adapter: ResultListAdapter<SearchResult, ResultListAdapter.ItemViewHolder<SearchResult>>
+    adapter: ResultListAdapter<AutocompleteResult, ResultListAdapter.ItemViewHolder<AutocompleteResult>>
 ) = searchResultList.setAdapter(adapter)

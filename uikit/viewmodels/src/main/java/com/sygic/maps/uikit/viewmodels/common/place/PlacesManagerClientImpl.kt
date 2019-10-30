@@ -100,7 +100,7 @@ class PlacesManagerClientImpl private constructor(
 
     private fun handleDefaultState(viewObject: ViewObject<*>, callback: PlacesManagerClient.Callback) {
         if (viewObject.data.payload is EmptyPayload) {
-            reverseGeocoderManagerClient.search(viewObject.position, emptySet(), callback)
+            reverseGeocoderManagerClient.reverseGeocode(viewObject.position, emptySet(), callback)
         } else {
             callback.onDataLoaded(viewObject.data)
         }

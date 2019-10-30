@@ -24,7 +24,6 @@
 
 <skin>
     <searching memo="options: depth, breadth" policy="depth" />
-    <!--todo-->
     <set name="poi_groups" file="skin_poi_groups.xml" hidden="true" memo="POI groups" />
     <set name="poi_categories" file="skin_poi_categories.xml" hidden="true" memo="POI categories" />
     <set name="poi_groups_car" file="skin_poi_groups_car.xml" hidden="true" memo="POI groups" />
