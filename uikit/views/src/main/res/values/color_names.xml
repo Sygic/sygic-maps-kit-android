@@ -58,6 +58,7 @@
     <color name="boulder">#757575</color>
     <color name="charade">#2d3140</color>
     <color name="ebony_clay">#252a3f</color>
+    <color name="tundora">#3C3B3B</color>
     <color name="mine_shaft">#212121</color>
     <color name="black">@android:color/black</color>
 

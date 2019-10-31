@@ -36,4 +36,6 @@
     <color name="speedProgressBackgroundColor">@color/gray_chateau</color>
     <color name="speedProgressForegroundStartColor">@color/limeade</color>
     <color name="speedProgressForegroundEndColor">@color/brick_red</color>
+    <color name="placeDetailItemBackgroundColor">@color/mercury</color>
+    <color name="placeDetailItemDisabledTintColor">@color/gray</color>
 </resources>

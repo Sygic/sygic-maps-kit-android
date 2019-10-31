@@ -26,7 +26,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <!-- todo: night color -->
-    <solid android:color="@color/mercury" />
+    <solid android:color="?attr/placeDetailItemBackgroundColor" />
     <corners android:radius="3dp" />
 </shape>

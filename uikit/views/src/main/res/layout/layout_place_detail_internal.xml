@@ -58,13 +58,13 @@
             <ImageView
                 android:id="@+id/placeDetailHandleView"
                 android:layout_width="0dp"
-                android:layout_height="6dp"
+                android:layout_height="12dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="4dp"
                 android:onClick="@{() -> viewModel.onHeaderClick()}"
                 android:paddingStart="148dp"
+                android:paddingTop="2dp"
                 android:paddingEnd="148dp"
+                android:paddingBottom="4dp"
                 android:src="@drawable/ic_drag_hint_shape"
                 app:layout_constraintBottom_toTopOf="@id/placeDetailSubtitleTextView"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +84,6 @@
                 android:text="@{viewModel.subtitleText}"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="@dimen/fontSizeSmall"
-                android:visibility="@{TextUtils.isEmpty(viewModel.subtitleText) ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toTopOf="@id/placeDetailTitleTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -124,7 +123,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView" />
 
-            <!--todo: disabled state-->
             <TextView
                 android:id="@+id/placeDetailItemWeb"
                 style="@style/PlaceDetailItem.Horizontal"
@@ -134,14 +132,16 @@
                 android:onClick="@{() -> viewModel.onWebUrlClick()}"
                 android:text="@string/url"
                 android:textAllCaps="true"
-                android:textColor="?android:attr/colorAccent"
+                app:placeDetailItemState="@{!TextUtils.isEmpty(viewModel.urlText)}"
                 app:layout_constraintBottom_toTopOf="@id/placeDetailItemLocationContainer"
                 app:layout_constraintEnd_toStartOf="@id/placeDetailItemPhone"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView" />
+                app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView"
+                tools:background="@drawable/bg_place_detail_item_horizontal_rounded"
+                tools:drawableTint="?android:attr/colorAccent"
+                tools:textColor="?android:attr/colorAccent" />
 
-            <!--todo: disabled state-->
             <TextView
                 android:id="@+id/placeDetailItemPhone"
                 style="@style/PlaceDetailItem.Horizontal"
@@ -150,13 +150,15 @@
                 android:drawableTop="@drawable/ic_phone"
                 android:onClick="@{() -> viewModel.onPhoneNumberClick()}"
                 android:text="@string/telephone"
-                android:textColor="?android:attr/colorAccent"
                 app:layout_constraintBottom_toBottomOf="@id/placeDetailItemWeb"
                 app:layout_constraintEnd_toStartOf="@id/placeDetailItemEmail"
                 app:layout_constraintStart_toEndOf="@id/placeDetailItemWeb"
-                app:layout_constraintTop_toTopOf="@id/placeDetailItemWeb" />
+                app:layout_constraintTop_toTopOf="@id/placeDetailItemWeb"
+                app:placeDetailItemState="@{!TextUtils.isEmpty(viewModel.phoneText)}"
+                tools:background="@drawable/bg_place_detail_item_horizontal_rounded"
+                tools:drawableTint="?android:attr/colorAccent"
+                tools:textColor="?android:attr/colorAccent" />
 
-            <!--todo: disabled state-->
             <TextView
                 android:id="@+id/placeDetailItemEmail"
                 style="@style/PlaceDetailItem.Horizontal"
@@ -165,11 +167,14 @@
                 android:drawableTop="@drawable/ic_email"
                 android:onClick="@{() -> viewModel.onEmailClick()}"
                 android:text="@string/email"
-                android:textColor="?android:attr/colorAccent"
                 app:layout_constraintBottom_toBottomOf="@id/placeDetailItemWeb"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/placeDetailItemPhone"
-                app:layout_constraintTop_toTopOf="@id/placeDetailItemWeb" />
+                app:layout_constraintTop_toTopOf="@id/placeDetailItemWeb"
+                app:placeDetailItemState="@{!TextUtils.isEmpty(viewModel.emailText)}"
+                tools:background="@drawable/bg_place_detail_item_horizontal_rounded"
+                tools:drawableTint="?android:attr/colorAccent"
+                tools:textColor="?android:attr/colorAccent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/placeDetailItemLocationContainer"

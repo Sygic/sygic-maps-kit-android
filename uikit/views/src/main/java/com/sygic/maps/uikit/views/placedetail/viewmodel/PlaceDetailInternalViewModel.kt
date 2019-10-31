@@ -27,22 +27,19 @@ package com.sygic.maps.uikit.views.placedetail.viewmodel
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.*
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.maps.uikit.views.common.BottomSheetBehaviorWrapper
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.maps.uikit.views.placedetail.manager.PreferencesManager
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
 private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
-const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED //todo
-const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED //todo
 
-internal class PlaceDetailInternalViewModel(app: Application, private val preferencesManager: PreferencesManager) :
-    AndroidViewModel(app),
-    BottomSheetBehaviorWrapper.StateListener {
+internal class PlaceDetailInternalViewModel(
+    app: Application,
+    private val preferencesManager: PreferencesManager
+) : AndroidViewModel(app), DefaultLifecycleObserver {
 
     val titleText: LiveData<String> = MutableLiveData()
     val subtitleText: LiveData<String> = MutableLiveData()
@@ -57,6 +54,10 @@ internal class PlaceDetailInternalViewModel(app: Application, private val prefer
     var listener: PlaceDetailBottomDialogFragment.Listener? = null
 
     private var showcaseLaunch: Job? = null
+
+    override fun onStart(owner: LifecycleOwner) {
+        startShowcase()
+    }
 
     fun onHeaderClick() {
         contentContainerVisible.asMutable().value = !contentContainerVisible.value!!
@@ -89,26 +90,24 @@ internal class PlaceDetailInternalViewModel(app: Application, private val prefer
         }
     }
 
-    override fun onStateChanged(@BottomSheetBehavior.State newState: Int) {
-        //todo
-        //startShowcase(newState)
-    }
-
-    /*private fun startShowcase(newState: Int) {
-        if (newState != SHOWCASE_BEHAVIOR_STATE || !preferencesManager.showcaseAllowed) {
+    private fun startShowcase() {
+        if (!preferencesManager.showcaseAllowed) {
             return
         }
 
         preferencesManager.showcaseAllowed = false
-        launchShowcaseBlock { contentContainerVisible.asSingleEvent().value = BottomSheetBehavior.STATE_COLLAPSED }
-    }*/
+        launchShowcaseBlock {
+            onHeaderClick()
+            launchShowcaseBlock { onHeaderClick() }
+        }
+    }
 
-    /*private fun launchShowcaseBlock(showcaseBlock: () -> Unit) {
+    private fun launchShowcaseBlock(showcaseBlock: () -> Unit) {
         showcaseLaunch = GlobalScope.launch(Dispatchers.Main) {
             delay(SHOWCASE_DELAY)
             showcaseBlock()
         }
-    }*/
+    }
 
     override fun onCleared() {
         super.onCleared()

@@ -41,9 +41,9 @@
 
     <style name="SygicExtendedFloatingActionButtonStyle">
         <item name="android:background">@drawable/bg_get_direction_button_rounded</item>
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/fontSizeLarge</item>
-        <item name="android:iconTint" tools:targetApi="o">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:iconTint" tools:targetApi="o">@color/white</item>
     </style>
 
     <style name="SygicInfobarStyle">
@@ -133,7 +133,6 @@
 
     <style name="PlaceDetailItem.Horizontal">
         <item name="android:minWidth">112dp</item>
-        <item name="android:background">@drawable/bg_place_detail_item_horizontal_rounded</item>
         <item name="android:drawablePadding">6dp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">@dimen/fontSizeSmall</item>

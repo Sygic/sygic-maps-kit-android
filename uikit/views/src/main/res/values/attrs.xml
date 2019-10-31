@@ -31,6 +31,8 @@
     <attr name="navigationTextColorPrimary" format="reference" />
     <attr name="navigationTextColorSecondary" format="reference" />
     <attr name="navigationTextColorTertiary" format="reference" />
+    <attr name="placeDetailItemBackgroundColor" format="reference" />
+    <attr name="placeDetailItemDisabledTintColor" format="reference" />
 
     <declare-styleable name="ThemeAttributes">
         <attr name="compassStyle" format="reference"/>

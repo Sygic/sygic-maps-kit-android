@@ -123,6 +123,7 @@ open class PlaceDetailBottomDialogFragment : BaseBottomDialogFragment() {
             this.onComponentChanged(arguments.getParcelableValue(PLACE_DETAIL_COMPONENT))
             this.listener = this@PlaceDetailBottomDialogFragment.listener
             this@PlaceDetailBottomDialogFragment.listener = null
+            lifecycle.addObserver(this)
         }
     }
 
@@ -140,15 +141,10 @@ open class PlaceDetailBottomDialogFragment : BaseBottomDialogFragment() {
         binding.lifecycleOwner = this
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel?.let { dialog.behavior?.addStateListener(it) }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
         listener = null
+        viewModel?.let { lifecycle.removeObserver(it) }
     }
 }
