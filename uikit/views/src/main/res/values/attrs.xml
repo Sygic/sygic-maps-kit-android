@@ -169,10 +169,9 @@
     </declare-styleable>
 
     <declare-styleable name="ZoomControlsMenu">
-        <attr name="android:orientation">
-            <enum name="horizontal" value="0" />
-            <enum name="vertical" value="1" />
-        </attr>
+        <attr name="buttonForeground" format="reference" />
+        <attr name="buttonBackground" format="reference" />
+        <attr name="buttonElevation" format="dimension" />
     </declare-styleable>
 
 </resources>

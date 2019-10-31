@@ -29,8 +29,12 @@ import android.util.AttributeSet
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.zoomcontrols.TiltType
 
-internal class ZoomControlsMapViewModeButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : BaseZoomControlsButton(context, attrs, defStyleAttr, iconDrawableRes = R.drawable.ic_3d) {
+internal class ZoomControlsMapViewModeButton @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.zoomControlsMenuStyle,
+    defStyleRes: Int = R.style.SygicZoomControlsMenuStyle
+) : BaseZoomControlsButton(context, attrs, defStyleAttr, defStyleRes, R.drawable.ic_3d) {
 
     override fun onActionUpOrCancel() {
         interactionListener?.onCameraProjectionChanged()
