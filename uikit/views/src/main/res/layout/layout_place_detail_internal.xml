@@ -43,11 +43,9 @@
         android:id="@+id/placeDetailContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
         app:displayedChild="@{safeUnbox(viewModel.contentViewSwitcherIndex)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/placeDetailHeaderContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -89,8 +87,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/placeDetailHandleView"
-                tools:text="Mlynské nivy 16, 821 09 Bratislava"
-                tools:visibility="visible" />
+                tools:text="Mlynské nivy 16, 821 09 Bratislava" />
 
             <TextView
                 android:id="@+id/placeDetailTitleTextView"

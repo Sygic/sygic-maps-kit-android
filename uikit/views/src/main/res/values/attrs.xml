@@ -85,7 +85,6 @@
         <attr name="android:icon" format="reference"/>
         <attr name="android:iconTint" format="reference"/>
         <attr name="android:background" format="reference" />
-        <attr name="android:backgroundTint" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="Infobar">
