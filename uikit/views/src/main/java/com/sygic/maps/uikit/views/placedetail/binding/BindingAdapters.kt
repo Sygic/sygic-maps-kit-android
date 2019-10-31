@@ -22,28 +22,25 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.zoomcontrols.buttons
+package com.sygic.maps.uikit.views.placedetail.binding
 
-import android.content.Context
-import android.util.AttributeSet
+import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.databinding.BindingAdapter
 import com.sygic.maps.uikit.views.R
-import com.sygic.maps.uikit.views.zoomcontrols.TiltType
+import com.sygic.maps.uikit.views.common.extensions.getColorFromAttr
 
-internal class ZoomControlsMapViewModeButton @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.zoomControlsMenuStyle,
-    defStyleRes: Int = R.style.SygicZoomControlsMenuStyle
-) : BaseZoomControlsButton(context, attrs, defStyleAttr, defStyleRes, R.drawable.ic_3d) {
-
-    override fun onActionUpOrCancel() {
-        interactionListener?.onCameraProjectionChanged()
-    }
-
-    fun cameraProjectionChanged(@TiltType tiltType: Int) {
-        when (tiltType) {
-            TiltType.TILT_2D -> setImageResource(R.drawable.ic_3d)
-            TiltType.TILT_3D -> setImageResource(R.drawable.ic_2d)
+@BindingAdapter(value = ["placeDetailItemState"])
+fun setPlaceDetailItemState(textView: TextView, enabled: Boolean) {
+    with(textView) {
+        setBackgroundResource(if (enabled) R.drawable.bg_place_detail_item_horizontal_rounded else R.drawable.bg_place_detail_item_horizontal_disabled_rounded)
+        getColorFromAttr(if (enabled) android.R.attr.colorAccent else R.attr.placeDetailItemDisabledTintColor).let {
+            setTextColor(it)
+            setDrawableColorTint(it)
         }
     }
+}
+
+private fun TextView.setDrawableColorTint(@ColorInt color: Int) {
+    for (drawable in compoundDrawables) drawable?.setTint(color)
 }

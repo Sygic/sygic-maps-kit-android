@@ -31,10 +31,13 @@
     <attr name="navigationTextColorPrimary" format="reference" />
     <attr name="navigationTextColorSecondary" format="reference" />
     <attr name="navigationTextColorTertiary" format="reference" />
+    <attr name="placeDetailItemBackgroundColor" format="reference" />
+    <attr name="placeDetailItemDisabledTintColor" format="reference" />
 
     <declare-styleable name="ThemeAttributes">
         <attr name="compassStyle" format="reference"/>
         <attr name="currentSpeedViewStyle" format="reference"/>
+        <attr name="extendedFloatingActionButtonStyle" format="reference"/>
         <attr name="infoBarStyle" format="reference" />
         <attr name="lanesViewStyle" format="reference" />
         <attr name="positionLockFabStyle" format="reference" />
@@ -68,6 +71,20 @@
 
     <declare-styleable name="EmptyRecyclerView">
         <attr name="emptyView" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ExtendedFloatingActionButton">
+        <attr name="android:layout_margin" format="dimension" />
+        <attr name="android:layout_marginTop" format="dimension" />
+        <attr name="android:layout_marginBottom" format="dimension" />
+        <attr name="android:layout_marginStart" format="dimension" />
+        <attr name="android:layout_marginEnd" format="dimension" />
+        <attr name="android:text" format="reference"/>
+        <attr name="android:textColor" format="reference"/>
+        <attr name="android:textSize" format="reference"/>
+        <attr name="android:icon" format="reference"/>
+        <attr name="android:iconTint" format="reference"/>
+        <attr name="android:background" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="Infobar">
@@ -148,6 +165,12 @@
         <attr name="segmentAngle" format="integer" />
         <attr name="segmentThickness" format="dimension" />
         <attr name="segmentSpacing" format="fraction" />
+    </declare-styleable>
+
+    <declare-styleable name="ZoomControlsMenu">
+        <attr name="buttonForeground" format="reference" />
+        <attr name="buttonBackground" format="reference" />
+        <attr name="buttonElevation" format="dimension" />
     </declare-styleable>
 
 </resources>

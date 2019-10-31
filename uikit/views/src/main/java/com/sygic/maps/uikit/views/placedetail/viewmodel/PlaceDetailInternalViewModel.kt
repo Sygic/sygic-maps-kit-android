@@ -27,10 +27,7 @@ package com.sygic.maps.uikit.views.placedetail.viewmodel
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.*
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.sygic.maps.uikit.views.common.BottomSheetBehaviorWrapper
 import com.sygic.maps.uikit.views.common.extensions.*
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.maps.uikit.views.placedetail.manager.PreferencesManager
@@ -38,12 +35,11 @@ import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
 private val SHOWCASE_DELAY = TimeUnit.SECONDS.toMillis(1)
-const val DEFAULT_BEHAVIOR_STATE = BottomSheetBehavior.STATE_COLLAPSED
-const val SHOWCASE_BEHAVIOR_STATE = BottomSheetBehavior.STATE_EXPANDED
 
-internal class PlaceDetailInternalViewModel(app: Application, private val preferencesManager: PreferencesManager) :
-    AndroidViewModel(app),
-    BottomSheetBehaviorWrapper.StateListener {
+internal class PlaceDetailInternalViewModel(
+    app: Application,
+    private val preferencesManager: PreferencesManager
+) : AndroidViewModel(app), DefaultLifecycleObserver {
 
     val titleText: LiveData<String> = MutableLiveData()
     val subtitleText: LiveData<String> = MutableLiveData()
@@ -53,15 +49,18 @@ internal class PlaceDetailInternalViewModel(app: Application, private val prefer
     val coordinatesText: LiveData<String> = MutableLiveData()
     val contentViewSwitcherIndex: LiveData<Int> = MutableLiveData()
     val navigationButtonEnabled: LiveData<Boolean> = MutableLiveData(false)
-
-    val dialogStateObservable: LiveData<Int> = SingleLiveEvent()
+    val contentContainerVisible: LiveData<Boolean> = MutableLiveData(false)
 
     var listener: PlaceDetailBottomDialogFragment.Listener? = null
 
     private var showcaseLaunch: Job? = null
 
+    override fun onStart(owner: LifecycleOwner) {
+        startShowcase()
+    }
+
     fun onHeaderClick() {
-        dialogStateObservable.asSingleEvent().value = BottomSheetBehavior.STATE_EXPANDED
+        contentContainerVisible.asMutable().value = !contentContainerVisible.value!!
     }
 
     fun onNavigationButtonClick() {
@@ -91,17 +90,16 @@ internal class PlaceDetailInternalViewModel(app: Application, private val prefer
         }
     }
 
-    override fun onStateChanged(@BottomSheetBehavior.State newState: Int) {
-        startShowcase(newState)
-    }
-
-    private fun startShowcase(newState: Int) {
-        if (newState != SHOWCASE_BEHAVIOR_STATE || !preferencesManager.showcaseAllowed) {
+    private fun startShowcase() {
+        if (!preferencesManager.showcaseAllowed) {
             return
         }
 
         preferencesManager.showcaseAllowed = false
-        launchShowcaseBlock { dialogStateObservable.asSingleEvent().value = BottomSheetBehavior.STATE_COLLAPSED }
+        launchShowcaseBlock {
+            onHeaderClick()
+            launchShowcaseBlock { onHeaderClick() }
+        }
     }
 
     private fun launchShowcaseBlock(showcaseBlock: () -> Unit) {

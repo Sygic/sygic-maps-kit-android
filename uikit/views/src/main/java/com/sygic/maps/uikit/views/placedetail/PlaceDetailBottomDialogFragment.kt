@@ -24,14 +24,12 @@
 
 package com.sygic.maps.uikit.views.placedetail
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.BaseBottomDialogFragment
@@ -42,9 +40,7 @@ import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment.Li
 import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.maps.uikit.views.placedetail.listener.DialogFragmentListener
 import com.sygic.maps.uikit.views.placedetail.manager.PreferencesManager
-import com.sygic.maps.uikit.views.placedetail.viewmodel.DEFAULT_BEHAVIOR_STATE
 import com.sygic.maps.uikit.views.placedetail.viewmodel.PlaceDetailInternalViewModel
-import com.sygic.maps.uikit.views.placedetail.viewmodel.SHOWCASE_BEHAVIOR_STATE
 
 private const val PLACE_DETAIL_COMPONENT = "place_detail_component"
 
@@ -117,26 +113,18 @@ open class PlaceDetailBottomDialogFragment : BaseBottomDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setStyle(STYLE_NO_TITLE, R.style.SygicPlaceDetailBottomSheetDialogTheme)
+
         preferencesManager = PreferencesManager(requireContext())
 
         viewModel = ViewModelProviders.of(
             this, PlaceDetailInternalViewModel.Factory(requireActivity().application, preferencesManager)
         )[PlaceDetailInternalViewModel::class.java].apply {
-            dialogStateObservable.observe(this@PlaceDetailBottomDialogFragment, Observer { setState(it) })
-
             this.onComponentChanged(arguments.getParcelableValue(PLACE_DETAIL_COMPONENT))
             this.listener = this@PlaceDetailBottomDialogFragment.listener
             this@PlaceDetailBottomDialogFragment.listener = null
+            lifecycle.addObserver(this)
         }
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return BottomSheetDialog(
-            this.requireContext(),
-            this.theme,
-            this.resources.getDimensionPixelSize(R.dimen.defaultPeekHeight),
-            if (preferencesManager.showcaseAllowed) SHOWCASE_BEHAVIOR_STATE else DEFAULT_BEHAVIOR_STATE
-        )
     }
 
     // Using LayoutInflater from AppCompatActivity instead of provided inflater from onCreateView fix DialogFragment
@@ -153,15 +141,10 @@ open class PlaceDetailBottomDialogFragment : BaseBottomDialogFragment() {
         binding.lifecycleOwner = this
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel?.let { dialog.behavior?.addStateListener(it) }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
         listener = null
+        viewModel?.let { lifecycle.removeObserver(it) }
     }
 }

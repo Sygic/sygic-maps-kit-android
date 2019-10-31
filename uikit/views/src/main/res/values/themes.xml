@@ -37,6 +37,9 @@
         <item name="navigationTextColorPrimary">@color/navigationTextColorPrimary</item>
         <item name="navigationTextColorSecondary">@color/navigationTextColorSecondary</item>
         <item name="navigationTextColorTertiary">@color/white</item>
+
+        <item name="placeDetailItemBackgroundColor">@color/placeDetailItemBackgroundColor</item>
+        <item name="placeDetailItemDisabledTintColor">@color/placeDetailItemDisabledTintColor</item>
     </style>
 
     <style name="Theme.Sygic.Colored" parent="Theme.Sygic.Light.DarkActionBar">

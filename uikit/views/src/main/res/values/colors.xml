@@ -24,9 +24,9 @@
   -->
 
 <resources>
-    <color name="colorPrimary">@color/azure_radiance</color>
+    <color name="colorPrimary">@color/colorAccent</color>
     <color name="colorPrimaryDark">@color/science_blue</color>
-    <color name="colorAccent">@color/azure_radiance</color>
+    <color name="colorAccent">@color/blue_ribbon</color>
     <color name="textColorPrimary">@color/mine_shaft</color>
     <color name="textColorSecondary">@color/boulder</color>
     <color name="iconBackground">@color/shuttle_gray</color>
@@ -36,4 +36,6 @@
     <color name="speedProgressBackgroundColor">@color/gray_chateau</color>
     <color name="speedProgressForegroundStartColor">@color/limeade</color>
     <color name="speedProgressForegroundEndColor">@color/brick_red</color>
+    <color name="placeDetailItemBackgroundColor">@color/mercury</color>
+    <color name="placeDetailItemDisabledTintColor">@color/gray</color>
 </resources>
