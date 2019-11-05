@@ -30,21 +30,20 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.*
 import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
-import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.extensions.toSdkSearchResultList
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.AutocompleteResult
+import com.sygic.sdk.search.ResultType
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SearchFragmentViewModel internal constructor(
     app: Application,
-    @Assisted private val resultListAdapter: SearchResultListAdapter<SearchResult>
+    private val searchManagerClient: SearchManagerClient
 ) : AndroidViewModel(app), DefaultLifecycleObserver {
 
     val onFinishObservable: LiveData<Any> = SingleLiveEvent()
@@ -59,17 +58,24 @@ class SearchFragmentViewModel internal constructor(
         }
     }
 
-    fun onSearchResultItemClick(searchResultItem: SearchResultItem<out SearchResult>) =
-        invokeCallbackAndFinish(listOf(searchResultItem))
+    fun onSearchResultItemClick(searchResultItem: SearchResultItem<out AutocompleteResult>) {
+        if (searchResultItem.dataPayload.type == ResultType.PLACE_CATEGORY) {
+            //ToDo: MS-6781
+            return
+        }
+
+        searchManagerClient.geocodeResult(searchResultItem.dataPayload) {
+            searchResultCallback?.onSearchResult(listOf(it))
+            onFinishObservable.asSingleEvent().call()
+        }
+    }
 
     fun onActionSearchClick(view: TextView) {
         view.hideKeyboard()
-        invokeCallbackAndFinish(resultListAdapter.items)
-    }
-
-    private fun invokeCallbackAndFinish(searchResultList: List<SearchResultItem<out SearchResult>>) {
-        searchResultCallback?.onSearchResult(searchResultList.toSdkSearchResultList())
-        onFinishObservable.asSingleEvent().call()
+        searchManagerClient.geocodeAllResults {
+            searchResultCallback?.onSearchResult(it)
+            onFinishObservable.asSingleEvent().call()
+        }
     }
 
     override fun onCleared() {

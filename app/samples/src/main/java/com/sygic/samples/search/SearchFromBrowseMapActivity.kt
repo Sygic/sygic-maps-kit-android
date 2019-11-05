@@ -46,9 +46,7 @@ class SearchFromBrowseMapActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_search_from_browse_map)
 
         val viewModel = ViewModelProviders.of(this).get(SearchFromBrowseMapActivityViewModel::class.java).apply {
-            this.showToastObservable.observe(
-                this@SearchFromBrowseMapActivity,
-                Observer<String> { longToast(it) })
+            showToastObservable.observe(this@SearchFromBrowseMapActivity, Observer { longToast(it) })
         }
 
         if (savedInstanceState == null) {

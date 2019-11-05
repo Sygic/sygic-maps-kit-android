@@ -26,27 +26,17 @@ package com.sygic.samples.base.idling
 
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.samples.app.activities.CommonSampleActivity
-import com.sygic.sdk.map.MapView
 import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.`object`.MapObject
-import com.sygic.sdk.map.data.SimpleMapDataModel
 
 class MapPinsIdlingResource(activity: CommonSampleActivity) : BaseIdlingResource(activity) {
 
     override fun getName(): String = "MapPinsIdlingResource"
 
     override fun isIdle(): Boolean {
-        activity.supportFragmentManager.fragments.forEach { fragment ->
-            if (fragment is MapFragmentWrapper<*>) return getMapObjects(fragment.mapDataModel)
-                .filterIsInstance<MapMarker>().isNotEmpty()
+        activity.supportFragmentManager.fragments.forEach {
+            if (it is MapFragmentWrapper<*,*,*,*>) return it.getMapDataModel().mapObjects.filterIsInstance<MapMarker>().isNotEmpty()
         }
 
         return false
     }
-}
-//todo: MS-6338 remove with next version (v16) of SDK
-private fun getMapObjects(model: MapView.MapDataModel): Set<MapObject<*>> {
-    val m = SimpleMapDataModel::class.java.getDeclaredMethod("getMapObjects")
-    m.isAccessible = true
-    return m.invoke(model) as Set<MapObject<*>>
 }

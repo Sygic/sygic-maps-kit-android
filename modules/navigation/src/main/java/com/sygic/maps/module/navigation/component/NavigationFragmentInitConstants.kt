@@ -25,9 +25,7 @@
 package com.sygic.maps.module.navigation.component
 
 import com.sygic.maps.module.navigation.types.SignpostType
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 
-val DISTANCE_UNITS_DEFAULT_VALUE = DistanceUnit.KILOMETERS
 val SIGNPOST_TYPE_DEFAULT_VALUE = SignpostType.FULL
 const val PREVIEW_MODE_DEFAULT_VALUE = false
 const val PREVIEW_CONTROLS_ENABLED_DEFAULT_VALUE = true

@@ -43,7 +43,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.sygic.maps.module.common.R
 import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
 import com.sygic.maps.module.common.delegate.FragmentsComponentDelegate
-import com.sygic.maps.module.common.di.BaseFragmentComponent
+import com.sygic.maps.module.common.di.base.BaseFragmentComponent
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.uikit.viewmodels.common.extensions.getSelectionType

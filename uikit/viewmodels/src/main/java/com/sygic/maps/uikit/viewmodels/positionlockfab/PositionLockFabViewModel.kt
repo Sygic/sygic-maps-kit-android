@@ -26,15 +26,16 @@ package com.sygic.maps.uikit.viewmodels.positionlockfab
 
 import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.sdk.map.Camera
-import com.sygic.maps.uikit.viewmodels.common.sdk.DEFAULT_ANIMATION
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
-import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
+import com.sygic.maps.uikit.viewmodels.common.sdk.DEFAULT_ANIMATION
+import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.positionlockfab.LockState
 import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
+import com.sygic.sdk.map.Camera
 
 private const val NORTH_UP = 0f
 
@@ -51,18 +52,16 @@ private const val ZOOM_LEVEL_PEDESTRIAN_ROTATE_INDICATOR = 16f
 open class PositionLockFabViewModel internal constructor(
     private val cameraModel: ExtendedCameraModel,
     private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager
-) :
-    ViewModel(),
-    Camera.ModeChangedListener,
-    DefaultLifecycleObserver {
+    private val permissionsManager: PermissionsManager,
+    private val positionManagerClient: PositionManagerClient
+) : ViewModel(), Camera.ModeChangedListener, DefaultLifecycleObserver {
 
     val currentState: LiveData<Int> = MutableLiveData(LockState.UNLOCKED)
 
     override fun onStart(owner: LifecycleOwner) {
         cameraModel.addModeChangedListener(this)
         if (currentState.value == LockState.LOCKED) {
-            locationManager.setSdkPositionUpdatingEnabled(true)
+            positionManagerClient.sdkPositionUpdatingEnabled.value = true
         }
     }
 
@@ -108,7 +107,7 @@ open class PositionLockFabViewModel internal constructor(
     }
 
     protected fun setLockedMode() {
-        locationManager.positionOnMapEnabled = true
+        locationManager.positionOnMapEnabled.value = true
         cameraModel.movementMode = Camera.MovementMode.FollowGpsPosition
         cameraModel.rotationMode = Camera.RotationMode.Free
     }
@@ -124,6 +123,6 @@ open class PositionLockFabViewModel internal constructor(
 
     override fun onStop(owner: LifecycleOwner) {
         cameraModel.removeModeChangedListener(this)
-        locationManager.setSdkPositionUpdatingEnabled(false)
+        positionManagerClient.sdkPositionUpdatingEnabled.value = false
     }
 }

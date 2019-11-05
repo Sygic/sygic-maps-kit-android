@@ -51,11 +51,10 @@ import com.sygic.maps.module.common.provider.ProviderType
 import com.sygic.maps.uikit.viewmodels.compass.CompassViewModel
 import com.sygic.maps.uikit.viewmodels.positionlockfab.PositionLockFabViewModel
 import com.sygic.maps.uikit.viewmodels.zoomcontrols.ZoomControlsViewModel
-import com.sygic.maps.uikit.views.common.components.FragmentComponent
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.compass.CompassView
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 import com.sygic.maps.uikit.views.searchfab.SearchFab
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
@@ -74,7 +73,7 @@ internal const val KEY_ZOOM_CONTROLS = "zoom_controls"
  * A *[BrowseMapFragment]* is the most basic component from our portfolio. It can be easily used to display view objects
  * on the map and interact with them. It also offers traffic information or can be simply used to display the actual
  * location. It comes with several pre build-in elements such as [CompassView], [ZoomControlsMenu], [PositionLockFab] or
- * [PoiDetailBottomDialogFragment].
+ * [PlaceDetailBottomDialogFragment].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapComponent, ModuleBuilder<BrowseMapComponent>, BrowseMapFragmentViewModel>(DaggerBrowseMapComponent.builder()),
@@ -203,18 +202,13 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(BrowseMapFragmentViewModel::class.java, arguments).apply {
-            this.poiDetailVisibleObservable.observe(
+            openFragmentObservable.observe(this@BrowseMapFragment, Observer { openFragment(it) })
+            placeDetailListenerObservable.observe(this@BrowseMapFragment, Observer { setPlaceDetailListener(it) })
+            placeDetailComponentObservable.observe(this@BrowseMapFragment, Observer { setPlaceDetailComponent(it) })
+            placeDetailVisibleObservable.observe(
                 this@BrowseMapFragment,
-                Observer<Boolean> { if (it) showPoiDetail() else hidePoiDetail() })
-            this.poiDetailComponentObservable.observe(
-                this@BrowseMapFragment,
-                Observer<PoiDetailComponent> { setPoiDetailComponent(it) })
-            this.poiDetailListenerObservable.observe(
-                this@BrowseMapFragment,
-                Observer<PoiDetailBottomDialogFragment.Listener> { setPoiDetailListener(it) })
-            this.openFragmentObservable.observe(
-                this@BrowseMapFragment,
-                Observer<FragmentComponent> { openFragment(it) })
+                Observer { if (it) showPlaceDetail() else hidePlaceDetail() }
+            )
         }
 
         compassViewModel = viewModelOf(CompassViewModel::class.java)
@@ -283,28 +277,28 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
         moduleConnectionProvidersMap.asMutable().put(ProviderType.NAVIGATION, provider)
     }
 
-    fun showPoiDetail(component: PoiDetailComponent? = null,
-                      listener: PoiDetailBottomDialogFragment.Listener = fragmentViewModel) {
-        PoiDetailBottomDialogFragment.newInstance(component).apply {
+    fun showPlaceDetail(component: PlaceDetailComponent? = null,
+                        listener: PlaceDetailBottomDialogFragment.Listener = fragmentViewModel) {
+        PlaceDetailBottomDialogFragment.newInstance(component).apply {
             this.listener = listener
-        }.showNow(fragmentManager, PoiDetailBottomDialogFragment.TAG)
+        }.showNow(fragmentManager, PlaceDetailBottomDialogFragment.TAG)
     }
 
-    fun hidePoiDetail() {
-        fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
+    fun hidePlaceDetail() {
+        fragmentManager?.findFragmentByTag(PlaceDetailBottomDialogFragment.TAG)?.let { fragment ->
             (fragment as DialogFragment).dismiss()
         }
     }
 
-    fun setPoiDetailListener(listener: PoiDetailBottomDialogFragment.Listener) {
-        fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).listener = listener
+    fun setPlaceDetailListener(listener: PlaceDetailBottomDialogFragment.Listener) {
+        fragmentManager?.findFragmentByTag(PlaceDetailBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as PlaceDetailBottomDialogFragment).listener = listener
         }
     }
 
-    fun setPoiDetailComponent(component: PoiDetailComponent) {
-        fragmentManager?.findFragmentByTag(PoiDetailBottomDialogFragment.TAG)?.let { fragment ->
-            (fragment as PoiDetailBottomDialogFragment).component = component
+    fun setPlaceDetailComponent(component: PlaceDetailComponent) {
+        fragmentManager?.findFragmentByTag(PlaceDetailBottomDialogFragment.TAG)?.let { fragment ->
+            (fragment as PlaceDetailBottomDialogFragment).component = component
         }
     }
 

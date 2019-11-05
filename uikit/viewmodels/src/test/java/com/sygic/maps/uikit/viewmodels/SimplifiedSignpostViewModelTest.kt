@@ -27,15 +27,13 @@ package com.sygic.maps.uikit.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.jraska.livedata.test
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.uikit.viewmodels.common.extensions.getDirectionDrawable
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostViewModel
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
-import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.warnings.DirectionInfo
+import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
 import com.sygic.sdk.route.RouteManeuver
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -54,28 +52,37 @@ class SimplifiedSignpostViewModelTest {
     @Mock
     private lateinit var regionalManager: RegionalManager
     @Mock
-    private lateinit var navigationManager: NavigationManager
+    private lateinit var navigationManagerClient: NavigationManagerClient
 
     private lateinit var simplifiedSignpostViewModel: SimplifiedSignpostViewModel
+
+    private fun initViewModel() {
+        simplifiedSignpostViewModel = SimplifiedSignpostViewModel(regionalManager, navigationManagerClient)
+    }
 
     @Before
     fun setup() {
         whenever(regionalManager.distanceUnit).thenReturn(MutableLiveData(DistanceUnit.KILOMETERS))
-
-        simplifiedSignpostViewModel = SimplifiedSignpostViewModel(regionalManager, navigationManager)
     }
 
     @Test
     fun initTest() {
-        verify(navigationManager).addOnDirectionListener(simplifiedSignpostViewModel)
+        whenever(navigationManagerClient.directionInfo).thenReturn(mock())
+
+        initViewModel()
+
+        verify(navigationManagerClient.directionInfo, times(2)).observeForever(any())
     }
 
     @Test
     fun onDirectionInfoChangedTest() {
-        val nextRoadName = "Main road"
         val directionInfoMock = mock<DirectionInfo>()
+        val directionInfoLiveData = MutableLiveData<DirectionInfo>(directionInfoMock)
+
+        val nextRoadName = "Main road"
         val primaryRouteManeuverMock = mock<RouteManeuver>()
         val secondaryRouteManeuverMock = mock<RouteManeuver>()
+
         whenever(primaryRouteManeuverMock.isValid).thenReturn(true)
         whenever(primaryRouteManeuverMock.nextRoadName).thenReturn(nextRoadName)
         whenever(primaryRouteManeuverMock.getDirectionDrawable()).thenReturn(RouteManeuver.Type.Right)
@@ -84,7 +91,10 @@ class SimplifiedSignpostViewModelTest {
         whenever(directionInfoMock.primary).thenReturn(primaryRouteManeuverMock)
         whenever(directionInfoMock.secondary).thenReturn(secondaryRouteManeuverMock)
         whenever(directionInfoMock.distance).thenReturn(100)
-        simplifiedSignpostViewModel.onDirectionInfoChanged(directionInfoMock)
+        whenever(navigationManagerClient.directionInfo).thenReturn(directionInfoLiveData)
+
+        initViewModel()
+        directionInfoLiveData.value = directionInfoMock
 
         simplifiedSignpostViewModel.distance.test().assertValue("100 m")
         simplifiedSignpostViewModel.primaryDirection.test().assertValue(R.drawable.ic_direction_right_90)

@@ -39,7 +39,7 @@ import com.sygic.samples.base.idling.ActionMenuVisibilityIdlingResource
 fun navigation(commonSampleActivity: CommonSampleActivity, func: NavigationRobot.() -> Unit) =
     NavigationRobot(commonSampleActivity).apply { func() }
 
-@Suppress("MemberVisibilityCanBePrivate", "unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class NavigationRobot(private val activity: CommonSampleActivity) : BaseRobot(activity, R.id.navigationFragment) {
 
     fun isActionMenuHidden() {

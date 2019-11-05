@@ -50,37 +50,37 @@ class BrowseMapMarkersEspressoTest : BaseMapTest(BrowseMapMarkersActivity::class
     fun mapMarkers() {
         browseMap(activity) {
             clickOnMapToLocation(GeneralLocation.CENTER_RIGHT)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             clickOnMapToLocation(GeneralLocation.BOTTOM_CENTER)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
 
             clickOnMapMarker(MapMarkers.sampleMarkerOne)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
 
             clickOnMapMarker(MapMarkers.sampleMarkerTwo)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
 
             clickOnMapMarker(MapMarkers.sampleMarkerThree)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
 
             clickOnMapMarker(MapMarkers.sampleMarkerFour)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
 
             clickOnMapMarker(MapMarkers.sampleMarkerFive)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
 
             clickOnMapMarker(MapMarkers.sampleMarkerSix)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
 
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
         }
     }
 }

@@ -30,15 +30,15 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.material.navigation.NavigationView
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.samples.BuildConfig
 import com.sygic.samples.R
 import com.sygic.samples.app.dialogs.AboutDialog
-import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
-import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.samples.app.fragments.*
 
 private const val GITHUB_WIKI_COMPASS = "${BuildConfig.GITHUB_WIKI}UiKit-Compass"
-private const val GITHUB_WIKI_POI_DETAIL = "${BuildConfig.GITHUB_WIKI}UiKit-Poi-Detail"
+private const val GITHUB_WIKI_PLACE_DETAIL = "${BuildConfig.GITHUB_WIKI}UiKit-Place-Detail"
 private const val GITHUB_WIKI_POSITION_LOCK_FAB = "${BuildConfig.GITHUB_WIKI}UiKit-Position-Lock-Fab"
 private const val GITHUB_WIKI_ZOOM_CONTROLS = "${BuildConfig.GITHUB_WIKI}UiKit-Zoom-Controls"
 private const val GITHUB_WIKI_SEARCH_TOOLBAR = "${BuildConfig.GITHUB_WIKI}UiKit-Search-Toolbar"
@@ -65,7 +65,7 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
             R.id.nav_search_module -> samplesListFragmentsObservable.asSingleEvent().value = SearchSampleListFragment()
             R.id.nav_navigation_module -> samplesListFragmentsObservable.asSingleEvent().value = NavigationSampleListFragment()
             R.id.nav_ui_kit_compass -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_COMPASS
-            R.id.nav_ui_kit_poi_detail -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_POI_DETAIL
+            R.id.nav_ui_kit_place_detail -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_PLACE_DETAIL
             R.id.nav_ui_kit_position_lock_fab -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_POSITION_LOCK_FAB
             R.id.nav_ui_kit_zoom_controls -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_ZOOM_CONTROLS
             R.id.nav_ui_kit_search_toolbar -> openLinkInBrowserObservable.asSingleEvent().value = GITHUB_WIKI_SEARCH_TOOLBAR

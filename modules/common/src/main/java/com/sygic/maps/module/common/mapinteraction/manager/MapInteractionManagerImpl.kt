@@ -26,7 +26,9 @@ package com.sygic.maps.module.common.mapinteraction.manager
 
 import android.view.MotionEvent
 import androidx.annotation.RestrictTo
+import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.MapView
+import com.sygic.sdk.map.listeners.OnMapInitListener
 import com.sygic.sdk.map.mapgesturesdetector.listener.MapGestureAdapter
 import java.util.*
 
@@ -35,19 +37,24 @@ class MapInteractionManagerImpl : MapInteractionManager {
 
     private val listeners = LinkedHashSet<MapInteractionManager.Listener>()
 
-    override fun onMapReady(mapView: MapView) {
-        mapView.addMapGestureListener(object : MapGestureAdapter() {
-            override fun onMapClicked(motionEvent: MotionEvent, isTwoFingers: Boolean): Boolean {
-                if (isTwoFingers) {
-                    return false
-                }
+    override fun setMapGestureListenerProvider(mapFragment: MapFragment) {
+        mapFragment.getMapAsync(object : OnMapInitListener {
+            override fun onMapReady(mapView: MapView) {
+                mapView.addMapGestureListener(object : MapGestureAdapter() {
+                    override fun onMapClicked(motionEvent: MotionEvent, isTwoFingers: Boolean): Boolean {
+                        if (isTwoFingers) {
+                            return false
+                        }
 
-                listeners.forEach { it.onMapObjectsRequestStarted() }
-                mapView.requestObjectsAtPoint(motionEvent.x, motionEvent.y) { list, _, _, _ ->
-                    listeners.forEach { it.onMapObjectsReceived(list) }
-                }
-                return super.onMapClicked(motionEvent, false)
+                        listeners.forEach { it.onMapObjectsRequestStarted() }
+                        mapView.requestObjectsAtPoint(motionEvent.x, motionEvent.y) { list, _, _, _ ->
+                            listeners.forEach { it.onMapObjectsReceived(list) }
+                        }
+                        return super.onMapClicked(motionEvent, false)
+                    }
+                })
             }
+            override fun onMapInitializationInterrupted() { /* Currently do nothing */ }
         })
     }
 

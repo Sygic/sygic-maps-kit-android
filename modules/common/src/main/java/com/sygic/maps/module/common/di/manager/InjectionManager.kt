@@ -26,7 +26,7 @@ package com.sygic.maps.module.common.di.manager
 
 import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
-import com.sygic.maps.module.common.di.BaseFragmentComponent
+import com.sygic.maps.module.common.di.base.BaseFragmentComponent
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.extensions.executeInjector
 

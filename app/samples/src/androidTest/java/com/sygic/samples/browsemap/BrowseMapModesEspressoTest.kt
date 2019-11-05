@@ -25,23 +25,23 @@
 package com.sygic.samples.browsemap
 
 import android.view.View
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Test
-import org.junit.runner.RunWith
 import androidx.appcompat.widget.MenuPopupWindow
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.GeneralLocation
-import org.hamcrest.CoreMatchers
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.samples.R
 import com.sygic.samples.base.map.BaseMapTest
 import com.sygic.samples.browsemap.robot.browseMap
 import com.sygic.samples.utils.MapMarkers
+import org.hamcrest.CoreMatchers
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.java) {
@@ -60,11 +60,11 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
         browseMap(activity) {
             onView(withId(R.id.selectionModeButton)).check(matches(isDisplayed()))
             clickOnMapToLocation(GeneralLocation.CENTER)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             clickOnMapToLocation(GeneralLocation.CENTER_RIGHT)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             clickOnMapMarker(MapMarkers.sampleMarkerOne)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
 
             clickOnView(R.id.selectionModeButton)
             onData(CoreMatchers.anything())
@@ -74,11 +74,11 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
                 .perform(click())
 
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             clickOnMapMarker(MapMarkers.sampleMarkerOne)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
 
             clickOnView(R.id.selectionModeButton)
             onData(CoreMatchers.anything())
@@ -88,12 +88,12 @@ class BrowseMapModesEspressoTest : BaseMapTest(BrowseMapModesActivity::class.jav
                 .perform(click())
 
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
             clickOnMapMarker(MapMarkers.sampleMarkerOne)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
             pressBack()
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
         }
     }
 }

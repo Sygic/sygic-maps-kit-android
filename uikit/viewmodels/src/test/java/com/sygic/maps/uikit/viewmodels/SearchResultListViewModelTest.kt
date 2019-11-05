@@ -26,18 +26,17 @@ package com.sygic.maps.uikit.viewmodels
 
 import android.widget.TextView
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.jraska.livedata.test
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.sygic.maps.uikit.viewmodels.common.search.SearchManager
+import com.nhaarman.mockitokotlin2.*
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
 import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultListErrorViewSwitcherIndex
 import com.sygic.maps.uikit.views.searchresultlist.adapter.DefaultStateAdapter
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.AutocompleteResult
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -53,20 +52,30 @@ class SearchResultListViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var searchManager: SearchManager
+    private lateinit var searchManagerClient: SearchManagerClient
 
     private lateinit var searchResultListViewModel: SearchResultListViewModel
 
     @Before
     fun setup() {
-        searchResultListViewModel = SearchResultListViewModel(searchManager, mock())
+        whenever(searchManagerClient.autocompleteResults).thenReturn(mock())
+        whenever(searchManagerClient.autocompleteResultState).thenReturn(mock())
+
+        searchResultListViewModel = SearchResultListViewModel(searchManagerClient)
     }
 
     @Test
     fun initTest() {
-        assertEquals(true, searchResultListViewModel.activeAdapter.value is DefaultStateAdapter<SearchResult>)
+        assertEquals(true, searchResultListViewModel.activeAdapter.value is DefaultStateAdapter<AutocompleteResult>)
         assertEquals(SearchResultListErrorViewSwitcherIndex.NO_RESULTS_FOUND, searchResultListViewModel.errorViewSwitcherIndex.value)
-        verify(searchManager).addSearchResultsListener(any())
+    }
+
+    @Test
+    fun onCreateTest() {
+        val lifecycleOwnerMock = mock<LifecycleOwner>()
+        searchResultListViewModel.onCreate(lifecycleOwnerMock)
+        verify(searchManagerClient.autocompleteResults).observe(eq(lifecycleOwnerMock), any())
+        verify(searchManagerClient.autocompleteResultState).observe(eq(lifecycleOwnerMock), any())
     }
 
     @Test
@@ -80,7 +89,7 @@ class SearchResultListViewModelTest {
     @Test
     fun onSearchResultItemClickTest() {
         val textViewMock = mock<TextView>()
-        val searchResultItemMock = mock<SearchResultItem<SearchResult>>()
+        val searchResultItemMock = mock<SearchResultItem<AutocompleteResult>>()
         searchResultListViewModel.onSearchResultItemClick(textViewMock, searchResultItemMock)
         verify(textViewMock).hideKeyboard()
         searchResultListViewModel.onSearchResultItemClickObservable.test().assertValue(searchResultItemMock)

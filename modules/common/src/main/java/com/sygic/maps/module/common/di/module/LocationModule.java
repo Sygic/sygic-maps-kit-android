@@ -27,7 +27,7 @@ package com.sygic.maps.module.common.di.module;
 import androidx.annotation.NonNull;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManagerImpl;
-import com.sygic.sdk.position.PositionManager;
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
 import dagger.Module;
 import dagger.Provides;
 
@@ -38,7 +38,7 @@ public class LocationModule {
 
     @Singleton
     @Provides
-    LocationManager provideLocationManager(@NonNull final PositionManager positionManager) {
-        return new LocationManagerImpl(positionManager);
+    LocationManager provideLocationManager(@NonNull final PositionManagerClient positionManagerClient) {
+        return new LocationManagerImpl(positionManagerClient);
     }
 }

@@ -39,7 +39,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.base.BaseRobot
-import com.sygic.samples.base.idling.PoiDetailVisibilityIdlingResource
+import com.sygic.samples.base.idling.PlaceDetailVisibilityIdlingResource
 import com.sygic.sdk.map.MapFragment
 import com.sygic.sdk.map.`object`.MapMarker
 
@@ -94,18 +94,18 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) : BaseRobot(act
         )
     }
 
-    fun isPoiDetailHidden() {
-        PoiDetailVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_HIDDEN).let {
+    fun isPlaceDetailHidden() {
+        PlaceDetailVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_HIDDEN).let {
             IdlingRegistry.getInstance().register(it)
-            onView(withId(R.id.poiDetailContainer)).check(doesNotExist())
+            onView(withId(R.id.placeDetailContainer)).check(doesNotExist())
             IdlingRegistry.getInstance().unregister(it)
         }
     }
 
-    fun isPoiDetailVisible() {
-        PoiDetailVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_COLLAPSED).let {
+    fun isPlaceDetailVisible() {
+        PlaceDetailVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_COLLAPSED).let {
             IdlingRegistry.getInstance().register(it)
-            onView(withId(R.id.poiDetailContainer)).check(matches(isDisplayed()))
+            onView(withId(R.id.placeDetailContainer)).check(matches(isDisplayed()))
             IdlingRegistry.getInstance().unregister(it)
         }
     }

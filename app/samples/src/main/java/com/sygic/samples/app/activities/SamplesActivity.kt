@@ -34,11 +34,11 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.sygic.samples.R
-import com.sygic.samples.databinding.ActivitySamplesBinding
-import com.sygic.samples.app.viewmodels.SamplesActivityViewModel
 import com.sygic.maps.uikit.views.common.extensions.openUrl
+import com.sygic.samples.R
 import com.sygic.samples.app.fragments.BaseSamplesListFragment
+import com.sygic.samples.app.viewmodels.SamplesActivityViewModel
+import com.sygic.samples.databinding.ActivitySamplesBinding
 
 class SamplesActivity : AppCompatActivity() {
 
@@ -53,21 +53,14 @@ class SamplesActivity : AppCompatActivity() {
         initDrawerToggle()
 
         samplesActivityViewModel = ViewModelProviders.of(this).get(SamplesActivityViewModel::class.java).apply {
-            this.drawerOpenedObservable.observe(
+            drawerOpenedObservable.observe(this@SamplesActivity, Observer { setDrawerOpened(it) })
+            samplesListFragmentsObservable.observe(this@SamplesActivity, Observer { placeFragment(it) })
+            openLinkInBrowserObservable.observe(this@SamplesActivity, Observer { openUrl(it) })
+            openDialogFragmentObservable.observe(this@SamplesActivity, Observer { openDialog(it) })
+            drawerItemCheckObservable.observe(
                 this@SamplesActivity,
-                Observer<Boolean> { setDrawerOpened(it) })
-            this.drawerItemCheckObservable.observe(
-                this@SamplesActivity,
-                Observer<Int> { binding.navigationView.setCheckedItem(it) })
-            this.samplesListFragmentsObservable.observe(
-                this@SamplesActivity,
-                Observer<BaseSamplesListFragment> { placeFragment(it) })
-            this.openLinkInBrowserObservable.observe(
-                this@SamplesActivity,
-                Observer<String> { openUrl(it) })
-            this.openDialogFragmentObservable.observe(
-                this@SamplesActivity,
-                Observer<Class<out AppCompatDialogFragment>> { openDialog(it) })
+                Observer { binding.navigationView.setCheckedItem(it) }
+            )
         }
         binding.samplesActivityViewModel = samplesActivityViewModel
         lifecycle.addObserver(samplesActivityViewModel)

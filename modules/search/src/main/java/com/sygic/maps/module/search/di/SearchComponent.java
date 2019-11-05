@@ -24,7 +24,7 @@
 
 package com.sygic.maps.module.search.di;
 
-import com.sygic.maps.module.common.di.BaseFragmentComponent;
+import com.sygic.maps.module.common.di.base.BaseFragmentComponent;
 import com.sygic.maps.module.common.di.FragmentModulesComponent;
 import com.sygic.maps.module.common.di.util.ModuleBuilder;
 import com.sygic.maps.module.search.SearchFragment;

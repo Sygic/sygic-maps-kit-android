@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit
 
 data class TimeData(
     private val dateTimeManager: DateTimeManager,
-    val timeToEndIdeal: Int,
+    val timeToEnd: Int,
     val timeToEndWithSpeedProfile: Int,
     val timeToEndWithSpeedProfileAndTraffic: Int
 ) : ItemData {

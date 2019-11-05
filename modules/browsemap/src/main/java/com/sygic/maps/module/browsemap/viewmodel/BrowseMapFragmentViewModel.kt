@@ -27,9 +27,12 @@ package com.sygic.maps.module.browsemap.viewmodel
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.browsemap.*
-import com.sygic.maps.module.browsemap.detail.PoiDetailsObject
+import com.sygic.maps.module.browsemap.detail.PlaceDetailsObject
 import com.sygic.maps.module.common.component.*
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.extensions.onMapClick
@@ -37,33 +40,40 @@ import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.listener.OnMapClickListenerWrapper
 import com.sygic.maps.module.common.mapinteraction.MapSelectionMode
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager
-import com.sygic.maps.module.common.poi.manager.PoiDataManager
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.common.provider.ModuleConnectionProviderWrapper
 import com.sygic.maps.module.common.provider.ProviderType
 import com.sygic.maps.module.common.theme.ThemeManager
-import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
+import com.sygic.maps.module.common.viewmodel.MapFragmentViewModel
 import com.sygic.maps.tools.annotations.Assisted
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
 import com.sygic.maps.uikit.viewmodels.common.extensions.getCopyWithPayload
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeMapMarker
-import com.sygic.maps.uikit.viewmodels.common.extensions.toPoiDetailData
+import com.sygic.maps.uikit.viewmodels.common.extensions.toPlaceDetailData
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.place.PlacesManagerClient
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
+import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.views.common.components.FragmentComponent
-import com.sygic.maps.uikit.views.common.extensions.*
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.extensions.getBoolean
+import com.sygic.maps.uikit.views.common.extensions.getInt
+import com.sygic.maps.uikit.views.common.extensions.getParcelableValue
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logWarning
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
+import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.sdk.map.`object`.MapMarker
-import com.sygic.sdk.map.`object`.ProxyPoi
+import com.sygic.sdk.map.`object`.ProxyPlace
 import com.sygic.sdk.map.`object`.UiObject
 import com.sygic.sdk.map.`object`.ViewObject
 import com.sygic.sdk.map.`object`.data.ViewObjectData
+import com.sygic.sdk.places.PlacesManager
+import kotlin.collections.set
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -71,25 +81,27 @@ class BrowseMapFragmentViewModel internal constructor(
     app: Application,
     @Assisted arguments: Bundle?,
     themeManager: ThemeManager,
+    regionalManager: RegionalManager,
     private val mapDataModel: ExtendedMapDataModel,
-    private val poiDataManager: PoiDataManager,
+    private val placesManagerClient: PlacesManagerClient,
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
-    private val permissionsManager: PermissionsManager
-) : ThemeSupportedViewModel(app, arguments, themeManager), DefaultLifecycleObserver, MapInteractionManager.Listener,
-    PoiDetailBottomDialogFragment.Listener {
+    private val permissionsManager: PermissionsManager,
+    private val positionManagerClient: PositionManagerClient
+) : MapFragmentViewModel(app, arguments, themeManager, regionalManager, positionManagerClient),
+    MapInteractionManager.Listener, PlaceDetailBottomDialogFragment.Listener {
 
     @MapSelectionMode
     var mapSelectionMode: Int = MAP_SELECTION_MODE_DEFAULT_VALUE
     var positionOnMapEnabled: Boolean
-        get() = locationManager.positionOnMapEnabled
+        get() = locationManager.positionOnMapEnabled.value!!
         set(value) {
             if (value) {
                 requestLocationAccess(permissionsManager, locationManager) {
-                    locationManager.positionOnMapEnabled = true
+                    locationManager.positionOnMapEnabled.value = true
                 }
             } else {
-                locationManager.positionOnMapEnabled = false
+                locationManager.positionOnMapEnabled.value = false
             }
         }
 
@@ -104,12 +116,12 @@ class BrowseMapFragmentViewModel internal constructor(
     var detailsViewFactory: DetailsViewFactory? = null
     private val moduleConnectionProvidersMap: Map<ProviderType, ModuleConnectionProvider?> = mutableMapOf()
 
-    val poiDetailVisibleObservable: LiveData<Boolean> = SingleLiveEvent()
-    val poiDetailComponentObservable: LiveData<PoiDetailComponent> = SingleLiveEvent()
-    val poiDetailListenerObservable: LiveData<PoiDetailBottomDialogFragment.Listener> = SingleLiveEvent()
+    val placeDetailVisibleObservable: LiveData<Boolean> = SingleLiveEvent()
+    val placeDetailComponentObservable: LiveData<PlaceDetailComponent> = SingleLiveEvent()
+    val placeDetailListenerObservable: LiveData<PlaceDetailBottomDialogFragment.Listener> = SingleLiveEvent()
     val openFragmentObservable: LiveData<FragmentComponent> = SingleLiveEvent()
 
-    private var poiDetailsView: UiObject? = null
+    private var placeDetailsView: UiObject? = null
     private var selectedMarker: MapMarker? = null
 
     init {
@@ -123,8 +135,6 @@ class BrowseMapFragmentViewModel internal constructor(
             positionLockFabEnabled.value = getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
             zoomControlsEnabled.value = getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
         }
-
-        mapInteractionManager.addOnMapClickListener(this)
     }
 
     override fun onCreate(owner: LifecycleOwner) {
@@ -138,12 +148,13 @@ class BrowseMapFragmentViewModel internal constructor(
                 map.forEach { updateModuleConnectionProvidersMap(it.key, it.value) }
             })
         }
-        poiDetailListenerObservable.asSingleEvent().value = this
+        placeDetailListenerObservable.asSingleEvent().value = this
+        mapInteractionManager.addOnMapClickListener(this)
     }
 
     override fun onStart(owner: LifecycleOwner) {
         if (positionOnMapEnabled) {
-            locationManager.setSdkPositionUpdatingEnabled(true)
+            positionManagerClient.sdkPositionUpdatingEnabled.value = true
         }
     }
 
@@ -160,12 +171,12 @@ class BrowseMapFragmentViewModel internal constructor(
         var firstViewObject = viewObjects.first()
         val dataLoadAllowed = onMapClickListener?.onMapClick(firstViewObject) ?: true
 
-        // First, check if the PoiDetailsView is visible
-        poiDetailsView?.let {
+        // First, check if the PlaceDetailsView is visible
+        placeDetailsView?.let {
 
             // Always remove the previous one
             mapDataModel.removeMapObject(it)
-            poiDetailsView = null
+            placeDetailsView = null
 
             // Check if we should ask or use our own logic
             if (onMapClickListener != null) {
@@ -198,7 +209,7 @@ class BrowseMapFragmentViewModel internal constructor(
                     return
                 }
 
-                getPoiDataAndNotifyObservers(firstViewObject)
+                getPlaceDataAndNotifyObservers(firstViewObject)
             }
 
             MapSelectionMode.FULL -> {
@@ -207,9 +218,9 @@ class BrowseMapFragmentViewModel internal constructor(
                     getOnClickMapMarker(firstViewObject)?.let { clickMapMarker ->
                         mapDataModel.addMapMarker(
                             when (firstViewObject) {
-                                // To persist ProxyPoi data payload we need to create a copy of the provided MapMarker
+                                // To persist ProxyPlace data payload we need to create a copy of the provided MapMarker
                                 // and give it the same payload
-                                is ProxyPoi -> clickMapMarker.getCopyWithPayload(firstViewObject)
+                                is ProxyPlace -> clickMapMarker.getCopyWithPayload(firstViewObject)
                                 else -> clickMapMarker
                             }.also {
                                 firstViewObject = it
@@ -223,7 +234,7 @@ class BrowseMapFragmentViewModel internal constructor(
                     return
                 }
 
-                getPoiDataAndNotifyObservers(firstViewObject)
+                getPlaceDataAndNotifyObservers(firstViewObject)
             }
         }
     }
@@ -236,27 +247,28 @@ class BrowseMapFragmentViewModel internal constructor(
         }
     }
 
-    private fun getPoiDataAndNotifyObservers(viewObject: ViewObject<*>) {
+    private fun getPlaceDataAndNotifyObservers(viewObject: ViewObject<*>) {
         val showDetailsView = onMapClickListener?.showDetailsView() ?: true
         if (showDetailsView && detailsViewFactory == null) {
-            poiDetailVisibleObservable.asSingleEvent().value = true
+            placeDetailVisibleObservable.asSingleEvent().value = true
         }
 
-        poiDataManager.getViewObjectData(viewObject, object : PoiDataManager.Callback() {
+        placesManagerClient.getViewObjectData(viewObject, object : PlacesManagerClient.Callback() {
             override fun onDataLoaded(data: ViewObjectData) {
                 onMapClickListener?.onMapDataReceived(data)
 
                 if (showDetailsView) {
                     detailsViewFactory?.let { factory ->
-                        poiDetailsView = PoiDetailsObject.create(data, factory, viewObject).also { view ->
+                        placeDetailsView = PlaceDetailsObject.create(data, factory, viewObject).also { view ->
                             mapDataModel.addMapObject(view)
                         }
                     } ?: run {
-                        poiDetailComponentObservable.asSingleEvent().value =
-                            PoiDetailComponent(data.toPoiDetailData(), navigationButtonEnabled.value!!)
+                        placeDetailComponentObservable.asSingleEvent().value =
+                            PlaceDetailComponent(data.toPlaceDetailData(), navigationButtonEnabled.value!!)
                     }
                 }
             }
+            override fun onPlaceError(code: PlacesManager.ErrorCode) { /* Currently do nothing */ }
         })
     }
 
@@ -276,7 +288,7 @@ class BrowseMapFragmentViewModel internal constructor(
     }
 
     override fun onNavigationButtonClick() {
-        poiDetailVisibleObservable.asSingleEvent().value = false
+        placeDetailVisibleObservable.asSingleEvent().value = false
         moduleConnectionProvidersMap[ProviderType.NAVIGATION]?.let {
             openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
         }
@@ -285,16 +297,12 @@ class BrowseMapFragmentViewModel internal constructor(
     override fun onDismiss() = mapDataModel.removeMapMarker(selectedMarker)
 
     override fun onStop(owner: LifecycleOwner) {
-        locationManager.setSdkPositionUpdatingEnabled(false)
+        positionManagerClient.sdkPositionUpdatingEnabled.value = false
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
         onMapClickListener = null
         (moduleConnectionProvidersMap as MutableMap).clear()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
         mapInteractionManager.removeOnMapClickListener(this)
     }
 }

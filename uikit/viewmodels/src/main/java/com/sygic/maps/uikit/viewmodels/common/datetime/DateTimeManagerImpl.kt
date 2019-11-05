@@ -31,8 +31,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.SparseArray
 import androidx.annotation.RestrictTo
-import com.sygic.maps.uikit.viewmodels.common.utils.Time
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
+import com.sygic.maps.uikit.views.common.utils.Time
 import java.text.DateFormat
 import java.util.*
 import kotlin.math.abs
@@ -44,7 +44,7 @@ class DateTimeManagerImpl private constructor(
 
     companion object : SingletonHolder<DateTimeManagerImpl>() {
         @JvmStatic
-        fun getInstance(app: Application): DateTimeManagerImpl = getInstance { DateTimeManagerImpl(app) }
+        fun getInstance(app: Application) = getInstance { DateTimeManagerImpl(app) }
     }
 
     private val timeInstances = SparseArray<DateFormat>()

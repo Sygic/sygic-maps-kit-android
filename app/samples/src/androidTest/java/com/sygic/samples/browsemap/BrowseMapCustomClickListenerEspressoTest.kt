@@ -47,18 +47,18 @@ class BrowseMapCustomClickListenerEspressoTest : BaseMapTest(BrowseMapClickListe
     @Test
     fun customClickListener() {
         browseMap(activity) {
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
 
             clickOnMapToLocation(GeneralLocation.CENTER)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             isToastVisible()
 
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             isToastVisible()
 
             clickOnMapToLocation(GeneralLocation.CENTER_RIGHT)
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             isToastVisible()
         }
     }
