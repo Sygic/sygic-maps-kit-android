@@ -30,7 +30,7 @@ import androidx.lifecycle.MutableLiveData
 import com.jraska.livedata.test
 import com.nhaarman.mockitokotlin2.*
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.DEFAULT_SPEED
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
 import com.sygic.maps.uikit.viewmodels.navigation.preview.RoutePreviewControlsViewModel
 import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
@@ -49,15 +49,15 @@ class RoutePreviewControlsViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var routeDemonstrationManager: RouteDemonstrationManager
+    private lateinit var routeDemonstrationManagerClient: RouteDemonstrationManagerClient
 
     private lateinit var routePreviewControlsViewModel: RoutePreviewControlsViewModel
 
     @Before
     fun setup() {
-        whenever(routeDemonstrationManager.demonstrationState).thenReturn(mock())
-        whenever(routeDemonstrationManager.speedMultiplier).thenReturn(MutableLiveData(DEFAULT_SPEED))
-        routePreviewControlsViewModel = RoutePreviewControlsViewModel(routeDemonstrationManager)
+        whenever(routeDemonstrationManagerClient.demonstrationState).thenReturn(mock())
+        whenever(routeDemonstrationManagerClient.speedMultiplier).thenReturn(MutableLiveData(DEFAULT_SPEED))
+        routePreviewControlsViewModel = RoutePreviewControlsViewModel(routeDemonstrationManagerClient)
     }
 
     @Test
@@ -69,34 +69,34 @@ class RoutePreviewControlsViewModelTest {
     fun onCreateTest() {
         val lifecycleOwnerMock = mock<LifecycleOwner>()
         routePreviewControlsViewModel.onCreate(lifecycleOwnerMock)
-        verify(routeDemonstrationManager.demonstrationState).observe(eq(lifecycleOwnerMock), any())
+        verify(routeDemonstrationManagerClient.demonstrationState).observe(eq(lifecycleOwnerMock), any())
     }
 
     @Test
     fun onPlayPauseButtonClickTest() {
-        whenever(routeDemonstrationManager.demonstrationState).thenReturn(MutableLiveData(DemonstrationState.INACTIVE))
+        whenever(routeDemonstrationManagerClient.demonstrationState).thenReturn(MutableLiveData(DemonstrationState.INACTIVE))
         routePreviewControlsViewModel.onPlayPauseButtonClick()
-        verify(routeDemonstrationManager).restart()
+        verify(routeDemonstrationManagerClient).restart()
 
-        whenever(routeDemonstrationManager.demonstrationState).thenReturn(MutableLiveData(DemonstrationState.ACTIVE))
+        whenever(routeDemonstrationManagerClient.demonstrationState).thenReturn(MutableLiveData(DemonstrationState.ACTIVE))
         routePreviewControlsViewModel.onPlayPauseButtonClick()
-        verify(routeDemonstrationManager).pause()
+        verify(routeDemonstrationManagerClient).pause()
 
-        whenever(routeDemonstrationManager.demonstrationState).thenReturn(MutableLiveData(DemonstrationState.PAUSED))
+        whenever(routeDemonstrationManagerClient.demonstrationState).thenReturn(MutableLiveData(DemonstrationState.PAUSED))
         routePreviewControlsViewModel.onPlayPauseButtonClick()
-        verify(routeDemonstrationManager).unPause()
+        verify(routeDemonstrationManagerClient).unPause()
     }
 
     @Test
     fun onSpeedButtonClickTest() {
-        val expectedValue = routeDemonstrationManager.speedMultiplier.value!! * 2 % 15
+        val expectedValue = routeDemonstrationManagerClient.speedMultiplier.value!! * 2 % 15
         routePreviewControlsViewModel.onSpeedButtonClick()
-        routeDemonstrationManager.speedMultiplier.test().assertValue(expectedValue)
+        routeDemonstrationManagerClient.speedMultiplier.test().assertValue(expectedValue)
     }
 
     @Test
     fun onStopButtonClickTest() {
         routePreviewControlsViewModel.onStopButtonClick()
-        verify(routeDemonstrationManager).stop()
+        verify(routeDemonstrationManagerClient).stop()
     }
 }

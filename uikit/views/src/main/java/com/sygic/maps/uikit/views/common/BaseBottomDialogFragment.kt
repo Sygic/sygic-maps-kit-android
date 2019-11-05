@@ -24,10 +24,12 @@
 
 package com.sygic.maps.uikit.views.common
 
-import androidx.appcompat.app.AppCompatDialogFragment
+import android.app.Dialog
+import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-abstract class BaseBottomDialogFragment : AppCompatDialogFragment() {
+abstract class BaseBottomDialogFragment : BottomSheetDialogFragment() {
 
     /**
      * A *[currentState]* reflects the current [BaseBottomDialogFragment] state.
@@ -39,6 +41,14 @@ abstract class BaseBottomDialogFragment : AppCompatDialogFragment() {
         get() = dialog.behavior?.state
 
     override fun getDialog(): BottomSheetDialog = super.getDialog() as BottomSheetDialog
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return BottomSheetDialog(
+            this.requireContext(),
+            this.theme,
+            initialState = BottomSheetBehavior.STATE_EXPANDED
+        )
+    }
 
     protected fun setState(@BottomSheetBehavior.State state: Int) {
         dialog.behavior?.state = state

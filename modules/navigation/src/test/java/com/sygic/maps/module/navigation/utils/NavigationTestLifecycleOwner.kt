@@ -32,13 +32,12 @@ import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItems
 
 class NavigationTestLifecycleOwner : LifecycleOwner, OnInfobarButtonClickListenerWrapper, ActionMenuItemsProviderWrapper {
 
-    override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> =
-        MutableLiveData(mutableMapOf())
     override val actionMenuItemsProvider: LiveData<ActionMenuItemsProviderWrapper.ProviderComponent> = MutableLiveData()
+    override val infobarButtonClickListenerProvidersMap: LiveData<Map<InfobarButtonType, OnInfobarButtonClickListener?>> = MutableLiveData(mutableMapOf())
 
     private val lifecycle = LifecycleRegistry(this)
 
-    fun onResume() {
+    init {
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
     }
 

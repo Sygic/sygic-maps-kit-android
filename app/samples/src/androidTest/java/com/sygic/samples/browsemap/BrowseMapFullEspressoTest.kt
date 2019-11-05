@@ -45,11 +45,11 @@ class BrowseMapFullEspressoTest : BaseMapTest(BrowseMapFullActivity::class.java)
     }
 
     @Test
-    fun clickOnMap_poiDetailVisible() {
+    fun clickOnMap_placeDetailVisible() {
         browseMap(activity) {
-            isPoiDetailHidden()
+            isPlaceDetailHidden()
             clickOnMapToLocation(GeneralLocation.CENTER)
-            isPoiDetailVisible()
+            isPlaceDetailVisible()
         }
     }
 }

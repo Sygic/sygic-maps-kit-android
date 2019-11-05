@@ -26,8 +26,8 @@ package com.sygic.maps.module.common.di.module;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManagerImpl;
+import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager;
+import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManagerImpl;
 import dagger.Module;
 import dagger.Provides;
 

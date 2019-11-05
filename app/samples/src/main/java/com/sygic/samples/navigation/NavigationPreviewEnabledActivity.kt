@@ -26,10 +26,10 @@ package com.sygic.samples.navigation
 
 import android.os.Bundle
 import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.navigation.utils.SampleDemonstrationRoutePlan
+import com.sygic.samples.utils.getPrimaryRoute
 
 class NavigationPreviewEnabledActivity : CommonSampleActivity() {
 
@@ -41,8 +41,8 @@ class NavigationPreviewEnabledActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_navigation_preview_enabled)
 
         if (savedInstanceState == null) {
-            computePrimaryRoute(SampleDemonstrationRoutePlan()) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo = route
+            SampleDemonstrationRoutePlan().getPrimaryRoute { route ->
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.route = route
             }
         }
     }

@@ -36,7 +36,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.sygic.maps.module.common.KEY_DISTANCE_UNITS
 import com.sygic.maps.module.common.MapFragmentWrapper
+import com.sygic.maps.module.common.component.DISTANCE_UNITS_DEFAULT_VALUE
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.navigation.component.*
 import com.sygic.maps.module.navigation.databinding.LayoutNavigationBinding
@@ -59,7 +61,6 @@ import com.sygic.maps.uikit.viewmodels.navigation.signpost.SimplifiedSignpostVie
 import com.sygic.maps.uikit.viewmodels.navigation.speed.CurrentSpeedViewModel
 import com.sygic.maps.uikit.viewmodels.navigation.speed.SpeedLimitViewModel
 import com.sygic.maps.uikit.views.common.extensions.*
-import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
 import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.actionmenu.ActionMenuBottomDialogFragment
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
@@ -73,10 +74,9 @@ import com.sygic.maps.uikit.views.navigation.signpost.FullSignpostView
 import com.sygic.maps.uikit.views.navigation.signpost.SimplifiedSignpostView
 import com.sygic.maps.uikit.views.navigation.speed.CurrentSpeedView
 import com.sygic.maps.uikit.views.navigation.speed.SpeedLimitView
-import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.Route
 
 const val NAVIGATION_FRAGMENT_TAG = "navigation_fragment_tag"
-internal const val KEY_DISTANCE_UNITS = "distance_units"
 internal const val KEY_SIGNPOST_ENABLED = "signpost_enabled"
 internal const val KEY_SIGNPOST_TYPE = "signpost_type"
 internal const val KEY_LANES_VIEW_ENABLED = "lanes_view_enabled"
@@ -85,11 +85,11 @@ internal const val KEY_PREVIEW_MODE = "preview_mode"
 internal const val KEY_INFOBAR_ENABLED = "infobar_enabled"
 internal const val KEY_CURRENT_SPEED_ENABLED = "current_speed_enabled"
 internal const val KEY_SPEED_LIMIT_ENABLED = "speed_limit_enabled"
-internal const val KEY_ROUTE_INFO = "route_info"
+internal const val KEY_ROUTE = "route"
 
 /**
  * A *[NavigationFragment]* is the core component for any navigation operation. It can be easily used for the navigation
- * purposes. By setting the [routeInfo] object will start the navigation process. Any pre build-in element such as
+ * purposes. By setting the [route] object will start the navigation process. Any pre build-in element such as
  * [FullSignpostView], [SimplifiedSignpostView], [Infobar], [RoutePreviewControls], [CurrentSpeedView] or [SpeedLimitView]
  * may be activated or deactivated and styled.
  */
@@ -255,20 +255,20 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
         }
 
     /**
-     * If not-null *[routeInfo]* is defined, then it will be used as an navigation routeInfo.
+     * If not-null *[route]* is defined, then it will be used as an route for navigation.
      *
-     * @param [RouteInfo] route info object to be processed.
+     * @param [Route] route object to be processed.
      *
-     * @return [RouteInfo] the current route info value or `null` if not yet defined.
+     * @return [Route] the current route value or `null` if not yet defined.
      */
-    var routeInfo: RouteInfo?
+    var route: Route?
         get() = if (::fragmentViewModel.isInitialized) {
-            fragmentViewModel.routeInfo.value
-        } else arguments.getParcelableValue(KEY_ROUTE_INFO)
+            fragmentViewModel.route
+        } else arguments.getParcelableValue(KEY_ROUTE)
         set(value) {
-            arguments = Bundle(arguments).apply { putParcelable(KEY_ROUTE_INFO, value) }
+            arguments = Bundle(arguments).apply { putParcelable(KEY_ROUTE, value) }
             if (::fragmentViewModel.isInitialized && value != null) {
-                fragmentViewModel.routeInfo.value = value
+                fragmentViewModel.route = value
             }
         }
 
@@ -276,29 +276,24 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
         super.onCreate(savedInstanceState)
 
         fragmentViewModel = viewModelOf(NavigationFragmentViewModel::class.java, arguments).apply {
-            this.infoToastObservable.observe(
+            activityFinishObservable.observe(this@NavigationFragment, Observer { finish() })
+            infoToastObservable.observe(this@NavigationFragment, Observer { showInfoToast(it) })
+            actionMenuHideObservable.observe(this@NavigationFragment, Observer { hideActionMenu() })
+            actionMenuShowObservable.observe(this@NavigationFragment, Observer { showActionMenu(it) })
+            actionMenuItemClickListenerObservable.observe(
                 this@NavigationFragment,
-                Observer<InfoToastComponent> { showInfoToast(it) })
-            this.actionMenuShowObservable.observe(
-                this@NavigationFragment,
-                Observer<ActionMenuData> { showActionMenu(it) })
-            this.actionMenuHideObservable.observe(
-                this@NavigationFragment,
-                Observer<Any> { hideActionMenu() })
-            this.actionMenuItemClickListenerObservable.observe(
-                this@NavigationFragment,
-                Observer<ActionMenuItemClickListener> { setActionMenuItemClickListener(it) })
-            this.activityFinishObservable.observe(
-                this@NavigationFragment,
-                Observer<Any> { finish() })
+                Observer { setActionMenuItemClickListener(it) }
+            )
         }
         infobarViewModel = viewModelOf(InfobarViewModel::class.java)
-        routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
-        currentSpeedViewModel = viewModelOf(CurrentSpeedViewModel::class.java)
         speedLimitViewModel = viewModelOf(SpeedLimitViewModel::class.java)
+        currentSpeedViewModel = viewModelOf(CurrentSpeedViewModel::class.java)
+        routePreviewControlsViewModel = viewModelOf(RoutePreviewControlsViewModel::class.java)
 
-        lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(infobarViewModel)
+        lifecycle.addObserver(fragmentViewModel)
+        lifecycle.addObserver(speedLimitViewModel)
+        lifecycle.addObserver(currentSpeedViewModel)
         lifecycle.addObserver(routePreviewControlsViewModel)
     }
 
@@ -407,8 +402,10 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
     override fun onDestroy() {
         super.onDestroy()
 
-        lifecycle.removeObserver(fragmentViewModel)
         lifecycle.removeObserver(infobarViewModel)
+        lifecycle.removeObserver(fragmentViewModel)
+        lifecycle.removeObserver(speedLimitViewModel)
+        lifecycle.removeObserver(currentSpeedViewModel)
         lifecycle.removeObserver(routePreviewControlsViewModel)
     }
 

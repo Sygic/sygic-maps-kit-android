@@ -24,67 +24,62 @@
 
 package com.sygic.samples.utils
 
-import com.sygic.maps.uikit.viewmodels.common.data.PoiData
+import androidx.lifecycle.Observer
 import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
-import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
-import com.sygic.maps.uikit.views.common.utils.logInfo
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
-import com.sygic.maps.uikit.views.poidetail.data.PoiDetailData
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClientImpl
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClientImpl
+import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
+import com.sygic.maps.uikit.views.placedetail.data.PlaceDetailData
+import com.sygic.sdk.InitializationCallback
+import com.sygic.sdk.context.SygicContext
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.CoordinateSearchResult
-import com.sygic.sdk.search.MapSearchResult
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.position.GeoPosition
+import com.sygic.sdk.route.Route
+import com.sygic.sdk.route.RoutePlan
+import com.sygic.sdk.route.Router
+import com.sygic.sdk.route.RouterProvider
+import com.sygic.sdk.search.GeocodingResult
+import com.sygic.sdk.search.ResultType
 
-fun List<SearchResult>.isCategoryResult(): Boolean {
-    val firstSearchResult = first()
-    return size == 1 && firstSearchResult is MapSearchResult
-            && (firstSearchResult.dataType == MapSearchResult.DataType.PoiCategoryGroup
-            || firstSearchResult.dataType == MapSearchResult.DataType.PoiCategory)
+fun getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
+    with(PositionManagerClientImpl.getInstance(RouteDemonstrationManagerClientImpl)) {
+        currentPosition.observeForever(object: Observer<GeoPosition> {
+            override fun onChanged(position: GeoPosition) {
+                if (position.isValid) {
+                    currentPosition.removeObserver(this)
+                    lastValidLocationCallback.invoke(position.coordinates)
+                }
+            }
+        })
+        sdkPositionUpdatingEnabled.value = true
+    }
 }
 
-fun List<SearchResult>.toGeoCoordinatesList(): List<GeoCoordinates> {
-    val geoCoordinatesList = mutableListOf<GeoCoordinates>()
-    forEach { searchResult ->
-        when (searchResult) {
-            is CoordinateSearchResult -> geoCoordinatesList.add(searchResult.position)
-            is MapSearchResult -> geoCoordinatesList.add(searchResult.position)
-            else -> logInfo("${searchResult.javaClass.simpleName} class conversion is not implemented yet.")
+fun RoutePlan.getPrimaryRoute(routeComputeCallback: (route: Route) -> Unit) {
+    RouterProvider.getInstance(object : InitializationCallback<Router> {
+        override fun onInstance(router: Router) {
+            router.computeRoute(this@getPrimaryRoute, object : Router.RouteComputeAdapter() {
+                override fun onPrimaryComputeFinished(router: Router, route: Route) = routeComputeCallback.invoke(route)
+            })
         }
-    }
-    return geoCoordinatesList
+
+        override fun onError(@SygicContext.OnInitListener.Result result: Int) {}
+    })
 }
 
-fun SearchResult.toPoiDetailComponent(): PoiDetailComponent? {
-    return when (this) {
-        is CoordinateSearchResult -> {
-            val formattedCoordinates = this.position.getFormattedLocation()
-            PoiDetailComponent(
-                PoiDetailData(
-                    titleString = formattedCoordinates,
-                    subtitleString = EMPTY_STRING,
-                    coordinatesString = formattedCoordinates
-                ),
-                true
-            )
-        }
-        is MapSearchResult -> {
-            val poiData = PoiData(
-                name = this.poiName.text,
-                street = this.street.text,
-                city = this.city.text
-            )
-            PoiDetailComponent(
-                PoiDetailData(
-                    titleString = poiData.title,
-                    subtitleString = poiData.description,
-                    coordinatesString = this.position.getFormattedLocation()
-                ),
-                true
-            )
-        }
-        else -> {
-            logInfo("${this.javaClass.simpleName} class conversion is not implemented yet.")
-            null
-        }
-    }
+fun List<GeocodingResult>.isCategoryResult(): Boolean {
+    return size == 1 && first().type == ResultType.PLACE_CATEGORY
+}
+
+fun List<GeocodingResult>.toGeoCoordinatesList(): List<GeoCoordinates> = map { it.location }
+
+fun GeocodingResult.toPlaceDetailComponent(navigationButtonEnabled: Boolean = false): PlaceDetailComponent {
+    return PlaceDetailComponent(
+        PlaceDetailData(
+            titleString = title,
+            subtitleString = subtitle,
+            coordinatesString = this.location.getFormattedLocation()
+        ),
+        navigationButtonEnabled
+    )
 }

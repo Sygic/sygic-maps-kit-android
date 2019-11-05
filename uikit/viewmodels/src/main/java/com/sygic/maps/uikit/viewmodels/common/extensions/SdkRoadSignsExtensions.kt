@@ -27,101 +27,101 @@ package com.sygic.maps.uikit.viewmodels.common.extensions
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.viewmodels.R
-import com.sygic.sdk.navigation.warnings.NaviSignInfo
+import com.sygic.sdk.map.MapRoadNumberFormat
+import com.sygic.sdk.map.MapRoadNumberFormat.NumberShape
+import com.sygic.sdk.map.MapRoadNumberFormat.SignColor
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo.SignElement.PictogramType
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo.SignElement.SignElementType
 
 @DrawableRes
-internal fun NaviSignInfo.pictogramDrawableRes(): Int {
-    val pictogramType = signElements.firstOrNull { signElement ->
-        signElement.elementType == NaviSignInfo.SignElement.SignElementType.Pictogram
-    }?.pictogramType ?: 0
-
-    return when (pictogramType) {
-        NaviSignInfo.SignElement.PictogramType.Airport -> R.drawable.ic_pictogram_airport
-        NaviSignInfo.SignElement.PictogramType.BusStation -> R.drawable.ic_pictogram_bus
-        NaviSignInfo.SignElement.PictogramType.Fair -> R.drawable.ic_pictogram_fair
-        NaviSignInfo.SignElement.PictogramType.FerryConnection -> R.drawable.ic_pictogram_ferry
-        NaviSignInfo.SignElement.PictogramType.FirstAidPost -> R.drawable.ic_pictogram_er
-        NaviSignInfo.SignElement.PictogramType.Harbour -> R.drawable.ic_pictogram_harbour
-        NaviSignInfo.SignElement.PictogramType.Hospital -> R.drawable.ic_pictogram_er
-        NaviSignInfo.SignElement.PictogramType.HotelOrMotel -> R.drawable.ic_pictogram_acc
-        NaviSignInfo.SignElement.PictogramType.IndustrialArea -> R.drawable.ic_pictogram_factory
-        NaviSignInfo.SignElement.PictogramType.InformationCenter -> R.drawable.ic_pictogram_info
-        NaviSignInfo.SignElement.PictogramType.ParkingFacility -> R.drawable.ic_parking
-        NaviSignInfo.SignElement.PictogramType.PetrolStation -> R.drawable.ic_pictogram_gas
-        NaviSignInfo.SignElement.PictogramType.RailwayStation -> R.drawable.ic_pictogram_train
-        NaviSignInfo.SignElement.PictogramType.RestArea -> R.drawable.ic_pictogram_rest
-        NaviSignInfo.SignElement.PictogramType.Restaurant -> R.drawable.ic_pictogram_food
-        NaviSignInfo.SignElement.PictogramType.Toilet -> R.drawable.ic_pictogram_wc
+internal fun SignpostInfo.pictogramDrawableRes(): Int =
+    when (signElements.firstOrNull { it.elementType == SignElementType.Pictogram }?.pictogramType ?: 0) {
+        PictogramType.Airport -> R.drawable.ic_pictogram_airport
+        PictogramType.BusStation -> R.drawable.ic_pictogram_bus
+        PictogramType.Fair -> R.drawable.ic_pictogram_fair
+        PictogramType.FerryConnection -> R.drawable.ic_pictogram_ferry
+        PictogramType.FirstAidPost -> R.drawable.ic_pictogram_er
+        PictogramType.Harbour -> R.drawable.ic_pictogram_harbour
+        PictogramType.Hospital -> R.drawable.ic_pictogram_er
+        PictogramType.HotelOrMotel -> R.drawable.ic_pictogram_acc
+        PictogramType.IndustrialArea -> R.drawable.ic_pictogram_factory
+        PictogramType.InformationCenter -> R.drawable.ic_pictogram_info
+        PictogramType.ParkingFacility -> R.drawable.ic_parking
+        PictogramType.PetrolStation -> R.drawable.ic_pictogram_gas
+        PictogramType.RailwayStation -> R.drawable.ic_pictogram_train
+        PictogramType.RestArea -> R.drawable.ic_pictogram_rest
+        PictogramType.Restaurant -> R.drawable.ic_pictogram_food
+        PictogramType.Toilet -> R.drawable.ic_pictogram_wc
         else -> 0
     }
-}
 
 @DrawableRes
-internal fun NaviSignInfo.RouteNumberFormat.roadSignBackgroundDrawableRes(): Int = when (shape) {
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueShape1 -> R.drawable.ic_roadsign_are_blue
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenEShape3 -> R.drawable.ic_roadsign_are_green
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueNavyShape2 -> R.drawable.ic_roadsign_hun_blue
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenEShape2 -> R.drawable.ic_roadsign_hun_green
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenAShape4 -> R.drawable.ic_roadsign_aus_4_green
-    NaviSignInfo.RouteNumberFormat.NumberShape.RedShape5 -> R.drawable.ic_roadsign_nzl_red
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueShape5 -> R.drawable.ic_roadsign_aus_2_blue
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueShape6 -> R.drawable.ic_roadsign_deu_blue
-    NaviSignInfo.RouteNumberFormat.NumberShape.RedShape6 -> R.drawable.ic_roadsign_tur_red
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenEShape6 -> R.drawable.ic_roadsign_svn_green
-    NaviSignInfo.RouteNumberFormat.NumberShape.RedShape8 -> R.drawable.ic_roadsign_che_red
-    NaviSignInfo.RouteNumberFormat.NumberShape.RedShape9, NaviSignInfo.RouteNumberFormat.NumberShape.RedShape10 -> R.drawable.ic_roadsign_fra_red
-    NaviSignInfo.RouteNumberFormat.NumberShape.BrownShape7 -> R.drawable.ic_roadsign_aus_1_brown
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlackShape11WhiteBorder -> R.drawable.ic_roadsign_aus_4_black
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape12BlueNavyBorder -> R.drawable.ic_roadsign_aus_5_white
-    NaviSignInfo.RouteNumberFormat.NumberShape.YellowShape13GreenABorder -> R.drawable.ic_roadsign_aus_5_green
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueRedCanShape -> R.drawable.ic_roadsign_can_blue_red_rebon
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape14GreenEBorder -> R.drawable.ic_roadsign_can_white_green_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape15BlackBorder -> R.drawable.ic_roadsign_can_white_black_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenEShape16WhiteBorder, NaviSignInfo.RouteNumberFormat.NumberShape.GreenEShape18WhiteBorder -> R.drawable.ic_roadsign_ita_green
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueShape17WhiteBorder -> R.drawable.ic_roadsign_isr_blue
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape17BlackBorder, NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape24BlackBorder -> R.drawable.ic_roadsign_isr_white_black_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape24BlueMexBorder -> R.drawable.ic_roadsign_isr_white_blue_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape24RedBorder -> R.drawable.ic_roadsign_isr_white_red_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape24GreenEBorder -> R.drawable.ic_roadsign_isr_white_green_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueShape18BlackBorder -> R.drawable.ic_roadsign_vnm_blue
-    NaviSignInfo.RouteNumberFormat.NumberShape.YellowShape18BlackBorder -> R.drawable.ic_roadsign_mys_yellow
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape20BlackBorder -> R.drawable.ic_roadsign_nld_white
-    NaviSignInfo.RouteNumberFormat.NumberShape.USAShield -> R.drawable.ic_roadsign_us_1_blue
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape22BlackBorder -> R.drawable.ic_roadsign_us_2_white
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteShape21BlackBorder -> R.drawable.ic_roadsign_us_3_white
-    NaviSignInfo.RouteNumberFormat.NumberShape.OrangeShape23WhiteBorder -> R.drawable.ic_roadsign_hkg_orange
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueMexShape, NaviSignInfo.RouteNumberFormat.NumberShape.RedMexShape -> R.drawable.ic_roadsign_mex_white
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenESauShape1 -> R.drawable.ic_roadsign_sau_1
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenESauShape2 -> R.drawable.ic_roadsign_sau_2
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenESauShape3 -> R.drawable.ic_roadsign_sau_3
-    NaviSignInfo.RouteNumberFormat.NumberShape.OrangeShape19BlackBorder -> R.drawable.ic_roadsign_fra_orange
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteRect, NaviSignInfo.RouteNumberFormat.NumberShape.WhiteRectBlackBorder -> R.drawable.ic_roadsign_rect_white
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteRectGreenEBorder -> R.drawable.ic_roadsign_rect_white_green_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.WhiteRectYellowBorder -> R.drawable.ic_roadsign_rect_white_yellow_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueRect, NaviSignInfo.RouteNumberFormat.NumberShape.BlueNavyRect,
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueRectWhiteBorder, NaviSignInfo.RouteNumberFormat.NumberShape.BlueNavyRectWhiteBorder -> R.drawable.ic_roadsign_rect_blue
-    NaviSignInfo.RouteNumberFormat.NumberShape.BlueRectBlackBorder -> R.drawable.ic_roadsign_rect_blue_black_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.RedRect, NaviSignInfo.RouteNumberFormat.NumberShape.RedRectWhiteBorder -> R.drawable.ic_roadsign_rect_red
-    NaviSignInfo.RouteNumberFormat.NumberShape.RedRectBlackBorder -> R.drawable.ic_roadsign_rect_red_black_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.BrownRect -> R.drawable.ic_roadsign_rect_brown
-    NaviSignInfo.RouteNumberFormat.NumberShape.OrangeRect -> R.drawable.ic_roadsign_rect_orange
-    NaviSignInfo.RouteNumberFormat.NumberShape.YellowRect, NaviSignInfo.RouteNumberFormat.NumberShape.YellowRectWhiteBorder -> R.drawable.ic_roadsign_rect_yellow
-    NaviSignInfo.RouteNumberFormat.NumberShape.YellowRectBlackBorder -> R.drawable.ic_roadsign_rect_yellow_black_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenERectBlackBorder -> R.drawable.ic_roadsign_rect_green_black_border
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenARect, NaviSignInfo.RouteNumberFormat.NumberShape.GreenERect, NaviSignInfo.RouteNumberFormat.NumberShape.GreenERectWhiteBorder,
-    NaviSignInfo.RouteNumberFormat.NumberShape.GreenARectGreenEBorder, NaviSignInfo.RouteNumberFormat.NumberShape.Unknown -> R.drawable.ic_roadsign_rect_green
+internal fun MapRoadNumberFormat.roadSignBackgroundDrawableRes(): Int = when (shape) {
+    NumberShape.BlueShape1 -> R.drawable.ic_roadsign_are_blue
+    NumberShape.GreenEShape3 -> R.drawable.ic_roadsign_are_green
+    NumberShape.BlueNavyShape2 -> R.drawable.ic_roadsign_hun_blue
+    NumberShape.GreenEShape2 -> R.drawable.ic_roadsign_hun_green
+    NumberShape.GreenAShape4 -> R.drawable.ic_roadsign_aus_4_green
+    NumberShape.RedShape5 -> R.drawable.ic_roadsign_nzl_red
+    NumberShape.BlueShape5 -> R.drawable.ic_roadsign_aus_2_blue
+    NumberShape.BlueShape6 -> R.drawable.ic_roadsign_deu_blue
+    NumberShape.RedShape6 -> R.drawable.ic_roadsign_tur_red
+    NumberShape.GreenEShape6 -> R.drawable.ic_roadsign_svn_green
+    NumberShape.RedShape8 -> R.drawable.ic_roadsign_che_red
+    NumberShape.RedShape9, NumberShape.RedShape10 -> R.drawable.ic_roadsign_fra_red
+    NumberShape.BrownShape7 -> R.drawable.ic_roadsign_aus_1_brown
+    NumberShape.BlackShape11WhiteBorder -> R.drawable.ic_roadsign_aus_4_black
+    NumberShape.WhiteShape12BlueNavyBorder -> R.drawable.ic_roadsign_aus_5_white
+    NumberShape.YellowShape13GreenABorder -> R.drawable.ic_roadsign_aus_5_green
+    NumberShape.BlueRedCanShape -> R.drawable.ic_roadsign_can_blue_red_rebon
+    NumberShape.WhiteShape14GreenEBorder -> R.drawable.ic_roadsign_can_white_green_border
+    NumberShape.WhiteShape15BlackBorder -> R.drawable.ic_roadsign_can_white_black_border
+    NumberShape.GreenEShape16WhiteBorder, NumberShape.GreenEShape18WhiteBorder -> R.drawable.ic_roadsign_ita_green
+    NumberShape.BlueShape17WhiteBorder -> R.drawable.ic_roadsign_isr_blue
+    NumberShape.WhiteShape17BlackBorder, NumberShape.WhiteShape24BlackBorder -> R.drawable.ic_roadsign_isr_white_black_border
+    NumberShape.WhiteShape24BlueMexBorder -> R.drawable.ic_roadsign_isr_white_blue_border
+    NumberShape.WhiteShape24RedBorder -> R.drawable.ic_roadsign_isr_white_red_border
+    NumberShape.WhiteShape24GreenEBorder -> R.drawable.ic_roadsign_isr_white_green_border
+    NumberShape.BlueShape18BlackBorder -> R.drawable.ic_roadsign_vnm_blue
+    NumberShape.YellowShape18BlackBorder -> R.drawable.ic_roadsign_mys_yellow
+    NumberShape.WhiteShape20BlackBorder -> R.drawable.ic_roadsign_nld_white
+    NumberShape.USAShield -> R.drawable.ic_roadsign_us_1_blue
+    NumberShape.WhiteShape22BlackBorder -> R.drawable.ic_roadsign_us_2_white
+    NumberShape.WhiteShape21BlackBorder -> R.drawable.ic_roadsign_us_3_white
+    NumberShape.OrangeShape23WhiteBorder -> R.drawable.ic_roadsign_hkg_orange
+    NumberShape.BlueMexShape, NumberShape.RedMexShape -> R.drawable.ic_roadsign_mex_white
+    NumberShape.GreenESauShape1 -> R.drawable.ic_roadsign_sau_1
+    NumberShape.GreenESauShape2 -> R.drawable.ic_roadsign_sau_2
+    NumberShape.GreenESauShape3 -> R.drawable.ic_roadsign_sau_3
+    NumberShape.OrangeShape19BlackBorder -> R.drawable.ic_roadsign_fra_orange
+    NumberShape.WhiteRect, NumberShape.WhiteRectBlackBorder -> R.drawable.ic_roadsign_rect_white
+    NumberShape.WhiteRectGreenEBorder -> R.drawable.ic_roadsign_rect_white_green_border
+    NumberShape.WhiteRectYellowBorder -> R.drawable.ic_roadsign_rect_white_yellow_border
+    NumberShape.BlueRect, NumberShape.BlueNavyRect,
+    NumberShape.BlueRectWhiteBorder, NumberShape.BlueNavyRectWhiteBorder -> R.drawable.ic_roadsign_rect_blue
+    NumberShape.BlueRectBlackBorder -> R.drawable.ic_roadsign_rect_blue_black_border
+    NumberShape.RedRect, NumberShape.RedRectWhiteBorder -> R.drawable.ic_roadsign_rect_red
+    NumberShape.RedRectBlackBorder -> R.drawable.ic_roadsign_rect_red_black_border
+    NumberShape.BrownRect -> R.drawable.ic_roadsign_rect_brown
+    NumberShape.OrangeRect -> R.drawable.ic_roadsign_rect_orange
+    NumberShape.YellowRect, NumberShape.YellowRectWhiteBorder -> R.drawable.ic_roadsign_rect_yellow
+    NumberShape.YellowRectBlackBorder -> R.drawable.ic_roadsign_rect_yellow_black_border
+    NumberShape.GreenERectBlackBorder -> R.drawable.ic_roadsign_rect_green_black_border
+    NumberShape.GreenARect, NumberShape.GreenERect, NumberShape.GreenERectWhiteBorder,
+    NumberShape.GreenARectGreenEBorder, NumberShape.Unknown -> R.drawable.ic_roadsign_rect_green
     else -> R.drawable.ic_roadsign_rect_green
 }
 
 @ColorRes
-internal fun NaviSignInfo.RouteNumberFormat.roadSignForegroundColorRes(): Int = when (numberColor) {
-    NaviSignInfo.RouteNumberFormat.SignColor.Black -> R.color.roadSignStroke
-    NaviSignInfo.RouteNumberFormat.SignColor.GreenE, NaviSignInfo.RouteNumberFormat.SignColor.GreenA -> R.color.roadSignGreen
-    NaviSignInfo.RouteNumberFormat.SignColor.Blue, NaviSignInfo.RouteNumberFormat.SignColor.BlueNavy, NaviSignInfo.RouteNumberFormat.SignColor.BlueMex -> R.color.roadSignBlue
-    NaviSignInfo.RouteNumberFormat.SignColor.Red -> R.color.roadSignRed
-    NaviSignInfo.RouteNumberFormat.SignColor.Yellow -> R.color.roadSignYellow
-    NaviSignInfo.RouteNumberFormat.SignColor.Orange -> R.color.roadSignOrange
-    NaviSignInfo.RouteNumberFormat.SignColor.Brown -> R.color.roadSignBrown
-    NaviSignInfo.RouteNumberFormat.SignColor.White, NaviSignInfo.RouteNumberFormat.SignColor.Unknown -> R.color.white
+internal fun MapRoadNumberFormat.roadSignForegroundColorRes(): Int = when (numberColor) {
+    SignColor.Black -> R.color.roadSignStroke
+    SignColor.GreenE, SignColor.GreenA -> R.color.roadSignGreen
+    SignColor.Blue, SignColor.BlueNavy, SignColor.BlueMex -> R.color.roadSignBlue
+    SignColor.Red -> R.color.roadSignRed
+    SignColor.Yellow -> R.color.roadSignYellow
+    SignColor.Orange -> R.color.roadSignOrange
+    SignColor.Brown -> R.color.roadSignBrown
+    SignColor.White, SignColor.Unknown -> R.color.white
     else -> R.color.white
 }

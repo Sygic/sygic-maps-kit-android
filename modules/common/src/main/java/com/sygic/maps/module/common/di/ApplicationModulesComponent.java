@@ -29,22 +29,30 @@ import android.app.Application;
 import com.sygic.maps.module.common.di.module.AppModule;
 import com.sygic.maps.module.common.di.module.DateTimeManagerModule;
 import com.sygic.maps.module.common.di.module.LocationModule;
-import com.sygic.maps.module.common.di.module.NavigationManagerModule;
+import com.sygic.maps.module.common.di.module.NavigationManagerClientModule;
 import com.sygic.maps.module.common.di.module.PermissionsModule;
-import com.sygic.maps.module.common.di.module.PoiDataManagerModule;
-import com.sygic.maps.module.common.di.module.PositionManagerModule;
-import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerModule;
+import com.sygic.maps.module.common.di.module.PlacesManagerClientModule;
+import com.sygic.maps.module.common.di.module.PositionManagerClientModule;
+import com.sygic.maps.module.common.di.module.ReverseGeocoderManagerClientModule;
+import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerClientModule;
 import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
-import com.sygic.maps.module.common.di.module.SearchModule;
-import com.sygic.maps.module.common.poi.manager.PoiDataManager;
+import com.sygic.maps.module.common.di.module.SearchManagerClientModule;
+import com.sygic.maps.module.common.di.module.ServicesManagerModule;
+import com.sygic.maps.module.common.di.module.SoundManagerModule;
+import com.sygic.maps.module.common.di.module.VoiceManagerClientModule;
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager;
+import com.sygic.maps.uikit.viewmodels.common.geocoder.ReverseGeocoderManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager;
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager;
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager;
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager;
-import com.sygic.maps.uikit.viewmodels.common.search.SearchManager;
-import com.sygic.sdk.navigation.NavigationManager;
-import com.sygic.sdk.position.PositionManager;
+import com.sygic.maps.uikit.viewmodels.common.place.PlacesManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient;
+import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager;
+import com.sygic.maps.uikit.viewmodels.common.sound.SoundManager;
+import com.sygic.maps.uikit.viewmodels.common.voice.VoiceManagerClient;
 
 import javax.inject.Singleton;
 
@@ -56,24 +64,32 @@ import dagger.Component;
                 AppModule.class,
                 DateTimeManagerModule.class,
                 LocationModule.class,
-                NavigationManagerModule.class,
+                NavigationManagerClientModule.class,
                 PermissionsModule.class,
-                PoiDataManagerModule.class,
-                PositionManagerModule.class,
-                RouteDemonstrationManagerModule.class,
-                SearchModule.class,
-                SdkInitializationManagerModule.class
+                PlacesManagerClientModule.class,
+                PositionManagerClientModule.class,
+                ReverseGeocoderManagerClientModule.class,
+                RouteDemonstrationManagerClientModule.class,
+                SdkInitializationManagerModule.class,
+                SearchManagerClientModule.class,
+                ServicesManagerModule.class,
+                SoundManagerModule.class,
+                VoiceManagerClientModule.class
         }
 )
 public interface ApplicationModulesComponent {
     Application getApplication();
     DateTimeManager getDateTimeManager();
     LocationManager getLocationManager();
-    NavigationManager getNavigationManager();
+    NavigationManagerClient getNavigationManagerClient();
     PermissionsManager getPermissionsManager();
-    PoiDataManager getPoiDataManager();
-    PositionManager getPositionManager();
-    RouteDemonstrationManager getRouteDemonstrationManager();
-    SearchManager getSearchManager();
+    PlacesManagerClient getPlacesManagerClient();
+    PositionManagerClient getPositionManagerClient();
+    ReverseGeocoderManagerClient getReverseGeocoderManagerClient();
+    RouteDemonstrationManagerClient getRouteDemonstrationManagerClient();
     SdkInitializationManager getSdkInitializationManager();
+    SearchManagerClient getSearchManagerClient();
+    ServicesManager getServicesManager();
+    SoundManager getSoundManager();
+    VoiceManagerClient getVoiceManagerClient();
 }

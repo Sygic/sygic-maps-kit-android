@@ -61,4 +61,9 @@
     <string name="tunnel">Tunnel</string>
     <string name="via">Via</string>
     <string name="exit_number">Exit %s</string>
+    <string name="get_direction">Get direction</string>
+    <string name="url">Url</string>
+    <string name="telephone">Telephone</string>
+    <string name="email">Email</string>
+    <string name="gps_coordinates">GPS coordinates</string>
 </resources>

@@ -99,12 +99,12 @@
             android:id="@+id/zoomControlsMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
             android:visibility="@{safeUnbox(browseMapFragmentViewModel.zoomControlsEnabled) ? View.VISIBLE : View.GONE}"
             app:interactionListener="@{zoomControlsViewModel}"
-            app:layout_constraintBottom_toTopOf="@id/positionLockFab"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:tiltType="@{safeUnbox(zoomControlsViewModel.tiltType)}"
             tools:visibility="visible" />
 

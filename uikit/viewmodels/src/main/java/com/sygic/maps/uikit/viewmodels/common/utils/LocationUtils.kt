@@ -51,9 +51,7 @@ fun requestLocationPermission(permissionsManager: PermissionsManager, onSuccess:
                             onSuccess()
                         }
 
-                        override fun onPermissionDenied(permission: String) {
-                            /* Currently do nothing */
-                        }
+                        override fun onPermissionDenied(permission: String) { /* Currently do nothing */ }
                     })
             } else {
                 onSuccess()

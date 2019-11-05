@@ -26,7 +26,7 @@ package com.sygic.maps.uikit.viewmodels.navigation.preview
 
 import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.navigation.preview.RoutePreviewControls
@@ -34,38 +34,38 @@ import com.sygic.maps.uikit.views.navigation.preview.state.PlayPauseButtonState
 
 /**
  * A [RoutePreviewControlsViewModel] is a basic ViewModel implementation for the [RoutePreviewControls] class. It listens
- * to the [RouteDemonstrationManager.demonstrationState] and set appropriate state to the [RoutePreviewControls] view.
- * It also listens to the [RoutePreviewControls] user interaction callbacks and control the [RouteDemonstrationManager].
+ * to the [RouteDemonstrationManagerClient.demonstrationState] and set appropriate state to the [RoutePreviewControls] view.
+ * It also listens to the [RoutePreviewControls] user interaction callbacks and control the [RouteDemonstrationManagerClient].
  */
 @AutoFactory
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class RoutePreviewControlsViewModel internal constructor(
-    private val routeDemonstrationManager: RouteDemonstrationManager
+    private val routeDemonstrationManagerClient: RouteDemonstrationManagerClient
 ) : ViewModel(), DefaultLifecycleObserver {
 
     val playPauseButtonState: LiveData<PlayPauseButtonState> = MutableLiveData(PlayPauseButtonState.PLAY)
 
     override fun onCreate(owner: LifecycleOwner) {
-        routeDemonstrationManager.demonstrationState.observe(owner, Observer { state ->
+        routeDemonstrationManagerClient.demonstrationState.observe(owner, Observer { state ->
             playPauseButtonState.asMutable().value =
                 if (state == DemonstrationState.ACTIVE) PlayPauseButtonState.PAUSE else PlayPauseButtonState.PLAY
         })
     }
 
     open fun onPlayPauseButtonClick() {
-        when (routeDemonstrationManager.demonstrationState.value) {
-            DemonstrationState.ACTIVE -> routeDemonstrationManager.pause()
-            DemonstrationState.PAUSED -> routeDemonstrationManager.unPause()
-            DemonstrationState.INACTIVE -> routeDemonstrationManager.restart()
+        when (routeDemonstrationManagerClient.demonstrationState.value) {
+            DemonstrationState.ACTIVE -> routeDemonstrationManagerClient.pause()
+            DemonstrationState.PAUSED -> routeDemonstrationManagerClient.unPause()
+            DemonstrationState.INACTIVE -> routeDemonstrationManagerClient.restart()
             DemonstrationState.STOPPED -> { /* do nothing */ }
         }
     }
 
     open fun onSpeedButtonClick() {
-        routeDemonstrationManager.speedMultiplier.value = routeDemonstrationManager.speedMultiplier.value!! * 2 % 15
+        routeDemonstrationManagerClient.speedMultiplier.value = routeDemonstrationManagerClient.speedMultiplier.value!! * 2 % 15
     }
 
     open fun onStopButtonClick() {
-        routeDemonstrationManager.stop()
+        routeDemonstrationManagerClient.stop()
     }
 }

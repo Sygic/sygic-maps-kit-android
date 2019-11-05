@@ -30,8 +30,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -42,11 +40,10 @@ import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.databinding.LayoutSearchBinding
 import com.sygic.maps.module.search.di.DaggerSearchComponent
-import com.sygic.maps.module.search.di.SearchComponent
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.tools.viewmodel.factory.ViewModelFactory
-import com.sygic.maps.uikit.viewmodels.common.initialization.SdkInitializationManager
 import com.sygic.maps.uikit.viewmodels.common.search.MAX_RESULTS_COUNT_DEFAULT_VALUE
+import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager
 import com.sygic.maps.uikit.viewmodels.searchresultlist.SearchResultListViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.SearchToolbarViewModel
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_INPUT
@@ -54,12 +51,9 @@ import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_LOCATI
 import com.sygic.maps.uikit.viewmodels.searchtoolbar.component.KEY_SEARCH_MAX_RESULTS_COUNT
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.searchresultlist.SearchResultList
-import com.sygic.maps.uikit.views.searchresultlist.adapter.SearchResultListAdapter
-import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.maps.uikit.views.searchtoolbar.SearchToolbar
-import com.sygic.sdk.online.OnlineManager
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.search.SearchResult
+import com.sygic.sdk.search.GeocodingResult
 import javax.inject.Inject
 
 const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
@@ -70,14 +64,14 @@ const val SEARCH_FRAGMENT_TAG = "search_fragment_tag"
  * several pre build-in elements such as [SearchToolbar] or [SearchResultList].
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResultCallbackWrapper {
+class SearchFragment : Fragment(), SearchResultCallbackWrapper {
 
     private val injectionManager = InjectionManager(DaggerSearchComponent.builder())
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
-    internal lateinit var sdkInitializationManager: SdkInitializationManager
+    internal lateinit var servicesManager: ServicesManager
 
     private lateinit var fragmentViewModel: SearchFragmentViewModel
     private lateinit var searchToolbarViewModel: SearchToolbarViewModel
@@ -106,14 +100,14 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     /**
      * If *[searchLocation]* is defined, then it will be used to improve search accuracy.
      *
-     * @param [GeoCoordinates] search position to be used, null otherwise.
+     * @param [GeoCoordinates] search position to be used, [GeoCoordinates.Invalid] otherwise.
      *
      * @return [GeoCoordinates] the search position value.
      */
-    var searchLocation: GeoCoordinates?
+    var searchLocation: GeoCoordinates
         get() = if (::searchToolbarViewModel.isInitialized) {
             searchToolbarViewModel.searchLocation
-        } else arguments.getParcelableValue(KEY_SEARCH_LOCATION)
+        } else arguments.getParcelableValue(KEY_SEARCH_LOCATION) ?: GeoCoordinates.Invalid
         set(value) {
             arguments = Bundle(arguments).apply { putParcelable(KEY_SEARCH_LOCATION, value) }
             if (::searchToolbarViewModel.isInitialized) {
@@ -154,47 +148,42 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
     override fun onAttach(context: Context?) {
         injectionManager.inject(this)
         super.onAttach(context)
-        sdkInitializationManager.initialize(this)
+
+        servicesManager.initializeSdk()
+        servicesManager.enableOnlineMapStreaming()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val resultListAdapter = SearchResultListAdapter<SearchResult>()
-
         fragmentViewModel = ViewModelProviders.of(
             this,
-            viewModelFactory.with(resultListAdapter)
+            viewModelFactory
         )[SearchFragmentViewModel::class.java].apply {
-            this.onFinishObservable.observe(
-                this@SearchFragment,
-                Observer<Any> { fragmentManager?.popBackStack() })
+            onFinishObservable.observe(this@SearchFragment, Observer { fragmentManager?.popBackStack() })
         }
         searchToolbarViewModel = ViewModelProviders.of(
             this,
             viewModelFactory.with(arguments)
         )[SearchToolbarViewModel::class.java].apply {
-            this.onActionSearchClickObservable.observe(
+            onActionSearchClickObservable.observe(
                 this@SearchFragment,
-                Observer<TextView> { view -> fragmentViewModel.onActionSearchClick(view) })
+                Observer { view -> fragmentViewModel.onActionSearchClick(view) }
+            )
         }
         searchResultListViewModel = ViewModelProviders.of(
             this,
-            viewModelFactory.with(resultListAdapter)
+            viewModelFactory
         )[SearchResultListViewModel::class.java].apply {
-            this.onSearchResultItemClickObservable.observe(
+            onSearchResultItemClickObservable.observe(
                 this@SearchFragment,
-                Observer<SearchResultItem<out SearchResult>> { fragmentViewModel.onSearchResultItemClick(it) })
+                Observer { fragmentViewModel.onSearchResultItemClick(it) }
+            )
         }
 
         lifecycle.addObserver(fragmentViewModel)
         lifecycle.addObserver(searchToolbarViewModel)
         lifecycle.addObserver(searchResultListViewModel)
-    }
-
-    @CallSuper
-    override fun onSdkInitialized() {
-        OnlineManager.getInstance().enableOnlineMapStreaming(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -219,9 +208,9 @@ class SearchFragment : Fragment(), SdkInitializationManager.Callback, SearchResu
      *
      * @param callback [SearchResultCallback] callback to invoke when a search process is done.
      */
-    fun setResultCallback(callback: (searchResultList: List<SearchResult>) -> Unit) {
+    fun setResultCallback(callback: (results: List<GeocodingResult>) -> Unit) {
         setResultCallback(object : SearchResultCallback {
-            override fun onSearchResult(searchResultList: List<SearchResult>) = callback(searchResultList)
+            override fun onSearchResult(results: List<GeocodingResult>) = callback(results)
         })
     }
 
