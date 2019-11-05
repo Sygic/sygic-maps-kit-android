@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.jraska.livedata.test
@@ -85,7 +86,9 @@ class SearchToolbarViewModelTest {
 
         whenever(searchManagerClient.searchText).thenReturn(mock())
         whenever(searchManagerClient.autocompleteResultState).thenReturn(mock())
-        whenever(searchManagerClient.searchLocation).thenReturn(mock())
+        val searchLocationMock = mock<MutableLiveData<GeoCoordinates>>()
+        whenever(searchLocationMock.value).thenReturn(GeoCoordinates.Invalid)
+        whenever(searchManagerClient.searchLocation).thenReturn(searchLocationMock)
         whenever(searchManagerClient.maxResultsCount).thenReturn(mock())
 
         searchToolbarViewModel = SearchToolbarViewModel(arguments, searchManagerClient)
@@ -103,7 +106,7 @@ class SearchToolbarViewModelTest {
     fun initTest() {
         assertEquals(true, searchToolbarViewModel.searchToolbarFocused.value)
         assertEquals(SearchToolbarIconStateSwitcherIndex.PROGRESSBAR, searchToolbarViewModel.iconStateSwitcherIndex.value)
-        assertEquals(null, searchToolbarViewModel.searchLocation)
+        assertEquals(GeoCoordinates.Invalid, searchToolbarViewModel.searchLocation)
         assertEquals(EMPTY_STRING, searchToolbarViewModel.inputText.value)
     }
 

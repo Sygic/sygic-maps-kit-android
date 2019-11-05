@@ -54,15 +54,9 @@ class ThemeManagerImpl(app: Application, private val mapDataModel: ExtendedMapDa
     }
 
     override fun setSkinAtLayer(skinLayer: ThemeManager.SkinLayer, desiredSkin: String) {
-        val newSkin = if (MapSkin.DEFAULT == desiredSkin) {
-            getMapMode(currentNightMode)
-        } else {
-            desiredSkin
+        mapDataModel.skin = ArrayList(mapDataModel.skin).apply {
+            this[skinLayer.position] = if (MapSkin.DEFAULT == desiredSkin) getMapMode(currentNightMode) else desiredSkin
         }
-
-        val skins: MutableList<String> = ArrayList(mapDataModel.skin)
-        skins[skinLayer.position] = newSkin
-        mapDataModel.skin = skins
     }
 
     @MapSkin
