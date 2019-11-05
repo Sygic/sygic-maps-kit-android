@@ -182,12 +182,12 @@ class NavigationFragmentViewModel internal constructor(
             override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
                 when (actionMenuItem) {
                     is SoundsOnActionMenuItem -> {
-                        soundManager.setSoundsOn()
+                        soundManager.soundsEnabled.value = true
                         infoToastObservable.asSingleEvent().value =
                             InfoToastComponent(R.drawable.ic_sounds_on, R.string.sounds_enabled)
                     }
                     is SoundsOffActionMenuItem -> {
-                        soundManager.setSoundsOff()
+                        soundManager.soundsEnabled.value = false
                         infoToastObservable.asSingleEvent().value =
                             InfoToastComponent(R.drawable.ic_sounds_off, R.string.sounds_disabled)
                     }
@@ -215,7 +215,7 @@ class NavigationFragmentViewModel internal constructor(
             getParcelableValue<Route>(KEY_ROUTE)?.let { route = it }
         }
 
-        soundManager.setSoundsOn()
+        soundManager.soundsEnabled.value = true
         soundManager.setDefaultVoice() //ToDo: Remove it, when CI-538 is done
 
         updateInfobarListenersMap(InfobarButtonType.LEFT, navigationDefaultLeftInfobarClickListener)

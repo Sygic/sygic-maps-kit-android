@@ -106,7 +106,7 @@ class ComplexDemoActivityViewModel : ViewModel() {
         override val fragment: Fragment
             get() {
                 return SearchFragment().apply {
-                    searchLocation = cameraDataModel?.position
+                    searchLocation = cameraDataModel?.position ?: GeoCoordinates.Invalid
                     setResultCallback(callback)
                 }
             }

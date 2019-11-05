@@ -25,10 +25,12 @@
 package com.sygic.maps.uikit.viewmodels.common.sound
 
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.MutableLiveData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SoundManager {
-    fun setSoundsOn()
-    fun setSoundsOff()
+
+    var soundsEnabled: MutableLiveData<Boolean>
+
     fun setDefaultVoice()
 }

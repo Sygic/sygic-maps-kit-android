@@ -25,6 +25,7 @@
 package com.sygic.maps.uikit.viewmodels.common.sound
 
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.voice.VoiceManagerClient
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
@@ -42,15 +43,7 @@ class SoundManagerImpl private constructor(
             getInstance { SoundManagerImpl(voiceManager, navManager) }
     }
 
-    override fun setSoundsOn() {
-        setNavigationAudioWarningsEnabled(true)
-        setNavigationAudioInstructionsEnabled(true)
-    }
-
-    override fun setSoundsOff() {
-        setNavigationAudioWarningsEnabled(false)
-        setNavigationAudioInstructionsEnabled(false)
-    }
+    override var soundsEnabled = MutableLiveData<Boolean>(false)
 
     private fun setNavigationAudioWarningsEnabled(enabled: Boolean) {
         navigationManagerClient.setAudioBetterRouteListener(if (enabled) NavigationManager.AudioBetterRouteListener { false } else null)
@@ -66,4 +59,11 @@ class SoundManagerImpl private constructor(
     }
 
     override fun setDefaultVoice() = voiceManagerClient.setDefaultVoice()
+
+    init {
+        soundsEnabled.observeForever { enabled ->
+            setNavigationAudioWarningsEnabled(enabled)
+            setNavigationAudioInstructionsEnabled(enabled)
+        }
+    }
 }

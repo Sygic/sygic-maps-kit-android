@@ -98,9 +98,9 @@ class PositionManagerClientImpl private constructor(
         }
     }
 
-    override val sdkPositionUpdatingEnabled by lazy { MutableLiveData<Boolean>() }
+    override val sdkPositionUpdatingEnabled by lazy { MutableLiveData<Boolean>(false) }
 
-    override val remotePositioningServiceEnabled by lazy { MutableLiveData<Boolean>() }
+    override val remotePositioningServiceEnabled by lazy { MutableLiveData<Boolean>(false) }
 
     init {
         sdkPositionUpdatingEnabled.observeForever { enabled ->

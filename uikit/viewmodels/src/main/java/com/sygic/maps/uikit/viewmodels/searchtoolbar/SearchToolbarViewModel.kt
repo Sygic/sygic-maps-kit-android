@@ -67,8 +67,8 @@ open class SearchToolbarViewModel internal constructor(
     val inputText: MutableLiveData<CharSequence> = UniqueMutableLiveData()
 
     var searchDelay: Long = DEFAULT_SEARCH_DELAY
-    var searchLocation: GeoCoordinates?
-        get() = searchManagerClient.searchLocation.value
+    var searchLocation: GeoCoordinates
+        get() = searchManagerClient.searchLocation.value!!
         set(value) {
             searchManagerClient.searchLocation.value = value
         }
@@ -85,7 +85,7 @@ open class SearchToolbarViewModel internal constructor(
     init {
         with(arguments) {
             inputText.value = getString(KEY_SEARCH_INPUT, EMPTY_STRING)
-            searchLocation = getParcelableValue(KEY_SEARCH_LOCATION)
+            searchLocation = getParcelableValue(KEY_SEARCH_LOCATION) ?: GeoCoordinates.Invalid
             maxResultsCount = getInt(KEY_SEARCH_MAX_RESULTS_COUNT, MAX_RESULTS_COUNT_DEFAULT_VALUE)
         }
 

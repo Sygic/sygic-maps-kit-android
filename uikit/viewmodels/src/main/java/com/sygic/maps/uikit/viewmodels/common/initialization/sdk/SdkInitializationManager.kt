@@ -25,12 +25,13 @@
 package com.sygic.maps.uikit.viewmodels.common.initialization.sdk
 
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
+import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.state.InitializationState
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SdkInitializationManager {
 
-    @InitializationState
-    var initializationState: Int
+    var initializationState: LiveData<InitializationState>
 
     fun initialize()
 }

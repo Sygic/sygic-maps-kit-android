@@ -57,7 +57,7 @@ object SearchManagerClientImpl : SearchManagerClient {
 
     override val searchText by lazy { MutableLiveData<String>(EMPTY_STRING) }
 
-    override val searchLocation by lazy { MutableLiveData<GeoCoordinates?>() }
+    override val searchLocation by lazy { MutableLiveData<GeoCoordinates>(GeoCoordinates.Invalid) }
 
     override val maxResultsCount by lazy { MutableLiveData<Int>(MAX_RESULTS_COUNT_DEFAULT_VALUE) }
 
@@ -79,7 +79,7 @@ object SearchManagerClientImpl : SearchManagerClient {
             it.geocode(SearchRequest(
                 searchInput = searchText.value!!,
                 maxResultCount = maxResultsCount.value!!,
-                location = searchLocation.value ?: GeoCoordinates.Invalid
+                location = searchLocation.value!!
             ), object : SearchManager.GeocodingResultsListener {
                 override fun onGeocodingResults(geocodingResults: List<GeocodingResult>) { callback.invoke(geocodingResults) }
                 override fun onGeocodingResultsError(code: SearchManager.ErrorCode) { /* Currently do nothing */ }

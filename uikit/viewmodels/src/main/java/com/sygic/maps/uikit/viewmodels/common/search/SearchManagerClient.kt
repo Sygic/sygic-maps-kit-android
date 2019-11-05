@@ -36,7 +36,7 @@ import com.sygic.sdk.search.GeocodingResult
 interface SearchManagerClient {
 
     val searchText: MutableLiveData<String>
-    val searchLocation: MutableLiveData<GeoCoordinates?>
+    val searchLocation: MutableLiveData<GeoCoordinates>
     val maxResultsCount: MutableLiveData<Int>
     val autocompleteResults: LiveData<List<AutocompleteResult>>
     val autocompleteResultState: LiveData<ResultState>

@@ -35,6 +35,7 @@ import com.sygic.samples.utils.toGeoCoordinatesList
 import com.sygic.sdk.map.data.SimpleCameraDataModel
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.sdk.position.GeoBoundingBox
+import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.search.GeocodingResult
 
 private const val CAMERA_RECTANGLE_MARGIN = 80
@@ -71,7 +72,7 @@ class SearchFromBrowseMapWitchPinsActivityViewModel : ViewModel(), ModuleConnect
     override val fragment: Fragment
         get() {
             val searchFragment = SearchFragment()
-            searchFragment.searchLocation = cameraDataModel?.position
+            searchFragment.searchLocation = cameraDataModel?.position ?: GeoCoordinates.Invalid
             searchFragment.setResultCallback(callback)
             return searchFragment
         }

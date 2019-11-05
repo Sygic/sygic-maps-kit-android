@@ -100,14 +100,14 @@ class SearchFragment : Fragment(), SearchResultCallbackWrapper {
     /**
      * If *[searchLocation]* is defined, then it will be used to improve search accuracy.
      *
-     * @param [GeoCoordinates] search position to be used, null otherwise.
+     * @param [GeoCoordinates] search position to be used, [GeoCoordinates.Invalid] otherwise.
      *
      * @return [GeoCoordinates] the search position value.
      */
-    var searchLocation: GeoCoordinates?
+    var searchLocation: GeoCoordinates
         get() = if (::searchToolbarViewModel.isInitialized) {
             searchToolbarViewModel.searchLocation
-        } else arguments.getParcelableValue(KEY_SEARCH_LOCATION)
+        } else arguments.getParcelableValue(KEY_SEARCH_LOCATION) ?: GeoCoordinates.Invalid
         set(value) {
             arguments = Bundle(arguments).apply { putParcelable(KEY_SEARCH_LOCATION, value) }
             if (::searchToolbarViewModel.isInitialized) {

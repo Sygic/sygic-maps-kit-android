@@ -26,8 +26,12 @@ package com.sygic.maps.uikit.viewmodels.common.initialization.sdk
 
 import android.app.Application
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.viewmodels.common.extensions.getApiKey
+import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.state.InitializationState
 import com.sygic.maps.uikit.viewmodels.common.remote.RemoteControlManager
+import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
 import com.sygic.maps.uikit.views.common.utils.logError
 import com.sygic.sdk.SygicEngine
@@ -42,16 +46,16 @@ class SdkInitializationManagerImpl private constructor(
         fun getInstance(app: Application) = getInstance { SdkInitializationManagerImpl(app) }
     }
 
-    @InitializationState
-    override var initializationState = InitializationState.INITIALIZATION_NOT_STARTED
+    override var initializationState: LiveData<InitializationState> =
+        MutableLiveData<InitializationState>(InitializationState.INITIALIZATION_NOT_STARTED)
 
     override fun initialize() {
         synchronized(this) {
-            if (initializationState == InitializationState.INITIALIZED || initializationState == InitializationState.INITIALIZING) {
+            if (initializationState.value == InitializationState.INITIALIZED || initializationState.value == InitializationState.INITIALIZING) {
                 return
             }
 
-            initializationState = InitializationState.INITIALIZING
+            initializationState.asMutable().value = InitializationState.INITIALIZING
         }
 
         app.getApiKey()?.let { key ->
@@ -60,11 +64,11 @@ class SdkInitializationManagerImpl private constructor(
                 .setRemoteControl(RemoteControlManager)
                 .setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {
-                        synchronized(this) { initializationState = InitializationState.INITIALIZED }
+                        synchronized(this) { initializationState.asMutable().value = InitializationState.INITIALIZED }
                     }
 
                     override fun onError(@SygicEngine.OnInitListener.InitError error: Int) {
-                        synchronized(this) { initializationState = InitializationState.ERROR }
+                        synchronized(this) { initializationState.asMutable().value = InitializationState.ERROR }
 
                         val errorType = when (error) {
                             SygicEngine.OnInitListener.InitError.InternalInit -> "Internal init"

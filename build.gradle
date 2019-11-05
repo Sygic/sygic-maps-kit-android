@@ -54,7 +54,7 @@ buildscript {
         constraintLayoutVersion = '1.1.3'
         annotationsVersion = '1.1.0'
         playServicesLocationVersion = '17.0.0'
-        sygicSdkVersion = '15.0.4-rc.767'
+        sygicSdkVersion = '15.0.4'
         daggerVersion = '2.24'
         javaxInjectVersion = '1'
         javaPoetVersion = '1.11.1'
@@ -91,7 +91,6 @@ buildscript {
         if (gradle.buildSdkFromSource()) {
             maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" }
         }
-        maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" } //todo: remove this line when stable version is out.
         maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
         google()
         jcenter()
@@ -100,7 +99,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" } //todo: remove this line when stable version is out.
         maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
         google()
         jcenter()
