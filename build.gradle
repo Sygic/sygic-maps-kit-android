@@ -58,17 +58,18 @@ buildscript {
         daggerVersion = '2.24'
         javaxInjectVersion = '1'
         javaPoetVersion = '1.11.1'
+        koushAndroidAsyncVersion = '2.2.1'
+
         junitVersion = '4.12'
         extJUnitVersion = '1.1.1'
         testRulesVersion = '1.2.0'
         testRunnerVersion = '1.2.0'
         espressoVersion = '3.2.0'
         uiAutomatorVersion = '2.2.0'
-        mockitoVersion = '3.0.0'
-        mockitoKotlinVersion = '2.1.0'
+        mockitoVersion = '3.1.0'
+        mockitoKotlinVersion = '2.2.0'
         robolectricVersion = '1.2.0'
-        livedataTestingVersion = '1.1.0'
-        koushAndroidAsyncVersion = '2.2.1'
+        livedataTestingVersion = '1.1.1'
 
         supportedAbis = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
     }

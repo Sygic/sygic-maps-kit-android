@@ -37,7 +37,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class ThemeModule {
+public class ThemeManagerModule {
 
     @FragmentScope
     @Provides

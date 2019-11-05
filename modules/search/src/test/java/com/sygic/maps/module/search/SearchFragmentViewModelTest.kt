@@ -34,6 +34,7 @@ import com.sygic.maps.module.search.callback.SearchResultCallback
 import com.sygic.maps.module.search.callback.SearchResultCallbackWrapper
 import com.sygic.maps.module.search.viewmodel.SearchFragmentViewModel
 import com.sygic.maps.uikit.viewmodels.common.search.SearchManagerClient
+import com.sygic.maps.uikit.views.common.extensions.EMPTY_STRING
 import com.sygic.maps.uikit.views.common.extensions.hideKeyboard
 import com.sygic.maps.uikit.views.searchresultlist.data.SearchResultItem
 import com.sygic.sdk.search.AutocompleteResult
@@ -78,13 +79,12 @@ class SearchFragmentViewModelTest {
     @Test
     fun onSearchResultItemClickTest() {
         val searchResultItemMock = mock<SearchResultItem<AutocompleteResult>>()
-        val dataPayloadMock = mock<AutocompleteResult>()
+        val dataPayload = AutocompleteResult(ResultType.PLACE, 0.0, 0.0, EMPTY_STRING, EMPTY_STRING, emptyList(), EMPTY_STRING, emptyList(), mock())
 
-        whenever(searchResultItemMock.dataPayload).thenReturn(dataPayloadMock)
-        whenever(dataPayloadMock.type).thenReturn(ResultType.PLACE)
+        whenever(searchResultItemMock.dataPayload).thenReturn(dataPayload)
 
         searchFragmentViewModel.onSearchResultItemClick(searchResultItemMock)
-        verify(searchManagerClient).geocodeResult(eq(dataPayloadMock), any())
+        verify(searchManagerClient).geocodeResult(eq(dataPayload), any())
     }
 
     @Test

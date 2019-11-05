@@ -27,11 +27,12 @@ package com.sygic.maps.module.common.di.module;
 import com.sygic.maps.module.common.di.scope.FragmentScope;
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager;
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManagerImpl;
+
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class RegionalModule {
+public class RegionalManagerModule {
 
     @FragmentScope
     @Provides

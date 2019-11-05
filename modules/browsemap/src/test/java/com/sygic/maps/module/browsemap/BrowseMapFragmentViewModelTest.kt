@@ -107,7 +107,7 @@ class BrowseMapFragmentViewModelTest {
         whenever(locationManager.positionOnMapEnabled).thenReturn(positionOnMapEnabledMock)
         whenever(regionalManager.distanceUnit).thenReturn(mock())
         whenever(positionManagerClient.sdkPositionUpdatingEnabled).thenReturn(mock())
-        whenever(positionManagerClient.remotePositioningServiceEnabled).thenReturn(mock())
+        if (BuildConfig.DEBUG) whenever(positionManagerClient.remotePositioningServiceEnabled).thenReturn(mock())
 
         val arguments = mock<Bundle>()
         whenever(arguments.getInt(eq(KEY_MAP_SELECTION_MODE), any())).thenReturn(MapSelectionMode.FULL)
