@@ -117,9 +117,9 @@ class NavigationFragmentViewModelTest {
         whenever(regionalManager.distanceUnit).thenReturn(mock())
         whenever(navigationManagerClient.route).thenReturn(mock())
         whenever(routeDemonstrationManagerClient.demonstrationState).thenReturn(mock())
-        whenever(positionManagerClient.remotePositioningServiceEnabled).thenReturn(mock())
         whenever(locationManager.positionOnMapEnabled).thenReturn(mock())
         whenever(soundManager.soundsEnabled).thenReturn(mock())
+        if (BuildConfig.DEBUG) whenever(positionManagerClient.remotePositioningServiceEnabled).thenReturn(mock())
 
         val arguments = mock<Bundle>()
         whenever(arguments.getParcelable<Route>(eq(KEY_ROUTE))).thenReturn(mock())
