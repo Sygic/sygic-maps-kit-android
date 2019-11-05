@@ -30,4 +30,6 @@
     <color name="navigationBackgroundColor">@color/black</color>
     <color name="navigationTextColorPrimary">@color/white</color>
     <color name="navigationTextColorSecondary">@color/gray_chateau</color>
+    <color name="placeDetailItemBackgroundColor">@color/mine_shaft</color>
+    <color name="placeDetailItemDisabledTintColor">@color/tundora</color>
 </resources>

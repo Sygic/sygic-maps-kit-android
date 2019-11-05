@@ -26,23 +26,23 @@ package com.sygic.maps.uikit.viewmodels.common.utils
 
 import com.sygic.maps.uikit.viewmodels.R
 import com.sygic.maps.uikit.viewmodels.common.extensions.createInstructionText
-import com.sygic.maps.uikit.viewmodels.common.sdk.holders.NaviSignInfoHolder
+import com.sygic.maps.uikit.viewmodels.common.sdk.holders.SignpostInfoHolder
 import com.sygic.maps.uikit.views.common.utils.TextHolder
-import com.sygic.sdk.navigation.warnings.DirectionInfo
-import com.sygic.sdk.navigation.warnings.NaviSignInfo
+import com.sygic.sdk.navigation.routeeventnotifications.DirectionInfo
+import com.sygic.sdk.navigation.routeeventnotifications.SignpostInfo
 
-internal fun createInstructionText(directionAndNaviSignInfoPair: Pair<DirectionInfo, NaviSignInfoHolder>): TextHolder =
-    createInstructionText(directionAndNaviSignInfoPair.first, directionAndNaviSignInfoPair.second)
+internal fun createInstructionText(directionAndSignpostInfoPair: Pair<DirectionInfo, SignpostInfoHolder>): TextHolder =
+    createInstructionText(directionAndSignpostInfoPair.first, directionAndSignpostInfoPair.second)
 
-internal fun createInstructionText(directionInfo: DirectionInfo, naviSignInfoHolder: NaviSignInfoHolder): TextHolder =
-    createInstructionText(directionInfo, naviSignInfoHolder.naviSignInfo)
+internal fun createInstructionText(directionInfo: DirectionInfo, signpostInfoHolder: SignpostInfoHolder): TextHolder =
+    createInstructionText(directionInfo, signpostInfoHolder.signpostInfo)
 
-internal fun createInstructionText(directionInfo: DirectionInfo, naviSignInfo: NaviSignInfo? = null): TextHolder {
+internal fun createInstructionText(directionInfo: DirectionInfo, signpostInfo: SignpostInfo? = null): TextHolder {
     if (directionInfo.distance > 2000) { // 2km
         return TextHolder.from(R.string.follow_the_route)
     }
 
-    naviSignInfo?.let { info ->
+    signpostInfo?.let { info ->
         return info.createInstructionText()
     }
 

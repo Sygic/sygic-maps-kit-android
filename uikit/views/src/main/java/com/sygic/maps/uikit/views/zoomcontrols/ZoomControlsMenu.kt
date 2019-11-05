@@ -28,13 +28,13 @@ import android.content.Context
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
 import android.widget.LinearLayout
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.isRtl
+import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu.InteractionListener
 import com.sygic.maps.uikit.views.zoomcontrols.buttons.*
 
-private const val ANIMATION_DELAY_PER_ITEM = 50
+private const val ANIMATION_DELAY_PER_ITEM = 70
 
 /**
  * A [ZoomControlsMenu] can be used to control camera zoom level or camera projection. The view state can be simply
@@ -50,8 +50,9 @@ private const val ANIMATION_DELAY_PER_ITEM = 50
 open class ZoomControlsMenu @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.zoomControlsMenuStyle
-) : LinearLayout(context, attrs, 0), ZoomControlsMenuButton.MenuCallback {
+    defStyleAttr: Int = R.attr.zoomControlsMenuStyle,
+    defStyleRes: Int = R.style.SygicZoomControlsMenuStyle
+) : LinearLayout(context, attrs, defStyleAttr, defStyleRes), ZoomControlsMenuButton.MenuCallback {
 
     private val uiHandler = Handler()
     private val menuButton: ZoomControlsMenuButton
@@ -108,25 +109,26 @@ open class ZoomControlsMenu @JvmOverloads constructor(
     }
 
     init {
-        orientation = HORIZONTAL
         clipChildren = false
 
         addView(
-            ZoomControlsMenuButton(context, attrs, defStyleAttr, this).also { menuButton = it },
+            ZoomControlsMenuButton(context, attrs, defStyleAttr, defStyleRes, this).also { menuButton = it },
             LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         )
 
-        val layoutParams = getChildLayoutParams()
-        addView(ZoomControlsZoomOutButton(context, attrs, defStyleAttr).apply { hide(false) }, layoutParams)
-        addView(ZoomControlsZoomInButton(context, attrs, defStyleAttr).apply { hide(false) }, layoutParams)
-        addView(ZoomControlsMapViewModeButton(context, attrs, defStyleAttr).apply { hide(false) }, layoutParams)
+        with(computeChildLayoutParams()) {
+            addView(ZoomControlsZoomOutButton(context, attrs, defStyleAttr, defStyleRes).apply { hide(false) }, this)
+            addView(ZoomControlsZoomInButton(context, attrs, defStyleAttr, defStyleRes).apply { hide(false) }, this)
+            addView(ZoomControlsMapViewModeButton(context, attrs, defStyleAttr, defStyleRes).apply { hide(false) }, this)
+        }
     }
 
-    private fun getChildLayoutParams(): LayoutParams {
-        return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-            context.isRtl().let {
-                setMargins(if (!it) internalButtonMargin else 0, 0, if (it) internalButtonMargin else 0, 0)
-            }
+    private fun computeChildLayoutParams() = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+        if (orientation == VERTICAL) {
+            setMargins(0, internalButtonMargin, 0, 0)
+        } else {
+            val isRtl = context.isRtl()
+            setMargins(if (!isRtl) internalButtonMargin else 0, 0, if (isRtl) internalButtonMargin else 0, 0)
         }
     }
 
@@ -183,7 +185,7 @@ open class ZoomControlsMenu @JvmOverloads constructor(
         var counter = 0L
         for (i in 0 until childCount) {
             getChildAt(i).let {
-                if (it is BaseZoomControlsButton && it.visibility != View.GONE) {
+                if (it is BaseZoomControlsButton) {
                     counter++
 
                     uiHandler.postDelayed(Runnable {
@@ -215,7 +217,7 @@ open class ZoomControlsMenu @JvmOverloads constructor(
         var counter = 0L
         for (i in childCount - 1 downTo 0) {
             getChildAt(i).let {
-                if (it is BaseZoomControlsButton && it.visibility != View.GONE) {
+                if (it is BaseZoomControlsButton) {
                     counter++
 
                     uiHandler.postDelayed(Runnable {

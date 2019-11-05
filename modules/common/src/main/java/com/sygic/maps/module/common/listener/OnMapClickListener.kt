@@ -28,7 +28,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.uikit.viewmodels.common.sdk.viewobject.SelectionType
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
+import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
 import com.sygic.sdk.map.`object`.MapMarker
 import com.sygic.sdk.map.`object`.data.ViewObjectData
 
@@ -46,7 +46,7 @@ interface OnMapClickListener {
     fun getClickMapMarker(latitude: Double, longitude: Double): MapMarker? = MapMarker.at(latitude, longitude).build()
 
     /**
-     * Modifies the details view ([PoiDetailBottomDialogFragment] or [DetailsViewFactory] if set) default behavior. If true,
+     * Modifies the details view ([PlaceDetailBottomDialogFragment] or [DetailsViewFactory] if set) default behavior. If true,
      * the details view will be shown when the [onMapDataReceived] is called.
      *
      * @return true to use the default behaviour, false otherwise. The default value is true.

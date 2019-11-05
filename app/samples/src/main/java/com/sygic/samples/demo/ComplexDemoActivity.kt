@@ -36,20 +36,18 @@ import com.sygic.maps.module.common.extensions.*
 import com.sygic.maps.module.navigation.NAVIGATION_FRAGMENT_TAG
 import com.sygic.maps.module.navigation.NavigationFragment
 import com.sygic.maps.module.navigation.listener.EventListener
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.maps.uikit.viewmodels.common.extensions.getLastValidLocation
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.views.common.extensions.isPermissionNotGranted
 import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.maps.uikit.views.common.extensions.requestPermission
-import com.sygic.maps.uikit.views.poidetail.PoiDetailBottomDialogFragment
-import com.sygic.maps.uikit.views.poidetail.component.PoiDetailComponent
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.demo.states.BrowseMapDemoDefaultState
 import com.sygic.samples.demo.viewmodels.ComplexDemoActivityViewModel
+import com.sygic.samples.utils.getLastValidLocation
+import com.sygic.samples.utils.getPrimaryRoute
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.Route
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.RoutingOptions
 import kotlinx.android.synthetic.main.activity_complex_demo.*
@@ -71,26 +69,21 @@ class ComplexDemoActivity : CommonSampleActivity() {
         setContentView(R.layout.activity_complex_demo)
 
         viewModel = ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
-            this.restoreDefaultStateObservable.observe(
+            hidePlaceDetailObservable.observe(this@ComplexDemoActivity, Observer { browseMapFragment.hidePlaceDetail() })
+            placeNavigationFragmentObservable.observe(this@ComplexDemoActivity, Observer { placeNavigationFragment(it) })
+            computePrimaryRouteObservable.observe(this@ComplexDemoActivity, Observer { createRoutePlanAndComputeRoute(it) })
+            restoreDefaultStateObservable.observe(
                 this@ComplexDemoActivity,
-                Observer<Any> { BrowseMapDemoDefaultState.setTo(browseMapFragment) })
-            this.showPoiDetailObservable.observe(
+                Observer { BrowseMapDemoDefaultState.setTo(browseMapFragment) }
+            )
+            showPlaceDetailObservable.observe(
                 this@ComplexDemoActivity,
-                Observer<Pair<PoiDetailComponent, PoiDetailBottomDialogFragment.Listener>> {
-                    browseMapFragment.showPoiDetail(it.first, it.second)
-                })
-            this.hidePoiDetailObservable.observe(
+                Observer { browseMapFragment.showPlaceDetail(it.first, it.second) }
+            )
+            routeComputeProgressVisibilityObservable.observe(
                 this@ComplexDemoActivity,
-                Observer<Any> { browseMapFragment.hidePoiDetail() })
-            this.computePrimaryRouteObservable.observe(
-                this@ComplexDemoActivity,
-                Observer<GeoCoordinates> { createRoutePlanAndComputeRoute(it) })
-            this.routeComputeProgressVisibilityObservable.observe(
-                this@ComplexDemoActivity,
-                Observer<Int> { routeComputeProgressBarContainer.visibility = it })
-            this.placeNavigationFragmentObservable.observe(
-                this@ComplexDemoActivity,
-                Observer<EventListener> { placeNavigationFragment(it) })
+                Observer { routeComputeProgressBarContainer.visibility = it }
+            )
         }
 
         browseMapFragment = if (savedInstanceState == null) {
@@ -137,12 +130,12 @@ class ComplexDemoActivity : CommonSampleActivity() {
                 }
             }
 
-            computePrimaryRoute(routePlan) { setRouteToNavigationFragment(it) }
+            routePlan.getPrimaryRoute { setRouteToNavigationFragment(it) }
         }
     }
 
-    private fun setRouteToNavigationFragment(route: RouteInfo) {
-        (supportFragmentManager.findFragmentByTag(NAVIGATION_FRAGMENT_TAG) as? NavigationFragment)?.routeInfo = route
+    private fun setRouteToNavigationFragment(route: Route) {
+        (supportFragmentManager.findFragmentByTag(NAVIGATION_FRAGMENT_TAG) as? NavigationFragment)?.route = route
     }
 
     private fun requestLastValidLocation(currentLocationCallback: (GeoCoordinates) -> Unit) {

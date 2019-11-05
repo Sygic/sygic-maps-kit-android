@@ -27,7 +27,7 @@ package com.sygic.maps.module.navigation.listener
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LiveData
 import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.Route
 
 /**
  * Interface definition for a callback to be invoked when a navigation event occurs.
@@ -35,7 +35,7 @@ import com.sygic.sdk.route.RouteInfo
 interface EventListener {
 
     /**
-     * Called when the [NavigationFragment] has been created and is waiting for the valid [RouteInfo].
+     * Called when the [NavigationFragment] has been created and is waiting for the valid [Route].
      */
     fun onNavigationCreated() {}
 
@@ -43,18 +43,18 @@ interface EventListener {
      * Called when navigation has been started. Note: Even if the [NavigationFragment.previewMode] is set to true,
      * this event will also be called.
      *
-     * @param routeInfo [RouteInfo] the route info object used for the navigation.
+     * @param route [Route] the route object used for the navigation.
      *
      */
-    fun onNavigationStarted(routeInfo: RouteInfo?) {}
+    fun onNavigationStarted(route: Route?) {}
 
     /**
      * Called when the SDK `onRouteChanged()` event occurs.
      *
-     * @param routeInfo [RouteInfo] the new route info object.
+     * @param route [Route] the new route object.
      *
      */
-    fun onRouteChanged(routeInfo: RouteInfo?) {}
+    fun onRouteChanged(route: Route?) {}
 
     /**
      * Called when navigation reach the target destination.

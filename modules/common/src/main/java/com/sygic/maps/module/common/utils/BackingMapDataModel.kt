@@ -60,7 +60,7 @@ internal class BackingMapDataModel : SimpleMapDataModel() {
                 state.warningTypeVisibility.forEach {
                     other.setWarningsTypeVisibility(it.first, it.second)
                 }
-                state.radarWarningSettings?.let { other.setRadarWarningSettings(it) }
+                state.incidentWarningSettings?.let { other.setIncidentWarningSettings(it) }
                 state.mapWarningSettings?.let { other.setMapWarningSettings(it) }
             }
         }.also {

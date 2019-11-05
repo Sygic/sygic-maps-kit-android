@@ -27,25 +27,30 @@ package com.sygic.maps.uikit.viewmodels.navigation.infobar
 import androidx.lifecycle.*
 import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextDataWrapper
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.InfobarTextType
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.DistanceData
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.PositionData
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.data.TimeData
-import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.*
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.ActualElevationInfobarItem
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.EstimatedTimeInfobarItem
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.RemainingDistanceInfobarItem
+import com.sygic.maps.uikit.viewmodels.navigation.infobar.text.items.RemainingTimeInfobarItem
 import com.sygic.maps.uikit.views.common.extensions.SPACE
 import com.sygic.maps.uikit.views.common.extensions.VERTICAL_BAR
 import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.extensions.observeOnce
+import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.navigation.infobar.Infobar
-import com.sygic.maps.uikit.views.navigation.infobar.items.*
-import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.position.PositionManager
+import com.sygic.maps.uikit.views.navigation.infobar.items.InfobarTextData
+import com.sygic.sdk.navigation.RouteProgress
 
 /**
  * A [InfobarViewModel] is a basic ViewModel implementation for the [Infobar] view class. It listens
- * to the [NavigationManager.OnNaviStatsListener] and set appropriate state to the [Infobar] view.
+ * to the [NavigationManagerClient] `routeProgress`  and set appropriate state to the [Infobar] view.
  * It also listens to the [Infobar] left and right buttons actions.
  */
 @AutoFactory
@@ -53,9 +58,9 @@ import com.sygic.sdk.position.PositionManager
 open class InfobarViewModel internal constructor(
     private val regionalManager: RegionalManager,
     private val dateTimeManager: DateTimeManager,
-    private val positionManager: PositionManager,
-    private val navigationManager: NavigationManager
-) : ViewModel(), DefaultLifecycleObserver, NavigationManager.OnNaviStatsListener {
+    private val positionManagerClient: PositionManagerClient,
+    private val navigationManagerClient: NavigationManagerClient
+) : ViewModel(), DefaultLifecycleObserver {
 
     val textDataPrimary: LiveData<InfobarTextData> = MutableLiveData(InfobarTextData.empty)
     val textDataSecondary: LiveData<InfobarTextData> = MutableLiveData(InfobarTextData.empty)
@@ -65,7 +70,6 @@ open class InfobarViewModel internal constructor(
     private val distanceUnitObserver = Observer<DistanceUnit> { distanceUnit = it }
 
     init {
-        navigationManager.addOnNaviStatsListener(this)
         regionalManager.distanceUnit.observeForever(distanceUnitObserver)
 
         setTextData(
@@ -92,31 +96,31 @@ open class InfobarViewModel internal constructor(
                 map.forEach { setTextData(it.key, it.value) }
             })
         }
+
+        navigationManagerClient.routeProgress.observe(owner, Observer { onRouteProgressChanged(it) })
     }
 
-    override fun onNaviStatsChanged(
-        distanceToEnd: Int,
-        timeToEndIdeal: Int,
-        timeToEndWithSpeedProfile: Int,
-        timeToEndWithSpeedProfileAndTraffic: Int,
-        routeProgress: Int
-    ) {
-        if (distanceToEnd == 0 && timeToEndIdeal == 0 && timeToEndWithSpeedProfile == 0
-            && timeToEndWithSpeedProfileAndTraffic == 0 && routeProgress == 0
+    private fun onRouteProgressChanged(routeProgress: RouteProgress) {
+        if (routeProgress.distanceToEnd == 0
+            && routeProgress.timeToEnd == 0
+            && routeProgress.timeToEndWithSpeedProfiles == 0
+            && routeProgress.timeToEndWithSpeedProfileAndTraffic == 0
+            && routeProgress.progress == 0F
         ) {
             return
         }
 
-        val currentLocation = positionManager.lastKnownPosition.coordinates
-        val positionData = PositionData(currentLocation)
-        val distanceData = DistanceData(distanceToEnd, distanceUnit)
-        val timeData = TimeData(
-            dateTimeManager, timeToEndIdeal,
-            timeToEndWithSpeedProfile,
-            timeToEndWithSpeedProfileAndTraffic
-        )
+        positionManagerClient.lastKnownPosition.observeOnce {
+            val positionData = PositionData(it.coordinates)
+            val distanceData = DistanceData(routeProgress.distanceToEnd, distanceUnit)
+            val timeData = TimeData(
+                dateTimeManager, routeProgress.timeToEnd,
+                routeProgress.timeToEndWithSpeedProfiles,
+                routeProgress.timeToEndWithSpeedProfileAndTraffic
+            )
 
-        updateTextData(positionData, distanceData, timeData)
+            updateTextData(positionData, distanceData, timeData)
+        }
     }
 
     private fun updateTextData(
@@ -152,7 +156,6 @@ open class InfobarViewModel internal constructor(
     override fun onCleared() {
         super.onCleared()
 
-        navigationManager.removeOnNaviStatsListener(this)
         regionalManager.distanceUnit.removeObserver(distanceUnitObserver)
     }
 }

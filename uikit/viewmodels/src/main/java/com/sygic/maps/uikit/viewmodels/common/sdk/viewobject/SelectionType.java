@@ -29,11 +29,11 @@ import androidx.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@IntDef({SelectionType.OTHER, SelectionType.MARKER, SelectionType.POI, SelectionType.ROUTE})
+@IntDef({SelectionType.OTHER, SelectionType.MARKER, SelectionType.PLACE, SelectionType.ROUTE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface SelectionType {
     int OTHER = 0;
     int MARKER = 1;
-    int POI = 2;
+    int PLACE = 2;
     int ROUTE = 3;
 }

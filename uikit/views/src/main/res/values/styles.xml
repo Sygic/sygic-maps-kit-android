@@ -23,7 +23,7 @@
   ~ SOFTWARE.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="SygicCompassStyle">
         <item name="android:elevation">4dp</item>
@@ -37,6 +37,13 @@
         <item name="android:layout_marginEnd">@dimen/currentSpeedViewLayoutMargin</item>
         <item name="android:layout_marginStart">@dimen/currentSpeedViewLayoutMargin</item>
         <item name="android:layout_marginTop">@dimen/currentSpeedViewLayoutMargin</item>
+    </style>
+
+    <style name="SygicExtendedFloatingActionButtonStyle">
+        <item name="android:background">@drawable/bg_get_direction_button_rounded</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/fontSizeLarge</item>
+        <item name="android:iconTint" tools:targetApi="o">@color/white</item>
     </style>
 
     <style name="SygicInfobarStyle">
@@ -105,20 +112,36 @@
     </style>
 
     <style name="SygicZoomControlsMenuStyle">
-        <item name="android:elevation">4dp</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
-        <item name="android:background">@drawable/bg_zoom_controls_button</item>
+        <item name="android:orientation">vertical</item>
+        <item name="buttonElevation">4dp</item>
+        <item name="buttonForeground">?attr/selectableItemBackground</item>
+        <item name="buttonBackground">@drawable/bg_zoom_controls_button</item>
     </style>
 
-    <style name="PoiDetailItem">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-        <item name="android:drawablePadding">18dp</item>
-        <item name="android:focusable">true</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:padding">24dp</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    <style name="SygicPlaceDetailBottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/SygicPlaceDetailBottomSheetStyle</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="SygicPlaceDetailBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="PlaceDetailItem">
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="PlaceDetailItem.Horizontal">
+        <item name="android:minWidth">112dp</item>
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">@dimen/fontSizeSmall</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="PlaceDetailItem.Vertical">
+        <item name="android:background">@drawable/bg_place_detail_item_vertical_rounded</item>
+        <item name="android:layout_margin">6dp</item>
     </style>
 
 </resources>

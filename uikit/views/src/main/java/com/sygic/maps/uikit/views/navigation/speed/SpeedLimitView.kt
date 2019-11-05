@@ -48,8 +48,7 @@ open class SpeedLimitView @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicSpeedLimitViewStyle
 ) : ViewSwitcher(context, attrs) {
 
-    private val binding: LayoutSpeedLimitInternalBinding =
-        LayoutSpeedLimitInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutSpeedLimitInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     private var layoutMargin: Int = 0
     private var layoutMarginTop: Int = 0

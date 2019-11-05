@@ -30,12 +30,12 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.getDrawable
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
@@ -50,8 +50,8 @@ internal abstract class BaseZoomControlsButton @JvmOverloads constructor(
     internal var interactionListener: ZoomControlsMenu.InteractionListener? = null
 
     private val iconImageView: ImageView
-    private val showAnimation: Animation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_up)
-    private val hideAnimation: Animation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_down)
+    private val showAnimation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_up)
+    private val hideAnimation = AnimationUtils.loadAnimation(context, R.anim.zoom_button_scale_down)
 
     open fun onActionDown() {}
     abstract fun onActionUpOrCancel()
@@ -60,18 +60,31 @@ internal abstract class BaseZoomControlsButton @JvmOverloads constructor(
         isClickable = true
         isFocusable = true
         clipToOutline = true
+
+        attrs?.let { attributeSet ->
+            @Suppress("Recycle")
+            context.obtainStyledAttributes(
+                attributeSet,
+                R.styleable.ZoomControlsMenu,
+                defStyleAttr,
+                defStyleRes
+            ).also {
+                setBackgroundResource(it.getResourceId(R.styleable.ZoomControlsMenu_buttonBackground,0))
+
+                foreground = getDrawable(it.getResourceId(R.styleable.ZoomControlsMenu_buttonForeground,0))
+                elevation = it.getDimensionPixelSize(R.styleable.ZoomControlsMenu_buttonElevation, 0).toFloat()
+            }.recycle()
+        }
+
         addView(createButtonIcon(context, attrs, defStyleAttr, iconDrawableRes).also { iconImageView = it })
     }
 
-    private fun createButtonIcon(context: Context, attrs: AttributeSet?,
-                                 defStyleAttr: Int, @DrawableRes resourceId: Int): ImageView {
-        val imageView = ImageView(context, attrs, defStyleAttr)
-        imageView.id = View.NO_ID
-        imageView.setImageResource(resourceId)
-        imageView.layoutParams =
-                LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER }
-        return imageView
-    }
+    private fun createButtonIcon(context: Context, attrs: AttributeSet?, defStyleAttr: Int, @DrawableRes resourceId: Int) =
+        ImageView(context, attrs, defStyleAttr).apply {
+            id = View.NO_ID
+            setImageResource(resourceId)
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER }
+        }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
@@ -102,7 +115,7 @@ internal abstract class BaseZoomControlsButton @JvmOverloads constructor(
     }
 
     fun show(animate: Boolean) {
-        if (visibility == View.INVISIBLE) {
+        if (visibility == View.GONE) {
             if (animate) {
                 playShowAnimation()
             }
@@ -115,7 +128,7 @@ internal abstract class BaseZoomControlsButton @JvmOverloads constructor(
             if (animate) {
                 playHideAnimation()
             }
-            super.setVisibility(View.INVISIBLE)
+            super.setVisibility(View.GONE)
         }
     }
 }

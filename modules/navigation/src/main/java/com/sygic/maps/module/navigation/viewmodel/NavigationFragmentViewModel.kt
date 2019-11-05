@@ -28,11 +28,13 @@ import android.app.Application
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.sygic.maps.module.common.theme.ThemeManager
-import com.sygic.maps.module.common.viewmodel.ThemeSupportedViewModel
+import com.sygic.maps.module.common.viewmodel.MapFragmentViewModel
 import com.sygic.maps.module.navigation.*
-import com.sygic.maps.module.navigation.R
 import com.sygic.maps.module.navigation.actionmenu.SoundsOffActionMenuItem
 import com.sygic.maps.module.navigation.actionmenu.SoundsOnActionMenuItem
 import com.sygic.maps.module.navigation.component.*
@@ -48,12 +50,15 @@ import com.sygic.maps.tools.annotations.AutoFactory
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapRoute
 import com.sygic.maps.uikit.viewmodels.common.extensions.removeAllMapRoutes
 import com.sygic.maps.uikit.viewmodels.common.location.LocationManager
-import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManager
+import com.sygic.maps.uikit.viewmodels.common.navigation.NavigationManagerClient
+import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.state.DemonstrationState
 import com.sygic.maps.uikit.viewmodels.common.permission.PermissionsManager
+import com.sygic.maps.uikit.viewmodels.common.position.PositionManagerClient
 import com.sygic.maps.uikit.viewmodels.common.regional.RegionalManager
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedCameraModel
 import com.sygic.maps.uikit.viewmodels.common.sdk.model.ExtendedMapDataModel
+import com.sygic.maps.uikit.viewmodels.common.sound.SoundManager
 import com.sygic.maps.uikit.viewmodels.common.utils.requestLocationAccess
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.InfobarButtonType
 import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButtonClickListener
@@ -61,9 +66,7 @@ import com.sygic.maps.uikit.viewmodels.navigation.infobar.button.OnInfobarButton
 import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.toast.InfoToastComponent
-import com.sygic.maps.uikit.views.common.units.DistanceUnit
 import com.sygic.maps.uikit.views.common.utils.TextHolder
-import com.sygic.maps.uikit.views.common.utils.UniqueMutableLiveData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuData
 import com.sygic.maps.uikit.views.navigation.actionmenu.data.ActionMenuItem
 import com.sygic.maps.uikit.views.navigation.actionmenu.listener.ActionMenuItemClickListener
@@ -75,9 +78,7 @@ import com.sygic.sdk.map.MapCenter
 import com.sygic.sdk.map.MapCenterSettings
 import com.sygic.sdk.map.`object`.MapRoute
 import com.sygic.sdk.navigation.NavigationManager
-import com.sygic.sdk.navigation.listeners.NoAudioInstructionListener
-import com.sygic.sdk.navigation.listeners.NoAudioWarningListener
-import com.sygic.sdk.route.RouteInfo
+import com.sygic.sdk.route.Route
 import com.sygic.sdk.route.Waypoint
 
 private const val DEFAULT_NAVIGATION_TILT = 60f
@@ -98,19 +99,22 @@ private val LANDSCAPE_MAP_CENTER_SETTING = MapCenterSettings(
 
 @AutoFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class NavigationFragmentViewModel internal constructor(
     app: Application,
     @Assisted arguments: Bundle?,
     themeManager: ThemeManager,
+    regionalManager: RegionalManager,
+    positionManagerClient: PositionManagerClient,
     private val cameraModel: ExtendedCameraModel,
     private val mapDataModel: ExtendedMapDataModel,
-    private val regionalManager: RegionalManager,
+    private val soundManager: SoundManager,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
-    private val navigationManager: NavigationManager,
-    private val routeDemonstrationManager: RouteDemonstrationManager
-) : ThemeSupportedViewModel(app, arguments, themeManager), DefaultLifecycleObserver,
-    NavigationManager.OnRouteChangedListener, NavigationManager.OnWaypointPassedListener, Camera.ModeChangedListener {
+    private val navigationManagerClient: NavigationManagerClient,
+    private val routeDemonstrationManagerClient: RouteDemonstrationManagerClient
+) : MapFragmentViewModel(app, arguments, themeManager, regionalManager, positionManagerClient),
+    NavigationManager.OnWaypointPassListener, Camera.ModeChangedListener {
 
     @LayoutRes
     val signpostLayout: Int
@@ -126,7 +130,6 @@ class NavigationFragmentViewModel internal constructor(
     val rightInfobarButton = MutableLiveData<InfobarButton?>()
 
     val previewMode = MutableLiveData<Boolean>(false)
-    val routeInfo: MutableLiveData<RouteInfo> = UniqueMutableLiveData()
 
     val infoToastObservable: LiveData<InfoToastComponent> = SingleLiveEvent()
     val actionMenuShowObservable: LiveData<ActionMenuData> = SingleLiveEvent()
@@ -136,6 +139,13 @@ class NavigationFragmentViewModel internal constructor(
 
     val isLanesViewEmbedded
         get() = signpostEnabled.value!! && signpostType == SignpostType.FULL
+
+    var route: Route?
+        get() = navigationManagerClient.route.value
+        set(value) {
+            navigationManagerClient.route.value = value
+            eventListener?.onNavigationStarted(value)
+        }
 
     private val infobarButtonListenersMap: Map<InfobarButtonType, OnInfobarButtonClickListener?> = mutableMapOf()
 
@@ -172,14 +182,12 @@ class NavigationFragmentViewModel internal constructor(
             override fun onActionMenuItemClick(actionMenuItem: ActionMenuItem) {
                 when (actionMenuItem) {
                     is SoundsOnActionMenuItem -> {
-                        navigationManager.removeAudioWarningListener()
-                        navigationManager.removeAudioInstructionListener()
+                        soundManager.soundsEnabled.value = true
                         infoToastObservable.asSingleEvent().value =
                             InfoToastComponent(R.drawable.ic_sounds_on, R.string.sounds_enabled)
                     }
                     is SoundsOffActionMenuItem -> {
-                        navigationManager.setAudioWarningListener(NoAudioWarningListener())
-                        navigationManager.setAudioInstructionListener(NoAudioInstructionListener())
+                        soundManager.soundsEnabled.value = false
                         infoToastObservable.asSingleEvent().value =
                             InfoToastComponent(R.drawable.ic_sounds_off, R.string.sounds_disabled)
                     }
@@ -188,12 +196,6 @@ class NavigationFragmentViewModel internal constructor(
             }
         }
         private set
-
-    var distanceUnit: DistanceUnit
-        get() = regionalManager.distanceUnit.value!!
-        set(value) {
-            regionalManager.distanceUnit.value = value
-        }
 
     init {
         with(arguments) {
@@ -210,12 +212,11 @@ class NavigationFragmentViewModel internal constructor(
                 SignpostType.FULL -> R.layout.layout_signpost_full_view_stub
                 SignpostType.SIMPLIFIED -> R.layout.layout_signpost_simplified_view_stub
             }
-            distanceUnit = getParcelableValue(KEY_DISTANCE_UNITS) ?: DISTANCE_UNITS_DEFAULT_VALUE
-            getParcelableValue<RouteInfo>(KEY_ROUTE_INFO)?.let { routeInfo.value = it }
+            getParcelableValue<Route>(KEY_ROUTE)?.let { route = it }
         }
 
-        routeInfo.observeForever(::setRouteInfo)
-        previewMode.withLatestFrom(routeInfo).observeForever { processRoutePreview(it.first, it.second) }
+        soundManager.soundsEnabled.value = true
+        soundManager.setDefaultVoice() //ToDo: Remove it, when CI-538 is done
 
         updateInfobarListenersMap(InfobarButtonType.LEFT, navigationDefaultLeftInfobarClickListener)
         updateInfobarListenersMap(InfobarButtonType.RIGHT, navigationDefaultRightInfobarClickListener)
@@ -239,10 +240,42 @@ class NavigationFragmentViewModel internal constructor(
             })
         }
 
-        routeDemonstrationManager.demonstrationState.observe(owner, Observer {
-            if (routeInfo.value != null) {
+        navigationManagerClient.route.observe(owner, Observer { route ->
+            // re-add new route to the Map
+            mapDataModel.removeAllMapRoutes()
+            route?.let { mapDataModel.addMapRoute(MapRoute.from(it).build()) }
+
+            // set the default navigation camera state
+            cameraModel.apply {
+                tilt = DEFAULT_NAVIGATION_TILT
+                movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
+                rotationMode = Camera.RotationMode.Vehicle
+            }
+
+            // notify listener
+            eventListener?.onRouteChanged(route)
+        })
+        previewMode.withLatestFrom(navigationManagerClient.route).observe(owner, Observer<Pair<Boolean, Route?>> {
+            it.second?.let { route ->
+                if (it.first) {
+                    // start preview mode
+                    locationManager.positionOnMapEnabled.value = false
+                    routeDemonstrationManagerClient.start(route)
+                } else {
+                    // stop the previous demonstration first
+                    routeDemonstrationManagerClient.stop()
+
+                    // start navigation mode
+                    requestLocationAccess(permissionsManager, locationManager) {
+                        locationManager.positionOnMapEnabled.value = true
+                    }
+                }
+            }
+        })
+        routeDemonstrationManagerClient.demonstrationState.observe(owner, Observer {
+            route?.let { route ->
                 when (it) {
-                    DemonstrationState.ACTIVE -> eventListener?.onNavigationStarted(routeInfo.value)
+                    DemonstrationState.ACTIVE -> eventListener?.onNavigationStarted(route)
                     DemonstrationState.STOPPED -> eventListener?.onNavigationFinished()
                     else -> { /* do nothing */ }
                 }
@@ -252,10 +285,9 @@ class NavigationFragmentViewModel internal constructor(
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        locationManager.positionOnMapEnabled = !previewMode.value!! || routeDemonstrationManager.demonstrationState.value == DemonstrationState.ACTIVE
+        locationManager.positionOnMapEnabled.value = !previewMode.value!! || routeDemonstrationManagerClient.demonstrationState.value == DemonstrationState.ACTIVE
         cameraModel.addModeChangedListener(this)
-        navigationManager.addOnRouteChangedListener(this)
-        navigationManager.addOnWaypointPassedListener(this)
+        navigationManagerClient.addOnWaypointPassListener(this)
         actionMenuItemClickListenerObservable.asSingleEvent().value = actionMenuItemClickListener
     }
 
@@ -263,18 +295,9 @@ class NavigationFragmentViewModel internal constructor(
         cameraModel.mapCenterSettings = if (isLandscape()) LANDSCAPE_MAP_CENTER_SETTING else PORTRAIT_MAP_CENTER_SETTING
     }
 
-    override fun onRouteChanged(routeInfo: RouteInfo?) {
-        eventListener?.onRouteChanged(routeInfo)
-        mapDataModel.removeAllMapRoutes()
-        routeInfo?.let {
-            this.routeInfo.value = it
-            mapDataModel.addMapRoute(MapRoute.from(it).build())
-        }
-    }
-
     override fun onFinishReached() {
         mapDataModel.removeAllMapRoutes()
-        navigationManager.stopNavigation()
+        navigationManagerClient.route.value = null
         eventListener?.onRouteFinishReached()
         eventListener?.onNavigationFinished()
     }
@@ -293,36 +316,6 @@ class NavigationFragmentViewModel internal constructor(
     override fun onWaypointPassed(waypoint: Waypoint) {}
     override fun onRotationModeChanged(@Camera.RotationMode mode: Int) {}
 
-    private fun setRouteInfo(routeInfo: RouteInfo) {
-        // set the default navigation camera state
-        cameraModel.apply {
-            tilt = DEFAULT_NAVIGATION_TILT
-            movementMode = Camera.MovementMode.FollowGpsPositionWithAutozoom
-            rotationMode = Camera.RotationMode.Vehicle
-        }
-
-        // set the new RouteInfo for navigation
-        navigationManager.setRouteForNavigation(routeInfo)
-        // notify listener
-        eventListener?.onNavigationStarted(routeInfo)
-    }
-
-    private fun processRoutePreview(previewActive: Boolean, routeInfo: RouteInfo) {
-        if (previewActive) {
-            // start preview mode
-            locationManager.positionOnMapEnabled = false
-            routeDemonstrationManager.start(routeInfo)
-        } else {
-            // stop the previous demonstration first
-            routeDemonstrationManager.stop()
-
-            // start navigation mode
-            requestLocationAccess(permissionsManager, locationManager) {
-                locationManager.positionOnMapEnabled = true
-            }
-        }
-    }
-
     private fun updateInfobarListenersMap(
         buttonType: InfobarButtonType,
         listener: OnInfobarButtonClickListener?
@@ -339,10 +332,9 @@ class NavigationFragmentViewModel internal constructor(
     fun onRightInfobarButtonClick() = infobarButtonListenersMap[InfobarButtonType.RIGHT]?.onButtonClick()
 
     override fun onStop(owner: LifecycleOwner) {
-        locationManager.positionOnMapEnabled = false
+        locationManager.positionOnMapEnabled.value = false
         cameraModel.removeModeChangedListener(this)
-        navigationManager.removeOnRouteChangedListener(this)
-        navigationManager.removeOnWaypointPassedListener(this)
+        navigationManagerClient.removeOnWaypointPassListener(this)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
@@ -354,7 +346,7 @@ class NavigationFragmentViewModel internal constructor(
         super.onCleared()
 
         mapDataModel.removeAllMapRoutes()
-        routeDemonstrationManager.destroy()
-        navigationManager.stopNavigation()
+        routeDemonstrationManagerClient.destroy()
+        navigationManagerClient.route.value = null
     }
 }

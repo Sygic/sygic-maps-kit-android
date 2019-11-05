@@ -39,7 +39,7 @@ import com.sygic.samples.base.idling.SearchResultListDataReceivedIdlingResource
 fun search(commonSampleActivity: CommonSampleActivity, func: SearchRobot.() -> Unit) =
     SearchRobot(commonSampleActivity).apply { func() }
 
-@Suppress("MemberVisibilityCanBePrivate", "unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class SearchRobot(private val activity: CommonSampleActivity) : BaseRobot(activity, R.id.searchFragment) {
 
     fun enterText(text: String) = enterText(R.id.searchToolbarInputEditText, text)

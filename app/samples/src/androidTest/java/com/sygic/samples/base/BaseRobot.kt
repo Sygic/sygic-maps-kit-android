@@ -42,7 +42,7 @@ import org.hamcrest.Matchers.not
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert.assertEquals
 
-@Suppress("MemberVisibilityCanBePrivate", "unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class BaseRobot(private val activity: CommonSampleActivity, @IdRes private val parentViewId: Int) {
 
     fun clickOnView(@IdRes viewId: Int) {

@@ -30,13 +30,13 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import com.sygic.maps.module.common.extensions.*
 import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.uikit.viewmodels.common.extensions.computePrimaryRoute
-import com.sygic.maps.uikit.viewmodels.common.extensions.getLastValidLocation
 import com.sygic.maps.uikit.views.common.extensions.isPermissionNotGranted
 import com.sygic.maps.uikit.views.common.extensions.longToast
 import com.sygic.maps.uikit.views.common.extensions.requestPermission
 import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
+import com.sygic.samples.utils.getLastValidLocation
+import com.sygic.samples.utils.getPrimaryRoute
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.RoutePlan
 import com.sygic.sdk.route.RoutingOptions
@@ -70,9 +70,8 @@ class NavigationDefaultActivity : CommonSampleActivity() {
                 }
             }
 
-            computePrimaryRoute(routePlan) { route ->
-                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.routeInfo =
-                    route
+            routePlan.getPrimaryRoute { route ->
+                (supportFragmentManager.findFragmentById(R.id.navigationFragment) as? NavigationFragment)?.route = route
             }
         }
     }

@@ -25,8 +25,8 @@
 package com.sygic.maps.module.common.di;
 
 import com.sygic.maps.module.common.di.module.MapModule;
-import com.sygic.maps.module.common.di.module.RegionalModule;
-import com.sygic.maps.module.common.di.module.ThemeModule;
+import com.sygic.maps.module.common.di.module.RegionalManagerModule;
+import com.sygic.maps.module.common.di.module.ThemeManagerModule;
 import com.sygic.maps.module.common.di.scope.FragmentScope;
 import com.sygic.maps.module.common.mapinteraction.manager.MapInteractionManager;
 import com.sygic.maps.module.common.theme.ThemeManager;
@@ -43,8 +43,8 @@ import dagger.Component;
         },
         modules = {
                 MapModule.class,
-                RegionalModule.class,
-                ThemeModule.class
+                RegionalManagerModule.class,
+                ThemeManagerModule.class
         }
 )
 public interface FragmentModulesComponent extends ApplicationModulesComponent {

@@ -31,20 +31,15 @@ import com.sygic.maps.module.common.provider.ModuleConnectionProvider
 import com.sygic.maps.module.search.SearchFragment
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.sdk.search.SearchResult
 
 class SearchFromBrowseMapActivityViewModel : ViewModel(), ModuleConnectionProvider {
 
     val showToastObservable: LiveData<String> = SingleLiveEvent()
 
-    private val callback: ((searchResultList: List<SearchResult>) -> Unit) = { searchResultList ->
-        showToastObservable.asSingleEvent().value = searchResultList.joinToString()
-    }
-
     override val fragment: Fragment
         get() {
             val searchFragment = SearchFragment()
-            searchFragment.setResultCallback(callback)
+            searchFragment.setResultCallback { showToastObservable.asSingleEvent().value = it.joinToString() }
             return searchFragment
         }
 }

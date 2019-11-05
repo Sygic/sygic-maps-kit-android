@@ -32,9 +32,12 @@ import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.getDrawable
 
 internal class ZoomControlsMenuButton @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0, private val callback: MenuCallback? = null
-) : BaseZoomControlsButton(context, attrs, defStyleAttr, iconDrawableRes = R.drawable.ic_plus_minus) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.zoomControlsMenuStyle,
+    defStyleRes: Int = R.style.SygicZoomControlsMenuStyle,
+    private val callback: MenuCallback? = null
+) : BaseZoomControlsButton(context, attrs, defStyleAttr, defStyleRes, R.drawable.ic_plus_minus) {
 
     private val openAnimation = getDrawable(R.drawable.vector_morph_plus_minus)
     private val closeAnimation = getDrawable(R.drawable.vector_morph_cross)

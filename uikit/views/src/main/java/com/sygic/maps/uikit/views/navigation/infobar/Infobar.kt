@@ -61,8 +61,7 @@ open class Infobar @JvmOverloads constructor(
     defStyleRes: Int = R.style.SygicInfobarStyle
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val binding: LayoutInfobarInternalBinding =
-        LayoutInfobarInternalBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = LayoutInfobarInternalBinding.inflate(LayoutInflater.from(context), this, true)
 
     private var layoutMargin: Int = 0
     private var layoutMarginTop: Int = 0
