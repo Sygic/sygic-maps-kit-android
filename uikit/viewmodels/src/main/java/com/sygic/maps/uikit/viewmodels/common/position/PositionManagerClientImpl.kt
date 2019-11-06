@@ -104,11 +104,11 @@ class PositionManagerClientImpl private constructor(
 
     init {
         sdkPositionUpdatingEnabled.observeForever { enabled ->
-            managerProvider.observeOnce { it.run { if (enabled) enableRemotePositioningService() else disableRemotePositioningService() } }
+            managerProvider.observeOnce { it.run { if (enabled) startPositionUpdating() else stopPositionUpdating() } }
         }
 
         remotePositioningServiceEnabled.observeForever { enabled ->
-            managerProvider.observeOnce { it.run { if (enabled) startPositionUpdating() else stopPositionUpdating() } }
+            managerProvider.observeOnce { it.run { if (enabled) enableRemotePositioningService() else disableRemotePositioningService() } }
         }
     }
 }
