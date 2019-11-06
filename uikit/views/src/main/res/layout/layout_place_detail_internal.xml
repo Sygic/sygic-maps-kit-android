@@ -64,52 +64,59 @@
                 android:paddingEnd="148dp"
                 android:paddingBottom="4dp"
                 android:src="@drawable/ic_drag_hint_shape"
-                app:layout_constraintBottom_toTopOf="@id/placeDetailSubtitleTextView"
+                app:layout_constraintBottom_toTopOf="@id/placeDetailTitleSubtitleContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/placeDetailSubtitleTextView"
+            <LinearLayout
+                android:id="@+id/placeDetailTitleSubtitleContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:minHeight="72dp"
                 android:onClick="@{() -> viewModel.onHeaderClick()}"
-                android:paddingStart="12dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="12dp"
-                android:singleLine="true"
-                android:text="@{viewModel.subtitleText}"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textDirection="locale"
-                android:textSize="@dimen/fontSizeSmall"
-                app:layout_constraintBottom_toTopOf="@id/placeDetailTitleTextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/placeDetailHandleView"
-                tools:text="Mlynské nivy 16, 821 09 Bratislava" />
-
-            <TextView
-                android:id="@+id/placeDetailTitleTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-medium"
-                android:onClick="@{() -> viewModel.onHeaderClick()}"
-                android:paddingStart="12dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="12dp"
-                android:singleLine="true"
-                android:text="@{viewModel.titleText}"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textDirection="locale"
-                android:textSize="@dimen/fontSizeMediumLarge"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@id/placeDetailItemWeb"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/placeDetailSubtitleTextView"
-                tools:text="Sheraton Bratislava" />
+                app:layout_constraintTop_toBottomOf="@id/placeDetailHandleView">
+
+                <TextView
+                    android:id="@+id/placeDetailSubtitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="12dp"
+                    android:singleLine="true"
+                    android:text="@{viewModel.subtitleText}"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textDirection="locale"
+                    android:textSize="@dimen/fontSizeSmall"
+                    android:visibility="@{!TextUtils.isEmpty(viewModel.subtitleText) ? View.VISIBLE : View.GONE}"
+                    tools:text="Mlynské nivy 16, 821 09 Bratislava"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/placeDetailTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="12dp"
+                    android:singleLine="true"
+                    android:text="@{viewModel.titleText}"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textDirection="locale"
+                    android:textSize="@dimen/fontSizeMediumLarge"
+                    tools:text="Sheraton Bratislava" />
+
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/placeDetailAdditionalContentGroup"
@@ -120,7 +127,7 @@
                 app:layout_constraintBottom_toTopOf="@id/placeDetailNavigationButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView" />
+                app:layout_constraintTop_toBottomOf="@id/placeDetailTitleSubtitleContainer" />
 
             <TextView
                 android:id="@+id/placeDetailItemWeb"
@@ -135,7 +142,7 @@
                 app:layout_constraintEnd_toStartOf="@id/placeDetailItemPhone"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/placeDetailTitleTextView"
+                app:layout_constraintTop_toBottomOf="@id/placeDetailTitleSubtitleContainer"
                 app:placeDetailItemState="@{!TextUtils.isEmpty(viewModel.urlText)}"
                 tools:background="@drawable/bg_place_detail_item_horizontal_rounded"
                 tools:drawableTint="?android:attr/colorAccent"
