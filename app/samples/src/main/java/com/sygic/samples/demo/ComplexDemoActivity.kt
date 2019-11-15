@@ -28,6 +28,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sygic.maps.module.browsemap.BROWSE_MAP_FRAGMENT_TAG
@@ -35,7 +36,6 @@ import com.sygic.maps.module.browsemap.BrowseMapFragment
 import com.sygic.maps.module.common.extensions.*
 import com.sygic.maps.module.navigation.NAVIGATION_FRAGMENT_TAG
 import com.sygic.maps.module.navigation.NavigationFragment
-import com.sygic.maps.module.navigation.listener.EventListener
 import com.sygic.maps.uikit.viewmodels.common.sdk.skin.VehicleSkin
 import com.sygic.maps.uikit.views.common.extensions.isPermissionNotGranted
 import com.sygic.maps.uikit.views.common.extensions.longToast
@@ -70,7 +70,6 @@ class ComplexDemoActivity : CommonSampleActivity() {
 
         viewModel = ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
             hidePlaceDetailObservable.observe(this@ComplexDemoActivity, Observer { browseMapFragment.hidePlaceDetail() })
-            placeNavigationFragmentObservable.observe(this@ComplexDemoActivity, Observer { placeNavigationFragment(it) })
             computePrimaryRouteObservable.observe(this@ComplexDemoActivity, Observer { createRoutePlanAndComputeRoute(it) })
             restoreDefaultStateObservable.observe(
                 this@ComplexDemoActivity,
@@ -108,10 +107,10 @@ class ComplexDemoActivity : CommonSampleActivity() {
                 ?.commit()
         }
 
-    private fun placeNavigationFragment(eventListener: EventListener) =
+    private fun placeNavigationFragment(route: Route) =
         NavigationFragment().also {
             it.setVehicleSkin(VehicleSkin.CAR)
-            it.setEventListener(eventListener)
+            it.route = route
             supportFragmentManager
                 ?.beginTransaction()
                 ?.replace(R.id.fragmentContainer, it, NAVIGATION_FRAGMENT_TAG)
@@ -130,12 +129,11 @@ class ComplexDemoActivity : CommonSampleActivity() {
                 }
             }
 
-            routePlan.getPrimaryRoute { setRouteToNavigationFragment(it) }
+            routePlan.getPrimaryRoute {
+                routeComputeProgressBarContainer.visibility = View.GONE
+                placeNavigationFragment(it)
+            }
         }
-    }
-
-    private fun setRouteToNavigationFragment(route: Route) {
-        (supportFragmentManager.findFragmentByTag(NAVIGATION_FRAGMENT_TAG) as? NavigationFragment)?.route = route
     }
 
     private fun requestLastValidLocation(currentLocationCallback: (GeoCoordinates) -> Unit) {
