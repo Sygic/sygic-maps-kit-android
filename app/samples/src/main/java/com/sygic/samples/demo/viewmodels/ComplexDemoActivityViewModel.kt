@@ -30,7 +30,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sygic.maps.module.common.listener.OnMapClickListener
 import com.sygic.maps.module.common.provider.ModuleConnectionProvider
-import com.sygic.maps.module.navigation.listener.EventListener
 import com.sygic.maps.module.search.SEARCH_FRAGMENT_TAG
 import com.sygic.maps.module.search.SearchFragment
 import com.sygic.maps.uikit.viewmodels.common.extensions.addMapMarker
@@ -49,7 +48,6 @@ import com.sygic.sdk.map.data.SimpleCameraDataModel
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
-import com.sygic.sdk.route.Route
 import com.sygic.sdk.search.GeocodingResult
 
 private const val CAMERA_RECTANGLE_MARGIN = 80
@@ -63,7 +61,6 @@ class ComplexDemoActivityViewModel : ViewModel() {
     val restoreDefaultStateObservable: LiveData<Any> = SingleLiveEvent()
     val computePrimaryRouteObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
     val routeComputeProgressVisibilityObservable: LiveData<Int> = SingleLiveEvent()
-    val placeNavigationFragmentObservable: LiveData<EventListener> = SingleLiveEvent()
     val showPlaceDetailObservable: LiveData<Pair<PlaceDetailComponent, PlaceDetailBottomDialogFragment.Listener>> = SingleLiveEvent()
     val hidePlaceDetailObservable: LiveData<Any> = SingleLiveEvent()
 
@@ -83,22 +80,10 @@ class ComplexDemoActivityViewModel : ViewModel() {
             hidePlaceDetailObservable.asSingleEvent().call()
             computePrimaryRouteObservable.asSingleEvent().value = targetPosition
             routeComputeProgressVisibilityObservable.asSingleEvent().value = View.VISIBLE
-            placeNavigationFragmentObservable.asSingleEvent().value = navigationEventListener
         }
 
         override fun onDismiss() {
             mapDataModel?.removeAllMapMarkers()
-        }
-    }
-
-    val navigationEventListener = object : EventListener {
-        override fun onNavigationStarted(route: Route?) {
-            routeComputeProgressVisibilityObservable.asSingleEvent().value = View.GONE
-        }
-
-        override fun onNavigationDestroyed() {
-            restoreDefaultStateObservable.asSingleEvent().call()
-            routeComputeProgressVisibilityObservable.asSingleEvent().value = View.GONE
         }
     }
 
