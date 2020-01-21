@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -26,6 +26,7 @@ package com.sygic.maps.module.browsemap.viewmodel
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -33,6 +34,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.sygic.maps.module.browsemap.*
 import com.sygic.maps.module.browsemap.detail.PlaceDetailsObject
+import com.sygic.maps.module.browsemap.manager.BrowseMapNetworkManager
 import com.sygic.maps.module.common.component.*
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.extensions.onMapClick
@@ -87,7 +89,8 @@ class BrowseMapFragmentViewModel internal constructor(
     private val mapInteractionManager: MapInteractionManager,
     private val locationManager: LocationManager,
     private val permissionsManager: PermissionsManager,
-    private val positionManagerClient: PositionManagerClient
+    private val positionManagerClient: PositionManagerClient,
+    private val browseMapNetworkManager: BrowseMapNetworkManager
 ) : MapFragmentViewModel(app, arguments, themeManager, regionalManager, positionManagerClient),
     MapInteractionManager.Listener, PlaceDetailBottomDialogFragment.Listener {
 
@@ -135,6 +138,8 @@ class BrowseMapFragmentViewModel internal constructor(
             positionLockFabEnabled.value = getBoolean(KEY_POSITION_LOCK_FAB, POSITION_LOCK_FAB_ENABLED_DEFAULT_VALUE)
             zoomControlsEnabled.value = getBoolean(KEY_ZOOM_CONTROLS, ZOOM_CONTROLS_ENABLED_DEFAULT_VALUE)
         }
+
+        Log.d("Tomas", browseMapNetworkManager.test)
     }
 
     override fun onCreate(owner: LifecycleOwner) {

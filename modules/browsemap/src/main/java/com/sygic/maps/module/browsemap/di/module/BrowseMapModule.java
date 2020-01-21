@@ -22,43 +22,37 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.browsemap.di;
+package com.sygic.maps.module.browsemap.di.module;
+
+import android.app.Application;
+
+import androidx.annotation.NonNull;
 
 import com.sygic.drive.module.networking.managers.auth.AuthManager;
+import com.sygic.drive.module.networking.managers.auth.AuthManagerImpl;
 import com.sygic.drive.module.networking.managers.networking.ApiRepository;
-import com.sygic.maps.module.browsemap.BrowseMapFragment;
-import com.sygic.maps.module.browsemap.di.module.BrowseMapModule;
-import com.sygic.maps.module.browsemap.di.module.ViewModelModule;
-import com.sygic.maps.module.common.di.FragmentModulesComponent;
-import com.sygic.maps.module.common.di.base.BaseFragmentComponent;
-import com.sygic.maps.module.common.di.util.ModuleBuilder;
+import com.sygic.drive.module.networking.managers.networking.ApiRepositoryImpl;
+import com.sygic.maps.module.browsemap.manager.BrowseMapNetworkManager;
+import com.sygic.maps.module.browsemap.manager.BrowseMapNetworkManagerImpl;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import dagger.Module;
+import dagger.Provides;
 
-import javax.inject.Scope;
+@Module
+public class BrowseMapModule {
 
-import dagger.Component;
+    @Provides
+    AuthManager provideAuthManager(@NonNull final Application application) { //todo: not here
+        return AuthManagerImpl.getInstance(application);
+    }
 
-@Scope
-@Retention(RetentionPolicy.RUNTIME)
-@interface Browse { }
+    @Provides
+    ApiRepository provideApiRepository(@NonNull final Application application, @NonNull final AuthManager authManager) { //todo: not here
+        return ApiRepositoryImpl.getInstance(application, authManager);
+    }
 
-@Browse
-@Component(
-        modules = {
-                ViewModelModule.class,
-                BrowseMapModule.class
-        },
-        dependencies = {
-                FragmentModulesComponent.class/*,
-                NetworkingModulesComponent.class*/ //todo: instead use this
-        }
-)
-public interface BrowseMapComponent extends BaseFragmentComponent<BrowseMapFragment> {
-    @Component.Builder
-    abstract class Builder implements ModuleBuilder<BrowseMapComponent> {}
-
-    AuthManager getAuthManager(); //todo: not here
-    ApiRepository getApiRepository(); //todo: not here
+    @Provides
+    BrowseMapNetworkManager provideTripLogNetworkManager(@NonNull final ApiRepository apiRepository) {
+        return BrowseMapNetworkManagerImpl.getInstance(apiRepository);
+    }
 }

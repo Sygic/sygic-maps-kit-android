@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -62,7 +62,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // modules
-    api project(':module-common')
+    api project(':module-networking')
     implementation project(':tool-viewmodel-factory')
     compileOnly project(':tool-annotation-processor')
     annotationProcessor project(':tool-annotation-processor')
