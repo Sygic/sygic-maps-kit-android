@@ -24,7 +24,8 @@
 
 package com.sygic.maps.module.browsemap.di;
 
-import com.sygic.drive.module.networking.di.component.ProxyComponent;
+import com.sygic.drive.module.networking.di.component.NetworkingModulesComponent;
+import com.sygic.drive.module.networking.di.module.NetworkManagersModule;
 import com.sygic.maps.module.browsemap.BrowseMapFragment;
 import com.sygic.maps.module.browsemap.di.module.BrowseMapModule;
 import com.sygic.maps.module.browsemap.di.module.ViewModelModule;
@@ -47,16 +48,14 @@ import dagger.Component;
 @Component(
         modules = {
                 ViewModelModule.class,
-                BrowseMapModule.class
+                BrowseMapModule.class,
+                NetworkManagersModule.class
         },
         dependencies = {
-                FragmentModulesComponent.class,
-                ProxyComponent.class                   //should be NetworkingModulesComponent
+                FragmentModulesComponent.class
         }
 )
-public interface BrowseMapComponent extends BaseFragmentComponent<BrowseMapFragment> {
+public interface BrowseMapComponent extends BaseFragmentComponent<BrowseMapFragment>, NetworkingModulesComponent {
     @Component.Builder
-    abstract class Builder implements ModuleBuilder<BrowseMapComponent> {
-        public abstract Builder plus(final ProxyComponent component);
-    }
+    abstract class Builder implements ModuleBuilder<BrowseMapComponent> {}
 }

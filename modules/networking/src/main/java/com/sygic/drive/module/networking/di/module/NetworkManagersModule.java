@@ -30,15 +30,22 @@ import androidx.annotation.NonNull;
 
 import com.sygic.drive.module.networking.managers.auth.AuthManager;
 import com.sygic.drive.module.networking.managers.auth.AuthManagerImpl;
+import com.sygic.drive.module.networking.managers.networking.ApiRepository;
+import com.sygic.drive.module.networking.managers.networking.ApiRepositoryImpl;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class AuthManagerModule {
+public class NetworkManagersModule {
 
     @Provides
     AuthManager provideAuthManager(@NonNull final Application application) {
         return AuthManagerImpl.getInstance(application);
+    }
+
+    @Provides
+    ApiRepository provideApiRepository(@NonNull final Application application, @NonNull final AuthManager authManager) {
+        return ApiRepositoryImpl.getInstance(application, authManager);
     }
 }
