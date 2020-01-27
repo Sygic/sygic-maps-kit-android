@@ -29,9 +29,11 @@ import com.sygic.drive.module.networking.di.module.AuthManagerModule;
 import com.sygic.drive.module.networking.managers.auth.AuthManager;
 import com.sygic.drive.module.networking.managers.networking.ApiRepository;
 import com.sygic.maps.module.common.di.ApplicationModulesComponent;
+import com.sygic.maps.module.common.di.scope.FragmentScope;
 
 import dagger.Component;
 
+@FragmentScope
 @Component(
         modules = {
                 AuthManagerModule.class,
@@ -41,7 +43,8 @@ import dagger.Component;
                 ApplicationModulesComponent.class
         }
 )
-public interface NetworkingModulesComponent { //todo: use it, extend application modules component?
+public interface NetworkingModulesComponent {
     AuthManager getAuthManager();
     ApiRepository getApiRepository();
 }
+

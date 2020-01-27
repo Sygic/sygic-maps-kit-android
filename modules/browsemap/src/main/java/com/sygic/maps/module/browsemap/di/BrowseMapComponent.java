@@ -24,8 +24,7 @@
 
 package com.sygic.maps.module.browsemap.di;
 
-import com.sygic.drive.module.networking.managers.auth.AuthManager;
-import com.sygic.drive.module.networking.managers.networking.ApiRepository;
+import com.sygic.drive.module.networking.di.component.ProxyComponent;
 import com.sygic.maps.module.browsemap.BrowseMapFragment;
 import com.sygic.maps.module.browsemap.di.module.BrowseMapModule;
 import com.sygic.maps.module.browsemap.di.module.ViewModelModule;
@@ -51,14 +50,13 @@ import dagger.Component;
                 BrowseMapModule.class
         },
         dependencies = {
-                FragmentModulesComponent.class/*,
-                NetworkingModulesComponent.class*/ //todo: instead use this
+                FragmentModulesComponent.class,
+                ProxyComponent.class                   //should be NetworkingModulesComponent
         }
 )
 public interface BrowseMapComponent extends BaseFragmentComponent<BrowseMapFragment> {
     @Component.Builder
-    abstract class Builder implements ModuleBuilder<BrowseMapComponent> {}
-
-    AuthManager getAuthManager(); //todo: not here
-    ApiRepository getApiRepository(); //todo: not here
+    abstract class Builder implements ModuleBuilder<BrowseMapComponent> {
+        public abstract Builder plus(final ProxyComponent component);
+    }
 }

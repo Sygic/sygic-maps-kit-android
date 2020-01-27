@@ -73,7 +73,7 @@ const val KEY_DISTANCE_UNITS = "distance_units"
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>(moduleBuilder: M)
+abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>(protected val moduleBuilder: M)
     : MapFragment() {
 
     protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)

@@ -34,12 +34,19 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.sygic.drive.module.networking.di.component.DaggerNetworkingModulesComponent
+import com.sygic.drive.module.networking.di.component.ProxyComponentImpl
+import com.sygic.drive.module.networking.di.module.ApiRepositoryModule
+import com.sygic.drive.module.networking.di.module.AuthManagerModule
+import com.sygic.drive.module.networking.managers.auth.AuthManager
+import com.sygic.drive.module.networking.managers.networking.ApiRepository
 import com.sygic.maps.module.browsemap.databinding.LayoutBrowseMapBinding
 import com.sygic.maps.module.browsemap.di.BrowseMapComponent
 import com.sygic.maps.module.browsemap.di.DaggerBrowseMapComponent
 import com.sygic.maps.module.browsemap.viewmodel.BrowseMapFragmentViewModel
 import com.sygic.maps.module.common.MapFragmentWrapper
 import com.sygic.maps.module.common.component.*
+import com.sygic.maps.module.common.delegate.ApplicationComponentDelegate
 import com.sygic.maps.module.common.detail.DetailsViewFactory
 import com.sygic.maps.module.common.di.util.ModuleBuilder
 import com.sygic.maps.module.common.listener.OnMapClickListener
@@ -59,6 +66,7 @@ import com.sygic.maps.uikit.views.positionlockfab.PositionLockFab
 import com.sygic.maps.uikit.views.searchfab.SearchFab
 import com.sygic.maps.uikit.views.zoomcontrols.ZoomControlsMenu
 import com.sygic.sdk.map.`object`.MapMarker
+import javax.inject.Inject
 
 const val BROWSE_MAP_FRAGMENT_TAG = "browse_map_fragment_tag"
 internal const val KEY_DETAILS_VIEW_FACTORY = "details_view_factory"
@@ -83,6 +91,12 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
     private lateinit var compassViewModel: CompassViewModel
     private lateinit var positionLockFabViewModel: PositionLockFabViewModel
     private lateinit var zoomControlsViewModel: ZoomControlsViewModel
+
+    @Inject
+    internal lateinit var repository: ApiRepository
+
+    @Inject
+    internal lateinit var auth: AuthManager
 
     override val mapClickListenerProvider: LiveData<OnMapClickListener> = MutableLiveData()
     override val moduleConnectionProvidersMap: LiveData<Map<ProviderType, ModuleConnectionProvider?>> = MutableLiveData(mutableMapOf())
@@ -358,5 +372,27 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
 
             recycle()
         }
+    }
+
+    override fun onAttach(context: Context) {
+        (moduleBuilder as BrowseMapComponent.Builder)
+            .plus(ProxyComponentImpl(DaggerNetworkingModulesComponent.builder()
+                .applicationModulesComponent(ApplicationComponentDelegate.getComponent(this@BrowseMapFragment))
+                .apiRepositoryModule(ApiRepositoryModule())
+                .authManagerModule(AuthManagerModule())
+                .build()))
+
+        super.onAttach(context)
+    }
+
+    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
+        (moduleBuilder as BrowseMapComponent.Builder)
+            .plus(ProxyComponentImpl(DaggerNetworkingModulesComponent.builder()
+                .applicationModulesComponent(ApplicationComponentDelegate.getComponent(this@BrowseMapFragment))
+                .apiRepositoryModule(ApiRepositoryModule())
+                .authManagerModule(AuthManagerModule())
+                .build()))
+
+        super.onInflate(context, attrs, savedInstanceState)
     }
 }

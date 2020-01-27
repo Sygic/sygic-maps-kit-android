@@ -66,4 +66,6 @@ dependencies {
 
     // modules
     api project(':module-common')
+
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 }

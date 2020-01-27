@@ -24,14 +24,9 @@
 
 package com.sygic.maps.module.browsemap.di.module;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
 
-import com.sygic.drive.module.networking.managers.auth.AuthManager;
-import com.sygic.drive.module.networking.managers.auth.AuthManagerImpl;
 import com.sygic.drive.module.networking.managers.networking.ApiRepository;
-import com.sygic.drive.module.networking.managers.networking.ApiRepositoryImpl;
 import com.sygic.maps.module.browsemap.manager.BrowseMapNetworkManager;
 import com.sygic.maps.module.browsemap.manager.BrowseMapNetworkManagerImpl;
 
@@ -40,16 +35,6 @@ import dagger.Provides;
 
 @Module
 public class BrowseMapModule {
-
-    @Provides
-    AuthManager provideAuthManager(@NonNull final Application application) { //todo: not here
-        return AuthManagerImpl.getInstance(application);
-    }
-
-    @Provides
-    ApiRepository provideApiRepository(@NonNull final Application application, @NonNull final AuthManager authManager) { //todo: not here
-        return ApiRepositoryImpl.getInstance(application, authManager);
-    }
 
     @Provides
     BrowseMapNetworkManager provideTripLogNetworkManager(@NonNull final ApiRepository apiRepository) {
