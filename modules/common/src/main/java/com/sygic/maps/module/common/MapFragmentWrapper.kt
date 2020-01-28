@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -73,7 +73,8 @@ const val KEY_DISTANCE_UNITS = "distance_units"
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>(protected val moduleBuilder: M)
+abstract class MapFragmentWrapper<F : Fragment, C : BaseFragmentComponent<F>, M : ModuleBuilder<C>, T : ThemeSupportedViewModel>(
+    moduleBuilder: M)
     : MapFragment() {
 
     protected abstract fun resolveAttributes(context: Context, attributes: AttributeSet)
