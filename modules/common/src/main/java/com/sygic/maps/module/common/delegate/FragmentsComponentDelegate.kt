@@ -21,6 +21,7 @@
 package com.sygic.maps.module.common.delegate
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.sygic.maps.module.common.di.DaggerFragmentModulesComponent
 import com.sygic.maps.module.common.di.FragmentModulesComponent
 
@@ -35,19 +36,41 @@ object FragmentsComponentDelegate {
         val fragmentManager = fragment.requireFragmentManager()
 
         val retainInstance =
-            fragmentManager.findFragmentByTag(COMPONENT_FRAGMENT_TAG + fragment.id) ?: ComponentHolderFragment(
-                DaggerFragmentModulesComponent
-                    .builder()
-                    .applicationModulesComponent(delegate.getComponent(fragment))
-                    .build()
-            ).also {
-                fragmentManager.beginTransaction().add(it, COMPONENT_FRAGMENT_TAG + fragment.id).commit()
-            }
+            fragmentManager.findFragmentByTag(COMPONENT_FRAGMENT_TAG + fragment.id)
 
-        return (retainInstance as ComponentHolderFragment).component
+        val transaction: FragmentTransaction
+
+        if (retainInstance != null) {
+            if (retainInstance is ComponentHolderFragment && retainInstance.component != null) {
+                return retainInstance.component
+            } else {
+                transaction = fragmentManager.beginTransaction().remove(retainInstance)
+            }
+        } else {
+            transaction = fragmentManager.beginTransaction()
+        }
+
+        return ComponentHolderFragment(
+            DaggerFragmentModulesComponent
+                .builder()
+                .applicationModulesComponent(delegate.getComponent(fragment))
+                .build()
+        ).also {
+            transaction.add(it, COMPONENT_FRAGMENT_TAG + fragment.id).commit()
+        }.component!!
     }
 
-    class ComponentHolderFragment(internal val component: FragmentModulesComponent) : Fragment() {
+    class ComponentHolderFragment : Fragment {
+
+        internal val component: FragmentModulesComponent?
+
+        constructor() : super() {
+            component = null
+        }
+
+        constructor(component: FragmentModulesComponent) : super() {
+            this.component = component
+        }
 
         init {
             retainInstance = true
