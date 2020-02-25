@@ -157,21 +157,22 @@ fun <A, B, C, R> combineLatest(first: LiveData<A>, second: LiveData<B>, third: L
  * The difference between combineLatest and zip is that the zip only emits after all LiveData
  * objects have a new value, but combineLatest will emit after any of them has a new value.
  */
-fun <T, Y> zip(first: LiveData<T>, second: LiveData<Y>) = zip(first, second) { t, y -> Pair(t, y) }
+fun <A, B> zip(first: LiveData<A>, second: LiveData<B>) = zip(first, second) { a, b -> Pair(a, b) }
 
-fun <T, Y, Z> zip(first: LiveData<T>, second: LiveData<Y>, zipFunction: (T, Y) -> Z) = MediatorLiveData<Z>().apply {
+@Suppress("UNCHECKED_CAST")
+fun <A, B, R> zip(first: LiveData<A>, second: LiveData<B>, zipFunction: (A, B) -> R) = MediatorLiveData<R>().apply {
 
     var firstEmitted = false
-    var firstValue: T? = null
+    var firstValue: A? = null
 
     var secondEmitted = false
-    var secondValue: Y? = null
+    var secondValue: B? = null
 
     addSource(first) {
         firstEmitted = true
         firstValue = it
         if (firstEmitted && secondEmitted) {
-            value = zipFunction(firstValue!!, secondValue!!)
+            value = zipFunction(firstValue as A, secondValue as B)
             firstEmitted = false
             secondEmitted = false
         }
@@ -181,7 +182,7 @@ fun <T, Y, Z> zip(first: LiveData<T>, second: LiveData<Y>, zipFunction: (T, Y) -
         secondEmitted = true
         secondValue = it
         if (firstEmitted && secondEmitted) {
-            value = zipFunction(firstValue!!, secondValue!!)
+            value = zipFunction(firstValue as A, secondValue as B)
             firstEmitted = false
             secondEmitted = false
         }
@@ -195,24 +196,25 @@ fun <T, Y, Z> zip(first: LiveData<T>, second: LiveData<Y>, zipFunction: (T, Y) -
  * The difference between combineLatest and zip is that the zip only emits after all LiveData
  * objects have a new value, but combineLatest will emit after any of them has a new value.
  */
-fun <T, Y, X> zip(first: LiveData<T>, second: LiveData<Y>, third: LiveData<X>) = zip(first, second, third) { t, y, x -> Triple(t, y, x) }
+fun <A, B, C> zip(first: LiveData<A>, second: LiveData<B>, third: LiveData<C>) = zip(first, second, third) { a, b, c -> Triple(a, b, c) }
 
-fun <T, Y, X, Z> zip(first: LiveData<T>, second: LiveData<Y>, third: LiveData<X>, zipFunction: (T, Y, X) -> Z) = MediatorLiveData<Z>().apply {
+@Suppress("UNCHECKED_CAST")
+fun <A, B, C, R> zip(first: LiveData<A>, second: LiveData<B>, third: LiveData<C>, zipFunction: (A, B, C) -> R) = MediatorLiveData<R>().apply {
 
     var firstEmitted = false
-    var firstValue: T? = null
+    var firstValue: A? = null
 
     var secondEmitted = false
-    var secondValue: Y? = null
+    var secondValue: B? = null
 
     var thirdEmitted = false
-    var thirdValue: X? = null
+    var thirdValue: C? = null
 
     addSource(first) {
         firstEmitted = true
         firstValue = it
         if (firstEmitted && secondEmitted && thirdEmitted) {
-            value = zipFunction(firstValue!!, secondValue!!, thirdValue!!)
+            value = zipFunction(firstValue as A, secondValue as B, thirdValue as C)
             firstEmitted = false
             secondEmitted = false
             thirdEmitted = false
@@ -226,7 +228,7 @@ fun <T, Y, X, Z> zip(first: LiveData<T>, second: LiveData<Y>, third: LiveData<X>
             firstEmitted = false
             secondEmitted = false
             thirdEmitted = false
-            value = zipFunction(firstValue!!, secondValue!!, thirdValue!!)
+            value = zipFunction(firstValue as A, secondValue as B, thirdValue as C)
         }
     }
 
@@ -237,7 +239,7 @@ fun <T, Y, X, Z> zip(first: LiveData<T>, second: LiveData<Y>, third: LiveData<X>
             firstEmitted = false
             secondEmitted = false
             thirdEmitted = false
-            value = zipFunction(firstValue!!, secondValue!!, thirdValue!!)
+            value = zipFunction(firstValue as A, secondValue as B, thirdValue as C)
         }
     }
 }
