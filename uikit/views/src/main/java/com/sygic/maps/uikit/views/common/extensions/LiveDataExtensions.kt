@@ -75,21 +75,22 @@ fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (T) -> Unit) {
  * The difference between combineLatest and zip is that the zip only emits after all LiveData
  * objects have a new value, but combineLatest will emit after any of them has a new value.
  */
-fun <X, T> combineLatest(first: LiveData<X>, second: LiveData<T>) = combineLatest(first, second) { x, t -> Pair(x, t) }
+fun <A, B> combineLatest(first: LiveData<A>, second: LiveData<B>) = combineLatest(first, second) { a, b -> Pair(a, b) }
 
-fun <X, T, Z> combineLatest(first: LiveData<X>, second: LiveData<T>, combineFunction: (X, T) -> Z) = MediatorLiveData<Z>().apply {
+@Suppress("UNCHECKED_CAST")
+fun <A, B, R> combineLatest(first: LiveData<A>, second: LiveData<B>, combineFunction: (A, B) -> R) = MediatorLiveData<R>().apply {
 
     var firstEmitted = false
-    var firstValue: X? = null
+    var firstValue: A? = null
 
     var secondEmitted = false
-    var secondValue: T? = null
+    var secondValue: B? = null
 
     addSource(first) {
         firstEmitted = true
         firstValue = it
         if (firstEmitted && secondEmitted) {
-            value = combineFunction(firstValue!!, secondValue!!)
+            value = combineFunction(firstValue as A, secondValue as B)
         }
     }
 
@@ -97,7 +98,7 @@ fun <X, T, Z> combineLatest(first: LiveData<X>, second: LiveData<T>, combineFunc
         secondEmitted = true
         secondValue = it
         if (firstEmitted && secondEmitted) {
-            value = combineFunction(firstValue!!, secondValue!!)
+            value = combineFunction(firstValue as A, secondValue as B)
         }
     }
 }
@@ -110,24 +111,25 @@ fun <X, T, Z> combineLatest(first: LiveData<X>, second: LiveData<T>, combineFunc
  * The difference between combineLatest and zip is that the zip only emits after all LiveData
  * objects have a new value, but combineLatest will emit after any of them has a new value.
  */
-fun <X, Y, T> combineLatest(first: LiveData<X>, second: LiveData<Y>, third: LiveData<T>) = combineLatest(first, second, third) { x, y, t -> Triple(x, y, t) }
+fun <A, B, R> combineLatest(first: LiveData<A>, second: LiveData<B>, third: LiveData<C>) = combineLatest(first, second, third) { a, b, c -> Triple(a, b, c) }
 
-fun <X, Y, T, Z> combineLatest(first: LiveData<X>, second: LiveData<Y>, third: LiveData<T>, combineFunction: (X, Y, T) -> Z) = MediatorLiveData<Z>().apply {
+@Suppress("UNCHECKED_CAST")
+fun <A, B, C, R> combineLatest(first: LiveData<A>, second: LiveData<B>, third: LiveData<C>, combineFunction: (A, B, C) -> R) = MediatorLiveData<R>().apply {
 
     var firstEmitted = false
-    var firstValue: X? = null
+    var firstValue: A? = null
 
     var secondEmitted = false
-    var secondValue: Y? = null
+    var secondValue: B? = null
 
     var thirdEmitted = false
-    var thirdValue: T? = null
+    var thirdValue: C? = null
 
     addSource(first) {
         firstEmitted = true
         firstValue = it
         if (firstEmitted && secondEmitted && thirdEmitted) {
-            value = combineFunction(firstValue!!, secondValue!!, thirdValue!!)
+            value = combineFunction(firstValue as A, secondValue as B, thirdValue as C)
         }
     }
 
@@ -135,7 +137,7 @@ fun <X, Y, T, Z> combineLatest(first: LiveData<X>, second: LiveData<Y>, third: L
         secondEmitted = true
         secondValue = it
         if (firstEmitted && secondEmitted && thirdEmitted) {
-            value = combineFunction(firstValue!!, secondValue!!, thirdValue!!)
+            value = combineFunction(firstValue as A, secondValue as B, thirdValue as C)
         }
     }
 
@@ -143,14 +145,14 @@ fun <X, Y, T, Z> combineLatest(first: LiveData<X>, second: LiveData<Y>, third: L
         thirdEmitted = true
         thirdValue = it
         if (firstEmitted && secondEmitted && thirdEmitted) {
-            value = combineFunction(firstValue!!, secondValue!!, thirdValue!!)
+            value = combineFunction(firstValue as A, secondValue as B, thirdValue as C)
         }
     }
 }
 
 /**
  * zips both of the LiveData and emits a value after both of them have emitted their values,
- * after that, emits values whenever any of them emits a value.
+ * after that, waits again for both LiveData to emit new value.
  *
  * The difference between combineLatest and zip is that the zip only emits after all LiveData
  * objects have a new value, but combineLatest will emit after any of them has a new value.
@@ -188,7 +190,7 @@ fun <T, Y, Z> zip(first: LiveData<T>, second: LiveData<Y>, zipFunction: (T, Y) -
 
 /**
  * zips three LiveData and emits a value after all of them have emitted their values,
- * after that, emits values whenever any of them emits a value.
+ * after that, waits again for both LiveData to emit new value.
  *
  * The difference between combineLatest and zip is that the zip only emits after all LiveData
  * objects have a new value, but combineLatest will emit after any of them has a new value.
