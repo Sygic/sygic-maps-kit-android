@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -111,7 +111,7 @@ fun <A, B, R> combineLatest(first: LiveData<A>, second: LiveData<B>, combineFunc
  * The difference between combineLatest and zip is that the zip only emits after all LiveData
  * objects have a new value, but combineLatest will emit after any of them has a new value.
  */
-fun <A, B, R> combineLatest(first: LiveData<A>, second: LiveData<B>, third: LiveData<C>) = combineLatest(first, second, third) { a, b, c -> Triple(a, b, c) }
+fun <A, B, C> combineLatest(first: LiveData<A>, second: LiveData<B>, third: LiveData<C>) = combineLatest(first, second, third) { a, b, c -> Triple(a, b, c) }
 
 @Suppress("UNCHECKED_CAST")
 fun <A, B, C, R> combineLatest(first: LiveData<A>, second: LiveData<B>, third: LiveData<C>, combineFunction: (A, B, C) -> R) = MediatorLiveData<R>().apply {
