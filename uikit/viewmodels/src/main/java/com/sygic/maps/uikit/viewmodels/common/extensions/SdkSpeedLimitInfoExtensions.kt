@@ -36,7 +36,6 @@ fun SpeedLimitInfo.getSpeedLimitValue(distanceUnit: DistanceUnit): Int = getSpee
     }
 )
 
-@MapView.CountrySignage
 internal fun Int.toSpeedLimitType(): SpeedLimitType {
     return when (this) {
         MapView.CountrySignage.America -> SpeedLimitType.US
