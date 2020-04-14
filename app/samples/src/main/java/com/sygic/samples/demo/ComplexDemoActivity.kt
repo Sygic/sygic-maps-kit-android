@@ -46,10 +46,10 @@ import com.sygic.samples.demo.states.BrowseMapDemoDefaultState
 import com.sygic.samples.demo.viewmodels.ComplexDemoActivityViewModel
 import com.sygic.samples.utils.getLastValidLocation
 import com.sygic.samples.utils.getPrimaryRoute
+import com.sygic.samples.utils.hasFragmentWithTag
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.Route
 import com.sygic.sdk.route.RoutePlan
-import com.sygic.sdk.route.RoutingOptions
 import kotlinx.android.synthetic.main.activity_complex_demo.*
 
 private const val REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION = 7001
@@ -63,27 +63,49 @@ class ComplexDemoActivity : CommonSampleActivity() {
     private lateinit var browseMapFragment: BrowseMapFragment
     private lateinit var viewModel: ComplexDemoActivityViewModel
 
+    private val backStackChangedListener = {
+        val displayed = supportFragmentManager.hasFragmentWithTag(ROUTING_OPTIONS_FRAGMENT_TAG)
+        if (viewModel.routingOptionsDisplayed && !displayed) {
+            viewModel.routingOptionsDisplayed = false
+            viewModel.showLastPlaceDetail()
+        }
+        viewModel.routingOptionsDisplayed = displayed
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_complex_demo)
 
-        viewModel = ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
-            hidePlaceDetailObservable.observe(this@ComplexDemoActivity, Observer { browseMapFragment.hidePlaceDetail() })
-            computePrimaryRouteObservable.observe(this@ComplexDemoActivity, Observer { createRoutePlanAndComputeRoute(it) })
-            restoreDefaultStateObservable.observe(
-                this@ComplexDemoActivity,
-                Observer { BrowseMapDemoDefaultState.setTo(browseMapFragment) }
-            )
-            showPlaceDetailObservable.observe(
-                this@ComplexDemoActivity,
-                Observer { browseMapFragment.showPlaceDetail(it.first, it.second) }
-            )
-            routeComputeProgressVisibilityObservable.observe(
-                this@ComplexDemoActivity,
-                Observer { routeComputeProgressBarContainer.visibility = it }
-            )
-        }
+        viewModel =
+            ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
+                hidePlaceDetailObservable.observe(
+                    this@ComplexDemoActivity,
+                    Observer { browseMapFragment.hidePlaceDetail() })
+                computePrimaryRouteObservable.observe(
+                    this@ComplexDemoActivity,
+                    Observer { createRoutePlanAndComputeRoute(it) })
+                showRouteOptionsObservable.observe(this@ComplexDemoActivity, Observer {
+                    browseMapFragment.hidePlaceDetail()
+                    placeRoutingOptionsFragment()
+                })
+                restoreDefaultStateObservable.observe(
+                    this@ComplexDemoActivity,
+                    Observer { BrowseMapDemoDefaultState.setTo(browseMapFragment) }
+                )
+                showPlaceDetailObservable.observe(
+                    this@ComplexDemoActivity,
+                    Observer {
+                        if (!viewModel.routingOptionsDisplayed) {
+                            browseMapFragment.showPlaceDetail(it.first, it.second)
+                        }
+                    }
+                )
+                routeComputeProgressVisibilityObservable.observe(
+                    this@ComplexDemoActivity,
+                    Observer { routeComputeProgressBarContainer.visibility = it }
+                )
+            }
 
         browseMapFragment = if (savedInstanceState == null) {
             placeBrowseMapFragment().apply { BrowseMapDemoDefaultState.setTo(this) }
@@ -93,18 +115,20 @@ class ComplexDemoActivity : CommonSampleActivity() {
 
         browseMapFragment.setOnMapClickListener(viewModel.onMapClickListener)
         browseMapFragment.setSearchConnectionProvider(viewModel.searchModuleConnectionProvider)
+
+        supportFragmentManager.addOnBackStackChangedListener(backStackChangedListener)
     }
 
     private fun placeBrowseMapFragment() =
         BrowseMapFragment().also {
             supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
-                ?.runOnCommit {
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
+                .runOnCommit {
                     viewModel.mapDataModel = it.mapDataModel
                     viewModel.cameraDataModel = it.cameraDataModel
                 }
-                ?.commit()
+                .commit()
         }
 
     private fun placeNavigationFragment(route: Route) =
@@ -112,21 +136,29 @@ class ComplexDemoActivity : CommonSampleActivity() {
             it.setVehicleSkin(VehicleSkin.CAR)
             it.route = route
             supportFragmentManager
-                ?.beginTransaction()
-                ?.replace(R.id.fragmentContainer, it, NAVIGATION_FRAGMENT_TAG)
-                ?.addToBackStack(null)
-                ?.commit()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, it, NAVIGATION_FRAGMENT_TAG)
+                .addToBackStack(null)
+                .commit()
         }
+
+    private fun placeRoutingOptionsFragment() {
+        RoutingOptionsFragment().also {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, it, ROUTING_OPTIONS_FRAGMENT_TAG)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
 
     private fun createRoutePlanAndComputeRoute(destination: GeoCoordinates) {
         requestLastValidLocation { lastValidLocation ->
             val routePlan = RoutePlan().apply {
                 setStart(lastValidLocation)
                 setDestination(destination)
-                routingOptions = RoutingOptions().apply {
-                    transportMode = RoutingOptions.TransportMode.Car
-                    routingType = RoutingOptions.RoutingType.Economic
-                }
+                routingOptions = viewModel.routingOptions
+                    ?: PersistentRoutingOptions(this@ComplexDemoActivity).createRoutingOptions()
             }
 
             routePlan.getPrimaryRoute {
@@ -183,5 +215,10 @@ class ComplexDemoActivity : CommonSampleActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        supportFragmentManager.removeOnBackStackChangedListener(backStackChangedListener)
     }
 }
