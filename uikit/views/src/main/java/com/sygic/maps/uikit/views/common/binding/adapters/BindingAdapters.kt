@@ -24,8 +24,14 @@
 
 package com.sygic.maps.uikit.views.common.binding.adapters
 
+import android.text.InputType
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.google.android.material.textfield.TextInputLayout
+import com.sygic.maps.uikit.views.R
+import com.sygic.maps.uikit.views.common.extensions.dropDownTextView
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 
 @BindingAdapter(value = ["text"])
@@ -36,4 +42,35 @@ fun setTextHolder(textView: TextView, textHolder: TextHolder?) {
     }
 
     textView.text = null
+}
+
+@BindingAdapter("values")
+fun setArrayAdapter(view: TextInputLayout, array: Array<String>) {
+    val adapter = ArrayAdapter(
+        view.context, R.layout.dropdown_menu_popup_item, array
+    )
+    view.dropDownTextView.setAdapter(adapter)
+    if (!adapter.isEmpty) {
+        view.dropDownTextView.tag = 0
+        view.dropDownTextView.setText(adapter.getItem(0), false)
+    }
+}
+
+@BindingAdapter("disableInput")
+fun setDisableInput(view: TextInputLayout, disable: Boolean) {
+    if (disable) {
+        view.dropDownTextView.inputType = InputType.TYPE_NULL
+    }
+}
+
+interface OnPositionSelectedListener {
+    fun onPositionSelected(position: Int)
+}
+
+@BindingAdapter("onSelected")
+fun setDropDownItemSelectedListener(view: TextInputLayout, listener: OnPositionSelectedListener?) {
+    view.dropDownTextView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+        view.dropDownTextView.tag = position
+        listener?.onPositionSelected(position)
+    }
 }

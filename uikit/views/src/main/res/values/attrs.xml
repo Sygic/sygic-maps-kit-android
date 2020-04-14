@@ -37,7 +37,6 @@
     <declare-styleable name="ThemeAttributes">
         <attr name="compassStyle" format="reference"/>
         <attr name="currentSpeedViewStyle" format="reference"/>
-        <attr name="extendedFloatingActionButtonStyle" format="reference"/>
         <attr name="infoBarStyle" format="reference" />
         <attr name="lanesViewStyle" format="reference" />
         <attr name="positionLockFabStyle" format="reference" />
