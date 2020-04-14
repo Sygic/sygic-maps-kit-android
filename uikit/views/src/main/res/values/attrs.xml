@@ -52,11 +52,11 @@
     </declare-styleable>
 
     <declare-styleable name="AdvancedInfoView">
-        <attr name="imageSource" />
-        <attr name="imageDescription" />
-        <attr name="titleText" />
-        <attr name="suggestionText"/>
-        <attr name="actionButtonText"/>
+        <attr name="imageSource" format="reference"/>
+        <attr name="imageDescription" format="string" />
+        <attr name="titleText" format="string"/>
+        <attr name="suggestionText" format="string"/>
+        <attr name="actionButtonText" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="CurrentSpeedView">
@@ -125,11 +125,11 @@
 
     <declare-styleable name="SearchToolbar">
         <attr name="searchIcon" />
-        <attr name="clearButtonIcon" />
+        <attr name="clearButtonIcon" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="SearchResultList">
-        <attr name="itemLayoutId" />
+        <attr name="itemLayoutId" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="SignpostView">
