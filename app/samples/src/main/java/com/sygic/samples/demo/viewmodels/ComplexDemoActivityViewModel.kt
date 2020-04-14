@@ -48,6 +48,7 @@ import com.sygic.sdk.map.data.SimpleCameraDataModel
 import com.sygic.sdk.map.data.SimpleMapDataModel
 import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
+import com.sygic.sdk.route.RoutingOptions
 import com.sygic.sdk.search.GeocodingResult
 
 private const val CAMERA_RECTANGLE_MARGIN = 80
@@ -57,25 +58,35 @@ class ComplexDemoActivityViewModel : ViewModel() {
     var targetPosition: GeoCoordinates? = null
     var mapDataModel: SimpleMapDataModel? = null
     var cameraDataModel: SimpleCameraDataModel? = null
+    var routingOptions: RoutingOptions? = null
+    var routingOptionsDisplayed = false
 
     val restoreDefaultStateObservable: LiveData<Any> = SingleLiveEvent()
+    val showRouteOptionsObservable: LiveData<Any> = SingleLiveEvent()
     val computePrimaryRouteObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
     val routeComputeProgressVisibilityObservable: LiveData<Int> = SingleLiveEvent()
     val showPlaceDetailObservable: LiveData<Pair<PlaceDetailComponent, PlaceDetailBottomDialogFragment.Listener>> = SingleLiveEvent()
     val hidePlaceDetailObservable: LiveData<Any> = SingleLiveEvent()
 
+    private var lastPlaceDetailDisplayed: Pair<PlaceDetailComponent, PlaceDetailBottomDialogFragment.Listener>? = null
+
     val onMapClickListener = object : OnMapClickListener {
         override fun showDetailsView() = false
         override fun onMapDataReceived(data: ViewObjectData) {
             targetPosition = data.position
-            showPlaceDetailObservable.asSingleEvent().value = Pair(
+            lastPlaceDetailDisplayed = Pair(
                 PlaceDetailComponent(data.toPlaceDetailData(), true),
                 placeDetailListener
             )
+            showPlaceDetailObservable.asSingleEvent().value = lastPlaceDetailDisplayed
         }
     }
 
     val placeDetailListener = object : PlaceDetailBottomDialogFragment.Listener {
+        override fun onRouteOptionsButtonClick() {
+            showRouteOptionsObservable.asSingleEvent().call()
+        }
+
         override fun onNavigationButtonClick() {
             hidePlaceDetailObservable.asSingleEvent().call()
             computePrimaryRouteObservable.asSingleEvent().value = targetPosition
@@ -117,9 +128,10 @@ class ComplexDemoActivityViewModel : ViewModel() {
                             targetPosition = this
                             cameraDataModel?.position = this
                             cameraDataModel?.zoomLevel = 10F
-                            showPlaceDetailObservable.asSingleEvent().value = Pair(
+                            lastPlaceDetailDisplayed = Pair(
                                 results.first().toPlaceDetailComponent(true), placeDetailListener
                             )
+                            showPlaceDetailObservable.asSingleEvent().value = lastPlaceDetailDisplayed
                         }
                     } else {
                         val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
@@ -132,5 +144,10 @@ class ComplexDemoActivityViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun showLastPlaceDetail() {
+        mapDataModel?.addMapMarker(targetPosition!!)
+        showPlaceDetailObservable.asSingleEvent().value = lastPlaceDetailDisplayed
     }
 }

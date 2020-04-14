@@ -24,6 +24,7 @@
 
 package com.sygic.samples.utils
 
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import com.sygic.maps.uikit.viewmodels.common.extensions.getFormattedLocation
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClientImpl
@@ -83,3 +84,9 @@ fun GeocodingResult.toPlaceDetailComponent(navigationButtonEnabled: Boolean = fa
         navigationButtonEnabled
     )
 }
+
+fun String.toRestriction() = split(":").let { it[0].toInt() to it[1].toInt() }
+
+fun Pair<Int, Int>.toPersistableString() = "$first:$second"
+
+fun FragmentManager.hasFragmentWithTag(tag: String) = findFragmentByTag(tag) != null
