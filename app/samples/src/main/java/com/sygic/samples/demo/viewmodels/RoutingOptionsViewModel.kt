@@ -29,14 +29,22 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.views.common.extensions.asMutable
+import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
+import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.samples.demo.PersistentRoutingOptions
 
 class RoutingOptionsViewModel(application: Application) : AndroidViewModel(application) {
     val persistentRoutingOptions = PersistentRoutingOptions(application)
 
+    val routingOptionsChanged: LiveData<Unit> = SingleLiveEvent()
     val dimensionalRestrictionsSelection: LiveData<Int> = MutableLiveData()
 
     fun onDimensionalRestrictionsSelected(position: Int) {
         dimensionalRestrictionsSelection.asMutable().value = position
+    }
+
+    fun resetToDefaults() {
+        persistentRoutingOptions.resetToDefaults()
+        routingOptionsChanged.asSingleEvent().call()
     }
 }

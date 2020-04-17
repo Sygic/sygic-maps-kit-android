@@ -109,6 +109,8 @@ class PersistentRoutingOptions(private val preferences: SharedPreferences) {
         }
     }
 
+    fun resetToDefaults() = preferences.edit().clear().apply()
+
     companion object {
         private const val PREFERENCES_NAME = "routing_options_prefs"
 

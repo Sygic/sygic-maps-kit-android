@@ -56,8 +56,9 @@ class SimpleEditAdapter : ListAdapter<ItemView, SimpleEditAdapter.ItemViewHolder
 
     private var onItemRemoved: (ItemView) -> Unit = {}
 
-    val items: List<ItemView>
+    var items: List<ItemView>
         get() = currentList
+        set(value) = submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ItemViewHolder(
@@ -73,8 +74,6 @@ class SimpleEditAdapter : ListAdapter<ItemView, SimpleEditAdapter.ItemViewHolder
     }
 
     fun addItem(item: ItemView) = submitList(currentList + item)
-
-    fun addItems(items: List<ItemView>) = submitList(currentList + items)
 
     private fun onRemoveItem(itemName: String) {
         val itemToRemove = currentList.find { it.name == itemName }!!

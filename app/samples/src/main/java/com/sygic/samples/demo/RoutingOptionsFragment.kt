@@ -73,6 +73,10 @@ class RoutingOptionsFragment : Fragment() {
         (activity as? AppCompatActivity)?.setSupportActionBar(view.findViewById(R.id.toolbar))
         (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        viewModel.routingOptionsChanged.observe(this, Observer {
+            initializeFromRoutingOptions()
+        })
+
         viewModel.dimensionalRestrictionsSelection.observe(this, Observer {
             onRestrictionSelected(it)
         })
@@ -133,7 +137,7 @@ class RoutingOptionsFragment : Fragment() {
             routingTypeDropDown.dropDownTextView.selectedIndex = routingType
             tunnelRestrictionDropDown.dropDownTextView.selectedIndex = tunnelRestriction
             vehicleFuelTypeDropDown.dropDownTextView.selectedIndex = vehicleFuelType
-            restrictionsRecyclerView.itemAdapter.addItems(dimensionalRestrictions.toItemViews())
+            restrictionsRecyclerView.itemAdapter.items = dimensionalRestrictions.toItemViews()
         }
 
         onRestrictionSelected(restrictionsDropDown.dropDownTextView.selectedPosition)

@@ -72,6 +72,7 @@
     <string name="vehicle_fuel_type">Vehicle fuel type</string>
     <string name="toll_road_avoided">Toll road avoided</string>
     <string name="highway_avoided">Highway avoided</string>
+    <string name="reset_to_defaults">Reset to defaults</string>
     <string name="url">Url</string>
     <string name="telephone">Telephone</string>
     <string name="email">Email</string>
