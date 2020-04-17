@@ -50,15 +50,16 @@
     </string-array>
 
     <string-array name="transport_mode_values">
-        <item>Unknown</item>
-        <item>Pedestrian</item>
         <item>Car</item>
-        <item>Bus</item>
         <item>Transport truck</item>
-        <item>Delivery truck</item>
-        <item>Camper</item>
-        <item>Garbage truck</item>
+        <item>Pedestrian</item>
     </string-array>
+
+    <integer-array name="transport_mode_indices">
+        <item>2</item>
+        <item>4</item>
+        <item>1</item>
+    </integer-array>
 
     <string-array name="hazardous_material_class_values">
         <item>None</item>

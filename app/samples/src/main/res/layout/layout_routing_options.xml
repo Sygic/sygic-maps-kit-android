@@ -123,6 +123,7 @@
                     app:disableInput="@{true}"
                     app:onSelected="@{null}"
                     app:values="@{@stringArray/transport_mode_values}"
+                    app:indices="@{@intArray/transport_mode_indices}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/routingServiceDropDown">

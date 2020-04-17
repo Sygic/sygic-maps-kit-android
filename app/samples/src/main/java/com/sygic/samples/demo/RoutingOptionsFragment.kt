@@ -127,12 +127,12 @@ class RoutingOptionsFragment : Fragment() {
         viewModel.persistentRoutingOptions.apply {
             tollRoadAvoidedSwitch.isChecked = isTollRoadAvoided
             highwayAvoidedSwitch.isChecked = isHighwayAvoided
-            routingServiceDropDown.dropDownTextView.selectedPosition = routingService
-            transportModeDropDown.dropDownTextView.selectedPosition = transportMode
-            hazardousMaterialClassDropDown.dropDownTextView.selectedPosition = hazardousMaterialClass
-            routingTypeDropDown.dropDownTextView.selectedPosition = routingType
-            tunnelRestrictionDropDown.dropDownTextView.selectedPosition = tunnelRestriction
-            vehicleFuelTypeDropDown.dropDownTextView.selectedPosition = vehicleFuelType
+            routingServiceDropDown.dropDownTextView.selectedIndex = routingService
+            transportModeDropDown.dropDownTextView.selectedIndex = transportMode
+            hazardousMaterialClassDropDown.dropDownTextView.selectedIndex = hazardousMaterialClass
+            routingTypeDropDown.dropDownTextView.selectedIndex = routingType
+            tunnelRestrictionDropDown.dropDownTextView.selectedIndex = tunnelRestriction
+            vehicleFuelTypeDropDown.dropDownTextView.selectedIndex = vehicleFuelType
             restrictionsRecyclerView.itemAdapter.addItems(dimensionalRestrictions.toItemViews())
         }
 
@@ -143,12 +143,12 @@ class RoutingOptionsFragment : Fragment() {
         viewModel.persistentRoutingOptions.apply {
             isTollRoadAvoided = tollRoadAvoidedSwitch.isChecked
             isHighwayAvoided = highwayAvoidedSwitch.isChecked
-            routingService = routingServiceDropDown.dropDownTextView.selectedPosition
-            transportMode = transportModeDropDown.dropDownTextView.selectedPosition
-            hazardousMaterialClass = hazardousMaterialClassDropDown.dropDownTextView.selectedPosition
-            routingType = routingTypeDropDown.dropDownTextView.selectedPosition
-            tunnelRestriction = tunnelRestrictionDropDown.dropDownTextView.selectedPosition
-            vehicleFuelType = vehicleFuelTypeDropDown.dropDownTextView.selectedPosition
+            routingService = routingServiceDropDown.dropDownTextView.selectedIndex
+            transportMode = transportModeDropDown.dropDownTextView.selectedIndex
+            hazardousMaterialClass = hazardousMaterialClassDropDown.dropDownTextView.selectedIndex
+            routingType = routingTypeDropDown.dropDownTextView.selectedIndex
+            tunnelRestriction = tunnelRestrictionDropDown.dropDownTextView.selectedIndex
+            vehicleFuelType = vehicleFuelTypeDropDown.dropDownTextView.selectedIndex
             dimensionalRestrictions = restrictionsRecyclerView.itemAdapter.items.toStringSet()
         }
     }

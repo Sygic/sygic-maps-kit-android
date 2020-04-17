@@ -26,10 +26,10 @@ package com.sygic.maps.uikit.views.common.binding.adapters
 
 import android.text.InputType
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.google.android.material.textfield.TextInputLayout
+import com.sygic.maps.uikit.views.common.ArrayIndicesAdapter
 import com.sygic.maps.uikit.views.R
 import com.sygic.maps.uikit.views.common.extensions.dropDownTextView
 import com.sygic.maps.uikit.views.common.utils.TextHolder
@@ -44,10 +44,10 @@ fun setTextHolder(textView: TextView, textHolder: TextHolder?) {
     textView.text = null
 }
 
-@BindingAdapter("values")
-fun setArrayAdapter(view: TextInputLayout, array: Array<String>) {
-    val adapter = ArrayAdapter(
-        view.context, R.layout.dropdown_menu_popup_item, array
+@BindingAdapter("values", "indices", requireAll = false)
+fun setArrayAdapter(view: TextInputLayout, array: Array<String>, indices: IntArray?) {
+    val adapter = ArrayIndicesAdapter(
+        view.context, R.layout.dropdown_menu_popup_item, array, indices
     )
     view.dropDownTextView.setAdapter(adapter)
     if (!adapter.isEmpty) {

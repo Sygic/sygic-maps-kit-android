@@ -36,6 +36,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.textfield.TextInputLayout
+import com.sygic.maps.uikit.views.common.ArrayIndicesAdapter
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 
 fun View.showKeyboard() = context?.showKeyboard(this)
@@ -77,6 +78,12 @@ var AutoCompleteTextView.selectedPosition: Int
 
 val AutoCompleteTextView.selectedValue: String?
     get() = adapter.getItem(selectedPosition).toString()
+
+var AutoCompleteTextView.selectedIndex: Int
+    get() = (adapter as ArrayIndicesAdapter<*>).getIndexForPosition(selectedPosition)
+    set(value) {
+        selectedPosition = (adapter as ArrayIndicesAdapter<*>).findPositionFromIndex(value)
+    }
 
 fun AutoCompleteTextView.findIndexForName(name: String): Int {
     for (i in 0 until adapter.count) {
