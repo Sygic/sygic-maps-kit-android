@@ -30,6 +30,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -229,7 +230,14 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
             zoomControlsViewModel = this@BrowseMapFragment.zoomControlsViewModel
             lifecycleOwner = this@BrowseMapFragment
             with(root as ViewGroup) {
-                super.onCreateView(inflater, this, savedInstanceState)?.let { addView(it, 0) }
+                super.onCreateView(inflater, this, savedInstanceState)?.let {
+                    addView(it, 0, ConstraintLayout.LayoutParams(0, 0).apply {
+                        topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                        bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                        startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                        endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                    })
+                }
             }
         }.root
 
