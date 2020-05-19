@@ -29,7 +29,7 @@ plugins {
     id 'kotlin-kapt'
 
     // https://github.com/gradle/gradle/issues/3593
-    id 'com.gladed.androidgitversion' version '0.4.9'
+    id 'com.gladed.androidgitversion' version '0.4.10'
     id 'com.github.triplet.play' version '2.2.0'
 }
 
