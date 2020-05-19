@@ -44,21 +44,27 @@ import com.sygic.samples.R
 import com.sygic.samples.app.activities.CommonSampleActivity
 import com.sygic.samples.demo.states.BrowseMapDemoDefaultState
 import com.sygic.samples.demo.viewmodels.ComplexDemoActivityViewModel
+import com.sygic.samples.demo.viewmodels.ComplexDemoViewModelFactory
 import com.sygic.samples.utils.getLastValidLocation
 import com.sygic.samples.utils.getPrimaryRoute
 import com.sygic.samples.utils.hasFragmentWithTag
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.Route
 import com.sygic.sdk.route.RoutePlan
+import com.sygic.sdk.route.RoutingOptions
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_complex_demo.*
+import javax.inject.Inject
 
 private const val REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION = 7001
 private const val REQUEST_CODE_GOOGLE_API_CLIENT = 7002
 private const val REQUEST_CODE_SETTING_ACTIVITY = 7003
 
 class ComplexDemoActivity : CommonSampleActivity() {
-
     override val wikiModulePath: String? = null
+
+    @Inject
+    lateinit var viewModelFactory: ComplexDemoViewModelFactory
 
     private lateinit var browseMapFragment: BrowseMapFragment
     private lateinit var viewModel: ComplexDemoActivityViewModel
@@ -73,18 +79,19 @@ class ComplexDemoActivity : CommonSampleActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_complex_demo)
 
-        viewModel =
-            ViewModelProviders.of(this).get(ComplexDemoActivityViewModel::class.java).apply {
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(ComplexDemoActivityViewModel::class.java).apply {
                 hidePlaceDetailObservable.observe(
                     this@ComplexDemoActivity,
                     Observer { browseMapFragment.hidePlaceDetail() })
                 computePrimaryRouteObservable.observe(
                     this@ComplexDemoActivity,
-                    Observer { createRoutePlanAndComputeRoute(it) })
+                    Observer { createRoutePlanAndComputeRoute(it.destination, it.options) })
                 showRouteOptionsObservable.observe(this@ComplexDemoActivity, Observer {
                     browseMapFragment.hidePlaceDetail()
                     placeRoutingOptionsFragment()
@@ -152,13 +159,12 @@ class ComplexDemoActivity : CommonSampleActivity() {
         }
     }
 
-    private fun createRoutePlanAndComputeRoute(destination: GeoCoordinates) {
+    private fun createRoutePlanAndComputeRoute(destination: GeoCoordinates, options: RoutingOptions) {
         requestLastValidLocation { lastValidLocation ->
             val routePlan = RoutePlan().apply {
                 setStart(lastValidLocation)
                 setDestination(destination)
-                routingOptions = viewModel.routingOptions
-                    ?: PersistentRoutingOptions(this@ComplexDemoActivity).createRoutingOptions()
+                routingOptions = options
             }
 
             routePlan.getPrimaryRoute {
@@ -193,7 +199,9 @@ class ComplexDemoActivity : CommonSampleActivity() {
         when (requestCode) {
             REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    viewModel.targetPosition?.let { createRoutePlanAndComputeRoute(it) }
+                    viewModel.targetPosition?.let {
+                        createRoutePlanAndComputeRoute(it, viewModel.routingOptions)
+                    }
                 } else {
                     longToast("Sorry, location permission is needed!")
                     finish()
@@ -208,7 +216,9 @@ class ComplexDemoActivity : CommonSampleActivity() {
         when (requestCode) {
             REQUEST_CODE_SETTING_ACTIVITY, REQUEST_CODE_GOOGLE_API_CLIENT -> {
                 if (isGpsEnabled()) {
-                    viewModel.targetPosition?.let { createRoutePlanAndComputeRoute(it) }
+                    viewModel.targetPosition?.let {
+                        createRoutePlanAndComputeRoute(it, viewModel.routingOptions)
+                    }
                 } else {
                     longToast("GPS module is not enabled :(")
                     finish()

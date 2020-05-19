@@ -24,18 +24,15 @@
 
 package com.sygic.samples.demo.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
-import com.sygic.samples.demo.PersistentRoutingOptions
+import com.sygic.samples.demo.RoutingOptionsManager
 
-class RoutingOptionsViewModel(application: Application) : AndroidViewModel(application) {
-    val persistentRoutingOptions = PersistentRoutingOptions(application)
-
+class RoutingOptionsViewModel(val routingOptionsManager: RoutingOptionsManager) : ViewModel() {
     val routingOptionsChanged: LiveData<Unit> = SingleLiveEvent()
     val dimensionalRestrictionsSelection: LiveData<Int> = MutableLiveData()
 
@@ -44,7 +41,7 @@ class RoutingOptionsViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun resetToDefaults() {
-        persistentRoutingOptions.resetToDefaults()
+        routingOptionsManager.resetToDefaults()
         routingOptionsChanged.asSingleEvent().call()
     }
 }

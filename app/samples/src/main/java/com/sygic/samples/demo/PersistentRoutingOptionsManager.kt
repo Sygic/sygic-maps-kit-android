@@ -30,62 +30,64 @@ import com.sygic.maps.uikit.views.common.extensions.get
 import com.sygic.maps.uikit.views.common.extensions.set
 import com.sygic.samples.utils.toRestriction
 import com.sygic.sdk.route.RoutingOptions
+import javax.inject.Inject
 
-class PersistentRoutingOptions(private val preferences: SharedPreferences) {
-    var isHighwayAvoided: Boolean
+class PersistentRoutingOptionsManager(private val preferences: SharedPreferences) : RoutingOptionsManager {
+    override var isHighwayAvoided: Boolean
         get() = preferences[HIGHWAY_AVOIDED_KEY, false]
         set(value) {
             preferences[HIGHWAY_AVOIDED_KEY] = value
         }
 
-    var isTollRoadAvoided: Boolean
+    override var isTollRoadAvoided: Boolean
         get() = preferences[TOLL_ROAD_AVOIDED_KEY, false]
         set(value) {
             preferences[TOLL_ROAD_AVOIDED_KEY] = value
         }
 
-    var routingService: Int
+    override var routingService: Int
         get() = preferences[ROUTING_SERVICE_KEY, RoutingOptions.RoutingService.Automatic]
         set(value) {
             preferences[ROUTING_SERVICE_KEY] = value
         }
 
-    var transportMode: Int
+    override var transportMode: Int
         get() = preferences[TRANSPORT_MODE_KEY, RoutingOptions.TransportMode.Car]
         set(value) {
             preferences[TRANSPORT_MODE_KEY] = value
         }
 
-    var hazardousMaterialClass: Int
+    override var hazardousMaterialClass: Int
         get() = preferences[HAZARDOUS_MATERIAL_CLASS_KEY, RoutingOptions.HazardousMaterialClass.None]
         set(value) {
             preferences[HAZARDOUS_MATERIAL_CLASS_KEY] = value
         }
 
-    var routingType: Int
+    override var routingType: Int
         get() = preferences[ROUTING_TYPE_KEY, RoutingOptions.RoutingType.Economic]
         set(value) {
             preferences[ROUTING_TYPE_KEY] = value
         }
 
-    var tunnelRestriction: Int
+    override var tunnelRestriction: Int
         get() = preferences[TUNNEL_RESTRICTION_KEY, RoutingOptions.ADRTunnelType.Unknown]
         set(value) {
             preferences[TUNNEL_RESTRICTION_KEY] = value
         }
 
-    var vehicleFuelType: Int
+    override var vehicleFuelType: Int
         get() = preferences[VEHICLE_FUEL_TYPE_KEY, RoutingOptions.VehicleFuelType.Petrol]
         set(value) {
             preferences[VEHICLE_FUEL_TYPE_KEY] = value
         }
 
-    var dimensionalRestrictions: Set<String>
+    override var dimensionalRestrictions: Set<String>
         get() = preferences.getStringSet(DIMENSIONAL_RESTRICTIONS_KEY, setOf())!!
         set(value) {
             preferences.edit().putStringSet(DIMENSIONAL_RESTRICTIONS_KEY, value).apply()
         }
 
+    @Inject
     constructor(context: Context) : this(
         context.getSharedPreferences(
             PREFERENCES_NAME,
@@ -93,15 +95,15 @@ class PersistentRoutingOptions(private val preferences: SharedPreferences) {
         )
     )
 
-    fun createRoutingOptions() = RoutingOptions().apply {
-        isHighwayAvoided = this@PersistentRoutingOptions.isHighwayAvoided
-        isTollRoadAvoided = this@PersistentRoutingOptions.isTollRoadAvoided
-        routingService = this@PersistentRoutingOptions.routingService
-        transportMode = this@PersistentRoutingOptions.transportMode
-        hazardousMaterialClass = this@PersistentRoutingOptions.hazardousMaterialClass
-        routingType = this@PersistentRoutingOptions.routingType
-        tunnelRestriction = this@PersistentRoutingOptions.tunnelRestriction
-        vehicleFuelType = this@PersistentRoutingOptions.vehicleFuelType
+    override fun getRoutingOptions() = RoutingOptions().apply {
+        isHighwayAvoided = this@PersistentRoutingOptionsManager.isHighwayAvoided
+        isTollRoadAvoided = this@PersistentRoutingOptionsManager.isTollRoadAvoided
+        routingService = this@PersistentRoutingOptionsManager.routingService
+        transportMode = this@PersistentRoutingOptionsManager.transportMode
+        hazardousMaterialClass = this@PersistentRoutingOptionsManager.hazardousMaterialClass
+        routingType = this@PersistentRoutingOptionsManager.routingType
+        tunnelRestriction = this@PersistentRoutingOptionsManager.tunnelRestriction
+        vehicleFuelType = this@PersistentRoutingOptionsManager.vehicleFuelType
         dimensionalRestrictions.forEach {
             it.toRestriction().apply {
                 addDimensionalRestriction(first, second)
@@ -109,7 +111,7 @@ class PersistentRoutingOptions(private val preferences: SharedPreferences) {
         }
     }
 
-    fun resetToDefaults() = preferences.edit().clear().apply()
+    override fun resetToDefaults() = preferences.edit().clear().apply()
 
     companion object {
         private const val PREFERENCES_NAME = "routing_options_prefs"

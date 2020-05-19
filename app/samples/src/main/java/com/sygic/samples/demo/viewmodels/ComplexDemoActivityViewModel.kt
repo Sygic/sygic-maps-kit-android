@@ -40,6 +40,8 @@ import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
+import com.sygic.samples.demo.ComputedRoute
+import com.sygic.samples.demo.RoutingOptionsManager
 import com.sygic.samples.utils.toGeoCoordinatesList
 import com.sygic.samples.utils.toPlaceDetailComponent
 import com.sygic.sdk.map.Camera
@@ -50,20 +52,24 @@ import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.RoutingOptions
 import com.sygic.sdk.search.GeocodingResult
+import javax.inject.Inject
 
 private const val CAMERA_RECTANGLE_MARGIN = 80
 
-class ComplexDemoActivityViewModel : ViewModel() {
+class ComplexDemoActivityViewModel(
+    private val routingOptionsManager: RoutingOptionsManager
+) : ViewModel() {
 
     var targetPosition: GeoCoordinates? = null
     var mapDataModel: SimpleMapDataModel? = null
     var cameraDataModel: SimpleCameraDataModel? = null
-    var routingOptions: RoutingOptions? = null
     var routingOptionsDisplayed = false
+    val routingOptions: RoutingOptions
+        get() = routingOptionsManager.getRoutingOptions()
 
     val restoreDefaultStateObservable: LiveData<Any> = SingleLiveEvent()
     val showRouteOptionsObservable: LiveData<Any> = SingleLiveEvent()
-    val computePrimaryRouteObservable: LiveData<GeoCoordinates> = SingleLiveEvent()
+    val computePrimaryRouteObservable: LiveData<ComputedRoute> = SingleLiveEvent()
     val routeComputeProgressVisibilityObservable: LiveData<Int> = SingleLiveEvent()
     val showPlaceDetailObservable: LiveData<Pair<PlaceDetailComponent, PlaceDetailBottomDialogFragment.Listener>> = SingleLiveEvent()
     val hidePlaceDetailObservable: LiveData<Any> = SingleLiveEvent()
@@ -89,7 +95,11 @@ class ComplexDemoActivityViewModel : ViewModel() {
 
         override fun onNavigationButtonClick() {
             hidePlaceDetailObservable.asSingleEvent().call()
-            computePrimaryRouteObservable.asSingleEvent().value = targetPosition
+            computePrimaryRouteObservable.asSingleEvent().value =
+                if (targetPosition == null) null else ComputedRoute(
+                    targetPosition!!,
+                    routingOptions
+                )
             routeComputeProgressVisibilityObservable.asSingleEvent().value = View.VISIBLE
         }
 

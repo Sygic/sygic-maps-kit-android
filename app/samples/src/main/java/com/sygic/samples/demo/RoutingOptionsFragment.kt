@@ -24,6 +24,7 @@
 
 package com.sygic.samples.demo
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -37,23 +38,31 @@ import com.sygic.maps.uikit.views.common.extensions.*
 import com.sygic.maps.uikit.views.recyclerview.ItemView
 import com.sygic.samples.R
 import com.sygic.samples.databinding.LayoutRoutingOptionsBinding
-import com.sygic.samples.demo.viewmodels.ComplexDemoActivityViewModel
 import com.sygic.samples.demo.viewmodels.RoutingOptionsViewModel
 import com.sygic.samples.utils.toPersistableString
 import com.sygic.samples.utils.toRestriction
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.layout_routing_options.*
+import javax.inject.Inject
 
 const val ROUTING_OPTIONS_FRAGMENT_TAG = "routing_options_fragment_tag"
 
 class RoutingOptionsFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: RoutingOptionsViewModelFactory
+
     private lateinit var binding: LayoutRoutingOptionsBinding
     private lateinit var viewModel: RoutingOptionsViewModel
-    private lateinit var activityViewModel: ComplexDemoActivityViewModel
     private var initialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(
@@ -62,8 +71,7 @@ class RoutingOptionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = LayoutRoutingOptionsBinding.inflate(inflater)
-        viewModel = ViewModelProviders.of(this)[RoutingOptionsViewModel::class.java]
-        activityViewModel = ViewModelProviders.of(requireActivity())[ComplexDemoActivityViewModel::class.java]
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[RoutingOptionsViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         return binding.root
@@ -115,7 +123,6 @@ class RoutingOptionsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         persistRoutingOptions()
-        activityViewModel.routingOptions = viewModel.persistentRoutingOptions.createRoutingOptions()
     }
 
     private fun onRestrictionSelected(position: Int) {
@@ -128,7 +135,7 @@ class RoutingOptionsFragment : Fragment() {
     }
 
     private fun initializeFromRoutingOptions() {
-        viewModel.persistentRoutingOptions.apply {
+        viewModel.routingOptionsManager.apply {
             tollRoadAvoidedSwitch.isChecked = isTollRoadAvoided
             highwayAvoidedSwitch.isChecked = isHighwayAvoided
             routingServiceDropDown.dropDownTextView.selectedIndex = routingService
@@ -144,7 +151,7 @@ class RoutingOptionsFragment : Fragment() {
     }
 
     private fun persistRoutingOptions() {
-        viewModel.persistentRoutingOptions.apply {
+        viewModel.routingOptionsManager.apply {
             isTollRoadAvoided = tollRoadAvoidedSwitch.isChecked
             isHighwayAvoided = highwayAvoidedSwitch.isChecked
             routingService = routingServiceDropDown.dropDownTextView.selectedIndex
