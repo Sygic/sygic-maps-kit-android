@@ -126,37 +126,37 @@ class ComplexDemoActivity : CommonSampleActivity() {
         supportFragmentManager.addOnBackStackChangedListener(backStackChangedListener)
     }
 
-    private fun placeBrowseMapFragment() =
-        BrowseMapFragment().also {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, it, BROWSE_MAP_FRAGMENT_TAG)
-                .runOnCommit {
-                    viewModel.mapDataModel = it.mapDataModel
-                    viewModel.cameraDataModel = it.cameraDataModel
-                }
-                .commit()
-        }
+    private fun placeBrowseMapFragment(): BrowseMapFragment {
+        val browseMapFragment = BrowseMapFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, browseMapFragment, BROWSE_MAP_FRAGMENT_TAG)
+            .runOnCommit {
+                viewModel.mapDataModel = browseMapFragment.mapDataModel
+                viewModel.cameraDataModel = browseMapFragment.cameraDataModel
+            }
+            .commit()
+        return browseMapFragment
+    }
 
-    private fun placeNavigationFragment(route: Route) =
-        NavigationFragment().also {
-            it.setVehicleSkin(VehicleSkin.CAR)
-            it.route = route
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, it, NAVIGATION_FRAGMENT_TAG)
-                .addToBackStack(null)
-                .commit()
+    private fun placeNavigationFragment(route: Route) {
+        val navigationFragment = NavigationFragment().apply {
+            setVehicleSkin(VehicleSkin.CAR)
+            this.route = route
         }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, navigationFragment, NAVIGATION_FRAGMENT_TAG)
+            .addToBackStack(null)
+            .commit()
+    }
 
     private fun placeRoutingOptionsFragment() {
-        RoutingOptionsFragment().also {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, it, ROUTING_OPTIONS_FRAGMENT_TAG)
-                .addToBackStack(null)
-                .commit()
-        }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, RoutingOptionsFragment(), ROUTING_OPTIONS_FRAGMENT_TAG)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun createRoutePlanAndComputeRoute(destination: GeoCoordinates, options: RoutingOptions) {
