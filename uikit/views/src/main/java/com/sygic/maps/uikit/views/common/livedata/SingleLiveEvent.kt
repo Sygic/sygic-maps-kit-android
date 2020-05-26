@@ -53,4 +53,12 @@ open class SingleLiveEvent<T> : SingleLiveData<T>() {
     fun call() {
         value = null
     }
+
+    /**
+     * Emits current value to observers.
+     */
+    @MainThread
+    fun emit() {
+        value = value
+    }
 }

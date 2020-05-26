@@ -74,17 +74,14 @@ class ComplexDemoActivityViewModel(
     val showPlaceDetailObservable: LiveData<Pair<PlaceDetailComponent, PlaceDetailBottomDialogFragment.Listener>> = SingleLiveEvent()
     val hidePlaceDetailObservable: LiveData<Any> = SingleLiveEvent()
 
-    private var lastPlaceDetailDisplayed: Pair<PlaceDetailComponent, PlaceDetailBottomDialogFragment.Listener>? = null
-
     val onMapClickListener = object : OnMapClickListener {
         override fun showDetailsView() = false
         override fun onMapDataReceived(data: ViewObjectData) {
             targetPosition = data.position
-            lastPlaceDetailDisplayed = Pair(
+            showPlaceDetailObservable.asSingleEvent().value = Pair(
                 PlaceDetailComponent(data.toPlaceDetailData(), true),
                 placeDetailListener
             )
-            showPlaceDetailObservable.asSingleEvent().value = lastPlaceDetailDisplayed
         }
     }
 
@@ -138,10 +135,10 @@ class ComplexDemoActivityViewModel(
                             targetPosition = this
                             cameraDataModel?.position = this
                             cameraDataModel?.zoomLevel = 10F
-                            lastPlaceDetailDisplayed = Pair(
+
+                            showPlaceDetailObservable.asSingleEvent().value = Pair(
                                 results.first().toPlaceDetailComponent(true), placeDetailListener
                             )
-                            showPlaceDetailObservable.asSingleEvent().value = lastPlaceDetailDisplayed
                         }
                     } else {
                         val geoBoundingBox = GeoBoundingBox(geoCoordinatesList.first(), geoCoordinatesList.first())
@@ -166,6 +163,6 @@ class ComplexDemoActivityViewModel(
 
     private fun showLastPlaceDetail() {
         mapDataModel?.addMapMarker(targetPosition!!)
-        showPlaceDetailObservable.asSingleEvent().value = lastPlaceDetailDisplayed
+        showPlaceDetailObservable.asSingleEvent().emit()
     }
 }
