@@ -156,7 +156,15 @@ class ComplexDemoActivityViewModel(
         }
     }
 
-    fun showLastPlaceDetail() {
+    fun onBackStackChanged(displayed: Boolean) {
+        if (routingOptionsDisplayed && !displayed) {
+            routingOptionsDisplayed = false
+            showLastPlaceDetail()
+        }
+        routingOptionsDisplayed = displayed
+    }
+
+    private fun showLastPlaceDetail() {
         mapDataModel?.addMapMarker(targetPosition!!)
         showPlaceDetailObservable.asSingleEvent().value = lastPlaceDetailDisplayed
     }

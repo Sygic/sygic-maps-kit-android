@@ -71,11 +71,7 @@ class ComplexDemoActivity : CommonSampleActivity() {
 
     private val backStackChangedListener = {
         val displayed = supportFragmentManager.hasFragmentWithTag(ROUTING_OPTIONS_FRAGMENT_TAG)
-        if (viewModel.routingOptionsDisplayed && !displayed) {
-            viewModel.routingOptionsDisplayed = false
-            viewModel.showLastPlaceDetail()
-        }
-        viewModel.routingOptionsDisplayed = displayed
+        viewModel.onBackStackChanged(displayed)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
