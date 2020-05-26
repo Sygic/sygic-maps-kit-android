@@ -50,7 +50,7 @@ buildscript {
         kotlinAnnotationsVersion = '17.0.0'
         lifecycleVersion = '2.1.0-rc01'
         appCompatVersion = '1.0.2'
-        materialVersion = '1.1.0-rc02'
+        materialVersion = '1.1.0'
         constraintLayoutVersion = '1.1.3'
         annotationsVersion = '1.1.0'
         playServicesLocationVersion = '17.0.0'
