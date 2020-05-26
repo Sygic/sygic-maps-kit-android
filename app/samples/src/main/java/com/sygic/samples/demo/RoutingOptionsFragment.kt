@@ -39,7 +39,6 @@ import com.sygic.maps.uikit.views.recyclerview.ItemView
 import com.sygic.samples.R
 import com.sygic.samples.databinding.LayoutRoutingOptionsBinding
 import com.sygic.samples.demo.viewmodels.RoutingOptionsViewModel
-import com.sygic.samples.utils.toPersistableString
 import com.sygic.samples.utils.toRestriction
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.layout_routing_options.*
@@ -174,4 +173,6 @@ class RoutingOptionsFragment : Fragment() {
         val index = restrictionsDropDown.dropDownTextView.findIndexForName(it.name)
         (index to it.value).toPersistableString()
     }.toSet()
+
+    private fun Pair<Int, Int>.toPersistableString() = "$first:$second"
 }

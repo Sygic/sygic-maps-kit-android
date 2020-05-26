@@ -87,6 +87,4 @@ fun GeocodingResult.toPlaceDetailComponent(navigationButtonEnabled: Boolean = fa
 
 fun String.toRestriction() = split(":").let { it[0].toInt() to it[1].toInt() }
 
-fun Pair<Int, Int>.toPersistableString() = "$first:$second"
-
 fun FragmentManager.hasFragmentWithTag(tag: String) = findFragmentByTag(tag) != null
