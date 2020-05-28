@@ -31,9 +31,11 @@ import androidx.annotation.LayoutRes
 class ArrayIndicesAdapter<T>(
     context: Context,
     @LayoutRes resource: Int,
-    objects: Array<T>,
-    private val indices: IntArray?
+    objects: List<T> = mutableListOf(),
+    private val indices: IntArray? = null
 ) : ArrayAdapter<T>(context, resource, objects) {
+    var selected = 0
+
     fun getIndexForPosition(position: Int) = indices?.get(position) ?: position
 
     fun findPositionFromIndex(index: Int): Int {

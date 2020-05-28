@@ -84,6 +84,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/highway_avoided"
+                    android:checked="@={viewModel.highwayAvoided}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/resetButton"
@@ -98,6 +99,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/toll_road_avoided"
+                    android:checked="@={viewModel.tollRoadAvoided}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/highwayAvoidedSwitch"
@@ -112,16 +114,16 @@
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/routing_service_hint"
-                    app:disableInput="@{true}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tollRoadAvoidedSwitch"
-                    app:onSelected="@{null}"
-                    app:values="@{@stringArray/routing_service_values}">
+                    app:layout_constraintTop_toBottomOf="@+id/tollRoadAvoidedSwitch">
 
                     <AutoCompleteTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:disableInput="@{true}"
+                        app:values="@{@stringArray/routing_service_values}"
+                        app:selected="@={viewModel.routingService}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -134,17 +136,17 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/transport_mode"
-                    app:disableInput="@{true}"
-                    app:onSelected="@{null}"
-                    app:values="@{@stringArray/transport_mode_values}"
-                    app:indices="@{@intArray/transport_mode_indices}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/routingServiceDropDown">
 
                     <AutoCompleteTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:disableInput="@{true}"
+                        app:values="@{@stringArray/transport_mode_values}"
+                        app:indices="@{@intArray/transport_mode_indices}"
+                        app:selected="@={viewModel.transportMode}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -157,16 +159,16 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/hazardous_material_class"
-                    app:disableInput="@{true}"
-                    app:onSelected="@{null}"
-                    app:values="@{@stringArray/hazardous_material_class_values}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/transportModeDropDown">
 
                     <AutoCompleteTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:disableInput="@{true}"
+                        app:values="@{@stringArray/hazardous_material_class_values}"
+                        app:selected="@={viewModel.hazardousMaterialClass}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -179,16 +181,16 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/routing_type"
-                    app:disableInput="@{true}"
-                    app:onSelected="@{null}"
-                    app:values="@{@stringArray/routing_type_values}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/hazardousMaterialClassDropDown">
 
                     <AutoCompleteTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:disableInput="@{true}"
+                        app:values="@{@stringArray/routing_type_values}"
+                        app:selected="@={viewModel.routingType}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -201,16 +203,16 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/tunnel_restrictions"
-                    app:disableInput="@{true}"
-                    app:onSelected="@{null}"
-                    app:values="@{@stringArray/tunnel_restriction_values}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/routingTypeDropDown">
 
                     <AutoCompleteTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:disableInput="@{true}"
+                        app:values="@{@stringArray/tunnel_restriction_values}"
+                        app:selected="@={viewModel.tunnelRestriction}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -223,16 +225,16 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/vehicle_fuel_type"
-                    app:disableInput="@{true}"
-                    app:onSelected="@{null}"
-                    app:values="@{@stringArray/vehicle_fuel_type_values}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tunnelRestrictionDropDown">
 
                     <AutoCompleteTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:disableInput="@{true}"
+                        app:values="@{@stringArray/vehicle_fuel_type_values}"
+                        app:selected="@={viewModel.vehicleFuelType}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -245,16 +247,17 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:hint="@string/dimensional_restrictions"
-                    app:disableInput="@{true}"
                     app:layout_constraintEnd_toStartOf="@+id/addRestrictionButton"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/vehicleFuelTypeDropDown"
-                    app:onSelected="@{viewModel::onDimensionalRestrictionsSelected}"
-                    app:values="@{@stringArray/dimensional_restriction_values}">
+                    app:layout_constraintTop_toBottomOf="@+id/vehicleFuelTypeDropDown">
 
                     <AutoCompleteTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:disableInput="@{true}"
+                        app:adapter="@{true}"
+                        app:adapterSource="@{viewModel.restrictionDropDownAdapter}"
+                        app:selected="@={viewModel.restriction}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -265,12 +268,14 @@
                     android:layout_marginEnd="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="16dp"
+                    android:onClick="@{() -> viewModel.onAddRestrictionButtonClicked()}"
+                    app:enable="@{viewModel.addRestrictionButtonEnabled}"
                     app:layout_constraintBottom_toBottomOf="@+id/restrictionsDropDown"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/restrictionsDropDown"
                     app:srcCompat="@drawable/ic_add_circle" />
 
-                <com.sygic.maps.uikit.views.recyclerview.SimpleEditRecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/restrictionsRecyclerView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -279,6 +284,8 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginEnd="16dp"
                     android:paddingStart="12dp"
+                    app:adapter="@{viewModel.restrictionsAdapter}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/restrictionsDropDown"

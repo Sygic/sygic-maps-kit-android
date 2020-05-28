@@ -1,12 +1,34 @@
+/*
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
+ *
+ * This project is licensed under the MIT License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.sygic.maps.uikit.views.common.extensions
 
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.TextView
-import com.google.android.material.textfield.TextInputLayout
 import com.sygic.maps.uikit.views.common.ArrayIndicesAdapter
 import com.sygic.maps.uikit.views.common.utils.TextHolder
 
@@ -14,13 +36,10 @@ fun TextView.text(textHolder: TextHolder) {
     text = textHolder.getText(context)
 }
 
-val TextInputLayout.dropDownTextView: AutoCompleteTextView
-    get() = (getChildAt(0) as FrameLayout).getChildAt(0) as AutoCompleteTextView
-
 var AutoCompleteTextView.selectedPosition: Int
-    get() = tag as Int
+    get() = (adapter as ArrayIndicesAdapter<*>).selected
     set(value) {
-        tag = value
+        (adapter as ArrayIndicesAdapter<*>).selected = value
         setText(selectedValue, false)
     }
 
@@ -32,18 +51,6 @@ var AutoCompleteTextView.selectedIndex: Int
     set(value) {
         selectedPosition = (adapter as ArrayIndicesAdapter<*>).findPositionFromIndex(value)
     }
-
-fun AutoCompleteTextView.findIndexForName(name: String): Int {
-    for (i in 0 until adapter.count) {
-        val item = adapter.getItem(i)
-        if (item == name) {
-            return i
-        }
-    }
-    return -1
-}
-
-fun AutoCompleteTextView.getItem(position: Int) = adapter.getItem(position).toString()
 
 inline fun EditText.doAfterTextChanged(crossinline action: (Editable?) -> Unit) {
     addTextChangedListener(object : TextWatcher {
