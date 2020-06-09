@@ -40,7 +40,7 @@ import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
-import com.sygic.samples.demo.ComputedRoute
+import com.sygic.samples.demo.RouteComputeData
 import com.sygic.samples.demo.RoutingOptionsManager
 import com.sygic.samples.utils.toGeoCoordinatesList
 import com.sygic.samples.utils.toPlaceDetailComponent
@@ -52,7 +52,6 @@ import com.sygic.sdk.position.GeoBoundingBox
 import com.sygic.sdk.position.GeoCoordinates
 import com.sygic.sdk.route.RoutingOptions
 import com.sygic.sdk.search.GeocodingResult
-import javax.inject.Inject
 
 private const val CAMERA_RECTANGLE_MARGIN = 80
 
@@ -69,7 +68,7 @@ class ComplexDemoActivityViewModel(
 
     val restoreDefaultStateObservable: LiveData<Any> = SingleLiveEvent()
     val showRouteOptionsObservable: LiveData<Any> = SingleLiveEvent()
-    val computePrimaryRouteObservable: LiveData<ComputedRoute> = SingleLiveEvent()
+    val computePrimaryRouteObservable: LiveData<RouteComputeData> = SingleLiveEvent()
     val routeComputeProgressVisibilityObservable: LiveData<Int> = SingleLiveEvent()
     val showPlaceDetailObservable: LiveData<Pair<PlaceDetailComponent, PlaceDetailBottomDialogFragment.Listener>> = SingleLiveEvent()
     val hidePlaceDetailObservable: LiveData<Any> = SingleLiveEvent()
@@ -92,11 +91,7 @@ class ComplexDemoActivityViewModel(
 
         override fun onNavigationButtonClick() {
             hidePlaceDetailObservable.asSingleEvent().call()
-            computePrimaryRouteObservable.asSingleEvent().value =
-                if (targetPosition == null) null else ComputedRoute(
-                    targetPosition!!,
-                    routingOptions
-                )
+            computePrimaryRouteObservable.asSingleEvent().value = RouteComputeData(targetPosition!!, routingOptions)
             routeComputeProgressVisibilityObservable.asSingleEvent().value = View.VISIBLE
         }
 
@@ -153,12 +148,12 @@ class ComplexDemoActivityViewModel(
         }
     }
 
-    fun onBackStackChanged(displayed: Boolean) {
-        if (routingOptionsDisplayed && !displayed) {
+    fun onBackStackChanged(isRoutingOptionsFragmentDisplayed: Boolean) {
+        if (routingOptionsDisplayed && !isRoutingOptionsFragmentDisplayed) {
             routingOptionsDisplayed = false
             showLastPlaceDetail()
         }
-        routingOptionsDisplayed = displayed
+        routingOptionsDisplayed = isRoutingOptionsFragmentDisplayed
     }
 
     private fun showLastPlaceDetail() {

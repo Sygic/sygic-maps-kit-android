@@ -28,7 +28,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.sygic.maps.uikit.views.common.extensions.get
 import com.sygic.maps.uikit.views.common.extensions.set
-import com.sygic.samples.utils.toRestriction
 import com.sygic.sdk.route.RoutingOptions
 import javax.inject.Inject
 
@@ -81,10 +80,10 @@ class PersistentRoutingOptionsManager(private val preferences: SharedPreferences
             preferences[VEHICLE_FUEL_TYPE_KEY] = value
         }
 
-    override var dimensionalRestrictions: Set<String>
-        get() = preferences.getStringSet(DIMENSIONAL_RESTRICTIONS_KEY, setOf())!!
+    override var dimensionalRestrictions: Set<Pair<Int, Int>>
+        get() = preferences.getStringSet(DIMENSIONAL_RESTRICTIONS_KEY, setOf())!!.map { it.toRestriction() }.toSet()
         set(value) {
-            preferences.edit().putStringSet(DIMENSIONAL_RESTRICTIONS_KEY, value).apply()
+            preferences.edit().putStringSet(DIMENSIONAL_RESTRICTIONS_KEY, value.map { it.toPersistableString() }.toSet()).apply()
         }
 
     @Inject
@@ -105,13 +104,15 @@ class PersistentRoutingOptionsManager(private val preferences: SharedPreferences
         tunnelRestriction = this@PersistentRoutingOptionsManager.tunnelRestriction
         vehicleFuelType = this@PersistentRoutingOptionsManager.vehicleFuelType
         dimensionalRestrictions.forEach {
-            it.toRestriction().apply {
-                addDimensionalRestriction(first, second)
-            }
+            addDimensionalRestriction(it.first, it.second)
         }
     }
 
     override fun resetToDefaults() = preferences.edit().clear().apply()
+
+    private fun String.toRestriction() = split(":").let { it[0].toInt() to it[1].toInt() }
+
+    private fun Pair<Int, Int>.toPersistableString() = "$first:$second"
 
     companion object {
         private const val PREFERENCES_NAME = "routing_options_prefs"

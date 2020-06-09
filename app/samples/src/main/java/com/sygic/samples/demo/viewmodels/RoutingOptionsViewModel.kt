@@ -34,7 +34,6 @@ import com.sygic.maps.uikit.views.recyclerview.ItemView
 import com.sygic.maps.uikit.views.recyclerview.SimpleEditAdapter
 import com.sygic.samples.R
 import com.sygic.samples.demo.RoutingOptionsManager
-import com.sygic.samples.utils.toRestriction
 
 class RoutingOptionsViewModel(
     application: Application,
@@ -111,19 +110,16 @@ class RoutingOptionsViewModel(
         routingOptionsManager.routingType = routingType.value!!
         routingOptionsManager.tunnelRestriction = tunnelRestriction.value!!
         routingOptionsManager.vehicleFuelType = vehicleFuelType.value!!
-        routingOptionsManager.dimensionalRestrictions = restrictionsAdapter.items.toStringSet()
+        routingOptionsManager.dimensionalRestrictions = restrictionsAdapter.items.toPairSet()
     }
 
-    private fun Set<String>.toItemViews(): List<ItemView> = map { value ->
-        val restriction = value.toRestriction()
-        val name = restrictionDropDownAdapter.value!![restriction.first]
-        ItemView(name, restriction.second)
+    private fun Set<Pair<Int, Int>>.toItemViews(): List<ItemView> = map { value ->
+        val name = restrictionDropDownAdapter.value!![value.first]
+        ItemView(name, value.second)
     }
 
-    private fun List<ItemView>.toStringSet(): Set<String> = map { itemView ->
+    private fun List<ItemView>.toPairSet(): Set<Pair<Int, Int>> = map { itemView ->
         val index = restrictionDropDownAdapter.value!!.indexOfFirst { it == itemView.name }
-        (index to itemView.value).toPersistableString()
+        index to itemView.value
     }.toSet()
-
-    private fun Pair<Int, Int>.toPersistableString() = "$first:$second"
 }

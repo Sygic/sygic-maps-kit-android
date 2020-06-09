@@ -78,7 +78,8 @@ class RoutingOptionsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> fragmentManager?.popBackStack()
+            else -> return false
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 }

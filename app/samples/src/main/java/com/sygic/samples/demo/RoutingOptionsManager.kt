@@ -11,7 +11,7 @@ interface RoutingOptionsManager {
     var routingType: Int
     var tunnelRestriction: Int
     var vehicleFuelType: Int
-    var dimensionalRestrictions: Set<String>
+    var dimensionalRestrictions: Set<Pair<Int, Int>>
 
     fun getRoutingOptions(): RoutingOptions
     fun resetToDefaults()
