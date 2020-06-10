@@ -33,7 +33,7 @@ import com.sygic.maps.uikit.views.common.extensions.asMutable
 import com.sygic.maps.uikit.views.recyclerview.ItemView
 import com.sygic.maps.uikit.views.recyclerview.SimpleEditAdapter
 import com.sygic.samples.R
-import com.sygic.samples.demo.RoutingOptionsManager
+import com.sygic.maps.module.common.routingoptions.RoutingOptionsManager
 
 class RoutingOptionsViewModel(
     application: Application,

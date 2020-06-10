@@ -41,7 +41,7 @@ import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.placedetail.PlaceDetailBottomDialogFragment
 import com.sygic.maps.uikit.views.placedetail.component.PlaceDetailComponent
 import com.sygic.samples.demo.RouteComputeData
-import com.sygic.samples.demo.RoutingOptionsManager
+import com.sygic.maps.module.common.routingoptions.RoutingOptionsManager
 import com.sygic.samples.utils.toGeoCoordinatesList
 import com.sygic.samples.utils.toPlaceDetailComponent
 import com.sygic.sdk.map.Camera

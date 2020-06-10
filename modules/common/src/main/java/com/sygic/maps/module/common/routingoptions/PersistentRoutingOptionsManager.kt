@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.samples.demo
+package com.sygic.maps.module.common.routingoptions
 
 import android.content.Context
 import android.content.SharedPreferences

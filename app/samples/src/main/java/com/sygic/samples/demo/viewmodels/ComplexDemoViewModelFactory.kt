@@ -2,7 +2,7 @@ package com.sygic.samples.demo.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.sygic.samples.demo.RoutingOptionsManager
+import com.sygic.maps.module.common.routingoptions.RoutingOptionsManager
 import javax.inject.Inject
 
 class ComplexDemoViewModelFactory @Inject constructor(

@@ -3,6 +3,7 @@ package com.sygic.samples.demo
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.sygic.maps.module.common.routingoptions.RoutingOptionsManager
 import com.sygic.samples.demo.viewmodels.RoutingOptionsViewModel
 import javax.inject.Inject
 
