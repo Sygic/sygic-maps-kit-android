@@ -145,7 +145,7 @@ class SearchFragment : Fragment(), SearchResultCallbackWrapper {
         resolveAttributes(attrs)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         injectionManager.inject(this)
         super.onAttach(context)
 

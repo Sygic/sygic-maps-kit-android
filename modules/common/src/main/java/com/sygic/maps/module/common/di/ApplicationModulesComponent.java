@@ -35,11 +35,13 @@ import com.sygic.maps.module.common.di.module.PlacesManagerClientModule;
 import com.sygic.maps.module.common.di.module.PositionManagerClientModule;
 import com.sygic.maps.module.common.di.module.ReverseGeocoderManagerClientModule;
 import com.sygic.maps.module.common.di.module.RouteDemonstrationManagerClientModule;
+import com.sygic.maps.module.common.di.module.RoutingOptionsModule;
 import com.sygic.maps.module.common.di.module.SdkInitializationManagerModule;
 import com.sygic.maps.module.common.di.module.SearchManagerClientModule;
 import com.sygic.maps.module.common.di.module.ServicesManagerModule;
 import com.sygic.maps.module.common.di.module.SoundManagerModule;
 import com.sygic.maps.module.common.di.module.VoiceManagerClientModule;
+import com.sygic.maps.module.common.routingoptions.RoutingOptionsManager;
 import com.sygic.maps.uikit.viewmodels.common.datetime.DateTimeManager;
 import com.sygic.maps.uikit.viewmodels.common.geocoder.ReverseGeocoderManagerClient;
 import com.sygic.maps.uikit.viewmodels.common.initialization.sdk.SdkInitializationManager;
@@ -70,6 +72,7 @@ import dagger.Component;
                 PositionManagerClientModule.class,
                 ReverseGeocoderManagerClientModule.class,
                 RouteDemonstrationManagerClientModule.class,
+                RoutingOptionsModule.class,
                 SdkInitializationManagerModule.class,
                 SearchManagerClientModule.class,
                 ServicesManagerModule.class,
@@ -87,6 +90,7 @@ public interface ApplicationModulesComponent {
     PositionManagerClient getPositionManagerClient();
     ReverseGeocoderManagerClient getReverseGeocoderManagerClient();
     RouteDemonstrationManagerClient getRouteDemonstrationManagerClient();
+    RoutingOptionsManager getRoutingOptionsManager();
     SdkInitializationManager getSdkInitializationManager();
     SearchManagerClient getSearchManagerClient();
     ServicesManager getServicesManager();

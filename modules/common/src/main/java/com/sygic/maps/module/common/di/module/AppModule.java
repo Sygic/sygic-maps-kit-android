@@ -40,6 +40,10 @@ public class AppModule {
         app = fragment.requireActivity().getApplication();
     }
 
+    public AppModule(final Application application) {
+        app = application;
+    }
+
     @Singleton
     @Provides
     Application provideApplication() {

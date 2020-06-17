@@ -289,7 +289,7 @@ class BrowseMapFragment : MapFragmentWrapper<BrowseMapFragment, BrowseMapCompone
                         listener: PlaceDetailBottomDialogFragment.Listener = fragmentViewModel) {
         PlaceDetailBottomDialogFragment.newInstance(component).apply {
             this.listener = listener
-        }.showNow(fragmentManager, PlaceDetailBottomDialogFragment.TAG)
+        }.show(requireFragmentManager(), PlaceDetailBottomDialogFragment.TAG)
     }
 
     fun hidePlaceDetail() {

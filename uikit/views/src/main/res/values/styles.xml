@@ -46,6 +46,13 @@
         <item name="android:iconTint" tools:targetApi="o">@color/white</item>
     </style>
 
+    <style name="SygicExtendedFloatingActionButtonOutlineStyle">
+        <item name="android:background">@drawable/bg_get_routing_options_button_rounded</item>
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textSize">@dimen/fontSizeLarge</item>
+        <item name="android:iconTint" tools:targetApi="o">?attr/colorAccent</item>
+    </style>
+
     <style name="SygicInfobarStyle">
         <item name="android:background">@drawable/bg_infobar_rounded</item>
         <item name="android:layout_marginBottom">@dimen/infobarLayoutMargin</item>

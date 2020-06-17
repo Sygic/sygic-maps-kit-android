@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -22,25 +22,37 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.delegate
+package com.sygic.maps.uikit.views.common
 
-import android.app.Application
-import androidx.fragment.app.Fragment
-import com.sygic.maps.module.common.di.ApplicationModulesComponent
-import com.sygic.maps.module.common.di.DaggerApplicationModulesComponent
-import com.sygic.maps.module.common.di.module.AppModule
+import android.content.Context
+import android.widget.ArrayAdapter
+import androidx.annotation.LayoutRes
 
-private var applicationModulesComponent: ApplicationModulesComponent? = null
+class ArrayIndicesAdapter<T>(
+    context: Context,
+    @LayoutRes resource: Int,
+    objects: List<T> = mutableListOf(),
+    private val indices: IntArray? = null
+) : ArrayAdapter<T>(context, resource, objects) {
+    var selected = 0
 
-object ApplicationComponentDelegate {
-    fun getComponent(fragment: Fragment) = getComponent(AppModule(fragment))
+    fun getIndexForPosition(position: Int) = indices?.get(position) ?: position
 
-    fun getComponent(app: Application) = getComponent(AppModule(app))
+    fun findPositionFromIndex(index: Int): Int {
+        if (indices == null) {
+            return index
+        }
+        indices.forEachIndexed { i, value ->
+            if (value == index) {
+                return i
+            }
+        }
+        return -1
+    }
 
-    private fun getComponent(appModule: AppModule): ApplicationModulesComponent = applicationModulesComponent?.let { it }
-        ?: DaggerApplicationModulesComponent
-            .builder()
-            .appModule(appModule)
-            .build()
-            .also { applicationModulesComponent = it }
+    init {
+        if (indices != null && objects.size != indices.size) {
+            throw IllegalArgumentException("Objects and indices must have same size!")
+        }
+    }
 }

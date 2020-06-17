@@ -287,6 +287,8 @@ class BrowseMapFragmentViewModel internal constructor(
         openFragmentObservable.asSingleEvent().value = FragmentComponent(it.fragment, it.getFragmentTag())
     }
 
+    override fun onRouteOptionsButtonClick() {}
+
     override fun onNavigationButtonClick() {
         placeDetailVisibleObservable.asSingleEvent().value = false
         moduleConnectionProvidersMap[ProviderType.NAVIGATION]?.let {

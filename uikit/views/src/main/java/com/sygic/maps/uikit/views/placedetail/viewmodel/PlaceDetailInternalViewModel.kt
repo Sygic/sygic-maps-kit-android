@@ -63,6 +63,10 @@ internal class PlaceDetailInternalViewModel(
         contentContainerVisible.asMutable().value = !contentContainerVisible.value!!
     }
 
+    fun onRoutingOptionsButtonClick() {
+        listener?.onRouteOptionsButtonClick()
+    }
+
     fun onNavigationButtonClick() {
         listener?.onNavigationButtonClick()
     }

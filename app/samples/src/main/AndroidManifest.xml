@@ -31,6 +31,7 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
+        android:name=".app.App"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -51,7 +52,8 @@
         <activity
             android:name=".demo.ComplexDemoActivity"
             android:label="@string/complex_demo"
-            android:theme="@style/AppTheme.NoExitAnimation.NoActionBar" />
+            android:theme="@style/AppTheme.NoExitAnimation.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".browsemap.BrowseMapDefaultActivity"
             android:label="@string/browse_map_default"

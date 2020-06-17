@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -22,25 +22,21 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.delegate
+package com.sygic.maps.module.common.routingoptions
 
-import android.app.Application
-import androidx.fragment.app.Fragment
-import com.sygic.maps.module.common.di.ApplicationModulesComponent
-import com.sygic.maps.module.common.di.DaggerApplicationModulesComponent
-import com.sygic.maps.module.common.di.module.AppModule
+import com.sygic.sdk.route.RoutingOptions
 
-private var applicationModulesComponent: ApplicationModulesComponent? = null
+interface RoutingOptionsManager {
+    var isHighwayAvoided: Boolean
+    var isTollRoadAvoided: Boolean
+    var routingService: Int
+    var transportMode: Int
+    var hazardousMaterialClass: Int
+    var routingType: Int
+    var tunnelRestriction: Int
+    var vehicleFuelType: Int
+    var dimensionalRestrictions: Set<Pair<Int, Int>>
 
-object ApplicationComponentDelegate {
-    fun getComponent(fragment: Fragment) = getComponent(AppModule(fragment))
-
-    fun getComponent(app: Application) = getComponent(AppModule(app))
-
-    private fun getComponent(appModule: AppModule): ApplicationModulesComponent = applicationModulesComponent?.let { it }
-        ?: DaggerApplicationModulesComponent
-            .builder()
-            .appModule(appModule)
-            .build()
-            .also { applicationModulesComponent = it }
+    fun getRoutingOptions(): RoutingOptions
+    fun resetToDefaults()
 }

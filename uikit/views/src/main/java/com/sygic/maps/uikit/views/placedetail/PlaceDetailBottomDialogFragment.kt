@@ -107,6 +107,7 @@ open class PlaceDetailBottomDialogFragment : BaseBottomDialogFragment() {
     }
 
     interface Listener : DialogFragmentListener {
+        fun onRouteOptionsButtonClick()
         fun onNavigationButtonClick()
     }
 

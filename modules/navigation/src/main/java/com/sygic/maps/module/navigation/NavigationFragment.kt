@@ -344,7 +344,7 @@ class NavigationFragment : MapFragmentWrapper<NavigationFragment, NavigationComp
     private fun showActionMenu(actionMenuData: ActionMenuData) {
         ActionMenuBottomDialogFragment.newInstance(actionMenuData).apply {
             itemClickListener = fragmentViewModel.actionMenuItemClickListener
-        }.show(fragmentManager, ActionMenuBottomDialogFragment.TAG)
+        }.show(requireFragmentManager(), ActionMenuBottomDialogFragment.TAG)
     }
 
     private fun setActionMenuItemClickListener(listener: ActionMenuItemClickListener) {

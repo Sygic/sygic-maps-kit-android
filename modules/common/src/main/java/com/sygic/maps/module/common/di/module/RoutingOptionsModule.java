@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -22,25 +22,35 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.module.common.delegate
+package com.sygic.maps.module.common.di.module;
 
-import android.app.Application
-import androidx.fragment.app.Fragment
-import com.sygic.maps.module.common.di.ApplicationModulesComponent
-import com.sygic.maps.module.common.di.DaggerApplicationModulesComponent
-import com.sygic.maps.module.common.di.module.AppModule
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
-private var applicationModulesComponent: ApplicationModulesComponent? = null
+import com.sygic.maps.module.common.routingoptions.PersistentRoutingOptionsManager;
+import com.sygic.maps.module.common.routingoptions.RoutingOptionsManager;
 
-object ApplicationComponentDelegate {
-    fun getComponent(fragment: Fragment) = getComponent(AppModule(fragment))
+import javax.inject.Named;
+import javax.inject.Singleton;
 
-    fun getComponent(app: Application) = getComponent(AppModule(app))
+import dagger.Module;
+import dagger.Provides;
 
-    private fun getComponent(appModule: AppModule): ApplicationModulesComponent = applicationModulesComponent?.let { it }
-        ?: DaggerApplicationModulesComponent
-            .builder()
-            .appModule(appModule)
-            .build()
-            .also { applicationModulesComponent = it }
+@Module
+public class RoutingOptionsModule {
+    private static final String ROUTING_OPTIONS_PREFERENCES = "routing_options_preferences";
+
+    @Singleton
+    @Provides
+    @Named(ROUTING_OPTIONS_PREFERENCES)
+    public SharedPreferences provideRoutingOptionsPreferences(Application app) {
+        return app.getSharedPreferences(ROUTING_OPTIONS_PREFERENCES, Context.MODE_PRIVATE);
+    }
+
+    @Singleton
+    @Provides
+    public RoutingOptionsManager provideRoutingOptionsManager(@Named(ROUTING_OPTIONS_PREFERENCES) SharedPreferences preferences) {
+        return new PersistentRoutingOptionsManager(preferences);
+    }
 }
