@@ -28,6 +28,7 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sygic.samples.R
+import com.sygic.samples.base.CustomLocation
 import com.sygic.samples.base.map.BaseMapTest
 import com.sygic.samples.browsemap.robot.browseMap
 import com.sygic.samples.utils.MapMarkers
@@ -53,7 +54,7 @@ class BrowseMapMarkersEspressoTest : BaseMapTest(BrowseMapMarkersActivity::class
             isPlaceDetailHidden()
             clickOnMapToLocation(GeneralLocation.CENTER_LEFT)
             isPlaceDetailHidden()
-            clickOnMapToLocation(GeneralLocation.BOTTOM_CENTER)
+            clickOnMapToLocation(CustomLocation.BOTTOM_CENTER_OFFSET)
             isPlaceDetailHidden()
 
             clickOnMapMarker(MapMarkers.sampleMarkerOne)
