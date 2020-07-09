@@ -81,6 +81,8 @@ buildscript {
     ext.isUsingDevVersion = {
         Properties properties = new Properties()
         def localProperties = file('local.properties')
+        if (!localProperties.exists())
+            return false
         properties.load(localProperties.newDataInputStream())
 
         return properties.getProperty('sygic.dev', 'false').toBoolean()
