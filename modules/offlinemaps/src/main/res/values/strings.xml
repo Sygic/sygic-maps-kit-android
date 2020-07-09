@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_continent_title">Select continent</string>
+    <string name="installed_maps_title">Installed maps</string>
+    <string name="installed_maps_subtitle">Installed: %1$d</string>
+    <string name="download_maps">Download more maps</string>
+    <string name="no_maps_installed">No maps installed</string>
+    <string name="current_detected_country">Your detected country is %1$s</string>
+    <string name="detect_current_country">Detect current country</string>
+    <string name="check_for_updates">Check for updates</string>
+    <string name="download_button_content_description">Download map</string>
+    <string name="map_contains_regions_size">%1$s • Contains %2$d regions • %3$d MB</string>
+    <string name="continent_and_map_size">%1$s • %2$d MB</string>
+    <string name="map_size_only">%1$d MB</string>
+    <string name="download_maps_title">Download maps</string>
+    <string name="download_maps_subtitle">Available: %1$d</string>
+    <string name="download_regions_title">Download regions</string>
+    <string name="dialog_optional_iso">Optional ISO</string>
+    <string name="dialog_detect_country_title">Detect country</string>
+    <string name="dialog_detect_country_message">Input ISO as optional argument</string>
+    <string name="dialog_detect_country_positive_button">Detect</string>
+    <string name="load_map">Load</string>
+    <string name="unload_map">Unload</string>
+    <string name="contains_countries">%1$d countries</string>
+    <string name="available_updates">Updates found for %1$d maps</string>
+    <string name="no_available_updates">No available updates</string>
+</resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2019 Sygic a.s. All rights reserved.
+  ~ Copyright (c) 2020 Sygic a.s. All rights reserved.
   ~
   ~ This project is licensed under the MIT License.
   ~
@@ -22,22 +22,17 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   ~ SOFTWARE.
   -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-<resources>
-    <color name="colorPrimary">@color/colorAccent</color>
-    <color name="colorPrimaryDark">@color/science_blue</color>
-    <color name="colorAccent">@color/blue_ribbon</color>
-    <color name="textColorPrimary">@color/mine_shaft</color>
-    <color name="textColorSecondary">@color/boulder</color>
-    <color name="offlineMapsTextColorPrimary">@color/white</color>
-    <color name="offlineMapsTextColorSecondary">@color/gray</color>
-    <color name="iconBackground">@color/shuttle_gray</color>
-    <color name="navigationBackgroundColor">@color/white</color>
-    <color name="navigationTextColorPrimary">@color/black</color>
-    <color name="navigationTextColorSecondary">@color/ebony_clay</color>
-    <color name="speedProgressBackgroundColor">@color/gray_chateau</color>
-    <color name="speedProgressForegroundStartColor">@color/limeade</color>
-    <color name="speedProgressForegroundEndColor">@color/brick_red</color>
-    <color name="placeDetailItemBackgroundColor">@color/mercury</color>
-    <color name="placeDetailItemDisabledTintColor">@color/gray</color>
-</resources>
+    <EditText
+        android:id="@+id/dialog_input_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="19dp"
+        android:hint="@string/dialog_optional_iso"
+        android:inputType="text"
+        android:importantForAutofill="no" />
+
+</LinearLayout>
