@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -22,47 +22,34 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.common.livedata
+package com.sygic.maps.offlinemaps.loader
 
-import androidx.annotation.MainThread
+import com.sygic.maps.offlinemaps.adapter.Copyable
+import com.sygic.sdk.map.MapLoader
 
-/**
- * A lifecycle-aware observable that sends only new updates after subscription, used for events like
- * navigation and Snackbar messages.
- *
- *
- * This avoids a common problem with events: on configuration change (like rotation) an update
- * can be emitted if the observer is active. This LiveData only calls the observable if there's an
- * explicit call to setValue() or call().
- *
- *
- * Note that only one observer is going to be notified of changes.
- */
-@Suppress("unused")
-open class SingleLiveEvent<T> : SingleLiveData<T>() {
+abstract class MapHolder(
+    val iso: String,
+    var status: MapLoader.MapStatus,
+    var progress: Int,
+    var updateAvailable: Boolean = false
+) : Copyable {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-    public override fun postValue(value: T) {
-        super.postValue(value)
+        other as MapHolder
+
+        if (iso != other.iso) return false
+        if (status != other.status) return false
+        if (progress != other.progress) return false
+
+        return true
     }
 
-    @MainThread
-    public override fun setValue(t: T?) {
-        super.setValue(t)
-    }
-
-    /**
-     * Used for cases where T is Void, to make calls cleaner.
-     */
-    @MainThread
-    fun call() {
-        value = null
-    }
-
-    /**
-     * Emits current value to observers.
-     */
-    @MainThread
-    fun emit() {
-        value = value
+    override fun hashCode(): Int {
+        var result = iso.hashCode()
+        result = 31 * result + status.hashCode()
+        result = 31 * result + progress
+        return result
     }
 }

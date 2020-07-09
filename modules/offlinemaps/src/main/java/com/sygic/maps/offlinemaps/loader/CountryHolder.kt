@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -22,47 +22,32 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.uikit.views.common.livedata
+package com.sygic.maps.offlinemaps.loader
 
-import androidx.annotation.MainThread
+import com.sygic.sdk.map.MapLoader
 
-/**
- * A lifecycle-aware observable that sends only new updates after subscription, used for events like
- * navigation and Snackbar messages.
- *
- *
- * This avoids a common problem with events: on configuration change (like rotation) an update
- * can be emitted if the observer is active. This LiveData only calls the observable if there's an
- * explicit call to setValue() or call().
- *
- *
- * Note that only one observer is going to be notified of changes.
- */
-@Suppress("unused")
-open class SingleLiveEvent<T> : SingleLiveData<T>() {
+class CountryHolder(val country: Country, status: MapLoader.MapStatus) : MapHolder(country.iso, status, 0) {
+    override fun copy() = CountryHolder(country.copy(), status)
 
-    public override fun postValue(value: T) {
-        super.postValue(value)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        if (!super.equals(other)) return false
+
+        other as CountryHolder
+
+        if (country != other.country) return false
+
+        return true
     }
 
-    @MainThread
-    public override fun setValue(t: T?) {
-        super.setValue(t)
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + country.hashCode()
+        return result
     }
 
-    /**
-     * Used for cases where T is Void, to make calls cleaner.
-     */
-    @MainThread
-    fun call() {
-        value = null
-    }
-
-    /**
-     * Emits current value to observers.
-     */
-    @MainThread
-    fun emit() {
-        value = value
+    override fun toString(): String {
+        return "CountryHolder(country=$country)"
     }
 }
