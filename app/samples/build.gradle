@@ -123,6 +123,7 @@ dependencies {
     implementation project(':module-browsemap')
     implementation project(':module-navigation')
     implementation project(':module-search')
+    implementation project(':offline-maps')
 
     // Dagger
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
