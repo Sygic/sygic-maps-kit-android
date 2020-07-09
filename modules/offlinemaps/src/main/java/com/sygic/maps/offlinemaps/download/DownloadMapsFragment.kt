@@ -50,6 +50,7 @@ class DownloadMapsFragment : NavigationFragment<DownloadMapsViewModel>() {
     ): View? {
         val binding = FragmentDownloadMapsBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
+        binding.adapter = CountryListAdapter()
         binding.lifecycleOwner = this
         return binding.root
     }

@@ -82,9 +82,13 @@ abstract class MapListAdapter<T : MapHolder, VH : MapEntryViewHolder<T>>(diffCal
         when {
             payloads.isEmpty() -> holder.bind(item)
             else -> {
-                when (val payload = payloads[0]) {
-                    is Int -> holder.updateProgress(payload)
-                    is MapLoader.MapStatus -> holder.updateFromStatus(payload, item.progress)
+                payloads.forEach { payload ->
+                    when (payload) {
+                        is Int -> holder.updateProgress(payload)
+                        is MapLoader.MapStatus -> {
+                            holder.updateFromStatus(payload, item.progress)
+                        }
+                    }
                 }
             }
         }
