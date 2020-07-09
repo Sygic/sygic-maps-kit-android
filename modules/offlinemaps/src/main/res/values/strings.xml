@@ -9,6 +9,7 @@
     <string name="detect_current_country">Detect current country</string>
     <string name="check_for_updates">Check for updates</string>
     <string name="download_button_content_description">Download map</string>
+    <string name="update_button_content_description">Update map</string>
     <string name="map_contains_regions_size">%1$s • Contains %2$d regions • %3$d MB</string>
     <string name="continent_and_map_size">%1$s • %2$d MB</string>
     <string name="map_size_only">%1$d MB</string>

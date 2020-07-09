@@ -52,7 +52,7 @@ abstract class MapEntryViewHolder<T : Any>(itemView: View, private val loadButto
     fun setUpdateButtonClickListener(callback: (View) -> Unit) = updateActionButton.setOnClickListener(callback)
 
     fun updateUpdateable(updateAvailable: Boolean, status: MapLoader.MapStatus) {
-        if (updateAvailable && status == MapLoader.MapStatus.Installed || status == MapLoader.MapStatus.Loaded) {
+        if (updateAvailable && (status == MapLoader.MapStatus.Installed || status == MapLoader.MapStatus.Loaded)) {
             updateActionButton.visibility = View.VISIBLE
         } else {
             updateActionButton.visibility = View.GONE

@@ -90,10 +90,10 @@
             android:layout_marginEnd="16dp"
             android:layout_gravity="center_vertical"
             android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/download_button_content_description"
+            android:contentDescription="@string/update_button_content_description"
             android:visibility="gone"
-            tools:visibility="visible"
-            tools:srcCompat="@drawable/ic_update" />
+            app:srcCompat="@drawable/ic_update"
+            tools:visibility="visible" />
 
         <FrameLayout
             android:id="@+id/actionLayout"
