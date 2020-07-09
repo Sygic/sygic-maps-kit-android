@@ -25,11 +25,13 @@
 package com.sygic.samples.app.viewmodels
 
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.material.navigation.NavigationView
+import com.sygic.samples.offlinemaps.OfflineMapsActivity
 import com.sygic.maps.uikit.views.common.extensions.asSingleEvent
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.samples.BuildConfig
@@ -51,6 +53,7 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
     val samplesListFragmentsObservable: LiveData<BaseSamplesListFragment> = SingleLiveEvent()
     val openLinkInBrowserObservable: LiveData<String> = SingleLiveEvent()
     val openDialogFragmentObservable: LiveData<Class<out AppCompatDialogFragment>> = SingleLiveEvent()
+    val startActivityObservable: LiveData<Class<out AppCompatActivity>> = SingleLiveEvent()
 
     init {
         drawerItemCheckObservable.asSingleEvent().value = R.id.nav_demos
@@ -60,6 +63,11 @@ class SamplesActivityViewModel : ViewModel(), DefaultLifecycleObserver, Navigati
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.nav_manage_maps -> {
+                startActivityObservable.asSingleEvent().value = OfflineMapsActivity::class.java
+                drawerOpenedObservable.asSingleEvent().value = false
+                return false
+            }
             R.id.nav_demos -> samplesListFragmentsObservable.asSingleEvent().value = DemoSampleListFragment()
             R.id.nav_browse_map_module -> samplesListFragmentsObservable.asSingleEvent().value = BrowseMapSampleListFragment()
             R.id.nav_search_module -> samplesListFragmentsObservable.asSingleEvent().value = SearchSampleListFragment()

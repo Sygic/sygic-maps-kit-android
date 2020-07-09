@@ -24,12 +24,13 @@
 
 package com.sygic.samples.di
 
-import com.sygic.samples.demo.RoutingOptionsFragment
+import com.sygic.samples.offlinemaps.OfflineMapsActivity
+
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class RoutingOptionsFragmentModule {
+abstract class OfflineMapsActivityModule {
     @ContributesAndroidInjector
-    abstract fun contributeRoutingOptionsFragmentInjector(): RoutingOptionsFragment
+    abstract fun contributeOfflineMapsActivityInjector(): OfflineMapsActivity
 }
