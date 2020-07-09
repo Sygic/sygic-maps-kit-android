@@ -33,6 +33,7 @@ import com.sygic.maps.uikit.viewmodels.common.initialization.InitializationCallb
 import com.sygic.maps.uikit.viewmodels.common.navigation.preview.RouteDemonstrationManagerClient
 import com.sygic.maps.uikit.views.common.extensions.observeOnce
 import com.sygic.maps.uikit.views.common.utils.SingletonHolder
+import com.sygic.sdk.position.GeoCourse
 import com.sygic.sdk.position.GeoPosition
 import com.sygic.sdk.position.PositionManager
 import com.sygic.sdk.position.PositionManagerProvider
@@ -51,6 +52,14 @@ class PositionManagerClientImpl private constructor(
         fun getInstance(managerClient: RouteDemonstrationManagerClient) = getInstance { PositionManagerClientImpl(managerClient) }
     }
 
+    private fun positionChangedListener(positionChanged: (GeoPosition) -> Unit) =
+        object : PositionManager.PositionChangeListener {
+            override fun onPositionChanged(geoPosition: GeoPosition) {
+                positionChanged(geoPosition)
+            }
+            override fun onCourseChanged(geoCourse: GeoCourse) {}
+        }
+
     private val managerProvider: LiveData<PositionManager> = object : MutableLiveData<PositionManager>() {
         init { PositionManagerProvider.getInstance(InitializationCallback<PositionManager> { value = it }) }
     }
@@ -59,7 +68,7 @@ class PositionManagerClientImpl private constructor(
         Transformations.switchMap<PositionManager, GeoPosition>(managerProvider) { manager ->
             object : LiveData<GeoPosition>() {
 
-                private val positionChangeListener by lazy { PositionManager.PositionChangeListener { value = it } }
+                private val positionChangeListener by lazy { positionChangedListener { value = it } }
                 private val demonstrationPositionObserver by lazy { Observer<GeoPosition> { value = it } } //ToDo: remove it when CI-531 is done
 
                 override fun onActive() {

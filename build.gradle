@@ -54,7 +54,7 @@ buildscript {
         constraintLayoutVersion = '1.1.3'
         annotationsVersion = '1.1.0'
         playServicesLocationVersion = '17.0.0'
-        sygicSdkVersion = '15.6.0'
+        sygicSdkVersion = '17.0.0-dev.978'
         daggerVersion = '2.24'
         javaxInjectVersion = '1'
         javaPoetVersion = '1.11.1'
@@ -89,7 +89,7 @@ buildscript {
     }
 
     repositories {
-        if (gradle.buildSdkFromSource()) {
+        if (gradle.buildSdkFromSource() || isUsingDevVersion()) {
             maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" }
         }
         maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
@@ -100,6 +100,10 @@ buildscript {
 
 allprojects {
     repositories {
+        if (isUsingDevVersion()) {
+            maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" }
+        }
+        maven { url "https://repository.sygic.com/repository/maven-sygic-internal/" }
         maven { url "https://public.repo.sygic.com/repository/maven-sygic-releases/" }
         google()
         jcenter()
@@ -108,4 +112,12 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+def isUsingDevVersion() {
+    Properties properties = new Properties()
+    def localProperties = file('local.properties')
+    properties.load(localProperties.newDataInputStream())
+
+    return properties.getProperty('sygic.dev', 'false').toBoolean()
 }

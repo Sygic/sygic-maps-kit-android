@@ -46,7 +46,7 @@ fun getLastValidLocation(lastValidLocationCallback: (GeoCoordinates) -> Unit) {
     with(PositionManagerClientImpl.getInstance(RouteDemonstrationManagerClientImpl)) {
         currentPosition.observeForever(object: Observer<GeoPosition> {
             override fun onChanged(position: GeoPosition) {
-                if (position.isValid) {
+                if (position.isValid()) {
                     currentPosition.removeObserver(this)
                     lastValidLocationCallback.invoke(position.coordinates)
                 }
