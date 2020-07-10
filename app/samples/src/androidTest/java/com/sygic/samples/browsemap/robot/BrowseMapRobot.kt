@@ -53,12 +53,12 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) : BaseRobot(act
         onView(withId(R.id.browseMapFragment)).check(matches(isDisplayed()))
     }
 
-    fun clickOnMapToLocation(generalLocation: GeneralLocation) {
+    fun clickOnMapToLocation(coordinatesProvider: CoordinatesProvider) {
         onView(withId(R.id.browseMapFragment)).perform(
             actionWithAssertions(
                 GeneralClickAction(
                     Tap.SINGLE,
-                    generalLocation,
+                    coordinatesProvider,
                     Press.FINGER,
                     InputDevice.SOURCE_TOUCHSCREEN,
                     MotionEvent.BUTTON_PRIMARY
@@ -103,7 +103,7 @@ class BrowseMapRobot(private val activity: CommonSampleActivity) : BaseRobot(act
     }
 
     fun isPlaceDetailVisible() {
-        PlaceDetailVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_COLLAPSED).let {
+        PlaceDetailVisibilityIdlingResource(activity, BottomSheetBehavior.STATE_EXPANDED).let {
             IdlingRegistry.getInstance().register(it)
             onView(withId(R.id.placeDetailContainer)).check(matches(isDisplayed()))
             IdlingRegistry.getInstance().unregister(it)
