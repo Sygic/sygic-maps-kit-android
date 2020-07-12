@@ -122,7 +122,7 @@ object MapLoaderGlobal {
                 val details = MapLoaderWrapper.getCountryDetails(iso, true)
                 countries[iso] = CountryHolder(Country(iso, details), MapLoaderWrapper.getMapStatus(iso))
                 details.regions.forEach {
-                    regions[it] = RegionHolder(Region(iso, MapLoaderWrapper.getRegionDetails(it, true)), MapLoaderWrapper.getMapStatus(it))
+                    regions[it] = RegionHolder(Region(it, MapLoaderWrapper.getRegionDetails(it, true)), MapLoaderWrapper.getMapStatus(it))
                 }
             }
         } catch (exception: MapLoadResultException) {

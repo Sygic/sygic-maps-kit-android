@@ -24,7 +24,6 @@
 
 package com.sygic.maps.offlinemaps.regions
 
-import androidx.lifecycle.Transformations
 import com.sygic.maps.offlinemaps.base.NavigationViewModel
 import com.sygic.maps.offlinemaps.extensions.RegionAdapterHandler
 import com.sygic.maps.offlinemaps.loader.CountryHolder
@@ -37,10 +36,10 @@ class RegionsViewModel : NavigationViewModel(), RegionAdapterHandler {
 
     var countryHolder: CountryHolder? = null
 
-    private val observable = if (installed) { MapLoaderGlobal.installedCountriesObservable } else { MapLoaderGlobal.countriesObservable }
-
-    val countryObservable = observable
-    val regionObservable = Transformations.switchMap(observable) {
+    val countryObservable by lazy(LazyThreadSafetyMode.NONE) {
+        if (installed) { MapLoaderGlobal.installedCountriesObservable } else { MapLoaderGlobal.countriesObservable }
+    }
+    val regionObservable by lazy(LazyThreadSafetyMode.NONE) {
         if (installed) {
             MapLoaderGlobal.installedRegionsObservable
         } else {

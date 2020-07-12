@@ -34,6 +34,7 @@ import com.sygic.maps.offlinemaps.adapter.RegionListAdapter
 import com.sygic.maps.offlinemaps.adapter.viewholder.CountryEntryViewHolder
 import com.sygic.maps.offlinemaps.base.NavigationFragment
 import com.sygic.maps.offlinemaps.databinding.FragmentRegionsBinding
+import com.sygic.sdk.map.MapLoader
 import kotlinx.android.synthetic.main.fragment_regions.*
 
 class RegionsFragment : NavigationFragment<RegionsViewModel>() {
@@ -68,9 +69,14 @@ class RegionsFragment : NavigationFragment<RegionsViewModel>() {
 
         viewModel.regionObservable.observe(viewLifecycleOwner, Observer { regions ->
             viewModel.countryHolder?.let { holder ->
-                regionsAdapter.submitList(holder.country.details.regions.map {
-                    regions[it]!!
-                })
+                val regionList = holder.country.details.regions.map { regions[it]!! }.filter {
+                    if (viewModel.installed) {
+                        it.status == MapLoader.MapStatus.Loaded || it.status == MapLoader.MapStatus.Installed
+                    } else {
+                        true
+                    }
+                }
+                regionsAdapter.submitList(regionList)
             }
         })
 
