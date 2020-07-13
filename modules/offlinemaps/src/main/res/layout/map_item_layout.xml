@@ -63,11 +63,27 @@
         app:layout_constraintTop_toTopOf="@+id/mapName"
         tools:text="NotInstalled" />
 
+    <com.google.android.material.progressindicator.ProgressIndicator
+        android:id="@+id/progressIndicator"
+        style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Determinate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:visibility="gone"
+        app:indicatorColor="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        tools:visibility="visible"
+        tools:progress="50" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -77,8 +93,8 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="16dp"
             android:visibility="gone"
             tools:text="@string/load_map"
             tools:visibility="visible" />
@@ -87,39 +103,22 @@
             android:id="@+id/updateActionButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginEnd="16dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="16dp"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/update_button_content_description"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_update"
             tools:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/actionLayout"
+        <ImageButton
+            android:id="@+id/primaryActionButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_gravity="center_vertical">
-
-            <ImageButton
-                android:id="@+id/primaryActionButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:contentDescription="@string/download_button_content_description"
-                tools:srcCompat="@drawable/ic_download" />
-
-            <com.google.android.material.progressindicator.ProgressIndicator
-                android:id="@+id/progressIndicator"
-                style="@style/Widget.MaterialComponents.ProgressIndicator.Circular.Determinate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:circularRadius="12dp"
-                app:indicatorColor="?attr/colorPrimary"
-                app:indicatorType="circular" />
-
-        </FrameLayout>
+            android:layout_gravity="center_vertical"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/download_button_content_description"
+            tools:srcCompat="@drawable/ic_download" />
 
     </LinearLayout>
 

@@ -104,9 +104,16 @@ abstract class MapEntryViewHolder<T : Any>(itemView: View, private val loadButto
                 progressIndicator.visibility = View.GONE
                 progressIndicator.setProgressCompat(progress, false)
             }
-            MapLoader.MapStatus.Installing, MapLoader.MapStatus.Updating -> {
+            MapLoader.MapStatus.PartiallyInstalled -> {
                 loadButton.visibility = View.GONE
                 primaryActionButton.visibility = View.GONE
+                progressIndicator.visibility = View.GONE
+                progressIndicator.setProgressCompat(progress, false)
+            }
+            MapLoader.MapStatus.Installing, MapLoader.MapStatus.Updating -> {
+                loadButton.visibility = View.GONE
+                primaryActionButton.setImageResource(R.drawable.ic_cancel)
+                primaryActionButton.visibility = View.VISIBLE
                 updateActionButton.visibility = View.GONE
                 progressIndicator.visibility = View.GONE
                 progressIndicator.setProgressCompat(progress, false)
@@ -121,7 +128,7 @@ abstract class MapEntryViewHolder<T : Any>(itemView: View, private val loadButto
                 progressIndicator.isIndeterminate = true
                 progressIndicator.visibility = View.VISIBLE
             }
-            MapLoader.MapStatus.NotInstalled, MapLoader.MapStatus.PartiallyInstalled -> {
+            MapLoader.MapStatus.NotInstalled -> {
                 loadButton.visibility = View.GONE
                 primaryActionButton.visibility = View.VISIBLE
                 primaryActionButton.setImageResource(R.drawable.ic_download)

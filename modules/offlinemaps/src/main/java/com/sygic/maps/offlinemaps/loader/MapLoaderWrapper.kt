@@ -93,7 +93,7 @@ object MapLoaderWrapper {
         return getMapLoader().getRegionDetails(iso, installed).getOrThrow()
     }
 
-    suspend fun installMap(iso: String, installStarted: CompletableDeferred<Unit>? = null): String {
+    suspend fun installMap(iso: String, installStarted: CompletableDeferred<MapLoader.Task>? = null): String {
         val mapLoader = getMapLoader()
         return suspendCancellableCoroutine { cont ->
             val task = mapLoader.installMap(iso, object : MapResultListener {
@@ -108,7 +108,7 @@ object MapLoaderWrapper {
             cont.invokeOnCancellation {
                 task.cancel()
             }
-            installStarted?.complete(Unit)
+            installStarted?.complete(task)
         }
     }
 
@@ -131,7 +131,7 @@ object MapLoaderWrapper {
         }
     }
 
-    suspend fun updateMap(iso: String, updateStarted: CompletableDeferred<Unit>? = null): String {
+    suspend fun updateMap(iso: String, updateStarted: CompletableDeferred<MapLoader.Task>? = null): String {
         val mapLoader = getMapLoader()
         return suspendCancellableCoroutine { cont ->
             val task = mapLoader.updateMap(iso, object : MapResultListener {
@@ -146,7 +146,7 @@ object MapLoaderWrapper {
             cont.invokeOnCancellation {
                 task.cancel()
             }
-            updateStarted?.complete(Unit)
+            updateStarted?.complete(task)
         }
     }
 

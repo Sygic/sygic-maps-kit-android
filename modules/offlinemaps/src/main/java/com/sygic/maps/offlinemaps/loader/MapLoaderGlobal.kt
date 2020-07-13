@@ -46,13 +46,15 @@ object MapLoaderGlobal {
 
     val installedCountriesObservable = MutableLiveData<MutableMap<String, CountryHolder>>()
     val installedRegionsObservable = MutableLiveData<MutableMap<String, RegionHolder>>()
-    val updatesAvailableObservable = MutableLiveData<List<String>>()
+    val updatesAvailableObservable = SingleLiveEvent<List<String>>()
     val detectedCountryObservable = SingleLiveEvent<CountryHolder>()
 
     val notifyMapChangedObservable = SingleLiveEvent<Pair<String, MapLoader.MapStatus>>()
     val mapInstallProgressObservable = MutableLiveData<Pair<String, Int>>()
 
     val mapLoaderExceptionObservable = SingleLiveEvent<String>()
+
+    private val mapTasks = HashMap<String, MapLoader.Task>()
 
     private val mapInstallProgressListener = MapInstallProgressListener { iso, downloadedBytes, totalSize ->
         val progress = downloadedBytes / totalSize.toFloat()
@@ -134,11 +136,14 @@ object MapLoaderGlobal {
 
     suspend fun handlePrimaryMapAction(iso: String) {
         when (val status = MapLoaderWrapper.getMapStatus(iso)) {
-            MapLoader.MapStatus.NotInstalled, MapLoader.MapStatus.PartiallyInstalled -> {
+            MapLoader.MapStatus.NotInstalled -> {
                 installMap(iso)
             }
             MapLoader.MapStatus.Installed, MapLoader.MapStatus.Loaded -> {
                 uninstallMap(iso)
+            }
+            MapLoader.MapStatus.Installing, MapLoader.MapStatus.Updating -> {
+                cancelInstallation(iso)
             }
             else -> logWarning("Primary button clicked but map is in state ($status)")
         }
@@ -146,11 +151,15 @@ object MapLoaderGlobal {
         loadAllMaps()
     }
 
+    fun cancelInstallation(iso: String) {
+        mapTasks[iso]?.cancel()
+    }
+
     suspend fun installMap(iso: String) {
         coroutineScope {
-            val installStarted = CompletableDeferred<Unit>(coroutineContext[Job])
+            val installStarted = CompletableDeferred<MapLoader.Task>(coroutineContext[Job])
             launch {
-                installStarted.await()
+                mapTasks[iso] = installStarted.await()
                 updateStatus(iso)
             }
             try {
@@ -180,9 +189,9 @@ object MapLoaderGlobal {
 
     suspend fun updateMap(iso: String) {
         coroutineScope {
-            val updateStarted = CompletableDeferred<Unit>(coroutineContext[Job])
+            val updateStarted = CompletableDeferred<MapLoader.Task>(coroutineContext[Job])
             launch {
-                updateStarted.await()
+                mapTasks[iso] = updateStarted.await()
                 updateStatus(iso)
             }
             try {
@@ -199,7 +208,7 @@ object MapLoaderGlobal {
             isos.forEach {
                 updateUpdateable(it)
             }
-            updatesAvailableObservable.value = isos
+            updatesAvailableObservable.postValue(isos)
         } catch (exception: MapLoadResultException) {
             logMapLoaderError("Cannot check for updates: ${exception.result}")
         }
