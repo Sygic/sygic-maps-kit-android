@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="OfflineMapsTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">?attr/colorAccent</item>
+    </style>
+
+    <style name="ToolbarTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbarWithSubtitleHeight</item>
+        <item name="android:minHeight">@dimen/toolbarWithSubtitleHeight</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="elevation">@dimen/toolbarElevation</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item>
+    </style>
+
+    <style name="FabTheme" parent="Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
+        <item name="iconTint">@android:color/white</item>
+        <item name="rippleColor">@color/black_a10</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+</resources>

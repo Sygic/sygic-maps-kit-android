@@ -29,6 +29,7 @@ include ':app-samples',
         ':module-browsemap',
         ':module-navigation',
         ':module-search',
+        ':offline-maps',
         ':tool-annotation-processor',
         ':tool-viewmodel-factory',
         ':uikit-views',
@@ -39,6 +40,7 @@ project(':module-common').projectDir = new File("modules/common")
 project(':module-browsemap').projectDir = new File("modules/browsemap")
 project(':module-navigation').projectDir = new File("modules/navigation")
 project(':module-search').projectDir = new File("modules/search")
+project(':offline-maps').projectDir = new File("modules/offlinemaps")
 project(':tool-annotation-processor').projectDir = new File("tools/annotation-processor")
 project(':tool-viewmodel-factory').projectDir = new File("tools/viewmodel-factory")
 project(':uikit-views').projectDir = new File("uikit/views")

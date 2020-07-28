@@ -41,6 +41,10 @@ import androidx.annotation.MainThread
 @Suppress("unused")
 open class SingleLiveEvent<T> : SingleLiveData<T>() {
 
+    public override fun postValue(value: T) {
+        super.postValue(value)
+    }
+
     @MainThread
     public override fun setValue(t: T?) {
         super.setValue(t)

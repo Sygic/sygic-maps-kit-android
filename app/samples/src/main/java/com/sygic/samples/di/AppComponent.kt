@@ -42,6 +42,7 @@ annotation class AppScope
 ], modules = [
     AndroidInjectionModule::class,
     ComplexDemoActivityModule::class,
+    OfflineMapsActivityModule::class,
     RoutingOptionsFragmentModule::class
 ])
 interface AppComponent : AndroidInjector<App> {

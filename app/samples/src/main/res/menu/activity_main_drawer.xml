@@ -34,6 +34,10 @@
                     android:id="@+id/nav_demos"
                     android:icon="@drawable/ic_car"
                     android:title="@string/demos" />
+                <item
+                    android:id="@+id/nav_manage_maps"
+                    android:icon="@drawable/ic_map"
+                    android:title="@string/manage_maps" />
             </group>
         </menu>
     </item>

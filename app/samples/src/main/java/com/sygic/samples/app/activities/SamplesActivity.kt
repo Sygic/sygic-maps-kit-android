@@ -24,12 +24,14 @@
 
 package com.sygic.samples.app.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -57,6 +59,7 @@ class SamplesActivity : AppCompatActivity() {
             samplesListFragmentsObservable.observe(this@SamplesActivity, Observer { placeFragment(it) })
             openLinkInBrowserObservable.observe(this@SamplesActivity, Observer { openUrl(it) })
             openDialogFragmentObservable.observe(this@SamplesActivity, Observer { openDialog(it) })
+            startActivityObservable.observe(this@SamplesActivity, Observer { startActivity(it) })
             drawerItemCheckObservable.observe(
                 this@SamplesActivity,
                 Observer { binding.navigationView.setCheckedItem(it) }
@@ -83,6 +86,9 @@ class SamplesActivity : AppCompatActivity() {
 
     private fun openDialog(dialogClass: Class<out AppCompatDialogFragment>) =
         dialogClass.newInstance().show(supportFragmentManager, null)
+
+    private fun startActivity(activityClass: Class<out AppCompatActivity>) =
+        ContextCompat.startActivity(this, Intent(this, activityClass), null)
 
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {

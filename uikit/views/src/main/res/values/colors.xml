@@ -29,6 +29,8 @@
     <color name="colorAccent">@color/blue_ribbon</color>
     <color name="textColorPrimary">@color/mine_shaft</color>
     <color name="textColorSecondary">@color/boulder</color>
+    <color name="offlineMapsTextColorPrimary">@color/white</color>
+    <color name="offlineMapsTextColorSecondary">@color/gray</color>
     <color name="iconBackground">@color/shuttle_gray</color>
     <color name="navigationBackgroundColor">@color/white</color>
     <color name="navigationTextColorPrimary">@color/black</color>
