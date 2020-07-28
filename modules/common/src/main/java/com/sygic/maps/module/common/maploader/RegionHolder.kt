@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.offlinemaps.loader
+package com.sygic.maps.module.common.maploader
 
-import com.sygic.sdk.map.RegionDetails
-
-data class Region(val iso: String, val details: RegionDetails)
+data class RegionHolder(val region: Region, val data: MapData)

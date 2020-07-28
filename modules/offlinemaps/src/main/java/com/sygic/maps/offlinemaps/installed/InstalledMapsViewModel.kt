@@ -26,26 +26,31 @@ package com.sygic.maps.offlinemaps.installed
 
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
+import com.sygic.maps.module.common.maploader.Country
+import com.sygic.maps.module.common.maploader.MapItem
+import com.sygic.maps.module.common.maploader.MapLoaderGlobal
 import com.sygic.maps.offlinemaps.R
 import com.sygic.maps.offlinemaps.base.NavigationViewModel
-import com.sygic.maps.offlinemaps.extensions.CountryAdapterHandler
-import com.sygic.maps.offlinemaps.loader.Country
-import com.sygic.maps.offlinemaps.loader.CountryHolder
-import com.sygic.maps.offlinemaps.loader.MapLoaderGlobal
+import com.sygic.maps.offlinemaps.extensions.MapAdapterHandler
+import com.sygic.maps.offlinemaps.extensions.toMb
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 
-class InstalledMapsViewModel : NavigationViewModel(), Toolbar.OnMenuItemClickListener, CountryAdapterHandler {
+class InstalledMapsViewModel : NavigationViewModel(), Toolbar.OnMenuItemClickListener, MapAdapterHandler {
     val navigateToMapsDownload = SingleLiveEvent<Unit>()
     val navigateToInstalledRegions = SingleLiveEvent<Country>()
     val showDetectCurrentCountryDialog = SingleLiveEvent<Unit>()
-    val installedCountriesObservable = Transformations.map(MapLoaderGlobal.installedCountriesObservable) { it.values.toList() }
+    val installedCountriesObservable = MapLoaderGlobal.installedCountries.map { countries -> countries.values.map { MapItem(it.country.iso, it.country.details.name, "${it.country.details.totalSize.toMb} MB", it.data) } }
     val updatesAvailableObservable = MapLoaderGlobal.updatesAvailableObservable
     val detectedCountryObservable = MapLoaderGlobal.detectedCountryObservable
     val notifyMapChangedObservable = MapLoaderGlobal.notifyMapChangedObservable
 
     fun loadInstalledMaps() = MapLoaderGlobal.launchInScope {
         MapLoaderGlobal.loadInstalledMaps()
+    }
+
+    fun detectCurrentCountry(iso: String) = MapLoaderGlobal.launchInScope {
+        MapLoaderGlobal.detectCountry(iso)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -64,25 +69,25 @@ class InstalledMapsViewModel : NavigationViewModel(), Toolbar.OnMenuItemClickLis
         }
     }
 
-    override fun onCountryClicked(country: CountryHolder) {
-        navigateToInstalledRegions.value = country.country
+    override fun onMapClicked(iso: String) {
+        navigateToInstalledRegions.value = MapLoaderGlobal.getInstalledCountry(iso).country
     }
 
-    override fun onPrimaryButtonClicked(country: CountryHolder) {
+    override fun onPrimaryButtonClicked(iso: String) {
         MapLoaderGlobal.launchInScope {
-            MapLoaderGlobal.handlePrimaryMapAction(country.iso)
+            MapLoaderGlobal.handlePrimaryMapAction(iso)
         }
     }
 
-    override fun onUpdateButtonClicked(country: CountryHolder) {
+    override fun onUpdateButtonClicked(iso: String) {
         MapLoaderGlobal.launchInScope {
-            MapLoaderGlobal.updateMap(country.iso)
+            MapLoaderGlobal.updateMap(iso)
         }
     }
 
-    override fun onLoadButtonClicked(country: CountryHolder) {
+    override fun onLoadButtonClicked(iso: String) {
         MapLoaderGlobal.launchInScope {
-            MapLoaderGlobal.handleLoadAction(country.iso)
+            MapLoaderGlobal.handleLoadAction(iso)
         }
     }
 

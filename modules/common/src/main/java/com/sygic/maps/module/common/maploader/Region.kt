@@ -22,19 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.offlinemaps.adapter.viewholder
+package com.sygic.maps.module.common.maploader
 
-import android.view.View
-import com.sygic.maps.offlinemaps.R
-import com.sygic.maps.offlinemaps.loader.RegionHolder
-import com.sygic.maps.offlinemaps.extensions.toMb
+import com.sygic.sdk.map.RegionDetails
 
-class RegionEntryViewHolder(itemView: View, loadButtonEnabled: Boolean) : MapEntryViewHolder<RegionHolder>(itemView, loadButtonEnabled) {
-    override fun bind(mapHolder: RegionHolder) {
-        val details = mapHolder.region.details
-        mapName.text = details.name
-        subtitleText.text = itemView.context.getString(R.string.map_size_only, details.size.toMb)
-        updateUpdateable(mapHolder.updateAvailable, mapHolder.status)
-        updateFromStatus(mapHolder.status, mapHolder.progress)
-    }
-}
+data class Region(val iso: String, val details: RegionDetails)

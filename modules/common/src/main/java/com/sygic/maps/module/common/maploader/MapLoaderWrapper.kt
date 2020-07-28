@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.offlinemaps.loader
+package com.sygic.maps.module.common.maploader
 
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.views.common.extensions.observeOnce
@@ -45,7 +45,7 @@ object MapLoaderWrapper {
         init {
             MapLoaderProvider.getInstance(object : CoreInitCallback<MapLoader> {
                 override fun onInstance(instance: MapLoader) {
-                    value = instance
+                    postValue(instance)
                 }
 
                 override fun onError(exception: CoreInitException) {

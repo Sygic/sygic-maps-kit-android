@@ -24,32 +24,33 @@
 
 package com.sygic.maps.offlinemaps.regions
 
+import androidx.lifecycle.viewModelScope
+import com.sygic.maps.module.common.maploader.CountryHolder
+import com.sygic.maps.module.common.maploader.MapLoaderGlobal
 import com.sygic.maps.offlinemaps.base.NavigationViewModel
-import com.sygic.maps.offlinemaps.extensions.RegionAdapterHandler
-import com.sygic.maps.offlinemaps.loader.CountryHolder
-import com.sygic.maps.offlinemaps.loader.MapLoaderGlobal
-import com.sygic.maps.offlinemaps.loader.RegionHolder
+import com.sygic.maps.offlinemaps.extensions.MapAdapterHandler
+import kotlinx.coroutines.launch
 
-class RegionsViewModel : NavigationViewModel(), RegionAdapterHandler {
+class RegionsViewModel : NavigationViewModel(), MapAdapterHandler {
     var country = ""
     var installed = false
 
     var countryHolder: CountryHolder? = null
 
-    val countryObservable by lazy(LazyThreadSafetyMode.NONE) {
-        if (installed) { MapLoaderGlobal.installedCountriesObservable } else { MapLoaderGlobal.countriesObservable }
+    val countryObservable by lazy {
+        if (installed) { MapLoaderGlobal.installedCountries } else { MapLoaderGlobal.countries }
     }
-    val regionObservable by lazy(LazyThreadSafetyMode.NONE) {
+    val regionObservable by lazy {
         if (installed) {
-            MapLoaderGlobal.installedRegionsObservable
+            MapLoaderGlobal.installedRegions
         } else {
-            MapLoaderGlobal.regionsObservable
+            MapLoaderGlobal.regions
         }
     }
     val notifyMapChangedObservable = MapLoaderGlobal.notifyMapChangedObservable
-    val mapInstallProgressObservable = MapLoaderGlobal.mapInstallProgressObservable
+    val mapInstallProgressObservable = MapLoaderGlobal.mapInstallProgress
 
-    fun loadMaps() = MapLoaderGlobal.launchInScope {
+    fun loadMaps() = viewModelScope.launch(MapLoaderGlobal.dispatcher) {
         if (installed) {
             MapLoaderGlobal.loadInstalledMaps()
         } else {
@@ -59,17 +60,17 @@ class RegionsViewModel : NavigationViewModel(), RegionAdapterHandler {
 
     fun onCountryPrimaryActionClicked() {
         MapLoaderGlobal.launchInScope {
-            MapLoaderGlobal.handlePrimaryMapAction(MapLoaderGlobal.countriesObservable.value!![country]!!.iso)
+            MapLoaderGlobal.handlePrimaryMapAction(MapLoaderGlobal.getCountry(country).country.iso)
         }
     }
 
-    override fun onPrimaryButtonClicked(region: RegionHolder) {
+    override fun onPrimaryButtonClicked(iso: String) {
         MapLoaderGlobal.launchInScope {
-            MapLoaderGlobal.handlePrimaryMapAction(region.iso)
+            MapLoaderGlobal.handlePrimaryMapAction(iso)
         }
     }
 
-    override fun onRegionClicked(region: RegionHolder) {}
-    override fun onUpdateButtonClicked(region: RegionHolder) {}
-    override fun onLoadButtonClicked(region: RegionHolder) {}
+    override fun onMapClicked(iso: String) {}
+    override fun onUpdateButtonClicked(iso: String) {}
+    override fun onLoadButtonClicked(iso: String) {}
 }

@@ -30,23 +30,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.sygic.maps.offlinemaps.adapter.RegionListAdapter
-import com.sygic.maps.offlinemaps.adapter.viewholder.CountryEntryViewHolder
+import com.sygic.maps.module.common.maploader.MapItem
+import com.sygic.maps.module.common.maploader.MapLoaderGlobal
+import com.sygic.maps.offlinemaps.adapter.MapListAdapter
+import com.sygic.maps.offlinemaps.adapter.viewholder.MapItemViewHolder
 import com.sygic.maps.offlinemaps.base.NavigationFragment
 import com.sygic.maps.offlinemaps.databinding.FragmentRegionsBinding
+import com.sygic.maps.offlinemaps.extensions.toMb
 import com.sygic.sdk.map.MapLoader
 import kotlinx.android.synthetic.main.fragment_regions.*
 
 class RegionsFragment : NavigationFragment<RegionsViewModel>() {
     override val viewModel by viewModels<RegionsViewModel>()
 
-    private val regionsAdapter: RegionListAdapter
-        get() = regionList.adapter as RegionListAdapter
+    private val regionsAdapter: MapListAdapter
+        get() = regionList.adapter as MapListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentRegionsBinding.inflate(inflater)
         binding.lifecycleOwner = this
-        binding.adapter = RegionListAdapter()
+        binding.adapter = MapListAdapter()
         binding.viewModel = viewModel
         return binding.root
     }
@@ -55,23 +58,26 @@ class RegionsFragment : NavigationFragment<RegionsViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         initArguments(requireArguments())
 
-        val countryViewHolder = CountryEntryViewHolder(countryLayout, false)
-        countryViewHolder.setPrimaryActionClickListener {
+        val mapViewHolder = MapItemViewHolder(countryLayout)
+        mapViewHolder.setPrimaryActionClickListener {
             viewModel.onCountryPrimaryActionClicked()
         }
 
         viewModel.countryObservable.observe(viewLifecycleOwner, Observer { countries ->
             val countryHolder = countries[viewModel.country]!!
             viewModel.countryHolder = countryHolder
-            countryViewHolder.bind(countryHolder)
+            mapViewHolder.bind(MapItem(countryHolder.country.iso, countryHolder.country.details.name, "${countryHolder.country.details.totalSize.toMb} MB", countryHolder.data))
             progressIndicator.visibility = View.GONE
         })
 
         viewModel.regionObservable.observe(viewLifecycleOwner, Observer { regions ->
             viewModel.countryHolder?.let { holder ->
-                val regionList = holder.country.details.regions.map { regions[it]!! }.filter {
+                val regionList = holder.country.details.regions.map {
+                    val region = regions[it]!!
+                    MapItem(it, region.region.details.name, "${region.region.details.size.toMb} MB", region.data)
+                }.filter {
                     if (viewModel.installed) {
-                        it.status == MapLoader.MapStatus.Loaded || it.status == MapLoader.MapStatus.Installed
+                        it.data.status == MapLoader.MapStatus.Loaded || it.data.status == MapLoader.MapStatus.Installed
                     } else {
                         true
                     }
@@ -82,7 +88,10 @@ class RegionsFragment : NavigationFragment<RegionsViewModel>() {
 
         viewModel.notifyMapChangedObservable.observe(viewLifecycleOwner, Observer {
             if (it.first == viewModel.country) {
-                countryViewHolder.updateFromStatus(it.second, 0)
+                mapViewHolder.updateStatus(it.second, 0)
+                MapLoaderGlobal.forEachRegionInCountry(viewModel.country) { regionIso ->
+                    regionsAdapter.updateStatus(regionIso, MapLoaderGlobal.getRegion(regionIso).data.status)
+                }
             } else {
                 regionsAdapter.updateStatus(it.first, it.second)
             }
@@ -90,7 +99,7 @@ class RegionsFragment : NavigationFragment<RegionsViewModel>() {
 
         viewModel.mapInstallProgressObservable.observe(viewLifecycleOwner, Observer {
             if (it.first == viewModel.country) {
-                countryViewHolder.updateProgress(it.second)
+                mapViewHolder.updateProgress(it.second)
             } else {
                 regionsAdapter.updateProgress(it.first, it.second)
             }
@@ -100,7 +109,7 @@ class RegionsFragment : NavigationFragment<RegionsViewModel>() {
     }
 
     private fun initArguments(arguments: Bundle) {
-        viewModel.country = arguments.getString(COUNTRY_KEY) ?: throw IllegalArgumentException("Must pass country ISO in arguments")
+        viewModel.country = requireNotNull(arguments.getString(COUNTRY_KEY)) { "Must pass country ISO in arguments" }
         viewModel.installed = arguments.getBoolean(INSTALLED_KEY, false)
     }
 

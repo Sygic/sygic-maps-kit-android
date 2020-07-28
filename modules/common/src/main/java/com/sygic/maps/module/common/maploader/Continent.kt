@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.offlinemaps.loader
+package com.sygic.maps.module.common.maploader
 
-import com.sygic.sdk.map.CountryDetails
-
-data class Country(val iso: String, val details: CountryDetails)
+data class Continent(val continentName: String, val countries: List<String>)

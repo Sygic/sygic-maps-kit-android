@@ -27,43 +27,24 @@ package com.sygic.maps.offlinemaps.extensions
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sygic.maps.offlinemaps.adapter.ContinentsAdapter
-import com.sygic.maps.offlinemaps.adapter.CountryListAdapter
-import com.sygic.maps.offlinemaps.adapter.RegionListAdapter
-import com.sygic.maps.offlinemaps.loader.Continent
-import com.sygic.maps.offlinemaps.loader.CountryHolder
-import com.sygic.maps.offlinemaps.loader.RegionHolder
+import com.sygic.maps.offlinemaps.adapter.MapListAdapter
+import com.sygic.maps.module.common.maploader.Continent
 
-interface CountryAdapterHandler {
-    fun onCountryClicked(country: CountryHolder)
-    fun onPrimaryButtonClicked(country: CountryHolder)
-    fun onUpdateButtonClicked(country: CountryHolder)
-    fun onLoadButtonClicked(country: CountryHolder)
-}
-
-interface RegionAdapterHandler {
-    fun onRegionClicked(region: RegionHolder)
-    fun onPrimaryButtonClicked(region: RegionHolder)
-    fun onUpdateButtonClicked(region: RegionHolder)
-    fun onLoadButtonClicked(region: RegionHolder)
+interface MapAdapterHandler {
+    fun onMapClicked(iso: String)
+    fun onPrimaryButtonClicked(iso: String)
+    fun onUpdateButtonClicked(iso: String)
+    fun onLoadButtonClicked(iso: String)
 }
 
 interface ContinentsAdapterHandler {
     fun onContinentSelected(continent: Continent)
 }
 
-@BindingAdapter("countryAdapter", "countryHandler", requireAll = false)
-fun setCountryAdapterHandler(view: RecyclerView, adapter: CountryListAdapter, handler: CountryAdapterHandler) {
+@BindingAdapter("mapAdapter", "mapHandler", requireAll = false)
+fun setCountryAdapterHandler(view: RecyclerView, adapter: MapListAdapter, handler: MapAdapterHandler) {
     view.adapter = adapter
-    adapter.setOnItemClicked(handler::onCountryClicked)
-    adapter.setOnPrimaryActionClicked(handler::onPrimaryButtonClicked)
-    adapter.setOnUpdateButtonClicked(handler::onUpdateButtonClicked)
-    adapter.setOnLoadButtonClicked(handler::onLoadButtonClicked)
-}
-
-@BindingAdapter("regionAdapter", "regionHandler", requireAll = false)
-fun setRegionAdapterHandler(view: RecyclerView, adapter: RegionListAdapter, handler: RegionAdapterHandler) {
-    view.adapter = adapter
-    adapter.setOnItemClicked(handler::onRegionClicked)
+    adapter.setOnItemClicked(handler::onMapClicked)
     adapter.setOnPrimaryActionClicked(handler::onPrimaryButtonClicked)
     adapter.setOnUpdateButtonClicked(handler::onUpdateButtonClicked)
     adapter.setOnLoadButtonClicked(handler::onLoadButtonClicked)

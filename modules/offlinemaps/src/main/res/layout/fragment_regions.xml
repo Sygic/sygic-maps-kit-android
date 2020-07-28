@@ -28,7 +28,7 @@
     <data>
         <variable
             name="adapter"
-            type="com.sygic.maps.offlinemaps.adapter.RegionListAdapter" />
+            type="com.sygic.maps.offlinemaps.adapter.MapListAdapter" />
 
         <variable
             name="viewModel"
@@ -69,8 +69,8 @@
             android:id="@+id/regionList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:regionAdapter="@{adapter}"
-            app:regionHandler="@{viewModel}"
+            app:mapAdapter="@{adapter}"
+            app:mapHandler="@{viewModel}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/map_item_layout"
             tools:itemCount="4" />

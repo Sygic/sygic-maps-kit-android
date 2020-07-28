@@ -22,23 +22,6 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.offlinemaps.adapter
+package com.sygic.maps.module.common.maploader
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import com.sygic.maps.offlinemaps.R
-import com.sygic.maps.offlinemaps.adapter.viewholder.CountryEntryViewHolder
-import com.sygic.maps.offlinemaps.loader.CountryHolder
-
-class CountryListAdapter : MapListAdapter<CountryHolder, CountryEntryViewHolder>(DiffCallback) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryEntryViewHolder {
-        val rootView = LayoutInflater.from(parent.context).inflate(R.layout.map_item_layout, parent, false)
-        return CountryEntryViewHolder(rootView, loadButtonEnabled)
-    }
-
-    companion object DiffCallback : DiffUtil.ItemCallback<CountryHolder>() {
-        override fun areItemsTheSame(oldItem: CountryHolder, newItem: CountryHolder) = oldItem.iso == newItem.iso
-        override fun areContentsTheSame(oldItem: CountryHolder, newItem: CountryHolder) = oldItem == newItem
-    }
-}
+data class CountryHolder(val country: Country, val data: MapData)

@@ -32,14 +32,13 @@ import android.widget.EditText
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.sygic.maps.module.common.maploader.Country
 import com.sygic.maps.offlinemaps.R
-import com.sygic.maps.offlinemaps.adapter.CountryListAdapter
+import com.sygic.maps.offlinemaps.adapter.MapListAdapter
 import com.sygic.maps.offlinemaps.base.NavigationFragment
 import com.sygic.maps.offlinemaps.continents.ContinentsFragment
 import com.sygic.maps.offlinemaps.databinding.FragmentInstalledMapsBinding
 import com.sygic.maps.offlinemaps.extensions.navigateTo
-import com.sygic.maps.offlinemaps.loader.Country
-import com.sygic.maps.offlinemaps.loader.MapLoaderGlobal
 import com.sygic.maps.offlinemaps.regions.RegionsFragment
 import com.sygic.maps.uikit.views.common.extensions.longToast
 import kotlinx.android.synthetic.main.fragment_installed_maps.*
@@ -52,8 +51,8 @@ class InstalledMapsFragment : NavigationFragment<InstalledMapsViewModel>() {
 
     override val viewModel by viewModels<InstalledMapsViewModel>()
 
-    private val mapListAdapter: CountryListAdapter
-        get() = installedMapList.adapter as CountryListAdapter
+    private val mapListAdapter: MapListAdapter
+        get() = installedMapList.adapter as MapListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +62,7 @@ class InstalledMapsFragment : NavigationFragment<InstalledMapsViewModel>() {
         val binding = FragmentInstalledMapsBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.adapter = CountryListAdapter()
+        binding.adapter = MapListAdapter()
         return binding.root
     }
 
@@ -135,9 +134,7 @@ class InstalledMapsFragment : NavigationFragment<InstalledMapsViewModel>() {
             .setView(inputTextView)
             .setPositiveButton(R.string.dialog_detect_country_positive_button) { _, _ ->
                 val editText = inputTextView.findViewById<EditText>(R.id.dialog_input_text)
-                MapLoaderGlobal.launchInScope {
-                    MapLoaderGlobal.detectCountry(editText.text.toString())
-                }
+                viewModel.detectCurrentCountry(editText.text.toString())
             }.show()
     }
 

@@ -22,23 +22,8 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.offlinemaps.adapter.viewholder
+package com.sygic.maps.module.common.maploader
 
-import android.view.View
-import com.sygic.maps.offlinemaps.R
-import com.sygic.maps.offlinemaps.loader.CountryHolder
-import com.sygic.maps.offlinemaps.extensions.toMb
+import com.sygic.sdk.map.MapLoader
 
-class CountryEntryViewHolder(itemView: View, loadButtonEnabled: Boolean) : MapEntryViewHolder<CountryHolder>(itemView, loadButtonEnabled) {
-    override fun bind(mapHolder: CountryHolder) {
-        val details = mapHolder.country.details
-        mapName.text = details.name
-        subtitleText.text = if (details.regions.isNotEmpty()) {
-            itemView.context.getString(R.string.map_contains_regions_size, details.continentName, details.regions.size, details.totalSize.toMb)
-        } else {
-            itemView.context.getString(R.string.continent_and_map_size, details.continentName, details.totalSize.toMb)
-        }
-        updateUpdateable(mapHolder.updateAvailable, mapHolder.status)
-        updateFromStatus(mapHolder.status, mapHolder.progress)
-    }
-}
+data class MapData(var status: MapLoader.MapStatus, var progress: Int = 0, var updateAvailable: Boolean = false)

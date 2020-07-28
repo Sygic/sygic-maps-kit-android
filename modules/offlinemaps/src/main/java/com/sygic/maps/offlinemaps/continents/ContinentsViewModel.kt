@@ -24,15 +24,15 @@
 
 package com.sygic.maps.offlinemaps.continents
 
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
+import com.sygic.maps.module.common.maploader.Continent
+import com.sygic.maps.module.common.maploader.MapLoaderGlobal
 import com.sygic.maps.offlinemaps.base.NavigationViewModel
 import com.sygic.maps.offlinemaps.extensions.ContinentsAdapterHandler
-import com.sygic.maps.offlinemaps.loader.Continent
-import com.sygic.maps.offlinemaps.loader.MapLoaderGlobal
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 
 class ContinentsViewModel : NavigationViewModel(), ContinentsAdapterHandler {
-    val continentsObservable = Transformations.map(MapLoaderGlobal.continentsObservable) { continents -> continents.map { Continent(it.key, it.value) } }
+    val continentsObservable = MapLoaderGlobal.continents.map { continents -> continents.map { Continent(it.key, it.value) } }
     val continentSelected = SingleLiveEvent<String>()
 
     override fun onContinentSelected(continent: Continent) {

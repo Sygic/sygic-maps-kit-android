@@ -30,7 +30,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.sygic.maps.offlinemaps.adapter.CountryListAdapter
+import com.sygic.maps.offlinemaps.adapter.MapListAdapter
 import com.sygic.maps.offlinemaps.base.NavigationFragment
 import com.sygic.maps.offlinemaps.databinding.FragmentDownloadMapsBinding
 import com.sygic.maps.offlinemaps.extensions.navigateTo
@@ -40,8 +40,8 @@ import kotlinx.android.synthetic.main.fragment_download_maps.*
 class DownloadMapsFragment : NavigationFragment<DownloadMapsViewModel>() {
     override val viewModel by viewModels<DownloadMapsViewModel>()
 
-    private val mapListAdapter: CountryListAdapter
-        get() = mapList.adapter as CountryListAdapter
+    private val mapListAdapter: MapListAdapter
+        get() = mapList.adapter as MapListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +50,7 @@ class DownloadMapsFragment : NavigationFragment<DownloadMapsViewModel>() {
     ): View? {
         val binding = FragmentDownloadMapsBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
-        binding.adapter = CountryListAdapter()
+        binding.adapter = MapListAdapter()
         binding.lifecycleOwner = this
         return binding.root
     }

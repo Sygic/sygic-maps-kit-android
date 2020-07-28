@@ -78,6 +78,7 @@ dependencies {
 
     // libraries
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleExtensions"
     implementation "androidx.activity:activity-ktx:$androidKtx"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtx"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"

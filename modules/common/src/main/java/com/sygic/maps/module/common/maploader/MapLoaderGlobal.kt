@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.offlinemaps.loader
+package com.sygic.maps.module.common.maploader
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
 import com.sygic.maps.uikit.views.common.utils.logError
@@ -36,23 +37,30 @@ import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-object MapLoaderGlobal {
-    private val mapLoaderDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-    private val scope = CoroutineScope(mapLoaderDispatcher + SupervisorJob())
+object MapLoaderGlobal : ApplicationMapLoader {
+    override val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val scope = CoroutineScope(dispatcher + SupervisorJob())
 
-    val continentsObservable = MutableLiveData<MutableMap<String, MutableList<String>>>()
-    val countriesObservable = MutableLiveData<MutableMap<String, CountryHolder>>()
-    val regionsObservable = MutableLiveData<MutableMap<String, RegionHolder>>()
+    private val continentsObservable = MutableLiveData<MutableMap<String, MutableList<String>>>()
+    private val countriesObservable = MutableLiveData<MutableMap<String, CountryHolder>>()
+    private val regionsObservable = MutableLiveData<MutableMap<String, RegionHolder>>()
+    override val continents: LiveData<MutableMap<String, MutableList<String>>> = continentsObservable
+    override val countries: LiveData<MutableMap<String, CountryHolder>> = countriesObservable
+    override val regions: LiveData<MutableMap<String, RegionHolder>> = regionsObservable
 
-    val installedCountriesObservable = MutableLiveData<MutableMap<String, CountryHolder>>()
-    val installedRegionsObservable = MutableLiveData<MutableMap<String, RegionHolder>>()
-    val updatesAvailableObservable = SingleLiveEvent<List<String>>()
-    val detectedCountryObservable = SingleLiveEvent<CountryHolder>()
+    private val installedCountriesObservable = MutableLiveData<MutableMap<String, CountryHolder>>()
+    private val installedRegionsObservable = MutableLiveData<MutableMap<String, RegionHolder>>()
+    override val installedCountries: LiveData<MutableMap<String, CountryHolder>> = installedCountriesObservable
+    override val installedRegions: LiveData<MutableMap<String, RegionHolder>> = installedRegionsObservable
 
-    val notifyMapChangedObservable = SingleLiveEvent<Pair<String, MapLoader.MapStatus>>()
-    val mapInstallProgressObservable = MutableLiveData<Pair<String, Int>>()
+    override val updatesAvailableObservable = SingleLiveEvent<List<String>>()
+    override val detectedCountryObservable = SingleLiveEvent<CountryHolder>()
 
-    val mapLoaderExceptionObservable = SingleLiveEvent<String>()
+    override val notifyMapChangedObservable = SingleLiveEvent<Pair<String, MapLoader.MapStatus>>()
+    private val mapInstallProgressObservable = MutableLiveData<Pair<String, Int>>()
+    override val mapInstallProgress: LiveData<Pair<String, Int>> = mapInstallProgressObservable
+
+    override val mapLoaderExceptionObservable = SingleLiveEvent<String>()
 
     private val mapTasks = HashMap<String, MapLoader.Task>()
 
@@ -65,7 +73,7 @@ object MapLoaderGlobal {
 
     private val mapResumedInstallDoneListener = MapResumedInstallDoneListener { iso, result ->
         if (result != MapLoader.LoadResult.Success) {
-            logError("Failed resumed install done for $iso with result $result")
+            logMapLoaderError("Failed resumed install done for $iso with result $result")
         }
         scope.launch {
             val status = MapLoaderWrapper.getMapStatus(iso)
@@ -75,21 +83,33 @@ object MapLoaderGlobal {
 
     init {
         scope.launch {
-            MapLoaderWrapper.getMapLoader().addMapProgressInstallListener(mapInstallProgressListener)
-            MapLoaderWrapper.getMapLoader().addMapResumedInstallDoneListener(mapResumedInstallDoneListener)
-            MapLoaderWrapper.getMapLoader().resumePendingInstallations()
+            MapLoaderWrapper.getMapLoader().apply {
+                addMapProgressInstallListener(mapInstallProgressListener)
+                addMapResumedInstallDoneListener(mapResumedInstallDoneListener)
+                resumePendingInstallations()
+            }
             loadInstalledMaps()
             loadAllMaps()
         }
     }
 
-    fun launchInScope(
-        context: CoroutineContext = EmptyCoroutineContext,
-        start: CoroutineStart = CoroutineStart.DEFAULT,
+    override fun getCountry(iso: String) = countries.value!![iso]!!
+
+    override fun getRegion(iso: String) = regions.value!![iso]!!
+
+    override fun getInstalledCountry(iso: String) = installedCountries.value!![iso]!!
+
+    override fun forEachRegionInCountry(iso: String, action: (String) -> Unit) {
+        countries.value?.get(iso)?.country?.details?.regions?.forEach(action)
+    }
+
+    override fun launchInScope(
+        context: CoroutineContext,
+        start: CoroutineStart,
         block: suspend CoroutineScope.() -> Unit
     ) = scope.launch(context, start, block)
 
-    suspend fun loadAllMaps() {
+    override suspend fun loadAllMaps() {
         val continents = HashMap<String, MutableList<String>>()
         val countries = HashMap<String, CountryHolder>()
         val regions = HashMap<String, RegionHolder>()
@@ -100,11 +120,11 @@ object MapLoaderGlobal {
                     continents[details.continentName] = mutableListOf()
                 }
                 continents[details.continentName]!! += iso
-                countries[iso] = CountryHolder(Country(iso, details), MapLoaderWrapper.getMapStatus(iso))
+                countries[iso] = CountryHolder(Country(iso, details), MapData(MapLoaderWrapper.getMapStatus(iso)))
                 details.regions.forEach {
                     regions[it] = RegionHolder(
                         Region(it, MapLoaderWrapper.getRegionDetails(it, false)),
-                        MapLoaderWrapper.getMapStatus(it)
+                        MapData(MapLoaderWrapper.getMapStatus(it))
                     )
                 }
             }
@@ -116,15 +136,19 @@ object MapLoaderGlobal {
         regionsObservable.postValue(regions)
     }
 
-    suspend fun loadInstalledMaps() {
+    override suspend fun loadInstalledMaps() {
         val countries = HashMap<String, CountryHolder>()
         val regions = HashMap<String, RegionHolder>()
         try {
             MapLoaderWrapper.getAvailableCountries(true).forEach { iso ->
                 val details = MapLoaderWrapper.getCountryDetails(iso, true)
-                countries[iso] = CountryHolder(Country(iso, details), MapLoaderWrapper.getMapStatus(iso))
+                countries[iso] = CountryHolder(Country(iso, details), MapData(MapLoaderWrapper.getMapStatus(iso)))
                 details.regions.forEach {
-                    regions[it] = RegionHolder(Region(it, MapLoaderWrapper.getRegionDetails(it, true)), MapLoaderWrapper.getMapStatus(it))
+                    regions[it] = RegionHolder(
+                        Region(it, MapLoaderWrapper.getRegionDetails(it, true)), MapData(
+                            MapLoaderWrapper.getMapStatus(it)
+                        )
+                    )
                 }
             }
         } catch (exception: MapLoadResultException) {
@@ -134,7 +158,7 @@ object MapLoaderGlobal {
         installedRegionsObservable.postValue(regions)
     }
 
-    suspend fun handlePrimaryMapAction(iso: String) {
+    override suspend fun handlePrimaryMapAction(iso: String) {
         when (val status = MapLoaderWrapper.getMapStatus(iso)) {
             MapLoader.MapStatus.NotInstalled -> {
                 installMap(iso)
@@ -151,11 +175,12 @@ object MapLoaderGlobal {
         loadAllMaps()
     }
 
-    fun cancelInstallation(iso: String) {
+    override suspend fun cancelInstallation(iso: String) {
         mapTasks[iso]?.cancel()
+        updateStatus(iso)
     }
 
-    suspend fun installMap(iso: String) {
+    override suspend fun installMap(iso: String) {
         coroutineScope {
             val installStarted = CompletableDeferred<MapLoader.Task>(coroutineContext[Job])
             launch {
@@ -171,7 +196,7 @@ object MapLoaderGlobal {
         updateStatus(iso)
     }
 
-    suspend fun uninstallMap(iso: String) {
+    override suspend fun uninstallMap(iso: String) {
         coroutineScope {
             val uninstallStarted = CompletableDeferred<Unit>(coroutineContext[Job])
             launch {
@@ -187,7 +212,7 @@ object MapLoaderGlobal {
         updateStatus(iso)
     }
 
-    suspend fun updateMap(iso: String) {
+    override suspend fun updateMap(iso: String) {
         coroutineScope {
             val updateStarted = CompletableDeferred<MapLoader.Task>(coroutineContext[Job])
             launch {
@@ -200,9 +225,10 @@ object MapLoaderGlobal {
                 logMapLoaderError("Cannot update map $iso: ${exception.result}")
             }
         }
+        updateStatus(iso)
     }
 
-    suspend fun checkForUpdates() {
+    override suspend fun checkForUpdates() {
         try {
             val isos = MapLoaderWrapper.checkForUpdates()
             isos.forEach {
@@ -214,19 +240,21 @@ object MapLoaderGlobal {
         }
     }
 
-    suspend fun detectCountry(iso: String = "") {
+    override suspend fun detectCountry(iso: String) {
         try {
             val detectedIso = MapLoaderWrapper.detectCountry(iso)
-            detectedCountryObservable.postValue(CountryHolder(
-                Country(detectedIso, MapLoaderWrapper.getCountryDetails(detectedIso, false)),
-                MapLoaderWrapper.getMapStatus(detectedIso)
-            ))
+            detectedCountryObservable.postValue(
+                CountryHolder(
+                    Country(detectedIso, MapLoaderWrapper.getCountryDetails(detectedIso, false)),
+                    MapData(MapLoaderWrapper.getMapStatus(detectedIso))
+                )
+            )
         } catch (exception: MapLoadResultException) {
             logMapLoaderError("Cannot detect country: ${exception.result}")
         }
     }
 
-    suspend fun handleLoadAction(iso: String) {
+    override suspend fun handleLoadAction(iso: String) {
         when (val status = MapLoaderWrapper.getMapStatus(iso)) {
             MapLoader.MapStatus.Installed -> {
                 val result = MapLoaderWrapper.loadMap(iso)
@@ -250,27 +278,30 @@ object MapLoaderGlobal {
     private suspend fun updateStatus(iso: String): MapLoader.MapStatus {
         val status = MapLoaderWrapper.getMapStatus(iso)
         updateMapsStatus(iso, status)
+        countries.value?.get(iso)?.country?.details?.regions?.forEach {
+            updateMapsStatus(it, MapLoaderWrapper.getMapStatus(it))
+        }
         notifyMapChangedObservable.postValue(iso to status)
         return status
     }
 
     private fun updateMapsStatus(iso: String, status: MapLoader.MapStatus) {
-        countriesObservable.value?.get(iso)?.status = status
-        regionsObservable.value?.get(iso)?.status = status
-        installedCountriesObservable.value?.get(iso)?.status = status
-        installedRegionsObservable.value?.get(iso)?.status = status
+        countriesObservable.value?.get(iso)?.data?.status = status
+        regionsObservable.value?.get(iso)?.data?.status = status
+        installedCountriesObservable.value?.get(iso)?.data?.status = status
+        installedRegionsObservable.value?.get(iso)?.data?.status = status
     }
 
     private fun updateMapsProgress(iso: String, progress: Int) {
-        countriesObservable.value?.get(iso)?.progress = progress
-        regionsObservable.value?.get(iso)?.progress = progress
-        installedCountriesObservable.value?.get(iso)?.progress = progress
-        installedRegionsObservable.value?.get(iso)?.progress = progress
+        countriesObservable.value?.get(iso)?.data?.progress = progress
+        regionsObservable.value?.get(iso)?.data?.progress = progress
+        installedCountriesObservable.value?.get(iso)?.data?.progress = progress
+        installedRegionsObservable.value?.get(iso)?.data?.progress = progress
     }
 
     private fun updateUpdateable(iso: String) {
-        installedCountriesObservable.value?.get(iso)?.updateAvailable = true
-        installedRegionsObservable.value?.get(iso)?.updateAvailable = true
+        installedCountriesObservable.value?.get(iso)?.data?.updateAvailable = true
+        installedRegionsObservable.value?.get(iso)?.data?.updateAvailable = true
     }
 
     private fun logMapLoaderError(message: String) {

@@ -28,7 +28,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import com.sygic.maps.offlinemaps.R
-import com.sygic.maps.offlinemaps.loader.Continent
+import com.sygic.maps.module.common.maploader.Continent
 
 class ContinentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val continentName = itemView.findViewById<MaterialTextView>(R.id.continentName)

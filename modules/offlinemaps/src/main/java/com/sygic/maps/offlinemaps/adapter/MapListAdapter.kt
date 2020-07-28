@@ -24,32 +24,33 @@
 
 package com.sygic.maps.offlinemaps.adapter
 
-import androidx.recyclerview.widget.DiffUtil
-import com.sygic.maps.offlinemaps.adapter.viewholder.MapEntryViewHolder
-import com.sygic.maps.offlinemaps.loader.MapHolder
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.sygic.maps.offlinemaps.R
+import com.sygic.maps.offlinemaps.adapter.viewholder.MapItemViewHolder
 import com.sygic.sdk.map.MapLoader
 
-abstract class MapListAdapter<T : MapHolder, VH : MapEntryViewHolder<T>>(diffCallback: DiffUtil.ItemCallback<T>) : InPlaceListAdapter<T, VH>(diffCallback) {
-    private var onItemClickedCallback: (T) -> Unit = {}
-    private var onPrimaryActionClicked: (T) -> Unit = {}
-    private var onLoadButtonClicked: (T) -> Unit = {}
-    private var onUpdateButtonClicked: (T) -> Unit = {}
+class MapListAdapter : InPlaceListAdapter() {
+    private var onItemClickedCallback: (String) -> Unit = {}
+    private var onPrimaryActionClicked: (String) -> Unit = {}
+    private var onLoadButtonClicked: (String) -> Unit = {}
+    private var onUpdateButtonClicked: (String) -> Unit = {}
 
-    protected var loadButtonEnabled = true
+    private var loadButtonEnabled = true
 
-    fun setOnItemClicked(callback: (T) -> Unit) {
+    fun setOnItemClicked(callback: (String) -> Unit) {
         onItemClickedCallback = callback
     }
 
-    fun setOnPrimaryActionClicked(callback: (T) -> Unit) {
+    fun setOnPrimaryActionClicked(callback: (String) -> Unit) {
         onPrimaryActionClicked = callback
     }
 
-    fun setOnUpdateButtonClicked(callback: (T) -> Unit) {
+    fun setOnUpdateButtonClicked(callback: (String) -> Unit) {
         onUpdateButtonClicked = callback
     }
 
-    fun setOnLoadButtonClicked(callback: (T) -> Unit) {
+    fun setOnLoadButtonClicked(callback: (String) -> Unit) {
         onLoadButtonClicked = callback
     }
 
@@ -63,20 +64,25 @@ abstract class MapListAdapter<T : MapHolder, VH : MapEntryViewHolder<T>>(diffCal
 
     fun updateStatus(iso: String, status: MapLoader.MapStatus) {
         currentMap[iso]?.let {
-            currentList[it].status = status
+            currentList[it].data.status = status
             notifyItemChanged(it, status)
         }
     }
 
     fun updateProgress(iso: String, progress: Int) {
         currentMap[iso]?.let {
-            currentList[it].progress = progress
+            currentList[it].data.progress = progress
             notifyItemChanged(it, progress)
         }
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MapItemViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.map_item_layout, parent, false)
+        return MapItemViewHolder(itemView)
+    }
+
     @Suppress("UNCHECKED_CAST")
-    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: MapItemViewHolder, position: Int, payloads: MutableList<Any>) {
         super.onBindViewHolder(holder, position, payloads)
         val item = getItem(position)
         when {
@@ -85,28 +91,18 @@ abstract class MapListAdapter<T : MapHolder, VH : MapEntryViewHolder<T>>(diffCal
                 payloads.forEach { payload ->
                     when (payload) {
                         is Int -> holder.updateProgress(payload)
-                        is MapLoader.MapStatus -> {
-                            holder.updateFromStatus(payload, item.progress)
-                        }
+                        is MapLoader.MapStatus -> holder.updateStatus(payload, item.data.progress)
                     }
                 }
             }
         }
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) {
+    override fun onBindViewHolder(holder: MapItemViewHolder, position: Int) {
         val item = getItem(position)
-        holder.itemView.setOnClickListener {
-            onItemClickedCallback(item)
-        }
-        holder.setPrimaryActionClickListener {
-            onPrimaryActionClicked(item)
-        }
-        holder.setLoadButtonClickListener {
-            onLoadButtonClicked(item)
-        }
-        holder.setUpdateButtonClickListener {
-            onUpdateButtonClicked(item)
-        }
+        holder.itemView.setOnClickListener { onItemClickedCallback(item.iso) }
+        holder.setPrimaryActionClickListener { onPrimaryActionClicked(item.iso) }
+        holder.setLoadButtonClickListener { onLoadButtonClicked(item.iso) }
+        holder.setUpdateButtonClickListener { onUpdateButtonClicked(item.iso) }
     }
 }

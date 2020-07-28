@@ -26,27 +26,24 @@ package com.sygic.maps.offlinemaps.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.sygic.maps.offlinemaps.loader.MapHolder
+import com.sygic.maps.offlinemaps.adapter.viewholder.MapItemViewHolder
+import com.sygic.maps.module.common.maploader.MapItem
 
-interface Copyable {
-    fun copy(): Copyable
-}
-
-abstract class InPlaceListAdapter<T : MapHolder, VH : RecyclerView.ViewHolder>(private val diffCallback: DiffUtil.ItemCallback<T>) : RecyclerView.Adapter<VH>() {
+abstract class InPlaceListAdapter : RecyclerView.Adapter<MapItemViewHolder>() {
     protected var currentMap = LinkedHashMap<String, Int>()
-    protected var currentList = emptyList<T>()
+    protected var currentList = emptyList<MapItem>()
 
     override fun getItemCount() = currentMap.size
 
     @Suppress("UNCHECKED_CAST")
-    fun submitList(list: List<T>) {
+    fun submitList(list: List<MapItem>) {
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return diffCallback.areItemsTheSame(currentList[oldItemPosition], list[newItemPosition])
+                return areItemsTheSame(currentList[oldItemPosition], list[newItemPosition])
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return diffCallback.areContentsTheSame(currentList[oldItemPosition], list[newItemPosition])
+                return areContentsTheSame(currentList[oldItemPosition], list[newItemPosition])
             }
 
             override fun getOldListSize(): Int {
@@ -57,7 +54,7 @@ abstract class InPlaceListAdapter<T : MapHolder, VH : RecyclerView.ViewHolder>(p
                 return list.size
             }
         }, false)
-        currentList = list.map { it.copy() } as List<T>
+        currentList = list.map { it.copy() }
         currentMap.clear()
         currentList.forEachIndexed { index, value ->
             currentMap[value.iso] = index
@@ -66,4 +63,9 @@ abstract class InPlaceListAdapter<T : MapHolder, VH : RecyclerView.ViewHolder>(p
     }
 
     fun getItem(position: Int) = currentList[position]
+
+    private companion object : DiffUtil.ItemCallback<MapItem>() {
+        override fun areItemsTheSame(oldItem: MapItem, newItem: MapItem) = oldItem.iso == newItem.iso
+        override fun areContentsTheSame(oldItem: MapItem, newItem: MapItem) = oldItem == newItem
+    }
 }

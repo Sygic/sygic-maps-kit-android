@@ -24,45 +24,60 @@
 
 package com.sygic.maps.offlinemaps.download
 
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
+import com.sygic.maps.module.common.maploader.Country
+import com.sygic.maps.module.common.maploader.MapItem
+import com.sygic.maps.module.common.maploader.MapLoaderGlobal
 import com.sygic.maps.offlinemaps.base.NavigationViewModel
-import com.sygic.maps.offlinemaps.extensions.CountryAdapterHandler
-import com.sygic.maps.offlinemaps.loader.Country
-import com.sygic.maps.offlinemaps.loader.CountryHolder
-import com.sygic.maps.offlinemaps.loader.MapLoaderGlobal
+import com.sygic.maps.offlinemaps.extensions.MapAdapterHandler
+import com.sygic.maps.offlinemaps.extensions.toMb
 import com.sygic.maps.uikit.views.common.livedata.SingleLiveEvent
+import com.sygic.sdk.map.CountryDetails
 
-class DownloadMapsViewModel : NavigationViewModel(), CountryAdapterHandler {
+class DownloadMapsViewModel : NavigationViewModel(), MapAdapterHandler {
     var continent = ""
 
     val navigateToCountryRegions = SingleLiveEvent<Country>()
-    val continentsObservable = Transformations.map(MapLoaderGlobal.continentsObservable) { continents -> continents[continent]!!.map { MapLoaderGlobal.countriesObservable.value!![it]!! } }
+    val continentsObservable = MapLoaderGlobal.continents.map { continents ->
+        continents[continent]!!.map {
+            val country = MapLoaderGlobal.getCountry(it)
+            MapItem(it, country.country.details.name, mapDetailsText(country.country.details), country.data)
+        }
+    }
     val notifyMapChangedObservable = MapLoaderGlobal.notifyMapChangedObservable
-    val mapInstallProgressObservable = MapLoaderGlobal.mapInstallProgressObservable
+    val mapInstallProgressObservable = MapLoaderGlobal.mapInstallProgress
 
     fun loadAllMaps() = MapLoaderGlobal.launchInScope {
         MapLoaderGlobal.loadAllMaps()
     }
 
-    override fun onCountryClicked(country: CountryHolder) {
-        if (country.country.details.regions.isNotEmpty()) {
-            navigateToCountryRegions.value = country.country
+    override fun onMapClicked(iso: String) {
+        val country = MapLoaderGlobal.getCountry(iso).country
+        if (country.details.regions.isNotEmpty()) {
+            navigateToCountryRegions.value = country
         }
     }
 
-    override fun onPrimaryButtonClicked(country: CountryHolder) {
+    override fun onPrimaryButtonClicked(iso: String) {
         MapLoaderGlobal.launchInScope {
-            MapLoaderGlobal.handlePrimaryMapAction(country.iso)
+            MapLoaderGlobal.handlePrimaryMapAction(iso)
         }
     }
 
-    override fun onLoadButtonClicked(country: CountryHolder) {
+    override fun onLoadButtonClicked(iso: String) {
         MapLoaderGlobal.launchInScope {
-            MapLoaderGlobal.handleLoadAction(country.iso)
+            MapLoaderGlobal.handleLoadAction(iso)
         }
     }
 
-    override fun onUpdateButtonClicked(country: CountryHolder) {
+    override fun onUpdateButtonClicked(iso: String) {
         // Not used
     }
+
+    private fun mapDetailsText(details: CountryDetails) =
+        if (details.regions.isEmpty()) {
+            "${details.totalSize.toMb} MB"
+        } else {
+            "${details.totalSize.toMb} MB • Contains ${details.regions.size} regions"
+        }
 }

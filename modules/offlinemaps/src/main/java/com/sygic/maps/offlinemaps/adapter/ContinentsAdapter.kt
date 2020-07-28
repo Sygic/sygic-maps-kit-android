@@ -28,9 +28,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.sygic.maps.module.common.maploader.Continent
 import com.sygic.maps.offlinemaps.R
 import com.sygic.maps.offlinemaps.adapter.viewholder.ContinentViewHolder
-import com.sygic.maps.offlinemaps.loader.Continent
 
 class ContinentsAdapter : ListAdapter<Continent, ContinentViewHolder>(DiffCallback) {
     private var onContinentClickedCallback: (Continent) -> Unit = {}

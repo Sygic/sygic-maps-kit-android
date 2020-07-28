@@ -22,34 +22,6 @@
  * SOFTWARE.
  */
 
-package com.sygic.maps.offlinemaps.loader
+package com.sygic.maps.module.common.maploader
 
-import com.sygic.maps.offlinemaps.adapter.Copyable
-import com.sygic.sdk.map.MapLoader
-
-abstract class MapHolder(
-    val iso: String,
-    var status: MapLoader.MapStatus,
-    var progress: Int,
-    var updateAvailable: Boolean = false
-) : Copyable {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as MapHolder
-
-        if (iso != other.iso) return false
-        if (status != other.status) return false
-        if (progress != other.progress) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = iso.hashCode()
-        result = 31 * result + status.hashCode()
-        result = 31 * result + progress
-        return result
-    }
-}
+data class MapItem(val iso: String, val name: String, val details: String, val data: MapData)

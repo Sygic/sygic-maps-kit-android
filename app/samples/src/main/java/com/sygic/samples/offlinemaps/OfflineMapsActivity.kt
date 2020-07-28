@@ -28,8 +28,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.sygic.maps.module.common.maploader.MapLoaderGlobal
 import com.sygic.maps.offlinemaps.installed.InstalledMapsFragment
-import com.sygic.maps.offlinemaps.loader.MapLoaderGlobal
 import com.sygic.maps.uikit.viewmodels.common.services.ServicesManager
 import com.sygic.samples.R
 import dagger.android.AndroidInjection

@@ -28,7 +28,7 @@
     <data>
         <variable
             name="adapter"
-            type="com.sygic.maps.offlinemaps.adapter.CountryListAdapter" />
+            type="com.sygic.maps.offlinemaps.adapter.MapListAdapter" />
         <variable
             name="viewModel"
             type="com.sygic.maps.offlinemaps.installed.InstalledMapsViewModel" />
@@ -71,8 +71,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:countryAdapter="@{adapter}"
-                    app:countryHandler="@{viewModel}"
+                    app:mapAdapter="@{adapter}"
+                    app:mapHandler="@{viewModel}"
                     tools:listitem="@layout/map_item_layout"
                     tools:itemCount="3" />
 
