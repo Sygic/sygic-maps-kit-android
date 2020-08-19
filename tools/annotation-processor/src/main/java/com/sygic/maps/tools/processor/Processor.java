@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Sygic a.s. All rights reserved.
+ * Copyright (c) 2020 Sygic a.s. All rights reserved.
  *
  * This project is licensed under the MIT License.
  *
@@ -260,10 +260,11 @@ public class Processor extends AbstractProcessor {
 
                 cb.add("\n");
 
-                cb.addStatement("final $1T[] parameters = new $1T[constructorAssistedParameters.size()]", Object.class);
+                cb.addStatement("final $1T[][] parameters = new $1T[constructorAssistedParameters.size()][]", Object.class);
                 cb.beginControlFlow("for ($T v = 0; v < constructorAssistedParameters.size(); v++)", int.class);
                 cb.addStatement("final $T[] entry = constructorAssistedParameters.get(v)", Class.class);
                 cb.addStatement("final $T[] nullableInfo = constructorAssistedParametersNullability.get(v)", Boolean.class);
+                cb.addStatement("parameters[v] = new $T[entry.length]", Object.class);
                 cb.addStatement("boolean allNullable = true");
                 cb.beginControlFlow("for (final $T nullable : nullableInfo)", Boolean.class);
                 cb.beginControlFlow("if (!nullable)");
@@ -285,7 +286,7 @@ public class Processor extends AbstractProcessor {
                 cb.addStatement("continue");
                 cb.endControlFlow();
                 cb.beginControlFlow("if (cls.isInstance(" + ASSISTED_PARAMETER_NAME + "[k]))");
-                cb.addStatement("parameters[i] = assistedValues[k]");
+                cb.addStatement("parameters[v][i] = assistedValues[k]");
                 cb.addStatement("k++");
                 cb.addStatement("continue");
                 cb.endControlFlow();
@@ -294,7 +295,7 @@ public class Processor extends AbstractProcessor {
                 cb.addStatement("found = false");
                 cb.addStatement("break");
                 cb.endControlFlow();
-                cb.addStatement("parameters[i] = assistedValues[k]");
+                cb.addStatement("parameters[v][i] = assistedValues[k]");
                 cb.addStatement("k++");
                 cb.endControlFlow();
                 cb.beginControlFlow("if (found)");
@@ -318,7 +319,7 @@ public class Processor extends AbstractProcessor {
                         VariableElement parameter = nonAssistedParameters.get(j);
                         if (parameter == null) {
                             parameter = assistedParameters.get(j);
-                            cb.add("($T)parameters[$L]", parameter.asType(), a++);
+                            cb.add("($T)parameters[variant][$L]", parameter.asType(), a++);
                         } else {
                             cb.add("$N", parameter.getSimpleName());
                         }
