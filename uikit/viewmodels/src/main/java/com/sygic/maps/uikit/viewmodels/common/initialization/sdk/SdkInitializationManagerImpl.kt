@@ -60,8 +60,7 @@ class SdkInitializationManagerImpl private constructor(
 
         app.getApiKey()?.let { key ->
             SygicEngine.Builder(app)
-                .setKeyAndSecret(app.packageName, key)
-                .setRemoteControl(RemoteControlManager)
+                .setKeyAndSecret(key, "")
                 .setInitListener(object : SygicEngine.OnInitListener {
                     override fun onSdkInitialized() {
                         synchronized(this) { initializationState.asMutable().value = InitializationState.INITIALIZED }
